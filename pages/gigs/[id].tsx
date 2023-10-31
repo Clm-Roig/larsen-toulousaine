@@ -32,7 +32,7 @@ const Post: React.FC<GigProps> = (gig) => {
           date.getMonth() + 1
         } - ${date.getFullYear()}`}</p>
         <p>{bands.join(" - ")}</p>
-        <ReactMarkdown children={description} />
+        <ReactMarkdown>{description}</ReactMarkdown>
         <p>Par {author.pseudo}</p>
       </div>
       <style jsx>{`

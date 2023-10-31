@@ -24,7 +24,7 @@ const Gig: React.FC<{ gig: GigProps }> = ({ gig }) => {
       <p>{`${date.getDate()} - ${
         date.getMonth() + 1
       } - ${date.getFullYear()}`}</p>
-      <ReactMarkdown children={description} />
+      <ReactMarkdown>{description}</ReactMarkdown>
       <small>Par {author?.pseudo}</small>
       <style jsx>{`
         div {
