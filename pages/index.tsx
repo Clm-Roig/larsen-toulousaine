@@ -1,60 +1,56 @@
-import React from "react"
-import { GetStaticProps } from "next"
-import Layout from "../components/Layout"
-import Post, { PostProps } from "../components/Post"
+import React from "react";
+import { GetStaticProps } from "next";
+import Layout from "../components/Layout";
+import Gig, { GigProps } from "../components/Gig";
+import prisma from "../lib/prisma";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const feed = [
-    {
-      id: "1",
-      title: "Prisma is the perfect ORM for Next.js",
-      content: "[Prisma](https://github.com/prisma/prisma) and Next.js go _great_ together!",
-      published: false,
+  const gigs = await prisma.gig.findMany({
+    include: {
       author: {
-        name: "Nikolas Burk",
-        email: "burk@prisma.io",
+        select: { pseudo: true },
       },
     },
-  ]
-  return { 
-    props: { feed }, 
-    revalidate: 10 
-  }
-}
+  });
+  return {
+    props: { gigs: JSON.parse(JSON.stringify(gigs)) }, // parse + stringify for Date fields
+    revalidate: 10,
+  };
+};
 
 type Props = {
-  feed: PostProps[]
-}
+  gigs: GigProps[];
+};
 
 const Blog: React.FC<Props> = (props) => {
   return (
     <Layout>
       <div className="page">
-        <h1>Public Feed</h1>
+        <h1>Tous les concerts</h1>
         <main>
-          {props.feed.map((post) => (
-            <div key={post.id} className="post">
-              <Post post={post} />
+          {props.gigs.map((gig) => (
+            <div key={gig.id} className="gig">
+              <Gig gig={gig} />
             </div>
           ))}
         </main>
       </div>
       <style jsx>{`
-        .post {
+        .gig {
           background: white;
           transition: box-shadow 0.1s ease-in;
         }
 
-        .post:hover {
+        .gig:hover {
           box-shadow: 1px 1px 3px #aaa;
         }
 
-        .post + .post {
+        .gig + .gig {
           margin-top: 2rem;
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
