@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Card, Stack, Image, Text } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
-import { Gig } from "../../domain/Gig.type";
+import { Gig } from "../../domain/Gig/Gig.type";
 
 const DATE_SIZE = 32;
 
@@ -15,7 +15,7 @@ const GigCard = ({ gig }: Props) => {
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" padding="md" h={300}>
+    <Card shadow="md" h={300}>
       <Card.Section>
         <Image
           src={
