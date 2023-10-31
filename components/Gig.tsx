@@ -16,10 +16,14 @@ export type GigProps = {
 };
 
 const Gig: React.FC<{ gig: GigProps }> = ({ gig }) => {
-  const { author, bands, title, description, date: rawDate } = gig;
+  const { author, bands, description, date: rawDate } = gig;
   const date = new Date(rawDate);
+
+  const handleOnClick = () => {
+    void Router.push("/gigs/[id]", `/gigs/${gig.id}`);
+  };
   return (
-    <div onClick={() => Router.push("/gigs/[id]", `/gigs/${gig.id}`)}>
+    <div onClick={handleOnClick}>
       <h2>{bands.join(" - ")}</h2>
       <p>{`${date.getDate()} - ${
         date.getMonth() + 1

@@ -17,7 +17,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     },
   });
   return {
-    props: JSON.parse(JSON.stringify(gig)), // parse + stringify for Date fields
+    props: {
+      ...gig,
+      // TODO: find a better / automatic way to convert dates
+      createdAt: gig.createdAt.toISOString(),
+      date: gig.date.toISOString(),
+      updatedAt: gig.updatedAt.toISOString(),
+    },
   };
 };
 

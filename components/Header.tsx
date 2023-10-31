@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
-  let left = (
+  const left = (
     <div className="left">
       <Link href="/" legacyBehavior>
         <a className="bold" data-active={isActive("/")}>
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
     </div>
   );
 
-  let right = null;
+  const right = null;
 
   return (
     <nav>

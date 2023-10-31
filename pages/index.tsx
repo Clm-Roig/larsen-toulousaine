@@ -13,7 +13,15 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   });
   return {
-    props: { gigs: JSON.parse(JSON.stringify(gigs)) }, // parse + stringify for Date fields
+    props: {
+      gigs: gigs.map((gig) => ({
+        ...gig,
+        // TODO: find a better / automatic way to convert dates
+        createdAt: gig.createdAt.toISOString(),
+        date: gig.date.toISOString(),
+        updatedAt: gig.updatedAt.toISOString(),
+      })),
+    },
     revalidate: 10,
   };
 };
