@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === "production") {
   if (!global.prisma) {
     global.prisma = new PrismaClient();
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   prisma = global.prisma;
 }
 
