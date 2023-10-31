@@ -1,56 +1,8 @@
 import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Title } from "@mantine/core";
 
 const Header: React.FC = () => {
-  const router = useRouter();
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
-
-  const left = (
-    <div className="left">
-      <Link href="/" legacyBehavior>
-        <a className="bold" data-active={isActive("/")}>
-          Agenda
-        </a>
-      </Link>
-      <style jsx>{`
-        .bold {
-          font-weight: bold;
-        }
-
-        a {
-          text-decoration: none;
-          color: #000;
-          display: inline-block;
-        }
-
-        .left a[data-active="true"] {
-          color: gray;
-        }
-
-        a + a {
-          margin-left: 1rem;
-        }
-      `}</style>
-    </div>
-  );
-
-  const right = null;
-
-  return (
-    <nav>
-      {left}
-      {right}
-      <style jsx>{`
-        nav {
-          display: flex;
-          padding: 2rem;
-          align-items: center;
-        }
-      `}</style>
-    </nav>
-  );
+  return <Title order={1}>Décibel Agenda</Title>;
 };
 
 export default Header;

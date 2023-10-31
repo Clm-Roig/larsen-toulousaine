@@ -1,42 +1,51 @@
 import React from "react";
-import Router from "next/router";
-import ReactMarkdown from "react-markdown";
+import { Box, Card, Stack, Image, Text } from "@mantine/core";
+import { Gig } from "../domain/Gig.type";
 
-export type GigProps = {
-  id: string;
-  title: string;
-  date: string;
-  author: {
-    pseudo: string;
-    email: string;
-  } | null;
-  bands: string[];
-  description: string;
-  published: boolean;
+const DATE_SIZE = 32;
+
+type Props = {
+  gig: Gig;
 };
 
-const Gig: React.FC<{ gig: GigProps }> = ({ gig }) => {
-  const { author, bands, description, date: rawDate } = gig;
+const Gig = ({ gig }: Props) => {
+  const { bands, date: rawDate, place } = gig;
   const date = new Date(rawDate);
 
-  const handleOnClick = () => {
-    void Router.push("/gigs/[id]", `/gigs/${gig.id}`);
-  };
   return (
-    <div onClick={handleOnClick}>
-      <h2>{bands.join(" - ")}</h2>
-      <p>{`${date.getDate()} - ${
-        date.getMonth() + 1
-      } - ${date.getFullYear()}`}</p>
-      <ReactMarkdown>{description}</ReactMarkdown>
-      <small>Par {author?.pseudo}</small>
-      <style jsx>{`
-        div {
-          color: inherit;
-          padding: 1rem;
-        }
-      `}</style>
-    </div>
+    <Card shadow="md" padding="md" h={300}>
+      <Card.Section>
+        <Image
+          src={
+            "https://picsum.photos/id/" +
+            Math.floor(Math.random() * 50) +
+            "/500/250"
+          }
+          alt={"Concert " + bands.join(", ")}
+        />
+      </Card.Section>
+
+      <Box
+        w={DATE_SIZE}
+        h={DATE_SIZE}
+        pos="absolute"
+        left={0}
+        top={0}
+        bg={"orange"}
+        ta="center"
+      >
+        <Text h={DATE_SIZE} w={DATE_SIZE} lh={DATE_SIZE + "px"}>
+          {date.getDate()}
+        </Text>
+      </Box>
+
+      <Stack justify="space-between" mt="md" gap="xs" dir="col" h="100%">
+        <Text fw={"700"} lineClamp={2}>
+          {bands.join(" - ")}
+        </Text>
+        <Text>{place.name}</Text>
+      </Stack>
+    </Card>
   );
 };
 

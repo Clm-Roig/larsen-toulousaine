@@ -1,14 +1,16 @@
 import React from "react";
 import { GetStaticProps } from "next";
 import Layout from "../components/Layout";
-import Gig, { GigProps } from "../components/Gig";
 import prisma from "../lib/prisma";
+import { Box, Title } from "@mantine/core";
+import { Gig as GigType } from "../domain/Gig.type";
+import GigList from "../components/GigList";
 
 export const getStaticProps: GetStaticProps = async () => {
   const gigs = await prisma.gig.findMany({
     include: {
-      author: {
-        select: { pseudo: true },
+      place: {
+        select: { name: true },
       },
     },
   });
@@ -27,38 +29,22 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 type Props = {
-  gigs: GigProps[];
+  gigs: GigType[];
 };
 
-const Blog: React.FC<Props> = (props) => {
+const Gigs = ({ gigs }: Props) => {
   return (
     <Layout>
       <div className="page">
-        <h1>Tous les concerts</h1>
+        <Title order={2}>Tous les concerts</Title>
         <main>
-          {props.gigs.map((gig) => (
-            <div key={gig.id} className="gig">
-              <Gig gig={gig} />
-            </div>
-          ))}
+          <Box p="sm">
+            <GigList gigs={gigs} />
+          </Box>
         </main>
       </div>
-      <style jsx>{`
-        .gig {
-          background: white;
-          transition: box-shadow 0.1s ease-in;
-        }
-
-        .gig:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .gig + .gig {
-          margin-top: 2rem;
-        }
-      `}</style>
     </Layout>
   );
 };
 
-export default Blog;
+export default Gigs;
