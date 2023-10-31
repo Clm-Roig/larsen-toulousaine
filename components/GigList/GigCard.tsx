@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Card, Stack, Image, Text } from "@mantine/core";
+import { useMantineTheme } from "@mantine/core";
 import { Gig } from "../../domain/Gig.type";
 
 const DATE_SIZE = 32;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const GigCard = ({ gig }: Props) => {
+  const theme = useMantineTheme();
   const { bands, date: rawDate, place } = gig;
   const date = new Date(rawDate);
 
@@ -33,6 +35,9 @@ const GigCard = ({ gig }: Props) => {
         top={0}
         bg={"orange"}
         ta="center"
+        style={{
+          borderBottomRightRadius: theme.radius[theme.defaultRadius] as string,
+        }}
       >
         <Text h={DATE_SIZE} w={DATE_SIZE} lh={DATE_SIZE + "px"}>
           {date.getDate()}
