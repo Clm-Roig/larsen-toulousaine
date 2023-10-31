@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Card, Stack, Image, Text } from "@mantine/core";
-import { Gig } from "../domain/Gig.type";
+import { Gig } from "../../domain/Gig.type";
 
 const DATE_SIZE = 32;
 
@@ -8,7 +8,7 @@ type Props = {
   gig: Gig;
 };
 
-const Gig = ({ gig }: Props) => {
+const GigCard = ({ gig }: Props) => {
   const { bands, date: rawDate, place } = gig;
   const date = new Date(rawDate);
 
@@ -49,4 +49,4 @@ const Gig = ({ gig }: Props) => {
   );
 };
 
-export default Gig;
+export default GigCard;
