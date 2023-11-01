@@ -14,11 +14,9 @@ const Users = ({ users }: Props) => {
   return (
     <Layout>
       <Title order={2}>Tous les utilisateurs</Title>
-      <main>
-        <Box p="sm">
-          <UserList users={users} />
-        </Box>
-      </main>
+      <Box p="sm">
+        <UserList users={users} />
+      </Box>
     </Layout>
   );
 };

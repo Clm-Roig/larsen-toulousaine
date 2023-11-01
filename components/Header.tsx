@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Group, Title, Text, Stack } from "@mantine/core";
+import { AppShell, Button, Group, Title, Text, Stack } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { IconLogin2 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -12,19 +12,26 @@ const Header: React.FC = () => {
   };
 
   return (
-    <Box bg="orange" p="xs">
-      <Group justify="space-between">
-        <Title order={1}>Décibel Agenda</Title>
+    <AppShell.Header bg="primary" p="xs">
+      <Group justify="space-between" h="100%">
+        <Title order={1} size={24}>
+          Décibel Agenda
+        </Title>
         {status === "authenticated" && (
           <Stack gap={0} align="center">
             <Text size="s">Bienvenu&middot;e {session?.user.pseudo} !</Text>
             <Group>
-              <Button size="xs" color="black" component={Link} href="/admin">
+              <Button
+                size="compact-xs"
+                color="secondary"
+                component={Link}
+                href="/admin"
+              >
                 Tableau de bord
               </Button>
               <Button
-                size="xs"
-                color="black"
+                size="compact-xs"
+                color="secondary"
                 onClick={handleSignOut}
                 rightSection={<IconLogin2 size={16} />}
               >
@@ -34,7 +41,7 @@ const Header: React.FC = () => {
           </Stack>
         )}
       </Group>
-    </Box>
+    </AppShell.Header>
   );
 };
 

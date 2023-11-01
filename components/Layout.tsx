@@ -2,7 +2,7 @@
 
 import React, { ReactNode } from "react";
 import Header from "./Header";
-import { Anchor, Box, Breadcrumbs } from "@mantine/core";
+import { Anchor, AppShell, Box, Breadcrumbs, Text, Stack } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -41,13 +41,34 @@ const Layout: React.FC<Props> = (props) => {
   ));
 
   return (
-    <>
-      <Header />
-      <Breadcrumbs m="xs">{breadcrumbsItems}</Breadcrumbs>
-      <Box mt={0} m="md">
-        {props.children}
-      </Box>
-    </>
+    <AppShell header={{ height: 64 }} padding="md">
+      <AppShell.Header>
+        <Header />
+      </AppShell.Header>
+
+      <AppShell.Main>
+        <Breadcrumbs mb="sm">{breadcrumbsItems}</Breadcrumbs>
+        <Box mt={0}>{props.children}</Box>
+      </AppShell.Main>
+
+      <AppShell.Footer p="xs">
+        <Stack align="center" gap={0}>
+          <Text size="sm">
+            Développé par{" "}
+            <Anchor href="https://clm-roig.github.io/" target="_blank">
+              Clément ROIG
+            </Anchor>{" "}
+            © {new Date().getFullYear()} - Code source disponible sur{" "}
+            <Anchor
+              href="https://github.com/Clm-Roig/decibel-agenda"
+              target="_blank"
+            >
+              GitHub
+            </Anchor>
+          </Text>
+        </Stack>
+      </AppShell.Footer>
+    </AppShell>
   );
 };
 

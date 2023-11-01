@@ -16,36 +16,34 @@ export default function Admin() {
 
   return (
     <Layout>
-      <main>
-        {status === "authenticated" && (
-          <>
-            <Group></Group>
-            <Text size="xl">{`Panneau d'administration`}</Text>
+      {status === "authenticated" && (
+        <>
+          <Group></Group>
+          <Text size="xl">{`Panneau d'administration`}</Text>
 
-            <Flex gap="sm">
-              <Card
-                component={Link}
-                href="/admin/users"
-                w={180}
-                p="md"
-                withBorder
-              >
-                <Stack align="center" gap="xs">
-                  <IconUser size={32} />
-                  <Text ta="center">Gérer les utilisateurs</Text>
-                </Stack>
-              </Card>
+          <Flex gap="sm">
+            <Card
+              component={Link}
+              href="/admin/users"
+              w={180}
+              p="md"
+              withBorder
+            >
+              <Stack align="center" gap="xs">
+                <IconUser size={32} />
+                <Text ta="center">Gérer les utilisateurs</Text>
+              </Stack>
+            </Card>
 
-              <Card component={Link} href="#" w={180} p="md" withBorder>
-                <Stack align="center" gap="xs">
-                  <IconPlus size={32} />
-                  <Text ta="center">Ajouter un concert (bientôt...)</Text>
-                </Stack>
-              </Card>
-            </Flex>
-          </>
-        )}
-      </main>
+            <Card component={Link} href="#" w={180} p="md" withBorder>
+              <Stack align="center" gap="xs">
+                <IconPlus size={32} />
+                <Text ta="center">Ajouter un concert (bientôt...)</Text>
+              </Stack>
+            </Card>
+          </Flex>
+        </>
+      )}
     </Layout>
   );
 }

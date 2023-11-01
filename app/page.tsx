@@ -1,4 +1,4 @@
-import { Stack, Text } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import Link from "next/link";
 import Layout from "../components/Layout";
 
@@ -9,7 +9,9 @@ const Page = () => {
         <Text size="xl">
           Bienvenue sur Décibel, votre agenda metal à Toulouse !
         </Text>
-        <Link href="/gigs">Voir les concerts</Link>
+        <Button component={Link} href="/gigs" w="fit-content">
+          Découvrir tous les concerts
+        </Button>
       </Stack>
     </Layout>
   );

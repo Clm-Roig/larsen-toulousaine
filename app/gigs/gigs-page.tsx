@@ -14,11 +14,9 @@ const Gigs = ({ gigs }: Props) => {
   return (
     <Layout>
       <Title order={2}>Tous les concerts</Title>
-      <main>
-        <Box p="sm">
-          <GigList gigs={gigs} />
-        </Box>
-      </main>
+      <Box>
+        <GigList gigs={gigs} />
+      </Box>
     </Layout>
   );
 };

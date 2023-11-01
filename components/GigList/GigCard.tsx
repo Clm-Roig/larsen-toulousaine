@@ -43,13 +43,19 @@ const GigCard = ({ gig }: Props) => {
         pos="absolute"
         left={0}
         top={0}
-        bg={"orange"}
+        bg={"primary"}
         ta="center"
         style={{
           borderBottomRightRadius: theme.radius[theme.defaultRadius] as string,
         }}
       >
-        <Text h={DATE_SIZE} w={DATE_SIZE * 2} lh={DATE_SIZE + "px"} fw="bold">
+        <Text
+          h={DATE_SIZE}
+          w={DATE_SIZE * 2}
+          lh={DATE_SIZE + "px"}
+          fw="bold"
+          c={"white"}
+        >
           {date.getDate()}/{(date.getMonth() + 1 + "").padStart(2, "0")}
         </Text>
       </Box>
