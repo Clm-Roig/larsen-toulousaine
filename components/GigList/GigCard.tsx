@@ -25,7 +25,7 @@ const GigCard = ({ gig }: Props) => {
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={350}>
+    <Card shadow="md" h={320}>
       <Card.Section>
         <Image
           src={
@@ -38,7 +38,7 @@ const GigCard = ({ gig }: Props) => {
       </Card.Section>
 
       <Box
-        w={DATE_SIZE}
+        w={DATE_SIZE * 2}
         h={DATE_SIZE}
         pos="absolute"
         left={0}
@@ -49,8 +49,8 @@ const GigCard = ({ gig }: Props) => {
           borderBottomRightRadius: theme.radius[theme.defaultRadius] as string,
         }}
       >
-        <Text h={DATE_SIZE} w={DATE_SIZE} lh={DATE_SIZE + "px"} fw="bold">
-          {date.getDate()}
+        <Text h={DATE_SIZE} w={DATE_SIZE * 2} lh={DATE_SIZE + "px"} fw="bold">
+          {date.getDate()}/{(date.getMonth() + 1 + "").padStart(2, "0")}
         </Text>
       </Box>
 
