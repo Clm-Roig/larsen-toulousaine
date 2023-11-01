@@ -34,22 +34,25 @@ const places = [
 ];
 
 async function main() {
-  try {
-    await prisma.genre.createMany({
-      data: genres.map((genre) => ({ name: genre.name, color: genre.color })),
-    });
-  } catch (e) {
-    console.error("Error when seeding genress");
-    console.error(e);
-  }
-  try {
-    await prisma.place.createMany({
-      data: places.map((placeName) => ({ name: placeName })),
-    });
-  } catch (e) {
-    console.error("Error when seeding places");
-    console.error(e);
-  }
+  await prisma.$transaction(
+    genres.map((genre) =>
+      prisma.genre.upsert({
+        where: { name: genre.name },
+        update: {},
+        create: genre,
+      }),
+    ),
+  );
+
+  await prisma.$transaction(
+    places.map((placeName) =>
+      prisma.place.upsert({
+        where: { name: placeName },
+        update: {},
+        create: { name: placeName },
+      }),
+    ),
+  );
 }
 
 main()
