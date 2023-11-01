@@ -3,8 +3,8 @@
 import React from "react";
 import Layout from "../../../components/Layout";
 import { Box, Title } from "@mantine/core";
-import { User } from "@prisma/client";
 import UserList from "../../../components/UserList";
+import { User } from "../../../domain/User/User.type";
 
 type Props = {
   users: User[];
@@ -13,14 +13,12 @@ type Props = {
 const Users = ({ users }: Props) => {
   return (
     <Layout>
-      <div className="page">
-        <Title order={2}>Tous les utilisateurs</Title>
-        <main>
-          <Box p="sm">
-            <UserList users={users} />
-          </Box>
-        </main>
-      </div>
+      <Title order={2}>Tous les utilisateurs</Title>
+      <main>
+        <Box p="sm">
+          <UserList users={users} />
+        </Box>
+      </main>
     </Layout>
   );
 };

@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { User } from "@prisma/client";
-import { Text } from "@mantine/core";
+import { Table } from "@mantine/core";
+import { User } from "../../domain/User/User.type";
 
 type Props = {
   users: User[];
@@ -10,22 +10,23 @@ type Props = {
 
 export default function UserList({ users }: Props) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr 1fr",
-        gap: 20,
-      }}
-    >
-      {users.map((user) => (
-        <div
-          key={user.id}
-          style={{ border: "1px solid #ccc", textAlign: "center" }}
-        >
-          <Text>{user.pseudo}</Text>
-          <Text>{user.email}</Text>
-        </div>
-      ))}
-    </div>
+    <Table>
+      <Table.Thead>
+        <Table.Tr>
+          <Table.Th>Pseudo</Table.Th>
+          <Table.Th>Rôle</Table.Th>
+          <Table.Th>E-mail</Table.Th>
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>
+        {users.map((user) => (
+          <Table.Tr key={user.id}>
+            <Table.Td>{user.pseudo}</Table.Td>
+            <Table.Td>{user.role}</Table.Td>
+            <Table.Td>{user.email}</Table.Td>
+          </Table.Tr>
+        ))}
+      </Table.Tbody>
+    </Table>
   );
 }

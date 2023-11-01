@@ -23,7 +23,8 @@
   // all plugins (eslint-plugin-xxx) go here:
   "plugins": [
     "@typescript-eslint",
-    "@next/eslint-plugin-next" // https://github.com/vercel/next.js/blob/canary/packages/eslint-plugin-next/lib/index.js
+    "@next/eslint-plugin-next", // https://github.com/vercel/next.js/blob/canary/packages/eslint-plugin-next/lib/index.js
+    "unused-imports"
   ],
 
   // all configs (eslint-config-xxx) go here:
@@ -42,6 +43,7 @@
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-misused-promises": "off",
-    "no-console": "error"
+    "no-console": "error",
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

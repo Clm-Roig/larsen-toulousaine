@@ -13,14 +13,12 @@ type Props = {
 const Gigs = ({ gigs }: Props) => {
   return (
     <Layout>
-      <div className="page">
-        <Title order={2}>Tous les concerts</Title>
-        <main>
-          <Box p="sm">
-            <GigList gigs={gigs} />
-          </Box>
-        </main>
-      </div>
+      <Title order={2}>Tous les concerts</Title>
+      <main>
+        <Box p="sm">
+          <GigList gigs={gigs} />
+        </Box>
+      </main>
     </Layout>
   );
 };

@@ -48,22 +48,28 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      let populatedToken = { ...token, testJWT: "hello" };
+    jwt({ token, user }) {
+      const populatedToken = { ...token };
       if (user) {
         // @ts-ignore
         populatedToken.pseudo = user?.pseudo;
+        // @ts-ignore
+        populatedToken.role = user?.role;
       }
       return populatedToken;
     },
-    async session({ session, token }) {
+    session({ session, token }) {
       return {
         ...session,
         user: {
           ...session.user,
           pseudo: token.pseudo,
+          role: token.rule,
         },
       };
+    },
+    redirect({ baseUrl }) {
+      return baseUrl + "/admin";
     },
   },
 };

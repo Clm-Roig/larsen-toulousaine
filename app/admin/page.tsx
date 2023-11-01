@@ -1,33 +1,51 @@
 "use client";
 
-import { Button, Text, Paper, Group } from "@mantine/core";
-import { signIn, signOut } from "next-auth/react";
+import { Text, Group, Card, Flex, Stack } from "@mantine/core";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { IconUser, IconPlus } from "@tabler/icons-react";
+import Layout from "../../components/Layout";
+import { useRouter } from "next/navigation";
 
 export default function Admin() {
-  const { status, data: session } = useSession();
-  const handleSignIn = async () => {
-    await signIn();
-  };
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" });
-  };
+  const { status } = useSession();
+  const router = useRouter();
+  if (status === "unauthenticated") {
+    router.push("/api/auth/signin");
+  }
+
   return (
-    <main>
-      {status === "unauthenticated" && (
-        <Button onClick={handleSignIn}>{`S'identifier`}</Button>
-      )}
-      {status === "authenticated" && (
-        <>
-          <Group>
-            <Text>Bienvenu&middot;e {session?.user.pseudo} !</Text>
-            <Button onClick={handleSignOut}>Se déconnecter</Button>
-          </Group>
-          <Paper shadow="xs" mih={500} m="md" p="md">
-            <Text>Panneau d'administration là</Text>
-          </Paper>
-        </>
-      )}
-    </main>
+    <Layout>
+      <main>
+        {status === "authenticated" && (
+          <>
+            <Group></Group>
+            <Text size="xl">{`Panneau d'administration`}</Text>
+
+            <Flex gap="sm">
+              <Card
+                component={Link}
+                href="/admin/users"
+                w={180}
+                p="md"
+                withBorder
+              >
+                <Stack align="center" gap="xs">
+                  <IconUser size={32} />
+                  <Text ta="center">Gérer les utilisateurs</Text>
+                </Stack>
+              </Card>
+
+              <Card component={Link} href="#" w={180} p="md" withBorder>
+                <Stack align="center" gap="xs">
+                  <IconPlus size={32} />
+                  <Text ta="center">Ajouter un concert (bientôt...)</Text>
+                </Stack>
+              </Card>
+            </Flex>
+          </>
+        )}
+      </main>
+    </Layout>
   );
 }

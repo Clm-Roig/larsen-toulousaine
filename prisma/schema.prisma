@@ -8,6 +8,11 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+enum Role {
+  MODERATOR
+  ADMIN
+}
+
 model Band {
   id     String  @id @default(cuid())
   name   String
@@ -37,6 +42,7 @@ model User {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   gigs      Gig[]
+  role      Role     @default(MODERATOR)
 
   @@map(name: "users")
 }
