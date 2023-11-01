@@ -2,26 +2,27 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Color palette source: https://sashamaps.net/docs/resources/20-colors/
 const genres = [
-  "Black Metal",
-  "Deathcore",
-  "Death Metal",
-  "Doom Metal",
-  "Folk Metal",
-  "Grindcore",
-  "Hardcore",
-  "Heavy Metal",
-  "Metal",
-  "Metalcore",
-  "Metal Industriel",
-  "Metal Progressif",
-  "Néo Metal",
-  "Post-Metal",
-  "Power Metal",
-  "Punk",
-  "Stoner",
-  "Sludge",
-  "Thrash Metal",
+  { name: "Black Metal", color: "#000000" },
+  { name: "Deathcore", color: "#f58231" },
+  { name: "Death Metal", color: "#e6194B" },
+  { name: "Doom Metal", color: "#000075" },
+  { name: "Folk Metal", color: "#3cb44b" },
+  { name: "Grindcore", color: "#9A6324" },
+  { name: "Hardcore", color: "#4363d8" },
+  { name: "Heavy Metal", color: "#ffe119" },
+  { name: "Metal", color: "#911eb4" },
+  { name: "Metalcore", color: "#f032e6" },
+  { name: "Metal Industriel", color: "#a9a9a9" },
+  { name: "Metal Progressif", color: "#fffac8" },
+  { name: "Néo Metal", color: "#dcbeff" },
+  { name: "Post-Metal", color: "#ffd8b1" },
+  { name: "Power Metal", color: "#fabed4" },
+  { name: "Punk", color: "#808000" },
+  { name: "Stoner", color: "#aaffc3" },
+  { name: "Sludge", color: "#800000" },
+  { name: "Thrash Metal", color: "#bfef45" },
 ];
 
 const places = [
@@ -35,7 +36,7 @@ const places = [
 async function main() {
   try {
     await prisma.genre.createMany({
-      data: genres.map((genreName) => ({ name: genreName })),
+      data: genres.map((genre) => ({ name: genre.name, color: genre.color })),
     });
   } catch (e) {
     console.error("Error when seeding genress");

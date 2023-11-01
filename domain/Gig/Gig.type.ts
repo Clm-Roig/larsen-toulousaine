@@ -1,3 +1,4 @@
+import { Band } from "../Band/Band.type";
 import { Place } from "../Place/Place.type";
 
 export type Gig = {
@@ -8,7 +9,7 @@ export type Gig = {
     pseudo: string;
     email: string;
   } | null;
-  bands: string[];
+  bands: Band[];
   description: string | null;
   place: Place;
   createdAt: string;

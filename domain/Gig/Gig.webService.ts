@@ -5,6 +5,11 @@ export const getGigs = async (): Promise<Gig[]> => {
   const gigs = await prisma.gig.findMany({
     include: {
       place: true,
+      bands: {
+        include: {
+          genres: true,
+        },
+      },
     },
   });
 
@@ -24,6 +29,11 @@ export const getGig = async (id: string): Promise<Gig | undefined> => {
     },
     include: {
       place: true,
+      bands: {
+        include: {
+          genres: true,
+        },
+      },
     },
   });
   if (!gig) return undefined;

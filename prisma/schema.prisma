@@ -44,6 +44,7 @@ model Genre {
   id    String @id @default(cuid())
   name  String @unique
   bands Band[]
+  color String @unique
 }
 
 model Place {
