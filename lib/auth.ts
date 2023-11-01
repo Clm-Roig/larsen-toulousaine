@@ -1,0 +1,69 @@
+import prisma from "./prisma";
+import { compare } from "bcryptjs";
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    CredentialsProvider({
+      name: "e-mail",
+      credentials: {
+        email: {
+          label: "E-mail",
+          type: "email",
+          placeholder: "example@example.com",
+        },
+        password: { label: "Mot de passe", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+        if (!user) {
+          return null;
+        }
+        const isPasswordCorrect = await compare(
+          credentials.password,
+          user.password,
+        );
+        if (!isPasswordCorrect) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          pseudo: user.pseudo,
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      let populatedToken = { ...token, testJWT: "hello" };
+      if (user) {
+        // @ts-ignore
+        populatedToken.pseudo = user?.pseudo;
+      }
+      return populatedToken;
+    },
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          pseudo: token.pseudo,
+        },
+      };
+    },
+  },
+};
