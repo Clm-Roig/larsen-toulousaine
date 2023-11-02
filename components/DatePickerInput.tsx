@@ -12,7 +12,7 @@ export default function DatePickerInput(inputProps: Props) {
     <DatesProvider
       settings={{
         locale: "fr",
-        timezone: "UTC",
+        timezone: "Europe/Paris",
       }}
     >
       <MantineDatePickerInput {...inputProps} />

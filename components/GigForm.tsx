@@ -119,7 +119,7 @@ export default function GigForm({ genres, places }: Props) {
       <Stack>
         <DatePickerInput
           label="Date du concert"
-          placeholder="dd/mm/YYYY"
+          valueFormat="DD MMMM YYYY"
           required
           {...form.getInputProps("date")}
         />
