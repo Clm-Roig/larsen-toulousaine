@@ -15,10 +15,11 @@ import {
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Band, Genre, Place } from "@prisma/client";
-import { BandWithGenres } from "../domain/Band/Band.type";
+import { notifications } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
 import { FormEvent } from "react";
 import { useSession } from "next-auth/react";
+import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
 import { MAX_GENRES_PER_BAND } from "../domain/constants";
 import { createGig } from "../domain/Gig/Gig.webService";
@@ -54,8 +55,12 @@ export default function GigForm({ genres, places }: Props) {
     validate: {
       date: (value) => (value ? null : "La date du concert est requise."),
       place: (value) => (value ? null : "Le lieu du concert est requis."),
-      bands: (value) =>
-        value?.length > 0 ? null : "Au moins un groupe est requis.",
+      bands: {
+        name: (value) => (value ? null : "Le nom est requis."),
+        genres: (value) => {
+          return value.length > 0 ? null : "Au moins un genre est requis.";
+        },
+      },
     },
     validateInputOnBlur: true,
   });
@@ -79,25 +84,33 @@ export default function GigForm({ genres, places }: Props) {
             connect: b.genres.map((g) => ({ id: g })),
           },
         }));
-      await createGig({
-        ...values,
-        author: {
-          connect: {
-            id: user.id,
+      try {
+        await createGig({
+          ...values,
+          author: {
+            connect: {
+              id: user.id,
+            },
           },
-        },
-        bands: {
-          ...(toConnectBands?.length > 0 ? { connect: toConnectBands } : {}),
-          ...(toCreateBands?.length > 0 ? { create: toCreateBands } : {}),
-        },
-        place: {
-          connect: {
-            id: place,
+          bands: {
+            ...(toConnectBands?.length > 0 ? { connect: toConnectBands } : {}),
+            ...(toCreateBands?.length > 0 ? { create: toCreateBands } : {}),
           },
-        },
-        title: null,
-        description: null,
-      });
+          place: {
+            connect: {
+              id: place,
+            },
+          },
+          title: null,
+          description: null,
+        });
+      } catch (error) {
+        notifications.show({
+          color: "red",
+          title: "Erreur à la création d'un concert",
+          message: error.message,
+        });
+      }
     }
   };
 
@@ -129,7 +142,12 @@ export default function GigForm({ genres, places }: Props) {
       <Text>Groupes</Text>
 
       {form.values.bands.map((band, index) => (
-        <Group key={band.key} mt="xs" align="flex-end">
+        <Group
+          h={index === 0 ? 80 : 60}
+          key={band.key}
+          mt="xs"
+          style={{ alignItems: "flex-start" }}
+        >
           <TextInput
             label={index === 0 ? "Nom du groupe" : ""}
             required
@@ -145,12 +163,16 @@ export default function GigForm({ genres, places }: Props) {
             {...form.getInputProps(`bands.${index}.genres`)}
           />
 
-          <Box>
-            <div></div>
+          <Box
+            style={{
+              alignSelf: index === 0 ? "center" : undefined,
+            }}
+          >
             <ActionIcon
               color="red"
               disabled={form.values.bands.length === 1}
               onClick={() => form.removeListItem("bands", index)}
+              size="lg"
             >
               <IconTrash size="1rem" />
             </ActionIcon>

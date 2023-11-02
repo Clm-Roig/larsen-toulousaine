@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import { theme } from "../theme";
 import { NextAuthProvider } from "./providers";
+import { Notifications } from "@mantine/notifications";
 
 export const metadata: Metadata = {
   title: "Décibel Agenda",
@@ -24,7 +26,10 @@ export default function RootLayout({
       </head>
       <body>
         <NextAuthProvider>
-          <MantineProvider theme={theme}>{children}</MantineProvider>
+          <MantineProvider theme={theme}>
+            <Notifications />
+            {children}
+          </MantineProvider>
         </NextAuthProvider>
       </body>
     </html>

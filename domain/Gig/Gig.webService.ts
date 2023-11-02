@@ -37,17 +37,8 @@ export async function getGig(id: string): Promise<Gig | undefined> {
 }
 
 export async function createGig(gig: Prisma.GigCreateInput) {
-  try {
-    const createdGig = await prisma.gig.create({
-      data: gig,
-    });
-    // eslint-disable-next-line no-console
-    console.log(createdGig);
-    return createdGig;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("An error ocurred when trying to create a gig");
-    // eslint-disable-next-line no-console
-    console.error(error);
-  }
+  const createdGig = await prisma.gig.create({
+    data: gig,
+  });
+  return createdGig;
 }
