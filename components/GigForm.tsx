@@ -10,18 +10,18 @@ import {
   TextInput,
   ActionIcon,
   Text,
-  MultiSelect,
   Stack,
   Box,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
-import { Genre, Place } from "@prisma/client";
+import { Band, Genre, Place } from "@prisma/client";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import { IconTrash } from "@tabler/icons-react";
 import { FormEvent } from "react";
 import { useSession } from "next-auth/react";
-
-const MAX_GENRES_NB = 3;
+import GenreSelect from "./GenreSelect";
+import { MAX_GENRES_PER_BAND } from "../domain/constants";
+import { createGig } from "../domain/Gig/Gig.webService";
 
 type Props = {
   genres: Genre[];
@@ -29,9 +29,15 @@ type Props = {
 };
 
 type AddGigValues = {
-  date?: Date;
+  date: Date;
   place?: Place["id"];
-  bands: Array<Omit<BandWithGenres, "id"> & { key: string }>;
+  bands: Array<
+    Omit<Band, "id" | "genres"> & {
+      id?: BandWithGenres["id"] | undefined;
+      key: string;
+      genres: Array<Genre["id"]>;
+    }
+  >;
 };
 
 const getNewBand = () => ({ name: "", genres: [], key: randomId() });
@@ -54,13 +60,45 @@ export default function GigForm({ genres, places }: Props) {
     validateInputOnBlur: true,
   });
 
-  const handleOnSubmit = (e: FormEvent) => {
+  const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const { values } = form;
-    // eslint-disable-next-line no-console
-    console.log(values, session?.user);
+    const { user } = session || {};
 
-    // TODO: create Gig... but can't use createGig() on client side
+    if (user && values) {
+      const { bands, place } = values;
+
+      const toConnectBands = bands
+        .filter((b) => !!b.id)
+        .map((b) => ({ id: b.id }));
+      const toCreateBands = bands
+        .filter((b) => !b.id)
+        .map((b) => ({
+          name: b.name,
+          genres: {
+            connect: b.genres.map((g) => ({ id: g })),
+          },
+        }));
+      await createGig({
+        ...values,
+        author: {
+          connect: {
+            id: user.id,
+          },
+        },
+        bands: {
+          ...(toConnectBands?.length > 0 ? { connect: toConnectBands } : {}),
+          ...(toCreateBands?.length > 0 ? { create: toCreateBands } : {}),
+        },
+        place: {
+          connect: {
+            id: place,
+          },
+        },
+        title: null,
+        description: null,
+      });
+    }
   };
 
   return (
@@ -98,18 +136,15 @@ export default function GigForm({ genres, places }: Props) {
             {...form.getInputProps(`bands.${index}.name`)}
           />
 
-          <MultiSelect
+          <GenreSelect
             label={index === 0 ? "Genre(s) (3 max)" : ""}
             withAsterisk
-            searchable
-            maxValues={MAX_GENRES_NB}
-            data={genres.map((genre) => ({
-              value: genre.id,
-              label: genre.name,
-            }))}
+            maxValues={MAX_GENRES_PER_BAND}
+            genres={genres}
             style={{ flex: 1 }}
             {...form.getInputProps(`bands.${index}.genres`)}
           />
+
           <Box>
             <div></div>
             <ActionIcon

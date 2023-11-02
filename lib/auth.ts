@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           pseudo: user.pseudo,
+          role: user.role,
         };
       },
     }),
@@ -55,6 +56,7 @@ export const authOptions: NextAuthOptions = {
         populatedToken.pseudo = user?.pseudo;
         // @ts-ignore
         populatedToken.role = user?.role;
+        populatedToken.id = user?.id;
       }
       return populatedToken;
     },
@@ -63,6 +65,7 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           ...session.user,
+          id: token.id,
           pseudo: token.pseudo,
           role: token.rule,
         },

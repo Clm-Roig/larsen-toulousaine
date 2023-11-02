@@ -1,8 +1,10 @@
-import { Gig } from "@prisma/client";
-import prisma from "../../lib/prisma";
-import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
+"use server";
 
-export const getGigs = async (): Promise<GigWithBandsAndPlace[]> => {
+import { Gig, Prisma } from "@prisma/client";
+import prisma from "../../lib/prisma";
+import { GigWithBandsAndPlace } from "./Gig.type";
+
+export async function getGigs(): Promise<GigWithBandsAndPlace[]> {
   const gigs = await prisma.gig.findMany({
     include: {
       place: true,
@@ -14,9 +16,9 @@ export const getGigs = async (): Promise<GigWithBandsAndPlace[]> => {
     },
   });
   return gigs;
-};
+}
 
-export const getGig = async (id: string): Promise<Gig | undefined> => {
+export async function getGig(id: string): Promise<Gig | undefined> {
   const gig = await prisma.gig.findUnique({
     where: {
       id: String(id),
@@ -32,41 +34,20 @@ export const getGig = async (id: string): Promise<Gig | undefined> => {
   });
   if (!gig) return undefined;
   return gig;
-};
+}
 
-export const createGig = async (gig: GigWithAuthor & GigWithBandsAndPlace) => {
+export async function createGig(gig: Prisma.GigCreateInput) {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const createdGig = await prisma.gig.create({
-      data: {
-        ...gig,
-        // Dirty fix to calm down TypeScript
-        authorId: undefined,
-        placeId: undefined,
-        author: {
-          connect: gig.author,
-        },
-        place: {
-          connect: gig.place,
-        },
-        bands: {
-          connectOrCreate: gig.bands.map((band) => ({
-            where: { id: band.id },
-            create: {
-              name: band.name,
-              genres: {
-                connect: band.genres,
-              },
-            },
-          })),
-        },
-      },
+      data: gig,
     });
     // eslint-disable-next-line no-console
     console.log(createdGig);
     return createdGig;
   } catch (error) {
     // eslint-disable-next-line no-console
+    console.error("An error ocurred when trying to create a gig");
+    // eslint-disable-next-line no-console
     console.error(error);
   }
-};
+}
