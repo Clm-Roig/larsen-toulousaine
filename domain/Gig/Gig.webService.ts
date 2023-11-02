@@ -1,7 +1,10 @@
 import prisma from "../../lib/prisma";
 import { Gig } from "./Gig.type";
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const getGigs = async (): Promise<Gig[]> => {
+  await sleep(2000);
   const gigs = await prisma.gig.findMany({
     include: {
       place: true,

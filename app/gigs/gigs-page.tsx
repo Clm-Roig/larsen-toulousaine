@@ -1,24 +1,14 @@
-"use client";
-
-import React from "react";
-import Layout from "../../components/Layout";
-import { Box, Title } from "@mantine/core";
-import { Gig as GigType } from "../../domain/Gig/Gig.type";
 import GigList from "../../components/GigList";
+import { getGigs } from "../../domain/Gig/Gig.webService";
 
-type Props = {
-  gigs: GigType[];
-};
-
-const Gigs = ({ gigs }: Props) => {
+export default async function GigsPage() {
+  const gigs = await getGigs();
   return (
-    <Layout>
-      <Title order={2}>Tous les concerts</Title>
-      <Box>
-        <GigList gigs={gigs} />
-      </Box>
-    </Layout>
+    <GigList
+      gigs={gigs.sort(
+        (gig1, gig2) =>
+          new Date(gig1.date).getTime() - new Date(gig2.date).getTime(),
+      )}
+    />
   );
-};
-
-export default Gigs;
+}

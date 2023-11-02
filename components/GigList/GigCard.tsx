@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Box, Card, Stack, Image, Text, Badge, Group } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
