@@ -23,7 +23,7 @@ const Header: React.FC = () => {
             <Group>
               <Button
                 size="compact-xs"
-                color="secondary"
+                color="primary.3"
                 component={Link}
                 href="/admin"
               >
@@ -31,7 +31,7 @@ const Header: React.FC = () => {
               </Button>
               <Button
                 size="compact-xs"
-                color="secondary"
+                color="primary.3"
                 onClick={handleSignOut}
                 rightSection={<IconLogin2 size={16} />}
               >
