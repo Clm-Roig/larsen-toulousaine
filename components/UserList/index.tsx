@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Table } from "@mantine/core";
-import { User } from "../../domain/User/User.type";
+import { User } from "@prisma/client";
 
 type Props = {
   users: User[];

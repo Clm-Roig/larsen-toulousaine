@@ -1,17 +1,16 @@
-import { Band } from "../Band/Band.type";
-import { Place } from "../Place/Place.type";
+import { Prisma } from "@prisma/client";
 
-export type Gig = {
-  id?: string;
-  title?: string | null;
-  date: string;
-  author?: {
-    pseudo: string;
-    email: string;
-  } | null;
-  bands: Band[];
-  description: string | null;
-  place: Place;
-  createdAt: string;
-  updatedAt: string;
-};
+const gigWithBands = Prisma.validator<Prisma.GigDefaultArgs>()({
+  include: { bands: { include: { genres: true } } },
+});
+const gigWithPlace = Prisma.validator<Prisma.GigDefaultArgs>()({
+  include: { place: true },
+});
+const gigWithAuthor = Prisma.validator<Prisma.GigDefaultArgs>()({
+  include: { author: true },
+});
+export type GigWithBandsAndPlace = Prisma.GigGetPayload<
+  typeof gigWithBands & typeof gigWithPlace
+>;
+
+export type GigWithAuthor = Prisma.GigGetPayload<typeof gigWithAuthor>;

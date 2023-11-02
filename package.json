@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@mantine/core": "^7.1.7",
+    "@mantine/dates": "^7.1.7",
     "@mantine/dropzone": "^7.1.7",
     "@mantine/form": "^7.1.7",
     "@mantine/hooks": "^7.1.7",
@@ -23,6 +24,7 @@
     "@prisma/client": "^5.5.2",
     "@tabler/icons-react": "^2.40.0",
     "bcryptjs": "^2.4.3",
+    "dayjs": "^1.11.10",
     "next": "^14.0.1",
     "next-auth": "^4.24.4",
     "react": "^18.2.0",

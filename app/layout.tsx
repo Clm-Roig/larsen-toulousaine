@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import { theme } from "../theme";
 import { NextAuthProvider } from "./providers";
 

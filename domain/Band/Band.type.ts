@@ -1,7 +1,7 @@
-import { Genre } from "../Genre/Genre.type";
+import { Prisma } from "@prisma/client";
 
-export type Band = {
-  id?: string;
-  name: string;
-  genres: Genre[];
-};
+const bandWithGenres = Prisma.validator<Prisma.BandDefaultArgs>()({
+  include: { genres: true },
+});
+
+export type BandWithGenres = Prisma.BandGetPayload<typeof bandWithGenres>;

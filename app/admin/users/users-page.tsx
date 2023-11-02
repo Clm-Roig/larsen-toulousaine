@@ -4,7 +4,7 @@ import React from "react";
 import Layout from "../../../components/Layout";
 import { Box, Title } from "@mantine/core";
 import UserList from "../../../components/UserList";
-import { User } from "../../../domain/User/User.type";
+import { User } from "@prisma/client";
 
 type Props = {
   users: User[];

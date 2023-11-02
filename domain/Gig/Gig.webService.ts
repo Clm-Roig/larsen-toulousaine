@@ -1,10 +1,8 @@
+import { Gig } from "@prisma/client";
 import prisma from "../../lib/prisma";
-import { Gig } from "./Gig.type";
+import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-export const getGigs = async (): Promise<Gig[]> => {
-  await sleep(2000);
+export const getGigs = async (): Promise<GigWithBandsAndPlace[]> => {
   const gigs = await prisma.gig.findMany({
     include: {
       place: true,
@@ -15,14 +13,7 @@ export const getGigs = async (): Promise<Gig[]> => {
       },
     },
   });
-
-  return gigs.map((gig) => ({
-    ...gig,
-    // TODO: find a better / automatic way to convert dates
-    createdAt: gig.createdAt.toISOString(),
-    date: gig.date.toISOString(),
-    updatedAt: gig.updatedAt.toISOString(),
-  }));
+  return gigs;
 };
 
 export const getGig = async (id: string): Promise<Gig | undefined> => {
@@ -40,11 +31,42 @@ export const getGig = async (id: string): Promise<Gig | undefined> => {
     },
   });
   if (!gig) return undefined;
-  return {
-    ...gig,
-    // TODO: find a better / automatic way to convert dates
-    createdAt: gig?.createdAt.toISOString(),
-    date: gig.date.toISOString(),
-    updatedAt: gig?.updatedAt.toISOString(),
-  };
+  return gig;
+};
+
+export const createGig = async (gig: GigWithAuthor & GigWithBandsAndPlace) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const createdGig = await prisma.gig.create({
+      data: {
+        ...gig,
+        // Dirty fix to calm down TypeScript
+        authorId: undefined,
+        placeId: undefined,
+        author: {
+          connect: gig.author,
+        },
+        place: {
+          connect: gig.place,
+        },
+        bands: {
+          connectOrCreate: gig.bands.map((band) => ({
+            where: { id: band.id },
+            create: {
+              name: band.name,
+              genres: {
+                connect: band.genres,
+              },
+            },
+          })),
+        },
+      },
+    });
+    // eslint-disable-next-line no-console
+    console.log(createdGig);
+    return createdGig;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
 };

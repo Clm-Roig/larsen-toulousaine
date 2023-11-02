@@ -3,14 +3,14 @@
 import React from "react";
 import { Box, Card, Stack, Image, Text, Badge, Group } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
-import { Gig } from "../../domain/Gig/Gig.type";
-import { Genre } from "../../domain/Genre/Genre.type";
 import { getTextColorBasedOnBgColor } from "../../utils/utils";
+import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
+import { Genre } from "@prisma/client";
 
 const DATE_SIZE = 32;
 
 type Props = {
-  gig: Gig;
+  gig: GigWithBandsAndPlace;
 };
 
 const GigCard = ({ gig }: Props) => {

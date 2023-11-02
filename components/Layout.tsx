@@ -35,8 +35,12 @@ const Layout: React.FC<Props> = (props) => {
 
   const breadcrumbsItems = breadcrumbs.map((item, index) => (
     <Anchor href={item.href} key={index} component={Link}>
-      {/* TODO: quick dirty fix */}
-      {item.text === "Gigs" ? "Concerts" : item.text}
+      {/* TODO: quick dirty fixes */}
+      {item.text === "Gigs"
+        ? "Concerts"
+        : item.text === "AddGig"
+        ? "Ajouter un concert"
+        : item.text}
     </Anchor>
   ));
 

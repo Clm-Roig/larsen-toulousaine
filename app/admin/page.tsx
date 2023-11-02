@@ -25,7 +25,7 @@ export default function Admin() {
             <Card
               component={Link}
               href="/admin/users"
-              w={180}
+              w={190}
               p="md"
               withBorder
             >
@@ -35,10 +35,16 @@ export default function Admin() {
               </Stack>
             </Card>
 
-            <Card component={Link} href="#" w={180} p="md" withBorder>
+            <Card
+              component={Link}
+              href="/admin/addGig"
+              w={190}
+              p="md"
+              withBorder
+            >
               <Stack align="center" gap="xs">
                 <IconPlus size={32} />
-                <Text ta="center">Ajouter un concert (bientôt...)</Text>
+                <Text ta="center">Ajouter un concert</Text>
               </Stack>
             </Card>
           </Flex>

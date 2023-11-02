@@ -1,9 +1,9 @@
 import GigCard from "./GigCard";
-import { Gig as GigType } from "../../domain/Gig/Gig.type";
 import { SimpleGrid, Box } from "@mantine/core";
+import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 
 type Props = {
-  gigs: GigType[];
+  gigs: GigWithBandsAndPlace[];
 };
 
 const GigList = ({ gigs }: Props) => {
