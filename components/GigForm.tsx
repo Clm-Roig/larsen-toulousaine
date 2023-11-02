@@ -7,22 +7,23 @@ import {
   Group,
   Select,
   Divider,
-  TextInput,
   ActionIcon,
   Text,
   Stack,
   Box,
+  TextInput,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Band, Genre, Place } from "@prisma/client";
 import { notifications } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { useSession } from "next-auth/react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
 import { MAX_GENRES_PER_BAND } from "../domain/constants";
 import { createGig } from "../domain/Gig/Gig.webService";
+import { searchBandsByName } from "../domain/Band/Band.webService";
 
 type Props = {
   genres: Genre[];
@@ -41,16 +42,27 @@ type AddGigValues = {
   >;
 };
 
+type BandSuggestion = {
+  label: string;
+  value: BandWithGenres;
+};
+
+const NB_CHAR_TO_LAUNCH_BAND_SEARCH = 2;
+
 const getNewBand = () => ({ name: "", genres: [], key: randomId() });
 
 export default function GigForm({ genres, places }: Props) {
   const { data: session } = useSession();
+  const [suggestions, setSuggestions] = useState<BandSuggestion[]>([]);
+  const [searchedBandInput, setSearchedBandInput] = useState("");
+  const [isLoadingBandSuggestions, setIsLoadingBandSuggestions] =
+    useState(false);
 
   const form = useForm<AddGigValues>({
     initialValues: {
       date: new Date(),
       place: undefined,
-      bands: [getNewBand()],
+      bands: [],
     },
     validate: {
       date: (value) => (value ? null : "La date du concert est requise."),
@@ -58,12 +70,46 @@ export default function GigForm({ genres, places }: Props) {
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
         genres: (value) => {
-          return value.length > 0 ? null : "Au moins un genre est requis.";
+          return value?.length > 0 ? null : "Au moins un genre est requis.";
         },
       },
     },
     validateInputOnBlur: true,
   });
+
+  const handleOnSearchBandChange = async (value: string) => {
+    setSearchedBandInput(value);
+    let newSuggestions: BandSuggestion[] = [];
+    if (value && value.length >= 2) {
+      setSuggestions([]);
+      setIsLoadingBandSuggestions(true);
+      newSuggestions = (await searchBandsByName(value))
+        .filter((band) =>
+          form.values.bands.every(
+            (selectedBand) => selectedBand.id !== band.id,
+          ),
+        )
+        .map((band) => ({
+          label: band.name,
+          value: band,
+        }));
+      setIsLoadingBandSuggestions(false);
+    }
+    setSuggestions(newSuggestions);
+  };
+
+  const handleOnSelectBand = (bandId: string) => {
+    const foundBand = suggestions.find((s) => s.value.id === bandId)?.value;
+    if (foundBand) {
+      form.insertListItem(`bands`, {
+        ...foundBand,
+        genres: foundBand?.genres.map((g) => g.id),
+        key: foundBand?.id,
+      });
+      setSuggestions([]);
+    }
+    setSearchedBandInput("");
+  };
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -141,16 +187,40 @@ export default function GigForm({ genres, places }: Props) {
 
       <Text>Groupes</Text>
 
+      <Select
+        label={"Chercher un groupe existant"}
+        searchable
+        required
+        withCheckIcon={false}
+        data={
+          suggestions.map((s) => ({
+            label: s.label,
+            value: s.value.id,
+          })) || []
+        }
+        searchValue={searchedBandInput}
+        onSearchChange={handleOnSearchBandChange}
+        onOptionSubmit={handleOnSelectBand}
+        nothingFoundMessage={
+          isLoadingBandSuggestions
+            ? "Chargement..."
+            : searchedBandInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
+            ? "Groupe non-référencé ou déjà sélectionné pour ce concert"
+            : ""
+        }
+      />
+
       {form.values.bands.map((band, index) => (
         <Group
           h={index === 0 ? 80 : 60}
-          key={band.key}
+          key={band.id || band.key}
           mt="xs"
           style={{ alignItems: "flex-start" }}
         >
           <TextInput
             label={index === 0 ? "Nom du groupe" : ""}
             required
+            disabled={!!form.values.bands[index].id}
             {...form.getInputProps(`bands.${index}.name`)}
           />
 
@@ -160,6 +230,7 @@ export default function GigForm({ genres, places }: Props) {
             maxValues={MAX_GENRES_PER_BAND}
             genres={genres}
             style={{ flex: 1 }}
+            disabled={!!form.values.bands[index].id}
             {...form.getInputProps(`bands.${index}.genres`)}
           />
 
@@ -170,7 +241,6 @@ export default function GigForm({ genres, places }: Props) {
           >
             <ActionIcon
               color="red"
-              disabled={form.values.bands.length === 1}
               onClick={() => form.removeListItem("bands", index)}
               size="lg"
             >
@@ -181,8 +251,11 @@ export default function GigForm({ genres, places }: Props) {
       ))}
 
       <Group justify="center" mt="md">
-        <Button onClick={() => form.insertListItem("bands", getNewBand())}>
-          Ajouter un groupe
+        <Button
+          variant="outline"
+          onClick={() => form.insertListItem("bands", getNewBand())}
+        >
+          Ajouter un nouveau groupe
         </Button>
       </Group>
 
