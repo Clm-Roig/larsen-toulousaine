@@ -1,8 +1,8 @@
 "use server";
 
-import { Gig, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
-import { GigWithBandsAndPlace } from "./Gig.type";
+import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
 
 export async function getGigs(): Promise<GigWithBandsAndPlace[]> {
   const gigs = await prisma.gig.findMany({
@@ -18,12 +18,15 @@ export async function getGigs(): Promise<GigWithBandsAndPlace[]> {
   return gigs;
 }
 
-export async function getGig(id: string): Promise<Gig | undefined> {
+export async function getGig(
+  id: string,
+): Promise<(GigWithBandsAndPlace & GigWithAuthor) | undefined> {
   const gig = await prisma.gig.findUnique({
     where: {
       id: String(id),
     },
     include: {
+      author: true,
       place: true,
       bands: {
         include: {

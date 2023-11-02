@@ -1,10 +1,13 @@
 import React from "react";
 import Layout from "../../../components/Layout";
 import { Text } from "@mantine/core";
-import { Gig } from "../../../domain/Gig/Gig.type";
+import {
+  GigWithAuthor,
+  GigWithBandsAndPlace,
+} from "../../../domain/Gig/Gig.type";
 
 type Props = {
-  gig: Gig;
+  gig: GigWithBandsAndPlace & GigWithAuthor;
 };
 
 const GigPage = ({ gig }: Props) => {
