@@ -12,10 +12,10 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppShell.Header bg="primary" p="xs">
+    <AppShell.Header bg="primary" p="xs" pl="md">
       <Group justify="space-between" h="100%">
-        <Title order={1} size={24}>
-          Décibel Agenda
+        <Title order={1} size={24} style={{ fontFamily: "Garamond" }}>
+          DÉCIBEL
         </Title>
         {status === "authenticated" && (
           <Stack gap={0} align="center">

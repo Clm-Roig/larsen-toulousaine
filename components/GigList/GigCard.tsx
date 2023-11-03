@@ -7,6 +7,8 @@ import { getTextColorBasedOnBgColor } from "../../utils/utils";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 import { Genre } from "@prisma/client";
 import { CARD_WIDTH } from "./constants";
+import dayjs from "dayjs";
+require("dayjs/locale/fr");
 
 const DATE_SIZE = 32;
 
@@ -17,7 +19,7 @@ type Props = {
 const GigCard = ({ gig }: Props) => {
   const theme = useMantineTheme();
   const { bands, date: rawDate, place } = gig;
-  const bandNames = bands.map((b) => b.name).join(" - ");
+  const bandNames = bands.map((b) => b.name).join(" | ");
   const bandGenres = bands.reduce((uniqueGenres: Genre[], band) => {
     const newGenres = band.genres.filter((genre) =>
       uniqueGenres.every((uniqueGenre) => uniqueGenre.id !== genre.id),
@@ -28,7 +30,7 @@ const GigCard = ({ gig }: Props) => {
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={380}>
+    <Card shadow="md" h={360}>
       <Card.Section>
         <Image
           src={gig.imageUrl ?? null}
@@ -41,7 +43,7 @@ const GigCard = ({ gig }: Props) => {
       </Card.Section>
 
       <Box
-        w={DATE_SIZE * 2}
+        w={DATE_SIZE * 3}
         h={DATE_SIZE}
         pos="absolute"
         left={0}
@@ -54,22 +56,21 @@ const GigCard = ({ gig }: Props) => {
       >
         <Text
           h={DATE_SIZE}
-          w={DATE_SIZE * 2}
+          w={DATE_SIZE * 3}
           lh={DATE_SIZE + "px"}
           fw="bold"
           c={"white"}
         >
-          {(date.getDate() + "").padStart(2, "0")}/
-          {(date.getMonth() + 1 + "").padStart(2, "0")}
+          {dayjs(date).locale("fr").format("ddd DD/MM")}
         </Text>
       </Box>
 
       <Stack justify="space-between" mt="md" gap="xs" dir="col" h="100%">
         <Stack gap="xs">
-          <Text fw="bold" lineClamp={2}>
+          <Text fw="bold" lineClamp={2} lh={1.25}>
             {bandNames}
           </Text>
-          <Group gap="xs">
+          <Group gap={4}>
             {bandGenres.map((genre) => (
               <Badge
                 key={genre?.id}

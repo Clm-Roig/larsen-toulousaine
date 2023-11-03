@@ -9,7 +9,7 @@ import { Notifications } from "@mantine/notifications";
 import { DatesProvider } from "@mantine/dates";
 
 export const metadata: Metadata = {
-  title: "Décibel Agenda",
+  title: "Décibel",
   description: "Votre agenda metal à Toulouse",
 };
 

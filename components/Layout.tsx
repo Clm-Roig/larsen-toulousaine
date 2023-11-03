@@ -51,6 +51,7 @@ const Layout: React.FC<Props> = (props) => {
       footer={{ height: 42 }}
       padding="md"
       layout="alt"
+      bg="#efefef"
     >
       <AppShell.Header>
         <Header />
