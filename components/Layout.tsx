@@ -45,7 +45,12 @@ const Layout: React.FC<Props> = (props) => {
   ));
 
   return (
-    <AppShell header={{ height: 64 }} padding="md">
+    <AppShell
+      header={{ height: 64 }}
+      footer={{ height: 42 }}
+      padding="md"
+      layout="alt"
+    >
       <AppShell.Header>
         <Header />
       </AppShell.Header>
