@@ -1,21 +1,76 @@
+"use client";
+
 import GigCard from "./GigCard";
-import { SimpleGrid, Box } from "@mantine/core";
+import {
+  SimpleGrid,
+  Box,
+  Loader,
+  Text,
+  Center,
+  ActionIcon,
+  Group,
+} from "@mantine/core";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 import { CARD_WIDTH } from "./constants";
+import dayjs from "dayjs";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { capitalize } from "../../utils/utils";
+require("dayjs/locale/fr");
 
 type Props = {
-  gigs: GigWithBandsAndPlace[];
+  gigs?: GigWithBandsAndPlace[];
+  isLoading: boolean;
+  monthDate: Date;
+  setMonthDate: (monthDate: Date) => void;
 };
 
-const GigList = ({ gigs }: Props) => {
+const GigList = ({ gigs, isLoading, monthDate, setMonthDate }: Props) => {
+  const incrementMonth = () => {
+    setMonthDate(dayjs(monthDate).add(1, "month").toDate());
+  };
+  const decrementMonth = () => {
+    setMonthDate(dayjs(monthDate).subtract(1, "month").toDate());
+  };
+
   return (
-    <SimpleGrid cols={{ xs: 2, sm: 2, md: 3, lg: 4, xl: 5 }}>
-      {gigs.map((gig) => (
-        <Box key={gig.id} maw={CARD_WIDTH}>
-          <GigCard gig={gig} />
-        </Box>
-      ))}
-    </SimpleGrid>
+    <>
+      <Center mb="md">
+        <Group align="center">
+          <ActionIcon onClick={decrementMonth} aria-label="Décrémenter mois">
+            <IconChevronLeft />
+          </ActionIcon>
+          <Text fw="bold">
+            {capitalize(dayjs(monthDate).locale("fr").format("MMMM YYYY"))}
+          </Text>
+          <ActionIcon onClick={incrementMonth} aria-label="Incrémenter mois">
+            <IconChevronRight />
+          </ActionIcon>
+        </Group>
+      </Center>
+      {isLoading && (
+        <Center>
+          <Loader />
+        </Center>
+      )}
+      {!isLoading && !!gigs && (
+        <>
+          {gigs.length > 0 ? (
+            <SimpleGrid cols={{ xs: 2, sm: 2, md: 3, lg: 4, xl: 5 }}>
+              {gigs.length > 0 &&
+                gigs.map((gig) => (
+                  <Box key={gig.id} maw={CARD_WIDTH}>
+                    <GigCard gig={gig} />
+                  </Box>
+                ))}
+            </SimpleGrid>
+          ) : (
+            <Center>
+              <Text size="lg">{`Aucun concert trouvé pour ce mois-ci :(`}</Text>
+            </Center>
+          )}
+        </>
+      )}
+    </>
   );
 };
 

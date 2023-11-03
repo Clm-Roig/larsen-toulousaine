@@ -3,9 +3,18 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
+import dayjs from "dayjs";
 
-export async function getGigs(): Promise<GigWithBandsAndPlace[]> {
+export async function getGigs(
+  monthDate = new Date(),
+): Promise<GigWithBandsAndPlace[]> {
   const gigs = await prisma.gig.findMany({
+    where: {
+      date: {
+        gte: dayjs(monthDate).startOf("month").toDate(),
+        lte: dayjs(monthDate).endOf("month").toDate(),
+      },
+    },
     include: {
       place: true,
       bands: {

@@ -5,6 +5,7 @@ import Header from "./Header";
 import { Anchor, AppShell, Box, Breadcrumbs, Text, Stack } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { capitalize } from "../utils/utils";
 
 type Props = {
   children: ReactNode;
@@ -24,7 +25,7 @@ const Layout: React.FC<Props> = (props) => {
         const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
         return {
           href,
-          text: subpath.charAt(0).toUpperCase() + subpath.slice(1),
+          text: capitalize(subpath),
         };
       });
 

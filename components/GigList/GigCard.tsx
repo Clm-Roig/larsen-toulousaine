@@ -28,7 +28,7 @@ const GigCard = ({ gig }: Props) => {
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={350}>
+    <Card shadow="md" h={380}>
       <Card.Section>
         <Image
           src={gig.imageUrl ?? null}
@@ -59,7 +59,8 @@ const GigCard = ({ gig }: Props) => {
           fw="bold"
           c={"white"}
         >
-          {date.getDate()}/{(date.getMonth() + 1 + "").padStart(2, "0")}
+          {(date.getDate() + "").padStart(2, "0")}/
+          {(date.getMonth() + 1 + "").padStart(2, "0")}
         </Text>
       </Box>
 

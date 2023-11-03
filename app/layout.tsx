@@ -6,6 +6,7 @@ import "@mantine/dates/styles.css";
 import { theme } from "../theme";
 import { NextAuthProvider } from "./providers";
 import { Notifications } from "@mantine/notifications";
+import { DatesProvider } from "@mantine/dates";
 
 export const metadata: Metadata = {
   title: "Décibel Agenda",
@@ -27,8 +28,11 @@ export default function RootLayout({
       <body>
         <NextAuthProvider>
           <MantineProvider theme={theme}>
-            <Notifications />
-            {children}
+            {/* Changing the locale to "fr" doesn't seem to work... */}
+            <DatesProvider settings={{ locale: "fr" }}>
+              <Notifications />
+              {children}
+            </DatesProvider>
           </MantineProvider>
         </NextAuthProvider>
       </body>
