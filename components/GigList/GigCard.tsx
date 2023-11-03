@@ -6,6 +6,7 @@ import { useMantineTheme } from "@mantine/core";
 import { getTextColorBasedOnBgColor } from "../../utils/utils";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 import { Genre } from "@prisma/client";
+import { CARD_WIDTH } from "./constants";
 
 const DATE_SIZE = 32;
 
@@ -27,15 +28,15 @@ const GigCard = ({ gig }: Props) => {
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={320}>
+    <Card shadow="md" h={350}>
       <Card.Section>
         <Image
-          src={
-            "https://picsum.photos/id/" +
-            Math.floor(Math.random() * 50) +
-            "/500/250"
-          }
+          src={gig.imageUrl ?? null}
+          h={(CARD_WIDTH * 9) / 16}
           alt={"Concert " + bandNames}
+          fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
+            (CARD_WIDTH * 9) / 16,
+          )}?text=.`}
         />
       </Card.Section>
 

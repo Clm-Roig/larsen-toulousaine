@@ -32,6 +32,7 @@ model Gig {
   updatedAt   DateTime @updatedAt @map(name: "updated_at")
   place       Place    @relation(fields: [placeId], references: [id])
   placeId     String
+  imageUrl    String?
 }
 
 model User {

@@ -12,6 +12,7 @@ import {
   Stack,
   Box,
   TextInput,
+  Image,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Band, Genre, Place } from "@prisma/client";
@@ -24,6 +25,7 @@ import GenreSelect from "./GenreSelect";
 import { MAX_GENRES_PER_BAND } from "../domain/constants";
 import { createGig } from "../domain/Gig/Gig.webService";
 import BandSelect from "./BandSelect";
+import { isValidUrl } from "../utils/utils";
 
 type Props = {
   genres: Genre[];
@@ -32,6 +34,7 @@ type Props = {
 
 type AddGigValues = {
   date: Date;
+  imageUrl?: string;
   place?: Place["id"];
   bands: Array<
     Omit<Band, "id" | "genres"> & {
@@ -49,12 +52,15 @@ export default function GigForm({ genres, places }: Props) {
 
   const form = useForm<AddGigValues>({
     initialValues: {
+      imageUrl: undefined,
       date: new Date(),
       place: undefined,
       bands: [],
     },
     validate: {
       date: (value) => (value ? null : "La date du concert est requise."),
+      imageUrl: (value) =>
+        !value || isValidUrl(value) ? null : "L'URL fournie n'est pas valide.",
       place: (value) => (value ? null : "Le lieu du concert est requis."),
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
@@ -197,7 +203,7 @@ export default function GigForm({ genres, places }: Props) {
         </Group>
       ))}
 
-      <Group justify="center" mt="md">
+      <Group justify="center" mt="sm">
         <Button
           variant="outline"
           onClick={() => form.insertListItem("bands", getNewBand())}
@@ -205,6 +211,25 @@ export default function GigForm({ genres, places }: Props) {
           Ajouter un nouveau groupe
         </Button>
       </Group>
+
+      <Divider my="md" />
+
+      <TextInput
+        label="URL de l'affiche du concert"
+        description="URL de l'image de couverture de l'évènement Facebook (Clic droit sur l'image > Copier le lien de l'image) ou image au ratio 16/9"
+        {...form.getInputProps("imageUrl")}
+      />
+
+      {isValidUrl(form.values.imageUrl) && (
+        <Image
+          mah={200}
+          maw={(200 * 16) / 9}
+          src={form.values.imageUrl}
+          alt="Affiche du concert"
+          m={"auto"}
+          mt={"sm"}
+        />
+      )}
 
       <Group justify="flex-end" mt="md">
         <Button type="submit">Ajouter le concert</Button>
