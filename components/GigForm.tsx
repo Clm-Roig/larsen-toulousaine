@@ -18,7 +18,7 @@ import DatePickerInput from "./DatePickerInput";
 import { Band, Genre, Place } from "@prisma/client";
 import { notifications } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { useSession } from "next-auth/react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
@@ -33,9 +33,9 @@ type Props = {
 };
 
 type AddGigValues = {
-  date: Date;
+  date: Date | null;
   imageUrl?: string;
-  place?: Place["id"];
+  place: Place["id"] | null;
   bands: Array<
     Omit<Band, "id" | "genres"> & {
       id?: BandWithGenres["id"] | undefined;
@@ -48,13 +48,14 @@ type AddGigValues = {
 const getNewBand = () => ({ name: "", genres: [], key: randomId() });
 
 export default function GigForm({ genres, places }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
   const form = useForm<AddGigValues>({
     initialValues: {
-      imageUrl: undefined,
-      date: new Date(),
-      place: undefined,
+      imageUrl: "",
+      date: null,
+      place: null,
       bands: [],
     },
     validate: {
@@ -82,12 +83,12 @@ export default function GigForm({ genres, places }: Props) {
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     const { values } = form;
+    const { date, bands, place } = values;
     const { user } = session || {};
 
-    if (user && values) {
-      const { bands, place } = values;
-
+    if (user && values && date && place) {
       const toConnectBands = bands
         .filter((b) => !!b.id)
         .map((b) => ({ id: b.id }));
@@ -102,6 +103,7 @@ export default function GigForm({ genres, places }: Props) {
       try {
         await createGig({
           ...values,
+          date: date,
           author: {
             connect: {
               id: user.id,
@@ -119,12 +121,19 @@ export default function GigForm({ genres, places }: Props) {
           title: null,
           description: null,
         });
+        form.reset();
+        notifications.show({
+          color: "green",
+          message: "Concert ajouté avec succès !",
+        });
       } catch (error) {
         notifications.show({
           color: "red",
           title: "Erreur à la création d'un concert",
           message: error.message,
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -216,7 +225,7 @@ export default function GigForm({ genres, places }: Props) {
 
       <TextInput
         label="URL de l'affiche du concert"
-        description="URL de l'image de couverture de l'évènement Facebook (Clic droit sur l'image > Copier le lien de l'image) ou image au ratio 16/9"
+        description="URL de l'image de couverture de l'évènement Facebook (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio 16/9."
         {...form.getInputProps("imageUrl")}
       />
 
@@ -232,7 +241,9 @@ export default function GigForm({ genres, places }: Props) {
       )}
 
       <Group justify="flex-end" mt="md">
-        <Button type="submit">Ajouter le concert</Button>
+        <Button loading={isLoading} type="submit">
+          Ajouter le concert
+        </Button>
       </Group>
     </form>
   );
