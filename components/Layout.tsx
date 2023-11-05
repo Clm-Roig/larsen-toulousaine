@@ -54,7 +54,14 @@ const Layout: React.FC<Props> = (props) => {
   ));
 
   return (
-    <AppShell header={{ height: 64 }} padding="md" layout="alt" bg="#efefef">
+    <AppShell
+      header={{ height: 64 }}
+      // Hardcoded height values according to footer content.
+      footer={{ height: { base: 64, xs: 42 } }}
+      padding="md"
+      layout="alt"
+      bg="#efefef"
+    >
       <AppShell.Header>
         <Header />
       </AppShell.Header>
