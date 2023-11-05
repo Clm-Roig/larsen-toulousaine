@@ -40,13 +40,21 @@ const GigList = ({
     <>
       <Center mb="md">
         <Group align="center">
-          <ActionIcon onClick={decrementMonth} aria-label="Décrémenter mois">
+          <ActionIcon
+            onClick={decrementMonth}
+            aria-label="Décrémenter mois"
+            size="lg"
+          >
             <IconChevronLeft />
           </ActionIcon>
-          <Text fw="bold">
+          <Text fw="bold" w={130} ta="center">
             {capitalize(dayjs(selectedMonth).locale("fr").format("MMMM YYYY"))}
           </Text>
-          <ActionIcon onClick={incrementMonth} aria-label="Incrémenter mois">
+          <ActionIcon
+            onClick={incrementMonth}
+            aria-label="Incrémenter mois"
+            size="lg"
+          >
             <IconChevronRight />
           </ActionIcon>
         </Group>

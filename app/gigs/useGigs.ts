@@ -54,6 +54,7 @@ export default function useGigs() {
   };
 
   return {
+    isLoading: monthGigs?.isLoading || false,
     selectedMonth: new Date(selectedMonth),
     setSelectedMonth,
     sortedMonthGigs,
