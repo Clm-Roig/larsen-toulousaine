@@ -13,6 +13,7 @@ import {
   getUniqueBandGenres,
 } from "../../domain/Band/Band.service";
 import { getGigImgHeight } from "../../domain/image";
+import { getGenreColor } from "../../domain/Genre/Genre.service";
 require("dayjs/locale/fr");
 
 const DATE_SIZE = 32;
@@ -74,9 +75,9 @@ const GigCard = ({ gig }: Props) => {
             {bandGenres.map((genre) => (
               <Badge
                 key={genre?.id}
-                color={genre.color}
+                color={getGenreColor(genre)}
                 style={{
-                  color: getTextColorBasedOnBgColor(genre.color),
+                  color: getTextColorBasedOnBgColor(getGenreColor(genre)),
                 }}
               >
                 {genre.name}

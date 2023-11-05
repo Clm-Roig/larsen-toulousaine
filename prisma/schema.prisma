@@ -50,10 +50,10 @@ model User {
 }
 
 model Genre {
-  id    String @id @default(cuid())
-  name  String @unique
+  id    String  @id @default(cuid())
+  name  String  @unique
   bands Band[]
-  color String @unique
+  color String? @unique
 }
 
 model Place {

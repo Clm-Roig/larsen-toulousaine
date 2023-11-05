@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import { capitalize, getTextColorBasedOnBgColor } from "../../../utils/utils";
 import ExternalLink from "../../../components/ExternalLink";
 import { getGigImgWidth } from "../../../domain/image";
+import { getGenreColor } from "../../../domain/Genre/Genre.service";
 require("dayjs/locale/fr");
 
 type Props = {
@@ -57,9 +58,9 @@ const GigPage = ({ gig }: Props) => {
                 {band.genres.map((genre) => (
                   <Badge
                     key={genre?.id}
-                    color={genre.color}
+                    color={getGenreColor(genre)}
                     style={{
-                      color: getTextColorBasedOnBgColor(genre.color),
+                      color: getTextColorBasedOnBgColor(getGenreColor(genre)),
                     }}
                   >
                     {genre.name}
