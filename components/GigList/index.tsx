@@ -20,16 +20,21 @@ require("dayjs/locale/fr");
 type Props = {
   gigs?: GigWithBandsAndPlace[];
   isLoading: boolean;
-  monthDate: Date;
-  setMonthDate: (monthDate: Date) => void;
+  selectedMonth: Date;
+  setSelectedMonth: (monthDate: Date) => void;
 };
 
-const GigList = ({ gigs, isLoading, monthDate, setMonthDate }: Props) => {
+const GigList = ({
+  gigs,
+  isLoading,
+  selectedMonth,
+  setSelectedMonth,
+}: Props) => {
   const incrementMonth = () => {
-    setMonthDate(dayjs(monthDate).add(1, "month").toDate());
+    setSelectedMonth(dayjs(selectedMonth).add(1, "month").toDate());
   };
   const decrementMonth = () => {
-    setMonthDate(dayjs(monthDate).subtract(1, "month").toDate());
+    setSelectedMonth(dayjs(selectedMonth).subtract(1, "month").toDate());
   };
 
   return (
@@ -40,7 +45,7 @@ const GigList = ({ gigs, isLoading, monthDate, setMonthDate }: Props) => {
             <IconChevronLeft />
           </ActionIcon>
           <Text fw="bold">
-            {capitalize(dayjs(monthDate).locale("fr").format("MMMM YYYY"))}
+            {capitalize(dayjs(selectedMonth).locale("fr").format("MMMM YYYY"))}
           </Text>
           <ActionIcon onClick={incrementMonth} aria-label="Incrémenter mois">
             <IconChevronRight />
