@@ -5,9 +5,14 @@ import { Box, Card, Stack, Image, Text, Badge, Group } from "@mantine/core";
 import { useMantineTheme } from "@mantine/core";
 import { getTextColorBasedOnBgColor } from "../../utils/utils";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
-import { Genre } from "@prisma/client";
 import { CARD_WIDTH } from "./constants";
 import dayjs from "dayjs";
+import Link from "next/link";
+import {
+  getBandNames,
+  getUniqueBandGenres,
+} from "../../domain/Band/Band.service";
+import { getGigImgHeight } from "../../domain/image";
 require("dayjs/locale/fr");
 
 const DATE_SIZE = 32;
@@ -19,25 +24,20 @@ type Props = {
 const GigCard = ({ gig }: Props) => {
   const theme = useMantineTheme();
   const { bands, date: rawDate, place } = gig;
-  const bandNames = bands.map((b) => b.name).join(" | ");
-  const bandGenres = bands.reduce((uniqueGenres: Genre[], band) => {
-    const newGenres = band.genres.filter((genre) =>
-      uniqueGenres.every((uniqueGenre) => uniqueGenre.id !== genre.id),
-    );
-    return [...uniqueGenres, ...newGenres];
-  }, []);
+  const bandNames = getBandNames(bands);
+  const bandGenres = getUniqueBandGenres(bands);
 
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={360}>
+    <Card shadow="md" h={360} component={Link} href={"/gigs/" + gig.id}>
       <Card.Section>
         <Image
           src={gig.imageUrl ?? null}
-          h={(CARD_WIDTH * 9) / 16}
+          h={getGigImgHeight(CARD_WIDTH)}
           alt={"Concert " + bandNames}
           fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
-            (CARD_WIDTH * 9) / 16,
+            getGigImgHeight(CARD_WIDTH),
           )}?text=.`}
         />
       </Card.Section>

@@ -21,18 +21,19 @@ model Band {
 }
 
 model Gig {
-  id          String   @id @default(cuid())
-  title       String?
-  bands       Band[]
-  date        DateTime
-  description String?
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    String
-  createdAt   DateTime @default(now()) @map(name: "created_at")
-  updatedAt   DateTime @updatedAt @map(name: "updated_at")
-  place       Place    @relation(fields: [placeId], references: [id])
-  placeId     String
-  imageUrl    String?
+  id                    String   @id @default(cuid())
+  title                 String?
+  bands                 Band[]
+  date                  DateTime
+  description           String?
+  author                User     @relation(fields: [authorId], references: [id])
+  authorId              String
+  createdAt             DateTime @default(now()) @map(name: "created_at")
+  updatedAt             DateTime @updatedAt @map(name: "updated_at")
+  place                 Place    @relation(fields: [placeId], references: [id])
+  placeId               String
+  imageUrl              String?
+  ticketReservationLink String?
 }
 
 model User {
