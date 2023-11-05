@@ -61,11 +61,22 @@ export async function getGig(
   return gig;
 }
 
-export async function createGig(gig: Prisma.GigCreateInput) {
+export async function createGig(gig: Omit<Prisma.GigCreateInput, "slug">) {
   const createdGig = await prisma.gig.create({
     data: {
       ...gig,
-      slug: computeGigSlug(gig as never),
+      // @ts-ignore
+      slug: computeGigSlug({
+        ...gig,
+        bands: [
+          // @ts-ignore
+          ...(gig.bands?.connect || []),
+          // @ts-ignore
+          ...(gig.bands?.connectOrCreate || []),
+          // @ts-ignore
+          ...(gig.bands?.create || []),
+        ],
+      }),
     },
   });
   return createdGig;
