@@ -1,13 +1,9 @@
 import { Box, Center, Loader } from "@mantine/core";
 import Layout from "../components/Layout";
 import { Suspense } from "react";
-import Gigs from "./gigs";
-import { getGenres } from "../domain/Genre/Genre.webService";
-import { getPlaces } from "../domain/Place/Place.webService";
+import GigsPage from "@/app/gigs-page";
 
-export default async function Page() {
-  const genres = await getGenres();
-  const places = await getPlaces();
+export default function Page() {
   return (
     <Layout>
       <Box>
@@ -18,7 +14,7 @@ export default async function Page() {
             </Center>
           }
         >
-          <Gigs genres={genres} places={places} />
+          <GigsPage />
         </Suspense>
       </Box>
     </Layout>
