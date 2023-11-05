@@ -46,7 +46,7 @@ const GigList = ({
                 gigs.map((gig) => (
                   <Grid.Col
                     key={gig.id}
-                    span={{ xs: 6, sm: 6, md: 4, lg: 3, xl: 3 }}
+                    span={{ xs: 6, sm: 6, md: 4, lg: 3, xl: 12 / 5 }}
                   >
                     <Box>
                       <GigCard gig={gig} />

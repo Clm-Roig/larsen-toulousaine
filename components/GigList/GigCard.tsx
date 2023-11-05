@@ -34,7 +34,7 @@ const GigCard = ({ gig }: Props) => {
     <Card shadow="md" h={360} component={Link} href={"/gigs/" + gig.id}>
       <Card.Section>
         <Image
-          src={gig.imageUrl ?? null}
+          src={gig.imageUrl}
           h={getGigImgHeight(CARD_WIDTH)}
           alt={"Concert " + bandNames}
           fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
