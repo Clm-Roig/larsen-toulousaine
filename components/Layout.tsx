@@ -5,7 +5,7 @@ import Header from "./Header";
 import { Anchor, AppShell, Box, Breadcrumbs, Text, Stack } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { capitalize } from "../utils/utils";
+import { V_SEPARATOR, capitalize } from "../utils/utils";
 import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 
 type Props = {
@@ -29,7 +29,7 @@ const Layout: React.FC<Props> = (props) => {
         if (subpath.includes("_")) {
           const slugData = getDataFromGigSlug(subpath);
           const { date, bandNames } = slugData;
-          text = date + " - " + bandNames.join(" | ");
+          text = date + " - " + bandNames.join(V_SEPARATOR);
         }
         return {
           href,

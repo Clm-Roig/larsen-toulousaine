@@ -1,8 +1,9 @@
 import { Band, Genre } from "@prisma/client";
 import { BandWithGenres } from "./Band.type";
+import { V_SEPARATOR } from "@/utils/utils";
 
 export function getBandNames(bands: Band[]): string {
-  return bands.map((b) => b.name).join(" | ");
+  return bands.map((b) => b.name).join(V_SEPARATOR);
 }
 
 export function getUniqueBandGenres(bands: BandWithGenres[]): Genre[] {

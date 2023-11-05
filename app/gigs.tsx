@@ -9,7 +9,7 @@ type Props = {
   places: Place[];
 };
 
-export default function Gigs({ genres, places }: Props) {
+export default function Gigs({ genres = [], places = [] }: Props) {
   const { isLoading, monthGigs, selectedMonth, setSelectedMonth } = useGigs();
 
   return (
