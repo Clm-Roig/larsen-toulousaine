@@ -2,11 +2,14 @@ import dayjs from "dayjs";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 import { useCallback, useEffect, useState } from "react";
 import { getGigs } from "../../domain/Gig/Gig.webService";
+import usePreferences from "../../hooks/usePreferences";
 
 export default function useGigs() {
+  const { excludedGenres, selectedPlaces } = usePreferences();
   const [selectedMonth, setSelectedMonth] = useState(
     dayjs(new Date()).startOf("month").toDate().getTime(),
   );
+
   const [gigsByMonth, setGigsByMonth] = useState<
     { monthTime: number; gigs: GigWithBandsAndPlace[]; isLoading: boolean }[]
   >([]);
@@ -48,15 +51,28 @@ export default function useGigs() {
   const monthGigs = gigsByMonth.find((g) => g.monthTime === selectedMonth);
   const sortedMonthGigs = {
     monthTime: monthGigs?.monthTime,
-    gigs: monthGigs?.gigs.sort(
-      (g1, g2) => new Date(g1.date).getTime() - new Date(g2.date).getTime(),
-    ),
+    gigs: monthGigs?.gigs
+      // Genre(s) filtering
+      .filter((gig) =>
+        gig.bands.some((band) =>
+          band.genres.every(
+            (genre) => !excludedGenres?.map((g) => g.id).includes(genre.id),
+          ),
+        ),
+      )
+      // Place(s) filtering
+      .filter((gig) => selectedPlaces?.includes(gig.placeId))
+      .sort(
+        (g1, g2) => new Date(g1.date).getTime() - new Date(g2.date).getTime(),
+      ),
   };
 
   return {
+    excludedGenres: excludedGenres || [],
     isLoading: monthGigs?.isLoading || false,
+    monthGigs: sortedMonthGigs.gigs,
     selectedMonth: new Date(selectedMonth),
+    selectedPlaces: selectedPlaces || [],
     setSelectedMonth,
-    sortedMonthGigs,
   };
 }

@@ -1,63 +1,37 @@
 "use client";
 
 import GigCard from "./GigCard";
-import {
-  Grid,
-  Box,
-  Loader,
-  Text,
-  Center,
-  ActionIcon,
-  Group,
-} from "@mantine/core";
+import { Grid, Box, Loader, Text, Center } from "@mantine/core";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
-import dayjs from "dayjs";
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { capitalize } from "../../utils/utils";
-require("dayjs/locale/fr");
+import ListControls from "./ListControls";
+import { Genre, Place } from "@prisma/client";
 
 type Props = {
+  genres: Genre[];
   gigs?: GigWithBandsAndPlace[];
   isLoading: boolean;
+  places: Place[];
   selectedMonth: Date;
   setSelectedMonth: (monthDate: Date) => void;
 };
 
 const GigList = ({
+  genres,
   gigs,
   isLoading,
+  places,
   selectedMonth,
   setSelectedMonth,
 }: Props) => {
-  const incrementMonth = () => {
-    setSelectedMonth(dayjs(selectedMonth).add(1, "month").toDate());
-  };
-  const decrementMonth = () => {
-    setSelectedMonth(dayjs(selectedMonth).subtract(1, "month").toDate());
-  };
-
   return (
     <>
       <Center mb="md">
-        <Group align="center">
-          <ActionIcon
-            onClick={decrementMonth}
-            aria-label="Décrémenter mois"
-            size="lg"
-          >
-            <IconChevronLeft />
-          </ActionIcon>
-          <Text fw="bold" w={130} ta="center">
-            {capitalize(dayjs(selectedMonth).locale("fr").format("MMMM YYYY"))}
-          </Text>
-          <ActionIcon
-            onClick={incrementMonth}
-            aria-label="Incrémenter mois"
-            size="lg"
-          >
-            <IconChevronRight />
-          </ActionIcon>
-        </Group>
+        <ListControls
+          genres={genres}
+          places={places}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+        />
       </Center>
       {isLoading && (
         <Center>
