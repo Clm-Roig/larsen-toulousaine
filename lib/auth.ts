@@ -53,10 +53,10 @@ export const authOptions: NextAuthOptions = {
       const populatedToken = { ...token };
       if (user) {
         // @ts-ignore
-        populatedToken.pseudo = user?.pseudo;
+        populatedToken.pseudo = user.pseudo;
         // @ts-ignore
-        populatedToken.role = user?.role;
-        populatedToken.id = user?.id;
+        populatedToken.role = user.role;
+        populatedToken.id = user.id;
       }
       return populatedToken;
     },

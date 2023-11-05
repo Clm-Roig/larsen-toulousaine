@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
+import { GigWithBandsAndPlace } from "../domain/Gig/Gig.type";
 import { useCallback, useEffect, useState } from "react";
-import { getGigs } from "../../domain/Gig/Gig.webService";
-import usePreferences from "../../hooks/usePreferences";
+import { getGigs } from "../domain/Gig/Gig.webService";
+import usePreferences from "../hooks/usePreferences";
 
 export default function useGigs() {
   const { excludedGenres, excludedPlaces } = usePreferences();

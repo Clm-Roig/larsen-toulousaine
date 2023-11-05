@@ -1,20 +1,26 @@
-import { Button, Stack, Text } from "@mantine/core";
-import Link from "next/link";
+import { Box, Center, Loader } from "@mantine/core";
 import Layout from "../components/Layout";
+import { Suspense } from "react";
+import Gigs from "./gigs";
+import { getGenres } from "../domain/Genre/Genre.webService";
+import { getPlaces } from "../domain/Place/Place.webService";
 
-const Page = () => {
+export default async function Page() {
+  const genres = await getGenres();
+  const places = await getPlaces();
   return (
     <Layout>
-      <Stack>
-        <Text size="xl">
-          Bienvenue sur Décibel, votre agenda metal à Toulouse !
-        </Text>
-        <Button component={Link} href="/gigs" w="fit-content">
-          Découvrir tous les concerts
-        </Button>
-      </Stack>
+      <Box>
+        <Suspense
+          fallback={
+            <Center h={200}>
+              <Loader />
+            </Center>
+          }
+        >
+          <Gigs genres={genres} places={places} />
+        </Suspense>
+      </Box>
     </Layout>
   );
-};
-
-export default Page;
+}

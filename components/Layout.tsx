@@ -6,6 +6,7 @@ import { Anchor, AppShell, Box, Breadcrumbs, Text, Stack } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { capitalize } from "../utils/utils";
+import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 
 type Props = {
   children: ReactNode;
@@ -22,10 +23,17 @@ const Layout: React.FC<Props> = (props) => {
         .filter((v) => v.length > 0);
 
       const crumblist = asPathNestedRoutes.map((subpath, idx) => {
+        let text = capitalize(subpath);
         const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
+        // Gig slug detection
+        if (subpath.includes("_")) {
+          const slugData = getDataFromGigSlug(subpath);
+          const { date, bandNames } = slugData;
+          text = date + " - " + bandNames.join(" | ");
+        }
         return {
           href,
-          text: capitalize(subpath),
+          text: text,
         };
       });
 
@@ -52,7 +60,7 @@ const Layout: React.FC<Props> = (props) => {
       </AppShell.Header>
 
       <AppShell.Main>
-        <Breadcrumbs mb="sm">{breadcrumbsItems}</Breadcrumbs>
+        <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
         <Box mt={0}>{props.children}</Box>
       </AppShell.Main>
 

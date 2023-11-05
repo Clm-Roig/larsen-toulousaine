@@ -1,7 +1,7 @@
 "use client";
 
 import { Genre, Place } from "@prisma/client";
-import GigList from "../../components/GigList";
+import GigList from "../components/GigList";
 import useGigs from "./useGigs";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   places: Place[];
 };
 
-export default function GigsPage({ genres, places }: Props) {
+export default function Gigs({ genres, places }: Props) {
   const { isLoading, monthGigs, selectedMonth, setSelectedMonth } = useGigs();
 
   return (

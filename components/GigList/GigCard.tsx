@@ -31,7 +31,7 @@ const GigCard = ({ gig }: Props) => {
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={360} component={Link} href={"/gigs/" + gig.id}>
+    <Card shadow="md" h={360} component={Link} href={"/" + gig.slug}>
       <Card.Section>
         <Image
           src={gig.imageUrl}

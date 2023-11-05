@@ -1,0 +1,150 @@
+import { BandWithGenres } from "@/domain/Band/Band.type";
+import { Genre, Place, Role, User } from "@prisma/client";
+
+export const allGenres: Genre[] = [
+  {
+    id: "cloevrdbg0000rmm07m7y9fex",
+    name: "Black Metal",
+    color: "#000000",
+  },
+  {
+    id: "cloevrdbg0001rmm05de24q3u",
+    name: "Deathcore",
+    color: "#f58231",
+  },
+  {
+    id: "cloevrdbg0002rmm0cv5qjc2z",
+    name: "Death Metal",
+    color: "#e6194B",
+  },
+  {
+    id: "cloevrdbg0003rmm0d2ifrs15",
+    name: "Doom Metal",
+    color: "#000075",
+  },
+  {
+    id: "cloevrdbg0004rmm0urjuhjyn",
+    name: "Folk Metal",
+    color: "#3cb44b",
+  },
+  {
+    id: "cloevrdbg0005rmm0yv8ipucp",
+    name: "Grindcore",
+    color: "#9A6324",
+  },
+  {
+    id: "cloevrdbg0006rmm0nndw8anb",
+    name: "Hardcore",
+    color: "#4363d8",
+  },
+  {
+    id: "cloevrdbg0007rmm0n9lhopwb",
+    name: "Heavy Metal",
+    color: "#ffe119",
+  },
+  {
+    id: "cloevrdbg0008rmm0lruqb588",
+    name: "Metal",
+    color: "#911eb4",
+  },
+  {
+    id: "cloevrdbg0009rmm08dxq2krx",
+    name: "Metalcore",
+    color: "#f032e6",
+  },
+  {
+    id: "cloevrdbg000armm0do5q5vtx",
+    name: "Metal Industriel",
+    color: "#a9a9a9",
+  },
+  {
+    id: "cloevrdbg000brmm0l3hjydd5",
+    name: "Metal Progressif",
+    color: "#fffac8",
+  },
+  {
+    id: "cloevrdbg000crmm0r9zwwlv3",
+    name: "Néo Metal",
+    color: "#dcbeff",
+  },
+  {
+    id: "cloevrdbg000drmm0arjlvycg",
+    name: "Post-Metal",
+    color: "#ffd8b1",
+  },
+  {
+    id: "cloevrdbg000ermm022gdf5of",
+    name: "Power Metal",
+    color: "#fabed4",
+  },
+  {
+    id: "cloevrdbg000frmm0ay2c6m8j",
+    name: "Punk",
+    color: "#808000",
+  },
+  {
+    id: "cloevrdbg000grmm0ujq7gx1t",
+    name: "Stoner",
+    color: "#aaffc3",
+  },
+  {
+    id: "cloevrdbg000hrmm047l36o7t",
+    name: "Sludge",
+    color: "#800000",
+  },
+  {
+    id: "cloevrdbg000irmm05rx4sipi",
+    name: "Thrash Metal",
+    color: "#bfef45",
+  },
+  {
+    id: "clolmb2of0000rm6opn38twlv",
+    name: "Heavy Symphonique",
+    color: null,
+  },
+];
+
+export const allBands: BandWithGenres[] = [
+  {
+    id: "cloevz6el0051rmukb32qe4r6",
+    name: "Devolution",
+    genres: [allGenres[2], allGenres[0]],
+  },
+  {
+    id: "cloevz6el0051rmukb32qe59z",
+    name: "Band 2",
+    genres: [allGenres[8], allGenres[10]],
+  },
+  {
+    id: "cloevz8el0051rmukb32qe4r6",
+    name: "Le Groupe 3 Cool",
+    genres: [allGenres[1], allGenres[9], allGenres[14]],
+  },
+];
+
+export const allPlaces: Place[] = [
+  {
+    id: "cloev8798l0051rmukb32qe4r6",
+    name: "La Cave",
+  },
+  {
+    id: "cloevz6el0051rmukb32qzz54s",
+    name: "L'Elixir",
+  },
+  {
+    id: "cloevz785z051rmukb32qe4r6",
+    name: "Le Stadium très grand",
+  },
+];
+
+export const allUsers: User[] = [
+  {
+    id: "cloev879874051rrhyb32qe4r6",
+    pseudo: "User1",
+    email: "user1@email.com",
+    password: " $2a$12$81kqB9DQzGOqQu6DM9rhzeenWCd.ltMu.JeuIzWcxY.BYRpaj51RK",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    role: Role.ADMIN,
+  },
+];

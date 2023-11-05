@@ -1,9 +1,10 @@
 "use server";
 
 import { Prisma } from "@prisma/client";
-import prisma from "../../lib/prisma";
 import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
 import dayjs from "dayjs";
+import prisma from "@/lib/prisma";
+import { computeGigSlug } from "@/domain/Gig/Gig.service";
 
 export async function getGigs(
   from = dayjs(new Date()).startOf("month").toDate(),
@@ -29,11 +30,22 @@ export async function getGigs(
 }
 
 export async function getGig(
-  id: string,
+  idOrSlug: string,
 ): Promise<(GigWithBandsAndPlace & GigWithAuthor) | undefined> {
-  const gig = await prisma.gig.findUnique({
+  const gig = await prisma.gig.findFirst({
     where: {
-      id: String(id),
+      OR: [
+        {
+          id: {
+            equals: idOrSlug,
+          },
+        },
+        {
+          slug: {
+            equals: idOrSlug,
+          },
+        },
+      ],
     },
     include: {
       author: true,
@@ -51,7 +63,10 @@ export async function getGig(
 
 export async function createGig(gig: Prisma.GigCreateInput) {
   const createdGig = await prisma.gig.create({
-    data: gig,
+    data: {
+      ...gig,
+      slug: computeGigSlug(gig as never),
+    },
   });
   return createdGig;
 }
