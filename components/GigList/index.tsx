@@ -2,7 +2,7 @@
 
 import GigCard from "./GigCard";
 import {
-  SimpleGrid,
+  Grid,
   Box,
   Loader,
   Text,
@@ -11,7 +11,6 @@ import {
   Group,
 } from "@mantine/core";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
-import { CARD_WIDTH } from "./constants";
 import dayjs from "dayjs";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { capitalize } from "../../utils/utils";
@@ -60,14 +59,19 @@ const GigList = ({
       {!isLoading && !!gigs && (
         <>
           {gigs.length > 0 ? (
-            <SimpleGrid cols={{ xs: 2, sm: 2, md: 3, lg: 4, xl: 5 }}>
+            <Grid>
               {gigs.length > 0 &&
                 gigs.map((gig) => (
-                  <Box key={gig.id} maw={CARD_WIDTH}>
-                    <GigCard gig={gig} />
-                  </Box>
+                  <Grid.Col
+                    key={gig.id}
+                    span={{ xs: 6, sm: 6, md: 4, lg: 3, xl: 3 }}
+                  >
+                    <Box>
+                      <GigCard gig={gig} />
+                    </Box>
+                  </Grid.Col>
                 ))}
-            </SimpleGrid>
+            </Grid>
           ) : (
             <Center>
               <Text size="lg">{`Aucun concert trouvé pour ce mois-ci :(`}</Text>
