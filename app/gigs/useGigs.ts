@@ -5,7 +5,7 @@ import { getGigs } from "../../domain/Gig/Gig.webService";
 import usePreferences from "../../hooks/usePreferences";
 
 export default function useGigs() {
-  const { excludedGenres, selectedPlaces } = usePreferences();
+  const { excludedGenres, excludedPlaces } = usePreferences();
   const [selectedMonth, setSelectedMonth] = useState(
     dayjs(new Date()).startOf("month").toDate().getTime(),
   );
@@ -61,7 +61,7 @@ export default function useGigs() {
         ),
       )
       // Place(s) filtering
-      .filter((gig) => selectedPlaces?.includes(gig.placeId))
+      .filter((gig) => !excludedPlaces?.includes(gig.placeId))
       .sort(
         (g1, g2) => new Date(g1.date).getTime() - new Date(g2.date).getTime(),
       ),
@@ -72,7 +72,6 @@ export default function useGigs() {
     isLoading: monthGigs?.isLoading || false,
     monthGigs: sortedMonthGigs.gigs,
     selectedMonth: new Date(selectedMonth),
-    selectedPlaces: selectedPlaces || [],
     setSelectedMonth,
   };
 }

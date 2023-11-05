@@ -6,15 +6,15 @@ export default function usePreferences() {
     key: "gigList-excludedGenres",
     defaultValue: [],
   });
-  const [selectedPlaces, setSelectedPlaces] = useLocalStorage<Place["id"][]>({
-    key: "gigList-selectedPlaces",
+  const [excludedPlaces, setExcludedPlaces] = useLocalStorage<Place["id"][]>({
+    key: "gigList-excludedPlaces",
     defaultValue: [],
   });
 
   return {
     excludedGenres: excludedGenres || [],
-    selectedPlaces: selectedPlaces || [],
+    excludedPlaces: excludedPlaces || [],
     setExcludedGenres,
-    setSelectedPlaces,
+    setExcludedPlaces,
   };
 }

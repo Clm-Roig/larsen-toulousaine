@@ -35,9 +35,9 @@ export default function ListControls({
 }: Props) {
   const {
     excludedGenres,
-    selectedPlaces,
+    excludedPlaces,
     setExcludedGenres,
-    setSelectedPlaces,
+    setExcludedPlaces,
   } = usePreferences();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
   const incrementMonth = () => {
@@ -112,22 +112,22 @@ export default function ListControls({
               {places.map((place) => (
                 <Checkbox
                   key={place.id}
-                  checked={selectedPlaces.includes(place.id)}
+                  checked={!excludedPlaces.includes(place.id)}
                   label={place.name}
                   size="xs"
                   onChange={(event) => {
                     const checked = event.currentTarget.checked;
                     if (checked) {
-                      setSelectedPlaces([
-                        ...new Set([...selectedPlaces, place.id]),
-                      ]);
-                    } else {
-                      setSelectedPlaces([
+                      setExcludedPlaces([
                         ...new Set([
-                          ...selectedPlaces.filter(
+                          ...excludedPlaces.filter(
                             (placeId) => placeId !== place.id,
                           ),
                         ]),
+                      ]);
+                    } else {
+                      setExcludedPlaces([
+                        ...new Set([...excludedPlaces, place.id]),
                       ]);
                     }
                   }}
