@@ -1,5 +1,13 @@
 import React from "react";
-import { AppShell, Button, Group, Title, Text, Stack } from "@mantine/core";
+import {
+  AppShell,
+  Button,
+  Group,
+  Title,
+  Text,
+  Stack,
+  ActionIcon,
+} from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { IconLogin2 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -29,14 +37,9 @@ const Header: React.FC = () => {
               >
                 Tableau de bord
               </Button>
-              <Button
-                size="compact-xs"
-                color="primary.3"
-                onClick={handleSignOut}
-                rightSection={<IconLogin2 size={16} />}
-              >
-                Se déconnecter
-              </Button>
+              <ActionIcon size="sm" bg="primary.3" onClick={handleSignOut}>
+                <IconLogin2 />
+              </ActionIcon>
             </Group>
           </Stack>
         )}
