@@ -2,32 +2,23 @@
 
 import { Prisma } from "@prisma/client";
 import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
-import dayjs from "dayjs";
 import prisma from "@/lib/prisma";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
+import api, { getErrorMessage } from "@/lib/axios";
 
-export async function getGigs(
-  from = dayjs(new Date()).startOf("month").toDate(),
-  to = dayjs(new Date()).endOf("month").toDate(),
-): Promise<GigWithBandsAndPlace[]> {
-  const gigs = await prisma.gig.findMany({
-    where: {
-      date: {
-        gte: from,
-        lte: to,
-      },
-    },
-    include: {
-      place: true,
-      bands: {
-        include: {
-          genres: true,
-        },
-      },
-    },
-  });
-  return gigs;
-}
+export const getGigs = async (
+  from: Date,
+  to: Date,
+): Promise<GigWithBandsAndPlace[]> => {
+  try {
+    const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
+      `/gigs?from=${from.toString()}&to=${to.toString()}`,
+    );
+    return response.data.gigs;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
 
 export async function getGig(
   idOrSlug: string,
