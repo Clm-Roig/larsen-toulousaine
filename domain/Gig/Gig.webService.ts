@@ -20,37 +20,18 @@ export const getGigs = async (
   }
 };
 
-export async function getGig(
+export const getGig = async (
   idOrSlug: string,
-): Promise<(GigWithBandsAndPlace & GigWithAuthor) | undefined> {
-  const gig = await prisma.gig.findFirst({
-    where: {
-      OR: [
-        {
-          id: {
-            equals: idOrSlug,
-          },
-        },
-        {
-          slug: {
-            equals: idOrSlug,
-          },
-        },
-      ],
-    },
-    include: {
-      author: true,
-      place: true,
-      bands: {
-        include: {
-          genres: true,
-        },
-      },
-    },
-  });
-  if (!gig) return undefined;
-  return gig;
-}
+): Promise<(GigWithBandsAndPlace & GigWithAuthor) | null> => {
+  try {
+    const response = await api.get<
+      (GigWithBandsAndPlace & GigWithAuthor) | undefined
+    >(`/gigs/${encodeURIComponent(idOrSlug)}`);
+    return response.data ?? null;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
 
 export async function createGig(gig: Omit<Prisma.GigCreateInput, "slug">) {
   const createdGig = await prisma.gig.create({
