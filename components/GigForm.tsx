@@ -27,8 +27,8 @@ import { createGig } from "../domain/Gig/Gig.webService";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
-import { useQuery } from "react-query";
 import { getGenres } from "@/domain/Genre/Genre.webService";
+import { useQuery } from "@tanstack/react-query";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 

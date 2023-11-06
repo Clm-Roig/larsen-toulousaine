@@ -5,8 +5,8 @@ import Layout from "../../../components/Layout";
 import { Alert, Skeleton, Title } from "@mantine/core";
 import UserList from "../../../components/UserList";
 import { getUsers } from "@/domain/User/User.webService";
-import { useQuery } from "react-query";
 import { User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
 
 const Users = () => {
   const {
