@@ -31,4 +31,12 @@ export const theme = createTheme({
   },
   fontFamily: "sans-serif",
   primaryColor: "primary",
+  breakpoints: {
+    xs: "30em",
+    sm: "48em",
+    md: "64em",
+    lg: "74em",
+    xl: "82em", // custom xl
+    xxl: "96em", // custom xxl
+  },
 });

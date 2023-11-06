@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import Header from "./Header";
 import {
   Anchor,
@@ -21,10 +21,10 @@ type Props = {
   withPaper?: boolean;
 };
 
-const Layout: React.FC<Props> = ({ children, withPaper }: Props) => {
+const Layout: FC<Props> = ({ children, withPaper }: Props) => {
   const pathname = usePathname();
 
-  const breadcrumbs = React.useMemo(
+  const breadcrumbs = useMemo(
     function generateBreadcrumbs() {
       const asPathWithoutQuery = pathname.split("?")[0];
       const asPathNestedRoutes = asPathWithoutQuery
@@ -36,7 +36,7 @@ const Layout: React.FC<Props> = ({ children, withPaper }: Props) => {
         const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
         // Gig slug detection
         if (subpath.includes("_")) {
-          const slugData = getDataFromGigSlug(subpath);
+          const slugData = getDataFromGigSlug(decodeURIComponent(subpath));
           const { date, bandNames } = slugData;
           text = date + " - " + bandNames.join(V_SEPARATOR);
         }
