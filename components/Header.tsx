@@ -11,12 +11,15 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { IconLogin2 } from "@tabler/icons-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Header: React.FC = () => {
+  const router = useRouter();
   const { status, data: session } = useSession();
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" });
+    await signOut({ redirect: false });
+    router.push("/");
   };
 
   return (

@@ -9,7 +9,6 @@ import {
   Text,
   Title,
   Anchor,
-  Paper,
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -48,7 +47,7 @@ const GigPage = async ({ gigSlug }: Props) => {
   } = gig;
   const bandNames = getBandNames(bands);
   return (
-    <Paper p="md" mt="sm" bg="white" shadow="sm">
+    <>
       <Title order={1}>{bandNames}</Title>
       <Flex mt="md" direction={{ base: "column", sm: "row" }} gap={"md"}>
         <Box mah={IMAGE_MAX_HEIGHT} maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}>
@@ -87,7 +86,7 @@ const GigPage = async ({ gigSlug }: Props) => {
           <Text>{place.name}</Text>
         </Flex>
       </Flex>
-    </Paper>
+    </>
   );
 };
 

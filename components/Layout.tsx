@@ -2,7 +2,15 @@
 
 import React, { ReactNode } from "react";
 import Header from "./Header";
-import { Anchor, AppShell, Box, Breadcrumbs, Text, Stack } from "@mantine/core";
+import {
+  Anchor,
+  AppShell,
+  Box,
+  Breadcrumbs,
+  Text,
+  Stack,
+  Paper,
+} from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { V_SEPARATOR, capitalize } from "../utils/utils";
@@ -10,9 +18,10 @@ import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 
 type Props = {
   children: ReactNode;
+  withPaper?: boolean;
 };
 
-const Layout: React.FC<Props> = (props) => {
+const Layout: React.FC<Props> = ({ children, withPaper }: Props) => {
   const pathname = usePathname();
 
   const breadcrumbs = React.useMemo(
@@ -68,7 +77,13 @@ const Layout: React.FC<Props> = (props) => {
 
       <AppShell.Main>
         <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
-        <Box mt={0}>{props.children}</Box>
+        {withPaper ? (
+          <Paper p="md" mt="sm" bg="white" shadow="sm">
+            {children}
+          </Paper>
+        ) : (
+          <Box mt={0}>{children}</Box>
+        )}
       </AppShell.Main>
 
       <AppShell.Footer p="xs">
