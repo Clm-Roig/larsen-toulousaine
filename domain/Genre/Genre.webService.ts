@@ -1,11 +1,11 @@
 import { Genre } from "@prisma/client";
-import prisma from "../../lib/prisma";
+import api, { getErrorMessage } from "@/lib/axios";
 
 export const getGenres = async (): Promise<Genre[]> => {
-  const genres = await prisma.genre.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-  return genres;
+  try {
+    const response = await api.get<{ genres: Genre[] }>(`/genres`);
+    return response.data.genres;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
 };

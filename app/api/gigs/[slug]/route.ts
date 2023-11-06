@@ -1,9 +1,7 @@
-import { GetServerSidePropsContext } from "next";
 import { NextResponse } from "next/server";
 
-export async function GET(context: GetServerSidePropsContext) {
+export async function GET() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { params } = context;
   await new Promise((resolve) => setTimeout(resolve, 3000));
   return NextResponse.json({
     gigs: [
