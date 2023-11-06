@@ -1,11 +1,11 @@
+import api, { getErrorMessage } from "@/lib/axios";
 import { Place } from "@prisma/client";
-import prisma from "../../lib/prisma";
 
 export const getPlaces = async (): Promise<Place[]> => {
-  const places = await prisma.place.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-  return places;
+  try {
+    const response = await api.get<{ places: Place[] }>(`/places`);
+    return response.data.places;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
 };

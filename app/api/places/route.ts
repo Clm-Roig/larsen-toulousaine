@@ -2,12 +2,12 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const genres = await prisma.genre.findMany({
+  const places = await prisma.place.findMany({
     orderBy: {
       name: "asc",
     },
   });
   return NextResponse.json({
-    genres: genres,
+    places: places,
   });
 }
