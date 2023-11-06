@@ -27,13 +27,11 @@ import { createGig } from "../domain/Gig/Gig.webService";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
+import { getGenres } from "@/domain/Genre/Genre.webService";
+import { useQuery } from "@tanstack/react-query";
+import { getPlaces } from "@/domain/Place/Place.webService";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
-
-type Props = {
-  genres: Genre[];
-  places: Place[];
-};
 
 type AddGigValues = {
   bands: Array<
@@ -51,7 +49,15 @@ type AddGigValues = {
 
 const getNewBand = () => ({ name: "", genres: [], key: randomId() });
 
-export default function GigForm({ genres, places }: Props) {
+export default function GigForm() {
+  const { data: genres } = useQuery<Genre[], Error>({
+    queryKey: ["genres"],
+    queryFn: async () => await getGenres(),
+  });
+  const { data: places } = useQuery<Place[], Error>({
+    queryKey: ["places"],
+    queryFn: async () => await getPlaces(),
+  });
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
@@ -160,7 +166,7 @@ export default function GigForm({ genres, places }: Props) {
           placeholder="Sélectionner un lieu"
           required
           searchable
-          data={places.map((place) => ({
+          data={places?.map((place) => ({
             value: place.id,
             label: place.name,
           }))}
@@ -197,7 +203,7 @@ export default function GigForm({ genres, places }: Props) {
             label={index === 0 ? "Genre(s) (3 max)" : ""}
             withAsterisk
             maxValues={MAX_GENRES_PER_BAND}
-            genres={genres}
+            genres={genres || []}
             style={{ flex: 1 }}
             disabled={!!form.values.bands[index].id}
             {...form.getInputProps(`bands.${index}.genres`)}

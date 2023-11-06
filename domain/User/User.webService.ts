@@ -1,7 +1,11 @@
+import api, { getErrorMessage } from "@/lib/axios";
 import { User } from "@prisma/client";
-import prisma from "../../lib/prisma";
 
 export const getUsers = async (): Promise<User[]> => {
-  const users = await prisma.user.findMany();
-  return users;
+  try {
+    const response = await api.get<{ users: User[] }>(`/users`);
+    return response.data.users;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
 };

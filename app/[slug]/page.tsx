@@ -6,7 +6,7 @@ import { Center, Loader } from "@mantine/core";
 export default function Page({ params }: { params: { slug: string } }) {
   const { slug: gigSlug } = params;
   return (
-    <Layout>
+    <Layout withPaper>
       <Suspense
         fallback={
           <Center>

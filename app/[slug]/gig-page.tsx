@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Badge,
@@ -9,7 +11,7 @@ import {
   Text,
   Title,
   Anchor,
-  Paper,
+  Skeleton,
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -19,6 +21,8 @@ import { getGigImgWidth } from "../../domain/image";
 import { getGenreColor } from "../../domain/Genre/Genre.service";
 import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 require("dayjs/locale/fr");
 
 type Props = {
@@ -27,9 +31,20 @@ type Props = {
 
 const IMAGE_MAX_HEIGHT = 250;
 
-const GigPage = async ({ gigSlug }: Props) => {
-  const gig = await getGig(gigSlug);
-  if (!gig) {
+const GigPage = ({ gigSlug }: Props) => {
+  const { data: gig, isLoading } = useQuery<
+    (GigWithBandsAndPlace & GigWithAuthor) | null,
+    Error
+  >({
+    queryKey: ["gig", gigSlug],
+    queryFn: async () => await getGig(gigSlug),
+  });
+
+  if (isLoading) {
+    return <Skeleton h={220} />;
+  }
+
+  if (gig === null) {
     return (
       <Stack ta="center">
         <Title>Concert introuvable ! :(</Title>
@@ -45,10 +60,10 @@ const GigPage = async ({ gigSlug }: Props) => {
     imageUrl,
     place,
     ticketReservationLink,
-  } = gig;
-  const bandNames = getBandNames(bands);
+  } = gig || {};
+  const bandNames = getBandNames(bands || []);
   return (
-    <Paper p="md" mt="sm" bg="white" shadow="sm">
+    <>
       <Title order={1}>{bandNames}</Title>
       <Flex mt="md" direction={{ base: "column", sm: "row" }} gap={"md"}>
         <Box mah={IMAGE_MAX_HEIGHT} maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}>
@@ -60,7 +75,7 @@ const GigPage = async ({ gigSlug }: Props) => {
           </Text>
 
           <Stack gap={0}>
-            {bands.map((band) => (
+            {bands?.map((band) => (
               <Group key={band.id}>
                 <Text>{band.name}</Text>
                 {band.genres.map((genre) => (
@@ -84,10 +99,10 @@ const GigPage = async ({ gigSlug }: Props) => {
             </ExternalLink>
           )}
 
-          <Text>{place.name}</Text>
+          <Text>{place?.name}</Text>
         </Flex>
       </Flex>
-    </Paper>
+    </>
   );
 };
 

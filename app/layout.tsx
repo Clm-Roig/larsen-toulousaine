@@ -4,7 +4,7 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import { theme } from "../theme";
-import { NextAuthProvider } from "./providers";
+import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { DatesProvider } from "@mantine/dates";
 
@@ -26,7 +26,7 @@ export default function RootLayout({
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body>
-        <NextAuthProvider>
+        <Providers>
           <MantineProvider theme={theme}>
             {/* Changing the locale to "fr" doesn't seem to work... */}
             <DatesProvider settings={{ locale: "fr" }}>
@@ -34,7 +34,7 @@ export default function RootLayout({
               {children}
             </DatesProvider>
           </MantineProvider>
-        </NextAuthProvider>
+        </Providers>
       </body>
     </html>
   );
