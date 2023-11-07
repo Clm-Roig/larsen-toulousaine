@@ -1,8 +1,4 @@
-"use server";
-
-import { Prisma } from "@prisma/client";
 import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
-import prisma from "@/lib/prisma";
 import api, { getErrorMessage } from "@/lib/axios";
 
 export const getGigs = async (
@@ -31,10 +27,3 @@ export const getGig = async (
     throw new Error(getErrorMessage(error));
   }
 };
-
-export async function createGig(gig: Prisma.GigCreateInput) {
-  const createdGig = await prisma.gig.create({
-    data: gig,
-  });
-  return createdGig;
-}
