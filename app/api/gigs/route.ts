@@ -1,8 +1,14 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
+import { put as blobPut } from "@vercel/blob";
+import sharp from "sharp";
 import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
+
+const IMG_OUTPUT_FORMAT = "jpg";
+const IMG_MAX_WIDTH = 800;
+const IMG_MAX_HEIGHT = Math.round((IMG_MAX_WIDTH * 9) / 16);
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -39,9 +45,31 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
+
+  const { imageUrl, slug } = body;
+  let blobImageUrl: string | undefined = undefined;
+  if (imageUrl) {
+    // Download image and store it in blob storage
+    const response = await fetch(imageUrl);
+    const arrayBufferImg = await (await response.blob()).arrayBuffer();
+    const bufferImg = Buffer.from(arrayBufferImg);
+    const resizedImg = await sharp(bufferImg)
+      .resize(IMG_MAX_WIDTH, IMG_MAX_HEIGHT, {
+        withoutEnlargement: true,
+      })
+      .toFormat(IMG_OUTPUT_FORMAT)
+      .toBuffer();
+    const { url } = await blobPut(slug + ".jpg", new Blob([resizedImg]), {
+      access: "public",
+    });
+    blobImageUrl = url;
+  }
   try {
     const createdGig = await prisma.gig.create({
-      data: Prisma.validator<Prisma.GigCreateInput>()(body),
+      data: Prisma.validator<Prisma.GigCreateInput>()({
+        ...body,
+        imageUrl: blobImageUrl,
+      }),
       include: { bands: true },
     });
     return NextResponse.json(createdGig);
