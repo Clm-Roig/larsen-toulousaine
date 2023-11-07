@@ -1,13 +1,17 @@
 import dayjs from "dayjs";
 import { GigWithBandsAndPlace } from "../domain/Gig/Gig.type";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getGigs } from "../domain/Gig/Gig.webService";
 import usePreferences from "../hooks/usePreferences";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const gigsStaleTimeInMs = 5 * 60 * 1000;
 
+// date is an object: it must serialized it before using it as a react-query key
+const getQueryKey = (date: Date) => dayjs(date).format("MM-YYYY");
+
 export default function useGigs() {
+  const queryClient = useQueryClient();
   const { excludedGenres, excludedPlaces } = usePreferences();
 
   const [selectedMonth, setSelectedMonth] = useState(
@@ -21,10 +25,48 @@ export default function useGigs() {
     .toDate();
 
   const { data: gigs, isLoading } = useQuery<GigWithBandsAndPlace[], Error>({
-    queryKey: ["gigs", selectedMonthStart, selectedMonthEnd],
+    queryKey: [
+      "gigs",
+      getQueryKey(selectedMonthStart),
+      getQueryKey(selectedMonthEnd),
+    ],
     queryFn: async () => await getGigs(selectedMonthStart, selectedMonthEnd),
     staleTime: gigsStaleTimeInMs,
   });
+
+  // Prefetch next month gigs
+  useEffect(() => {
+    const nextMonthStart = dayjs(selectedMonthStart).add(1, "month").toDate();
+    const nextMonthEnd = dayjs(selectedMonthEnd).add(1, "month").toDate();
+    void queryClient.prefetchQuery({
+      queryKey: [
+        "gigs",
+        getQueryKey(nextMonthStart),
+        getQueryKey(nextMonthEnd),
+      ],
+      queryFn: async () => await getGigs(nextMonthStart, nextMonthEnd),
+      staleTime: gigsStaleTimeInMs,
+    });
+  }, [queryClient, selectedMonthEnd, selectedMonthStart]);
+
+  // Prefetch previous month gigs
+  useEffect(() => {
+    const previousMonthStart = dayjs(selectedMonthStart)
+      .subtract(1, "month")
+      .toDate();
+    const previousMonthEnd = dayjs(selectedMonthEnd)
+      .subtract(1, "month")
+      .toDate();
+    void queryClient.prefetchQuery({
+      queryKey: [
+        "gigs",
+        getQueryKey(previousMonthStart),
+        getQueryKey(previousMonthEnd),
+      ],
+      queryFn: async () => await getGigs(previousMonthStart, previousMonthEnd),
+      staleTime: gigsStaleTimeInMs,
+    });
+  }, [queryClient, selectedMonthEnd, selectedMonthStart]);
 
   const sortedGigs = gigs
     // Genre(s) filtering
