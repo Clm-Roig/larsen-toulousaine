@@ -1,7 +1,7 @@
 "use client";
 
 import GigForm, { AddGigValues } from "@/components/GigForm";
-import { createGig } from "@/domain/Gig/Gig.oldWebService";
+import { createGig } from "@/domain/Gig/Gig.webService";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Box } from "@mantine/core";
 import { useSession } from "next-auth/react";
@@ -13,6 +13,7 @@ export default function AddGig() {
   const { data: session } = useSession();
 
   const handleOnSubmit = async (values: AddGigValues) => {
+    let isSuccess: boolean = false;
     setIsLoading(true);
     const { date, bands, place } = values;
     const { user } = session || {};
@@ -32,6 +33,7 @@ export default function AddGig() {
           },
         }));
       try {
+        // TODO: don't be forced to use Prisma format => it's the API job to do so!
         await createGig({
           ...values,
           date: date,
@@ -57,16 +59,19 @@ export default function AddGig() {
           color: "green",
           message: "Concert ajouté avec succès !",
         });
+        isSuccess = true;
       } catch (error) {
         notifications.show({
           color: "red",
           title: "Erreur à la création d'un concert",
           message: error.message,
         });
+        isSuccess = false;
       } finally {
         setIsLoading(false);
       }
     }
+    return isSuccess;
   };
 
   return (

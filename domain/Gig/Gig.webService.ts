@@ -27,3 +27,15 @@ export const getGig = async (
     throw new Error(getErrorMessage(error));
   }
 };
+
+export const createGig = async (
+  // TODO: improve typing here
+  gig: unknown,
+): Promise<GigWithBandsAndPlace> => {
+  try {
+    const response = await api.post<GigWithBandsAndPlace>(`/gigs`, gig);
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};

@@ -1,7 +1,8 @@
 import { User } from "@prisma/client";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 
-const EXPIRATION_TIME = "1h";
+// TODO: refresh token to reduce this duration
+const EXPIRATION_TIME = "30d";
 
 type CustomJWTPayload = JWTPayload & Omit<User, "password">;
 

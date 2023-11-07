@@ -1,4 +1,6 @@
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,13 +31,35 @@ export async function GET(request: NextRequest) {
   });
 }
 
-export async function POST(request: Request) {
-  const gigData = await request.json();
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  return NextResponse.json(gigData);
-}
-
-export async function DELETE() {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  return NextResponse.json({});
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  if (!body) {
+    return NextResponse.json(
+      { message: "You must provide gig data in the request body." },
+      { status: 400 },
+    );
+  }
+  try {
+    const createdGig = await prisma.gig.create({
+      data: Prisma.validator<Prisma.GigCreateInput>()(body),
+      include: { bands: true },
+    });
+    return NextResponse.json(createdGig);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    if (error instanceof PrismaClientValidationError) {
+      return NextResponse.json(
+        {
+          message:
+            "There was an error with your data when trying to create a gig.",
+        },
+        { status: 400 },
+      );
+    }
+    return NextResponse.json(
+      { message: "An unexpected error occured." },
+      { status: 500 },
+    );
+  }
 }

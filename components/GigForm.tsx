@@ -48,7 +48,7 @@ const getNewBand = () => ({ name: "", genres: [], key: randomId() });
 
 type Props = {
   isLoading: boolean;
-  onSubmit: (values: AddGigValues) => Promise<void>;
+  onSubmit: (values: AddGigValues) => Promise<boolean>;
 };
 
 export default function GigForm({ isLoading, onSubmit }: Props) {
@@ -96,8 +96,10 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await onSubmit(form.values);
-    form.reset();
+    const isSuccess = await onSubmit(form.values);
+    if (isSuccess) {
+      form.reset();
+    }
   };
 
   return (

@@ -35,7 +35,7 @@ export default function BandSelect({
   } = useQuery<BandWithGenres[] | null, Error>({
     queryKey: ["bandSearch", debouncedSearchQueryInput],
     queryFn: async () =>
-      debouncedSearchQueryInput?.length > NB_CHAR_TO_LAUNCH_BAND_SEARCH
+      debouncedSearchQueryInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
         ? await searchBandsByName(debouncedSearchQueryInput)
         : null,
   });
