@@ -1,19 +1,15 @@
-import prisma from "../../lib/prisma";
+import api, { getErrorMessage } from "@/lib/axios";
 import { BandWithGenres } from "./Band.type";
 
-export async function searchBandsByName(
-  searchedName: string,
-): Promise<BandWithGenres[]> {
-  const results = await prisma.band.findMany({
-    where: {
-      name: {
-        contains: searchedName,
-        mode: "insensitive",
-      },
-    },
-    include: {
-      genres: true,
-    },
-  });
-  return results;
-}
+export const searchBandsByName = async (
+  query: string | undefined,
+): Promise<BandWithGenres[]> => {
+  try {
+    const response = await api.get<{ bands: BandWithGenres[] }>(
+      `/bands/search${query ? `?query=${encodeURIComponent(query)}` : ""}`,
+    );
+    return response.data.bands;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};

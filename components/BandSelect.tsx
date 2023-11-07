@@ -1,8 +1,12 @@
+"use client";
+
 import { Select } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import { searchBandsByName } from "../domain/Band/Band.webService";
 import { Band } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { useDebouncedValue } from "@mantine/hooks";
 
 type Props = {
   excludedBandIds?: Array<Band["id"]>;
@@ -20,50 +24,50 @@ export default function BandSelect({
   excludedBandIds,
   onBandSelect: onSelect,
 }: Props) {
-  const [suggestions, setSuggestions] = useState<BandSuggestion[]>([]);
-  const [searchedBandInput, setSearchedBandInput] = useState("");
+  const [searchQueryInput, setSearchQueryInput] = useState("");
+  const [debouncedSearchQueryInput] = useDebouncedValue(searchQueryInput, 400);
   const [value, setValue] = useState<string | null>("");
-  const [isLoadingBandSuggestions, setIsLoadingBandSuggestions] =
-    useState(false);
+
+  const {
+    data: foundBands,
+    isLoading,
+    isFetched,
+  } = useQuery<BandWithGenres[] | null, Error>({
+    queryKey: ["bandSearch", debouncedSearchQueryInput],
+    queryFn: async () =>
+      debouncedSearchQueryInput?.length > NB_CHAR_TO_LAUNCH_BAND_SEARCH
+        ? await searchBandsByName(debouncedSearchQueryInput)
+        : null,
+  });
 
   // Workaround to prevent select to set the searchValue when an option is selected
   useEffect(() => {
     if (value) {
       setValue("");
-      setSearchedBandInput("");
+      setSearchQueryInput("");
     }
   }, [value]);
 
-  const handleOnSearchBandChange = async (value: string) => {
-    setSearchedBandInput(value);
-    let newSuggestions: BandSuggestion[] = [];
-    if (value && value.length >= 2) {
-      setSuggestions([]);
-      setIsLoadingBandSuggestions(true);
-      newSuggestions = (await searchBandsByName(value))
-        .filter(
-          (band) =>
-            !excludedBandIds ||
-            excludedBandIds?.every(
-              (excludedBandId) => excludedBandId !== band?.id,
-            ),
-        )
-        .map((band) => ({
-          label: band.name,
-          value: band,
-        }));
-      setIsLoadingBandSuggestions(false);
-    }
-    setSuggestions(newSuggestions);
-  };
+  const suggestions: BandSuggestion[] | undefined =
+    foundBands
+      ?.filter(
+        (band) =>
+          !excludedBandIds ||
+          excludedBandIds?.every(
+            (excludedBandId) => excludedBandId !== band?.id,
+          ),
+      )
+      .map((band) => ({
+        label: band.name,
+        value: band,
+      })) || undefined;
 
   const handleOnSelectBand = (bandId: string) => {
-    const foundBand = suggestions.find((s) => s.value.id === bandId)?.value;
+    const foundBand = suggestions?.find((s) => s.value.id === bandId)?.value;
     if (foundBand) {
       onSelect(foundBand);
-      setSuggestions([]);
     }
-    setSearchedBandInput("");
+    setSearchQueryInput("");
   };
 
   return (
@@ -72,18 +76,18 @@ export default function BandSelect({
       searchable
       withCheckIcon={false}
       data={
-        suggestions.map((s) => ({
+        suggestions?.map((s) => ({
           label: s.label,
           value: s.value.id,
         })) || []
       }
-      searchValue={searchedBandInput}
-      onSearchChange={handleOnSearchBandChange}
+      onSearchChange={setSearchQueryInput}
+      searchValue={searchQueryInput}
       onOptionSubmit={handleOnSelectBand}
       nothingFoundMessage={
-        isLoadingBandSuggestions
+        isLoading
           ? "Chargement..."
-          : searchedBandInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
+          : isFetched && suggestions?.length === 0
           ? "Groupe non-référencé ou déjà sélectionné pour ce concert"
           : ""
       }

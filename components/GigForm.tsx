@@ -16,25 +16,21 @@ import {
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Band, Genre, Place } from "@prisma/client";
-import { notifications } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
-import { FormEvent, useState } from "react";
-import { useSession } from "next-auth/react";
+import { FormEvent } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
 import { MAX_GENRES_PER_BAND } from "../domain/constants";
-import { createGig } from "../domain/Gig/Gig.oldWebService";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
-import { computeGigSlug } from "@/domain/Gig/Gig.service";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
-type AddGigValues = {
+export type AddGigValues = {
   bands: Array<
     Omit<Band, "id" | "genres"> & {
       id?: BandWithGenres["id"] | undefined;
@@ -50,7 +46,12 @@ type AddGigValues = {
 
 const getNewBand = () => ({ name: "", genres: [], key: randomId() });
 
-export default function GigForm() {
+type Props = {
+  isLoading: boolean;
+  onSubmit: (values: AddGigValues) => Promise<void>;
+};
+
+export default function GigForm({ isLoading, onSubmit }: Props) {
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -59,8 +60,6 @@ export default function GigForm() {
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession();
 
   const form = useForm<AddGigValues>({
     initialValues: {
@@ -97,62 +96,8 @@ export default function GigForm() {
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    const { values } = form;
-    const { date, bands, place } = values;
-    const { user } = session || {};
-
-    if (user && values && date && place) {
-      const slug = computeGigSlug({ bands, date });
-
-      const toConnectBands = bands
-        .filter((b) => !!b.id)
-        .map((b) => ({ id: b.id }));
-      const toCreateBands = bands
-        .filter((b) => !b.id)
-        .map((b) => ({
-          name: b.name,
-          genres: {
-            connect: b.genres.map((g) => ({ id: g })),
-          },
-        }));
-      try {
-        await createGig({
-          ...values,
-          date: date,
-          author: {
-            connect: {
-              id: user.id,
-            },
-          },
-          bands: {
-            ...(toConnectBands?.length > 0 ? { connect: toConnectBands } : {}),
-            ...(toCreateBands?.length > 0 ? { create: toCreateBands } : {}),
-          },
-          place: {
-            connect: {
-              id: place,
-            },
-          },
-          title: null,
-          description: null,
-          slug: slug,
-        });
-        form.reset();
-        notifications.show({
-          color: "green",
-          message: "Concert ajouté avec succès !",
-        });
-      } catch (error) {
-        notifications.show({
-          color: "red",
-          title: "Erreur à la création d'un concert",
-          message: error.message,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    await onSubmit(form.values);
+    form.reset();
   };
 
   return (
