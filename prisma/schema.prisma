@@ -35,6 +35,7 @@ model Gig {
   imageUrl              String?
   ticketReservationLink String?
   slug                  String
+  isCanceled            Boolean  @default(false)
 }
 
 model User {

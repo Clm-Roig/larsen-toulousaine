@@ -1,8 +1,11 @@
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { capitalize } from "@/utils/utils";
+import { Band, Gig } from "@prisma/client";
 import dayjs from "dayjs";
 
-export const computeGigSlug = (gig: GigWithBandsAndPlace): string => {
+export const computeGigSlug = (gig: {
+  bands: { name: Band["name"] }[];
+  date: Gig["date"];
+}): string => {
   const { bands, date } = gig;
   const dateString = dayjs(date).format("DD-MM-YYYY");
   const bandsString = bands

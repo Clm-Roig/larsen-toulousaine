@@ -14,6 +14,7 @@ import {
 } from "../../domain/Band/Band.service";
 import { getGigImgHeight } from "../../domain/image";
 import { getGenreColor } from "../../domain/Genre/Genre.service";
+import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 require("dayjs/locale/fr");
 
 const DATE_SIZE = 32;
@@ -24,14 +25,22 @@ type Props = {
 
 const GigCard = ({ gig }: Props) => {
   const theme = useMantineTheme();
-  const { bands, date: rawDate, place } = gig;
+  const { bands, date: rawDate, isCanceled, place } = gig;
   const bandNames = getBandNames(bands);
   const bandGenres = getUniqueBandGenres(bands);
 
   const date = new Date(rawDate);
 
   return (
-    <Card shadow="md" h={360} component={Link} href={"/" + gig.slug}>
+    <Card
+      shadow="md"
+      h={360}
+      component={Link}
+      href={"/" + gig.slug}
+      opacity={isCanceled ? 0.7 : 1}
+      c={isCanceled ? "gray.6" : ""}
+      style={{ border: isCanceled ? "1px solid red" : "" }}
+    >
       <Card.Section>
         <Image
           src={gig.imageUrl}
@@ -41,6 +50,9 @@ const GigCard = ({ gig }: Props) => {
             getGigImgHeight(CARD_WIDTH),
           )}?text=.`}
         />
+        {isCanceled && (
+          <CanceledGigOverlay height={getGigImgHeight(CARD_WIDTH)} />
+        )}
       </Card.Section>
 
       <Box

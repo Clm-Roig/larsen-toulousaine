@@ -30,6 +30,7 @@ import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
+import { computeGigSlug } from "@/domain/Gig/Gig.service";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -102,6 +103,8 @@ export default function GigForm() {
     const { user } = session || {};
 
     if (user && values && date && place) {
+      const slug = computeGigSlug({ bands, date });
+
       const toConnectBands = bands
         .filter((b) => !!b.id)
         .map((b) => ({ id: b.id }));
@@ -133,6 +136,7 @@ export default function GigForm() {
           },
           title: null,
           description: null,
+          slug: slug,
         });
         form.reset();
         notifications.show({

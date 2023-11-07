@@ -12,6 +12,7 @@ import {
   Title,
   Anchor,
   Skeleton,
+  Alert,
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -23,6 +24,8 @@ import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { IconX } from "@tabler/icons-react";
+import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 require("dayjs/locale/fr");
 
 type Props = {
@@ -58,6 +61,7 @@ const GigPage = ({ gigSlug }: Props) => {
     description,
     date: rawDate,
     imageUrl,
+    isCanceled,
     place,
     ticketReservationLink,
   } = gig || {};
@@ -66,10 +70,32 @@ const GigPage = ({ gigSlug }: Props) => {
     <>
       <Title order={1}>{bandNames}</Title>
       <Flex mt="md" direction={{ base: "column", sm: "row" }} gap={"md"}>
-        <Box mah={IMAGE_MAX_HEIGHT} maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}>
-          <Image src={imageUrl} alt={"Affiche du concert"} />
+        <Box
+          mah={IMAGE_MAX_HEIGHT}
+          maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
+          pos="relative"
+        >
+          <Image
+            src={imageUrl}
+            alt={"Affiche du concert"}
+            opacity={isCanceled ? 0.7 : 1}
+          />
+          {isCanceled && <CanceledGigOverlay height={IMAGE_MAX_HEIGHT} />}
         </Box>
         <Flex direction="column" gap="sm">
+          {isCanceled && (
+            <Alert
+              color="red.9"
+              title="CONCERT ANNULÉ"
+              icon={<IconX />}
+              p={"sm"}
+              styles={{
+                title: {
+                  marginBottom: 0,
+                },
+              }}
+            />
+          )}
           <Text>
             {capitalize(dayjs(rawDate).locale("fr").format("dddd DD MMMM"))}
           </Text>

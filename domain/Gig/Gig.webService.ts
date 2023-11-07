@@ -3,7 +3,6 @@
 import { Prisma } from "@prisma/client";
 import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
 import prisma from "@/lib/prisma";
-import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import api, { getErrorMessage } from "@/lib/axios";
 
 export const getGigs = async (
@@ -33,23 +32,9 @@ export const getGig = async (
   }
 };
 
-export async function createGig(gig: Omit<Prisma.GigCreateInput, "slug">) {
+export async function createGig(gig: Prisma.GigCreateInput) {
   const createdGig = await prisma.gig.create({
-    data: {
-      ...gig,
-      // @ts-ignore
-      slug: computeGigSlug({
-        ...gig,
-        bands: [
-          // @ts-ignore
-          ...(gig.bands?.connect || []),
-          // @ts-ignore
-          ...(gig.bands?.connectOrCreate || []),
-          // @ts-ignore
-          ...(gig.bands?.create || []),
-        ],
-      }),
-    },
+    data: gig,
   });
   return createdGig;
 }
