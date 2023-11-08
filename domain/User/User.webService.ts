@@ -9,3 +9,12 @@ export const getUsers = async (): Promise<User[]> => {
     throw new Error(getErrorMessage(error));
   }
 };
+
+// TODO: add typing
+export const updatePassword = async (values: any): Promise<void> => {
+  try {
+    await api.put<void>(`/users/password`, values);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
