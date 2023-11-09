@@ -2,7 +2,7 @@
 
 import React from "react";
 import Layout from "../../../components/Layout";
-import { Alert, Skeleton, Title } from "@mantine/core";
+import { Alert, Skeleton } from "@mantine/core";
 import UserList from "../../../components/UserList";
 import { getUsers } from "@/domain/User/User.webService";
 import { User } from "@prisma/client";
@@ -20,8 +20,7 @@ const Users = () => {
   });
 
   return (
-    <Layout withPaper>
-      <Title order={2}>Tous les utilisateurs</Title>
+    <Layout title="Tous les utilisateurs" withPaper>
       {isLoading && <Skeleton height={150} />}
       {users && <UserList users={users} />}
       {isError && <Alert color="red">{error?.message}</Alert>}

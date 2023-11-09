@@ -10,6 +10,7 @@ import {
   Text,
   Stack,
   Paper,
+  Title,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -18,10 +19,11 @@ import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 
 type Props = {
   children: ReactNode;
+  title?: string;
   withPaper?: boolean;
 };
 
-const Layout: FC<Props> = ({ children, withPaper }: Props) => {
+const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const pathname = usePathname();
 
   const breadcrumbs = useMemo(
@@ -62,6 +64,15 @@ const Layout: FC<Props> = ({ children, withPaper }: Props) => {
     </Anchor>
   ));
 
+  const childrenWithTitle = (
+    <>
+      <Title order={1} mb={"sm"}>
+        {title}
+      </Title>
+      {children}
+    </>
+  );
+
   return (
     <AppShell
       header={{ height: 64 }}
@@ -79,10 +90,10 @@ const Layout: FC<Props> = ({ children, withPaper }: Props) => {
         <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
         {withPaper ? (
           <Paper p="md" mt="sm" bg="white" shadow="sm">
-            {children}
+            {childrenWithTitle}
           </Paper>
         ) : (
-          <Box mt={0}>{children}</Box>
+          <Box mt={0}>{childrenWithTitle}</Box>
         )}
       </AppShell.Main>
 

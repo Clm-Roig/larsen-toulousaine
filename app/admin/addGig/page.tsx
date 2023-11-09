@@ -5,7 +5,7 @@ import AddGig from "./add-gig-page";
 
 export default function Page() {
   return (
-    <Layout>
+    <Layout title="Ajouter un concert" withPaper>
       <Center>
         <Suspense fallback={<Loader />}>
           <AddGig />

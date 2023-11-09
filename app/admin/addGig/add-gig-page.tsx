@@ -3,7 +3,7 @@
 import GigForm, { AddGigValues } from "@/components/GigForm";
 import { createGig } from "@/domain/Gig/Gig.webService";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
-import { Box, Title } from "@mantine/core";
+import { Box } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
@@ -76,9 +76,6 @@ export default function AddGig() {
 
   return (
     <Box w={750}>
-      <Title order={2} mb={"sm"}>
-        Modifier votre mot de passe
-      </Title>
       <GigForm isLoading={isLoading} onSubmit={handleOnSubmit} />
     </Box>
   );

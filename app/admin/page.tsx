@@ -1,6 +1,6 @@
 "use client";
 
-import { Text, Card, Flex, Stack, Title } from "@mantine/core";
+import { Text, Card, Flex, Stack } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { IconUser, IconUsers, IconPlus } from "@tabler/icons-react";
@@ -36,11 +36,9 @@ export default function Admin() {
   }
 
   return (
-    <Layout>
+    <Layout title="Panneau d'administration">
       {status === "authenticated" && (
         <>
-          <Title order={2} mb={"sm"}>{`Panneau d'administration`}</Title>
-
           <Flex gap="sm">
             {data?.user.role === Role.ADMIN && (
               <DashboardCard

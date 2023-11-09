@@ -50,7 +50,7 @@ const GigPage = ({ gigSlug }: Props) => {
   if (gig === null) {
     return (
       <Stack ta="center">
-        <Title>Concert introuvable ! :(</Title>
+        <Text size="xl">Concert introuvable ! :(</Text>
         <Anchor href="/" component={Link}>{`Retourner à l'accueil`}</Anchor>
       </Stack>
     );

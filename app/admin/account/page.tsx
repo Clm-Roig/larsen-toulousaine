@@ -1,12 +1,11 @@
-import { Center, Loader, Title } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 import Layout from "@/components/Layout";
 import { Suspense } from "react";
 import AccountPage from "./account-page";
 
 export default function Page() {
   return (
-    <Layout>
-      <Title>Mon compte</Title>
+    <Layout title={"Mon compte"} withPaper>
       <Suspense
         fallback={
           <Center h={200}>

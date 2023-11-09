@@ -3,7 +3,6 @@ import {
   AppShell,
   Button,
   Group,
-  Title,
   Text,
   Stack,
   ActionIcon,
@@ -25,9 +24,9 @@ const Header: React.FC = () => {
   return (
     <AppShell.Header bg="primary" p="xs" pl="md">
       <Group justify="space-between" h="100%">
-        <Title order={1} size={24} style={{ fontFamily: "Garamond" }}>
+        <Text size={"xl"} fw="bold" style={{ fontFamily: "Garamond" }}>
           DÉCIBEL
-        </Title>
+        </Text>
         {status === "authenticated" && (
           <Stack gap={0} align="center">
             <Text size="s">Bienvenu&middot;e {session?.user.pseudo} !</Text>
