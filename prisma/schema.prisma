@@ -14,10 +14,11 @@ enum Role {
 }
 
 model Band {
-  id     String  @id @default(cuid())
-  name   String
-  genres Genre[]
-  Gigs   Gig[]
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  name      String
+  genres    Genre[]
+  Gigs      Gig[]
 }
 
 model Gig {
