@@ -20,7 +20,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { FormEvent } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
-import { MAX_GENRES_PER_BAND } from "../domain/constants";
+import { MAX_GENRES_PER_BAND } from "../domain/Band/constants";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";

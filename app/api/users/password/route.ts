@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { ERROR_NAMES, updatePasswordErrors } from "@/domain/User/errors";
-import { MIN_PASSWORD_LENGTH } from "@/domain/constants";
+import { MIN_PASSWORD_LENGTH } from "@/domain/User/constants";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { compare, genSaltSync, hashSync } from "bcryptjs";

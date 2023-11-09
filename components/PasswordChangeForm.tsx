@@ -3,7 +3,7 @@
 import { useForm } from "@mantine/form";
 import { Button, Group, PasswordInput } from "@mantine/core";
 import { FormEvent } from "react";
-import { MIN_PASSWORD_LENGTH } from "../domain/constants";
+import { MIN_PASSWORD_LENGTH } from "@/domain/User/constants";
 import { UpdatePasswordValues } from "@/domain/User/User.webService";
 
 type Props = {

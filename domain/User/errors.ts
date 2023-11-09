@@ -1,4 +1,4 @@
-import { MIN_PASSWORD_LENGTH } from "@/domain/constants";
+import { MIN_PASSWORD_LENGTH } from "@/domain/User/constants";
 
 export enum ERROR_NAMES {
   MISSING_BODY = "MISSING_BODY",
