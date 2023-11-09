@@ -1,12 +1,10 @@
 import { Metadata } from "next";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
-import { theme } from "../theme";
 import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
-import { DatesProvider } from "@mantine/dates";
 
 export const metadata: Metadata = {
   title: "Décibel",
@@ -27,13 +25,8 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <MantineProvider theme={theme}>
-            {/* Changing the locale to "fr" doesn't seem to work... */}
-            <DatesProvider settings={{ locale: "fr" }}>
-              <Notifications />
-              {children}
-            </DatesProvider>
-          </MantineProvider>
+          <Notifications />
+          {children}
         </Providers>
       </body>
     </html>
