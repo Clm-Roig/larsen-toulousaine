@@ -11,6 +11,8 @@ declare module "next-auth" {
       pseudo: string;
       role: Role;
       accessToken: string;
+      exp: number;
+      iat: number;
     };
   }
 }

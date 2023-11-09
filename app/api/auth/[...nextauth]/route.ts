@@ -1,4 +1,4 @@
-import { signJwtAccessToken } from "@/lib/jwt";
+import { EXPIRATION_TIME_IN_SECONDS, signJwtAccessToken } from "@/lib/jwt";
 import prisma from "@/lib/prisma";
 import { compare } from "bcryptjs";
 import NextAuth, { NextAuthOptions } from "next-auth";
@@ -7,6 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: EXPIRATION_TIME_IN_SECONDS,
   },
   providers: [
     CredentialsProvider({

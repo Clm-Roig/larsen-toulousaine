@@ -1,8 +1,8 @@
 import { User } from "@prisma/client";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 
-// TODO: refresh token to reduce this duration
-const EXPIRATION_TIME = "30d";
+// TODO: setup refresh token mechanism to reduce this duration
+export const EXPIRATION_TIME_IN_SECONDS = 30 * 24 * 60 * 60; // 30 days
 
 type CustomJWTPayload = JWTPayload & Omit<User, "password">;
 
@@ -14,7 +14,7 @@ export async function signJwtAccessToken(payload: CustomJWTPayload) {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(EXPIRATION_TIME)
+    .setExpirationTime(EXPIRATION_TIME_IN_SECONDS)
     .sign(new TextEncoder().encode(secretKey));
 
   return token;
