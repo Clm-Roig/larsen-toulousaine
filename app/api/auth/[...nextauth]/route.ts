@@ -1,10 +1,10 @@
 import { signJwtAccessToken } from "@/lib/jwt";
 import prisma from "@/lib/prisma";
 import { compare } from "bcryptjs";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
@@ -64,5 +64,7 @@ const handler = NextAuth({
       return baseUrl + "/admin";
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

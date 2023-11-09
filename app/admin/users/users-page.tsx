@@ -18,6 +18,7 @@ const Users = () => {
     queryKey: ["users"],
     queryFn: async () => await getUsers(),
   });
+
   return (
     <Layout withPaper>
       <Title order={2}>Tous les utilisateurs</Title>

@@ -7,6 +7,7 @@ import { IconUser, IconUsers, IconPlus } from "@tabler/icons-react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/navigation";
 import { ReactElement } from "react";
+import { Role } from "@prisma/client";
 
 function DashboardCard({
   href,
@@ -28,7 +29,7 @@ function DashboardCard({
 }
 
 export default function Admin() {
-  const { status } = useSession();
+  const { status, data } = useSession();
   const router = useRouter();
   if (status === "unauthenticated") {
     router.push("/api/auth/signin");
@@ -38,14 +39,16 @@ export default function Admin() {
     <Layout>
       {status === "authenticated" && (
         <>
-          <Title order={2}>{`Panneau d'administration`}</Title>
+          <Title order={2} mb={"sm"}>{`Panneau d'administration`}</Title>
 
           <Flex gap="sm">
-            <DashboardCard
-              href="/admin/users"
-              icon={<IconUsers />}
-              text="Gérer les utilisateurs"
-            />
+            {data?.user.role === Role.ADMIN && (
+              <DashboardCard
+                href="/admin/users"
+                icon={<IconUsers />}
+                text="Gérer les utilisateurs"
+              />
+            )}
             <DashboardCard
               href="/admin/addGig"
               icon={<IconPlus />}

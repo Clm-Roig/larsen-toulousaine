@@ -1,23 +1,19 @@
 "use client";
 
 import { useForm } from "@mantine/form";
-import { Button, Group, TextInput } from "@mantine/core";
+import { Button, Group, PasswordInput } from "@mantine/core";
 import { FormEvent } from "react";
 import { MIN_PASSWORD_LENGTH } from "../domain/constants";
-
-export type ChangePasswordValues = {
-  newPassword: string;
-  newPasswordConfirmation: string;
-  previousPassword: string;
-};
+import { UpdatePasswordValues } from "@/domain/User/User.webService";
 
 type Props = {
   isLoading: boolean;
-  onSubmit: (values: ChangePasswordValues) => Promise<boolean>;
+  isSuccess: boolean;
+  onSubmit: (values: UpdatePasswordValues) => void;
 };
 
-export default function GigForm({ isLoading, onSubmit }: Props) {
-  const form = useForm<ChangePasswordValues>({
+export default function PasswordChangeForm({ isLoading, onSubmit }: Props) {
+  const form = useForm<UpdatePasswordValues>({
     initialValues: {
       newPassword: "",
       newPasswordConfirmation: "",
@@ -31,38 +27,35 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
       previousPassword: (value) =>
         value ? null : "Le précédent mot de passe est requis.",
       newPasswordConfirmation: (value, values) =>
-        value
-          ? null
+        !value
+          ? "Veuillez confirmer votre nouveau mot de passe."
           : values["newPassword"] !== value
           ? "Les deux mots de passe doivent correspondre."
-          : "Veuillez confirmer votre nouveau mot de passe.",
+          : null,
     },
     validateInputOnBlur: true,
   });
 
-  const handleOnSubmit = async (e: FormEvent) => {
+  const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const isSuccess = await onSubmit(form.values);
-    if (isSuccess) {
-      form.reset();
-    }
+    onSubmit(form.values);
   };
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <TextInput
+      <PasswordInput
         label="Précédent mot de passe"
         required
         {...form.getInputProps("previousPassword")}
       />
 
-      <TextInput
+      <PasswordInput
         label="Nouveau mot de passe"
         required
         {...form.getInputProps("newPassword")}
       />
 
-      <TextInput
+      <PasswordInput
         label="Confirmation du nouveau mot de passe"
         required
         {...form.getInputProps("newPasswordConfirmation")}
