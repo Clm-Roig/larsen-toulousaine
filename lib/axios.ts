@@ -20,7 +20,7 @@ api.interceptors.request.use(
 );
 
 export const getErrorMessage = (error: AxiosError | Error): string => {
-  let message = "Une erreur inatendue s'est produite.";
+  let message = "Une erreur inattendue s'est produite.";
   if (isAxiosError(error)) {
     if (error.response !== undefined) {
       // The request was made and the server responded with a status code

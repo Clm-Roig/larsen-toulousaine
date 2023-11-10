@@ -5,6 +5,15 @@ import { put as blobPut } from "@vercel/blob";
 import sharp from "sharp";
 import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import {
+  missingBodyError,
+  mustBeAuthenticatedError,
+  toResponse,
+} from "@/domain/errors";
+import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
+import { computeGigSlug } from "@/domain/Gig/Gig.service";
 
 const IMG_OUTPUT_FORMAT = "jpg";
 const IMG_MAX_WIDTH = 800;
@@ -38,15 +47,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  const body = (await request.json()) as CreateGigArgs;
   if (!body) {
-    return NextResponse.json(
-      { message: "You must provide gig data in the request body." },
-      { status: 400 },
-    );
+    return toResponse(missingBodyError);
+  }
+  const { user } = (await getServerSession(authOptions)) || {};
+  if (!user) {
+    return toResponse(mustBeAuthenticatedError);
   }
 
-  const { imageUrl, slug } = body;
+  const { bands, imageUrl, slug } = body;
   let blobImageUrl: string | undefined = undefined;
   if (imageUrl) {
     // Download image and store it in blob storage
@@ -65,10 +75,36 @@ export async function POST(request: NextRequest) {
     blobImageUrl = url;
   }
   try {
+    // Create inexisting bands
+    const toCreateBands = bands.filter((b) => !b.id);
+    const createdBands = await Promise.all(
+      toCreateBands.map(async (band) => {
+        const createdBand = await prisma.band.create({
+          data: {
+            name: band.name,
+            genres: { connect: band.genres.map((g) => ({ id: g })) },
+          },
+        });
+        return createdBand;
+      }),
+    );
+    const toConnectBands = bands.filter((b) => b.id);
+    const slug = computeGigSlug({ bands: bands, date: body.date });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { placeId, ...bodyWithoutPlaceId } = body;
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
-        ...body,
+        ...bodyWithoutPlaceId,
+        bands: {
+          connect: [...createdBands, ...toConnectBands].map((b) => ({
+            id: b.id,
+          })),
+        },
         imageUrl: blobImageUrl,
+        author: { connect: { id: user.id } },
+        slug: slug,
+        place: { connect: { id: body.placeId } },
       }),
       include: { bands: true },
     });

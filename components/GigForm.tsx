@@ -15,7 +15,7 @@ import {
   Image,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
-import { Band, Genre, Place } from "@prisma/client";
+import { Genre, Place } from "@prisma/client";
 import { IconTrash } from "@tabler/icons-react";
 import { FormEvent } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
@@ -27,28 +27,15 @@ import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
+import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
-
-export type AddGigValues = {
-  bands: Array<
-    Omit<Band, "id" | "genres"> & {
-      id?: BandWithGenres["id"] | undefined;
-      key: string;
-      genres: Array<Genre["id"]>;
-    }
-  >;
-  date: Date | null;
-  imageUrl?: string;
-  place: Place["id"] | null;
-  ticketReservationLink?: string;
-};
 
 const getNewBand = () => ({ name: "", genres: [], key: randomId() });
 
 type Props = {
   isLoading: boolean;
-  onSubmit: (values: AddGigValues) => Promise<boolean>;
+  onSubmit: (values: CreateGigArgs) => Promise<boolean>;
 };
 
 export default function GigForm({ isLoading, onSubmit }: Props) {
@@ -61,19 +48,22 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
     queryFn: async () => await getPlaces(),
   });
 
-  const form = useForm<AddGigValues>({
+  const form = useForm<Omit<CreateGigArgs, "date"> & { date: Date | null }>({
     initialValues: {
       bands: [],
       date: null,
-      imageUrl: "",
-      place: null,
-      ticketReservationLink: "",
+      description: null,
+      imageUrl: null,
+      placeId: "",
+      ticketReservationLink: null,
+      title: null,
+      slug: "",
     },
     validate: {
       date: (value) => (value ? null : "La date du concert est requise."),
       imageUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
-      place: (value) => (value ? null : "Le lieu du concert est requis."),
+      placeId: (value) => (value ? null : "Le lieu du concert est requis."),
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
         genres: (value) => {
@@ -96,7 +86,10 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const isSuccess = await onSubmit(form.values);
+    const isSuccess = await onSubmit({
+      ...form.values,
+      date: form.values.date as Date, // date can't be null if the form is submitted
+    });
     if (isSuccess) {
       form.reset();
     }
@@ -121,7 +114,7 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
             value: place.id,
             label: place.name,
           }))}
-          {...form.getInputProps("place")}
+          {...form.getInputProps("placeId")}
         />
       </Stack>
 
@@ -211,7 +204,7 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
       />
 
       <Group justify="flex-end" mt="md">
-        <Button loading={isLoading} type="submit">
+        <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
           Ajouter le concert
         </Button>
       </Group>

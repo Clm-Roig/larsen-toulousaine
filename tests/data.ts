@@ -109,16 +109,19 @@ export const allBands: BandWithGenres[] = [
     id: "cloevz6el0051rmukb32qe4r6",
     name: "Devolution",
     genres: [allGenres[2], allGenres[0]],
+    createdAt: new Date(),
   },
   {
     id: "cloevz6el0051rmukb32qe59z",
     name: "Band 2",
     genres: [allGenres[8], allGenres[10]],
+    createdAt: new Date(),
   },
   {
     id: "cloevz8el0051rmukb32qe4r6",
     name: "Le Groupe 3 Cool",
     genres: [allGenres[1], allGenres[9], allGenres[14]],
+    createdAt: new Date(),
   },
 ];
 

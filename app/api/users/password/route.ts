@@ -1,54 +1,61 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { ERROR_NAMES, updatePasswordErrors } from "@/domain/User/errors";
+import {
+  incorrectPreviousPasswordError,
+  missingNewPasswordError,
+  missingPreviousPasswordError,
+  tooShortPasswordError,
+} from "@/domain/User/errors";
 import { MIN_PASSWORD_LENGTH } from "@/domain/User/constants";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { compare, genSaltSync, hashSync } from "bcryptjs";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-
-const getErrorResponse = (errorName: ERROR_NAMES) => {
-  const error = updatePasswordErrors.find((e) => e.name === errorName);
-  return NextResponse.json(error, { status: error?.status });
-};
+import {
+  CustomError,
+  missingAuthToken,
+  missingBodyError,
+  mustBeAuthenticatedError,
+  toResponse,
+} from "@/domain/errors";
 
 export async function PUT(request: NextRequest) {
   let body;
   try {
     body = await request.json();
   } catch (e) {
-    return getErrorResponse(ERROR_NAMES.MISSING_BODY);
+    return toResponse(missingBodyError);
   }
 
   // Validate data
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {
-    return getErrorResponse(ERROR_NAMES.MUST_BE_AUTHENTICATED);
+    return toResponse(mustBeAuthenticatedError);
   }
   const { id: userId } = user;
   const { newPassword, previousPassword } = body;
-  let error: NextResponse | null = null;
+  let error: CustomError | null = null;
   if (!previousPassword) {
-    error = getErrorResponse(ERROR_NAMES.MISSING_PREVIOUS_PASSWORD);
+    error = missingPreviousPasswordError;
   }
   if (!newPassword) {
-    error = getErrorResponse(ERROR_NAMES.MISSING_NEW_PASSWORD);
+    error = missingNewPasswordError;
   }
   if (newPassword.length < MIN_PASSWORD_LENGTH) {
-    error = getErrorResponse(ERROR_NAMES.TOO_SHORT_PASSWORD);
+    error = tooShortPasswordError;
   }
   if (error !== null) {
-    return error;
+    return toResponse(error);
   }
 
   try {
     // Check if previous password is ok
     const user = await prisma.user.findFirst({ where: { id: userId } });
     if (!user) {
-      return getErrorResponse(ERROR_NAMES.MISSING_AUTH_TOKEN);
+      return toResponse(missingAuthToken);
     }
     if (!(await compare(previousPassword, user.password))) {
-      return getErrorResponse(ERROR_NAMES.INCORRECT_PREVIOUS_PASSWORD);
+      return toResponse(incorrectPreviousPasswordError);
     }
 
     // Update password

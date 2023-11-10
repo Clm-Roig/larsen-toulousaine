@@ -1,5 +1,7 @@
+import { Band, Genre, Gig } from "@prisma/client";
 import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
+import { BandWithGenres } from "@/domain/Band/Band.type";
 
 export const getGigs = async (
   from: Date,
@@ -28,9 +30,21 @@ export const getGig = async (
   }
 };
 
+export type CreateGigArgs = Omit<
+  Gig,
+  "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled"
+> & {
+  bands: Array<
+    Omit<Band, "id" | "genres"> & {
+      id?: BandWithGenres["id"] | undefined;
+      key: string; // needed by the add gig form
+      genres: Array<Genre["id"]>;
+    }
+  >;
+};
+
 export const createGig = async (
-  // TODO: improve typing here
-  gig: unknown,
+  gig: CreateGigArgs,
 ): Promise<GigWithBandsAndPlace> => {
   try {
     const response = await api.post<GigWithBandsAndPlace>(`/gigs`, gig);
