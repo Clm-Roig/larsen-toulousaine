@@ -35,7 +35,7 @@ model Gig {
   placeId               String
   imageUrl              String?
   ticketReservationLink String?
-  slug                  String
+  slug                  String   @unique
   isCanceled            Boolean  @default(false)
 }
 

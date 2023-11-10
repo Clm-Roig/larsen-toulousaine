@@ -28,6 +28,7 @@ import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
+import { useRouter } from "next/navigation";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -39,6 +40,7 @@ type Props = {
 };
 
 export default function GigForm({ isLoading, onSubmit }: Props) {
+  const router = useRouter();
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -91,7 +93,9 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
       date: form.values.date as Date, // date can't be null if the form is submitted
     });
     if (isSuccess) {
-      form.reset();
+      // TODO: temporary workaround because form.reset() doesn't work as expected with null string
+      // and we don't want to use empty string as default values
+      router.push("/admin");
     }
   };
 
