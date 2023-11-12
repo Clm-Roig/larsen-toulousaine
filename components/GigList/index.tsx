@@ -1,6 +1,6 @@
 "use client";
 
-import GigCard from "./GigCard";
+import GigCard from "./GigCard/GigCard";
 import { Grid, Box, Loader, Text, Center } from "@mantine/core";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 import ListControls from "./ListControls";
