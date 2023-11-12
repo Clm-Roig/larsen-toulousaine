@@ -14,11 +14,11 @@ import { useRouter } from "next/navigation";
 
 const Header: React.FC = () => {
   const router = useRouter();
-  const { status, data: session } = useSession();
+  const { status } = useSession();
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
-    router.push("/");
+    router.push("/."); // using only "/" was not working
   };
 
   return (
@@ -29,21 +29,30 @@ const Header: React.FC = () => {
         </Text>
         {status === "authenticated" && (
           <Stack gap={0} align="center">
-            <Text size="s">Bienvenu&middot;e {session?.user.pseudo} !</Text>
             <Group>
               <Button
-                size="compact-xs"
+                size="compact-md"
                 color="primary.3"
                 component={Link}
                 href="/admin"
               >
                 Tableau de bord
               </Button>
-              <ActionIcon size="sm" bg="primary.3" onClick={handleSignOut}>
+              <ActionIcon size="md" bg="primary.3" onClick={handleSignOut}>
                 <IconLogin2 />
               </ActionIcon>
             </Group>
           </Stack>
+        )}
+        {status === "unauthenticated" && (
+          <Button
+            size="compact-md"
+            color="primary.3"
+            component={Link}
+            href="/admin"
+          >
+            Se connecter
+          </Button>
         )}
       </Group>
     </AppShell.Header>
