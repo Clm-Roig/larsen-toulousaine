@@ -42,6 +42,15 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           const slugData = getDataFromGigSlug(decodeURIComponent(subpath));
           const { date, bandNames } = slugData;
           text = date + " - " + bandNames.join(V_SEPARATOR);
+        } else {
+          // TODO: quick dirty fix for french translation
+          const frenchBreadcrumbDictionnary = {
+            Account: "Compte",
+            AddGig: "Ajout d'un concert",
+            Admin: "Administration",
+            Gigs: "Concerts",
+          };
+          text = frenchBreadcrumbDictionnary[text];
         }
         return {
           href,
@@ -56,12 +65,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
 
   const breadcrumbsItems = breadcrumbs.map((item, index) => (
     <Anchor href={item.href} key={index} component={Link}>
-      {/* TODO: quick dirty fixes */}
-      {item.text === "Gigs"
-        ? "Concerts"
-        : item.text === "AddGig"
-        ? "Ajouter un concert"
-        : item.text}
+      {item.text}
     </Anchor>
   ));
 
