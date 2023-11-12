@@ -36,7 +36,7 @@ const Header: React.FC = () => {
                 component={Link}
                 href="/admin"
               >
-                Tableau de bord
+                {`Panneau d'admin`}
               </Button>
               <ActionIcon size="md" bg="primary.3" onClick={handleSignOut}>
                 <IconLogin2 />
