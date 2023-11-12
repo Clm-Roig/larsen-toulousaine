@@ -54,7 +54,9 @@ export default function ListControls({
   return (
     <Flex justify="space-between" direction="row" w="100%">
       {/* Hidden button (same as the right on) for flex layout (left / center / right) */}
-      <Button style={{ visibility: "hidden" }}>Filtres</Button>
+      <Button visibleFrom="xs" style={{ visibility: "hidden" }}>
+        Filtres
+      </Button>
 
       <Group>
         <ActionIcon

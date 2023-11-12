@@ -25,14 +25,14 @@ const GigList = ({
 }: Props) => {
   return (
     <>
-      <Center mb="md">
+      <Box mb="md">
         <ListControls
           genres={genres}
           places={places}
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
         />
-      </Center>
+      </Box>
       {isLoading && (
         <Center>
           <Loader />

@@ -69,20 +69,21 @@ const GigPage = ({ gigSlug }: Props) => {
   return (
     <>
       <Title order={1}>{bandNames}</Title>
-      <Flex mt="md" direction={{ base: "column", sm: "row" }} gap={"md"}>
+      <Flex mt="md" direction={{ base: "column", md: "row" }} gap={"md"}>
         <Box
           mah={IMAGE_MAX_HEIGHT}
           maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
           pos="relative"
+          m={{ base: "auto", md: 0 }}
         >
           <Image
             src={imageUrl}
             alt={"Affiche du concert"}
             opacity={isCanceled ? 0.7 : 1}
           />
-          {isCanceled && <CanceledGigOverlay height={IMAGE_MAX_HEIGHT} />}
+          {isCanceled && <CanceledGigOverlay />}
         </Box>
-        <Flex direction="column" gap="sm">
+        <Flex direction="column" gap="sm" w="100%">
           {isCanceled && (
             <Alert
               color="red.9"
@@ -96,7 +97,7 @@ const GigPage = ({ gigSlug }: Props) => {
               }}
             />
           )}
-          <Text>
+          <Text fw="bold">
             {capitalize(dayjs(rawDate).locale("fr").format("dddd DD MMMM"))}
           </Text>
 

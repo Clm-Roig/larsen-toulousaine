@@ -1,17 +1,17 @@
-import { Center, Stack, Text } from "@mantine/core";
+import { Center, Box, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 
-type Props = { height: number };
-
-export default function CanceledGigOverlay({ height }: Props) {
+export default function CanceledGigOverlay() {
   return (
-    <Center pos="absolute" top={0} w={"100%"} h={height} ta="center" c="red.9">
-      <Stack gap={0}>
-        <IconX size={132} />
-        <Text c="red" bg="rgba(0,0,0,0.8)" fw="bold">
+    <>
+      <Center pos="absolute" top={0} w="100%" h="100%" ta="center" c="red.9">
+        <IconX size={"66.6666%"} />
+      </Center>
+      <Box pos="absolute" bottom={0} w="100%" ta="center" c="red.9">
+        <Text c="red" bg="rgba(0,0,0,0.8)" fw="bold" w="100%">
           ANNULÉ
         </Text>
-      </Stack>
-    </Center>
+      </Box>
+    </>
   );
 }
