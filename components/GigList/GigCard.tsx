@@ -42,17 +42,17 @@ const GigCard = ({ gig }: Props) => {
       style={{ border: isCanceled ? "1px solid red" : "" }}
     >
       <Card.Section>
-        <Image
-          src={gig.imageUrl}
-          h={getGigImgHeight(CARD_WIDTH)}
-          alt={"Concert " + bandNames}
-          fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
-            getGigImgHeight(CARD_WIDTH),
-          )}?text=.`}
-        />
-        {isCanceled && (
-          <CanceledGigOverlay height={getGigImgHeight(CARD_WIDTH)} />
-        )}
+        <Box style={{ position: "relative" }}>
+          <Image
+            src={gig.imageUrl}
+            h={getGigImgHeight(CARD_WIDTH)}
+            alt={"Concert " + bandNames}
+            fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
+              getGigImgHeight(CARD_WIDTH),
+            )}?text=.`}
+          />
+          {isCanceled && <CanceledGigOverlay />}
+        </Box>
       </Card.Section>
 
       <Box

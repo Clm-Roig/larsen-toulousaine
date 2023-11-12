@@ -11,6 +11,7 @@ import {
   Stack,
   Paper,
   Title,
+  Container,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -64,13 +65,15 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
     </Anchor>
   ));
 
-  const childrenWithTitle = (
+  const childrenWithTitle = title ? (
     <>
       <Title order={1} mb={"sm"}>
         {title}
       </Title>
       {children}
     </>
+  ) : (
+    <>{children}</>
   );
 
   return (
@@ -78,7 +81,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
       header={{ height: 64 }}
       // Hardcoded height values according to footer content.
       footer={{ height: { base: 64, xs: 42 } }}
-      padding="md"
+      padding={{ base: "xs", sm: "md" }}
       layout="alt"
       bg="#efefef"
     >
@@ -87,14 +90,18 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
       </AppShell.Header>
 
       <AppShell.Main>
-        <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
-        {withPaper ? (
-          <Paper p="md" mt="sm" bg="white" shadow="sm">
-            {childrenWithTitle}
-          </Paper>
-        ) : (
-          <Box mt={0}>{childrenWithTitle}</Box>
-        )}
+        <Container fluid>
+          <Box style={{ overflow: "clip" }}>
+            <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
+          </Box>
+          {withPaper ? (
+            <Paper p="md" mt="sm" bg="white" shadow="sm">
+              {childrenWithTitle}
+            </Paper>
+          ) : (
+            <Box mt={0}>{childrenWithTitle}</Box>
+          )}
+        </Container>
       </AppShell.Main>
 
       <AppShell.Footer p="xs">
