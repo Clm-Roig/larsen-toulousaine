@@ -36,13 +36,23 @@ export async function GET(request: NextRequest) {
       place: true,
       bands: {
         include: {
-          genres: true,
+          band: {
+            include: {
+              genres: true,
+            },
+          },
         },
       },
     },
   });
+
+  const cleanedGigs = gigs.map((gig) => ({
+    ...gig,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+    bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
+  }));
   return NextResponse.json({
-    gigs: gigs,
+    gigs: cleanedGigs,
   });
 }
 
@@ -85,7 +95,7 @@ export async function POST(request: NextRequest) {
             genres: { connect: band.genres.map((g) => ({ id: g })) },
           },
         });
-        return createdBand;
+        return { ...createdBand, order: band.order };
       }),
     );
     const toConnectBands = bands.filter((b) => b.id);
@@ -97,8 +107,13 @@ export async function POST(request: NextRequest) {
       data: Prisma.validator<Prisma.GigCreateInput>()({
         ...bodyWithoutPlaceId,
         bands: {
-          connect: [...createdBands, ...toConnectBands].map((b) => ({
-            id: b.id,
+          create: [...toConnectBands, ...createdBands].map((band) => ({
+            band: {
+              connect: {
+                id: band.id,
+              },
+            },
+            order: band.order,
           })),
         },
         imageUrl: blobImageUrl,

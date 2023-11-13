@@ -13,6 +13,7 @@ import {
   Box,
   TextInput,
   Image,
+  Paper,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Genre, Place } from "@prisma/client";
@@ -29,10 +30,15 @@ import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 import { useRouter } from "next/navigation";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
-const getNewBand = () => ({ name: "", genres: [], key: randomId() });
+const getNewBand = () => ({
+  name: "",
+  genres: [],
+  key: randomId(),
+});
 
 type Props = {
   isLoading: boolean;
@@ -90,6 +96,7 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
     e.preventDefault();
     const isSuccess = await onSubmit({
       ...form.values,
+      bands: form.values.bands.map((b, i) => ({ ...b, order: i + 1 })),
       date: form.values.date as Date, // date can't be null if the form is submitted
     });
     if (isSuccess) {
@@ -133,45 +140,70 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
         onBandSelect={handleOnSelectBand}
       />
 
-      {form.values.bands.map((band, index) => (
-        <Group
-          h={index === 0 ? 80 : 60}
-          key={band.id || band.key}
-          mt="xs"
-          style={{ alignItems: "flex-start" }}
-        >
-          <TextInput
-            label={index === 0 ? "Nom du groupe" : ""}
-            required
-            disabled={!!form.values.bands[index].id}
-            {...form.getInputProps(`bands.${index}.name`)}
-          />
+      <DragDropContext
+        onDragEnd={({ destination, source }) =>
+          form.reorderListItem("bands", {
+            from: source.index,
+            to: destination?.index || 0,
+          })
+        }
+      >
+        <Droppable droppableId="dnd-list" direction="vertical">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {form.values.bands.map((band, index) => (
+                <Draggable
+                  key={band.id || band.key}
+                  index={index}
+                  draggableId={band.id || band.key}
+                >
+                  {(provided) => (
+                    <Paper
+                      p="xs"
+                      mt="xs"
+                      withBorder
+                      shadow="none"
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                    >
+                      <Group h={60} style={{ alignItems: "flex-start" }}>
+                        <TextInput
+                          required
+                          disabled={!!form.values.bands[index].id}
+                          placeholder="Nom du groupe"
+                          {...form.getInputProps(`bands.${index}.name`)}
+                        />
 
-          <GenreSelect
-            label={index === 0 ? "Genre(s) (3 max)" : ""}
-            withAsterisk
-            maxValues={MAX_GENRES_PER_BAND}
-            genres={genres || []}
-            style={{ flex: 1 }}
-            disabled={!!form.values.bands[index].id}
-            {...form.getInputProps(`bands.${index}.genres`)}
-          />
+                        <GenreSelect
+                          withAsterisk
+                          maxValues={MAX_GENRES_PER_BAND}
+                          genres={genres || []}
+                          style={{ flex: 1 }}
+                          placeholder="Genres (3 max)"
+                          disabled={!!form.values.bands[index].id}
+                          {...form.getInputProps(`bands.${index}.genres`)}
+                        />
 
-          <Box
-            style={{
-              alignSelf: index === 0 ? "center" : undefined,
-            }}
-          >
-            <ActionIcon
-              color="red"
-              onClick={() => form.removeListItem("bands", index)}
-              size="lg"
-            >
-              <IconTrash size="1rem" />
-            </ActionIcon>
-          </Box>
-        </Group>
-      ))}
+                        <Box>
+                          <ActionIcon
+                            color="red"
+                            onClick={() => form.removeListItem("bands", index)}
+                            size="lg"
+                          >
+                            <IconTrash size="1rem" />
+                          </ActionIcon>
+                        </Box>
+                      </Group>
+                    </Paper>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <Group justify="center" mt="sm">
         <Button

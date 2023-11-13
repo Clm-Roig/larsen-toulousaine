@@ -66,6 +66,7 @@ const GigPage = ({ gigSlug }: Props) => {
     ticketReservationLink,
   } = gig || {};
   const bandNames = getBandNames(bands || []);
+
   return (
     <>
       <Title order={1}>{bandNames}</Title>

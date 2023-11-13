@@ -27,10 +27,19 @@ export async function GET(
       place: true,
       bands: {
         include: {
-          genres: true,
+          band: {
+            include: {
+              genres: true,
+            },
+          },
         },
       },
     },
   });
-  return NextResponse.json(gig);
+  const cleanedGig = {
+    ...gig,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+    bands: gig?.bands.map((b) => ({ ...b.band, order: b.order })),
+  };
+  return NextResponse.json(cleanedGig);
 }

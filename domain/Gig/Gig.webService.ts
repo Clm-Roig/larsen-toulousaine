@@ -39,6 +39,7 @@ export type CreateGigArgs = Omit<
       id?: BandWithGenres["id"] | undefined;
       key: string; // needed by the add gig form
       genres: Array<Genre["id"]>;
+      order: number;
     }
   >;
 };

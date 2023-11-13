@@ -14,29 +14,29 @@ enum Role {
 }
 
 model Band {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @map(name: "created_at")
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now()) @map(name: "created_at")
   name      String
   genres    Genre[]
-  Gigs      Gig[]
+  gigs      BandsOnGigs[]
 }
 
 model Gig {
-  id                    String   @id @default(cuid())
+  id                    String        @id @default(cuid())
   title                 String?
-  bands                 Band[]
   date                  DateTime
   description           String?
-  author                User     @relation(fields: [authorId], references: [id])
+  author                User          @relation(fields: [authorId], references: [id])
   authorId              String
-  createdAt             DateTime @default(now()) @map(name: "created_at")
-  updatedAt             DateTime @updatedAt @map(name: "updated_at")
-  place                 Place    @relation(fields: [placeId], references: [id])
+  createdAt             DateTime      @default(now()) @map(name: "created_at")
+  updatedAt             DateTime      @updatedAt @map(name: "updated_at")
+  place                 Place         @relation(fields: [placeId], references: [id])
   placeId               String
   imageUrl              String?
   ticketReservationLink String?
-  slug                  String   @unique
-  isCanceled            Boolean  @default(false)
+  slug                  String        @unique
+  isCanceled            Boolean       @default(false)
+  bands                 BandsOnGigs[]
 }
 
 model User {
@@ -63,4 +63,14 @@ model Place {
   id   String @id @default(cuid())
   name String @unique
   gigs Gig[]
+}
+
+model BandsOnGigs {
+  band   Band   @relation(fields: [bandId], references: [id])
+  bandId String // relation scalar field (used in the `@relation` attribute above)
+  gig    Gig    @relation(fields: [gigId], references: [id], onDelete: Cascade)
+  gigId  String // relation scalar field (used in the `@relation` attribute above)
+  order  Int
+
+  @@id([bandId, gigId])
 }

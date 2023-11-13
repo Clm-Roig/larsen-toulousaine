@@ -30,7 +30,7 @@ type Props = {
 const GigCard = ({ gig }: Props) => {
   const { bands, date: rawDate, isCanceled, place } = gig;
   const { status } = useSession();
-  const bandNames = getBandNames(bands);
+  const bandNames = getBandNames(bands.sort((b1, b2) => b1.order - b2.order));
   const bandGenres = getUniqueBandGenres(bands);
 
   const date = new Date(rawDate);
