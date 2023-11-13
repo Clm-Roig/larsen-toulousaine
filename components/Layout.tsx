@@ -17,6 +17,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { V_SEPARATOR, capitalize } from "../utils/utils";
 import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
+import { useHeadroom } from "@mantine/hooks";
 
 type Props = {
   children: ReactNode;
@@ -34,6 +35,7 @@ const frenchBreadcrumbDictionnary = {
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const pathname = usePathname();
+  const pinned = useHeadroom({ fixedAt: 100 });
 
   const breadcrumbs = useMemo(
     function generateBreadcrumbs() {
@@ -84,11 +86,12 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
 
   return (
     <AppShell
-      header={{ height: 64 }}
+      header={{ height: 64, collapsed: !pinned }}
       padding={{ base: "xs", sm: "md" }}
+      withBorder={false}
       bg="#efefef"
     >
-      <AppShell.Header>
+      <AppShell.Header style={{ boxShadow: "0px 0px 3px black" }}>
         <Header />
       </AppShell.Header>
 
