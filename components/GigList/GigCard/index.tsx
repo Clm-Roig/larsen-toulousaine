@@ -99,7 +99,7 @@ const GigCard = ({ gig }: Props) => {
 
       {status === "authenticated" && (
         <CardTopBox position="right" width={MENU_ICON_WIDTH}>
-          <CardMenu />
+          <CardMenu gig={gig} />
         </CardTopBox>
       )}
     </Box>

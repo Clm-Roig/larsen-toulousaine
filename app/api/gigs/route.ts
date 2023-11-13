@@ -14,10 +14,11 @@ import {
 } from "@/domain/errors";
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
-
-const IMG_OUTPUT_FORMAT = "jpg";
-const IMG_MAX_WIDTH = 800;
-const IMG_MAX_HEIGHT = Math.round((IMG_MAX_WIDTH * 9) / 16);
+import {
+  IMG_MAX_HEIGHT,
+  IMG_MAX_WIDTH,
+  IMG_OUTPUT_FORMAT,
+} from "@/domain/Gig/constants";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

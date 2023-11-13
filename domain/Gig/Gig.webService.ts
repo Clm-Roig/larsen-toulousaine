@@ -34,6 +34,8 @@ export type CreateGigArgs = Omit<
   Gig,
   "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled"
 > & {
+  id?: string;
+  createdAt?: Date;
   bands: Array<
     Omit<Band, "id" | "genres"> & {
       id?: BandWithGenres["id"] | undefined;
@@ -49,6 +51,30 @@ export const createGig = async (
 ): Promise<GigWithBandsAndPlace> => {
   try {
     const response = await api.post<GigWithBandsAndPlace>(`/gigs`, gig);
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export type EditGigArgs = Gig & {
+  bands: Array<
+    Omit<Band, "id" | "genres"> & {
+      id: BandWithGenres["id"];
+      genres: Array<Genre["id"]>;
+      order: number;
+    }
+  >;
+};
+
+export const editGig = async (
+  gig: EditGigArgs,
+): Promise<GigWithBandsAndPlace> => {
+  try {
+    const response = await api.put<GigWithBandsAndPlace>(
+      `/gigs/${gig.id}`,
+      gig,
+    );
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));

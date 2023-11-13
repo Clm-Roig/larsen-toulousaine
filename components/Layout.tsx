@@ -31,6 +31,7 @@ const frenchBreadcrumbDictionnary = {
   Admin: "Administration",
   Gigs: "Concerts",
   Users: "Utilisateurs",
+  Edit: "Éditer",
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
@@ -54,7 +55,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           text = date + " - " + bandNames.join(V_SEPARATOR);
         } else {
           // TODO: quick dirty fix for french translation
-          text = frenchBreadcrumbDictionnary[text];
+          text = frenchBreadcrumbDictionnary[text] || text;
         }
         return {
           href,

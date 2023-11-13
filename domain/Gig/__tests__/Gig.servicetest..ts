@@ -6,7 +6,9 @@ import { expect, describe, it } from "@jest/globals";
 describe("Gig service", () => {
   describe("computeGigSlug", () => {
     it("contains band names & gig date", () => {
-      const gigBands = allBands.slice(0, 2);
+      const gigBands = allBands
+        .slice(0, 2)
+        .map((b, idx) => ({ ...b, order: idx + 1 }));
       const gig: GigWithBandsAndPlace = {
         id: "oiqdkjioaz8549849d8",
         bands: gigBands,
@@ -14,6 +16,7 @@ describe("Gig service", () => {
         place: allPlaces[0],
         createdAt: new Date(),
         updatedAt: new Date(),
+        isCanceled: false,
         title: null,
         authorId: allUsers[0].id,
         description: null,

@@ -1,7 +1,12 @@
 import { Menu as MantineMenu, ActionIcon, rem } from "@mantine/core";
+import { Gig } from "@prisma/client";
 import { IconDots, IconEdit, IconTrash, IconX } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
-export default function CardMenu() {
+type Props = { gig: Gig };
+
+export default function CardMenu({ gig }: Props) {
+  const router = useRouter();
   return (
     <MantineMenu position="bottom-end" shadow="sm" withinPortal>
       <MantineMenu.Target>
@@ -13,9 +18,9 @@ export default function CardMenu() {
       <MantineMenu.Dropdown>
         <MantineMenu.Item
           leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
-          disabled
+          onClick={() => router.push(`/${gig.slug}/edit`)}
         >
-          Modifier (soon™)
+          Éditer
         </MantineMenu.Item>
         <MantineMenu.Item
           leftSection={<IconX style={{ width: rem(14), height: rem(14) }} />}

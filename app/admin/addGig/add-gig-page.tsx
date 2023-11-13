@@ -6,13 +6,14 @@ import { Box } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 
 export default function AddGig() {
-  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOnSubmit = async (values: CreateGigArgs) => {
-    let isSuccess: boolean = false;
     setIsLoading(true);
     const { user } = session || {};
 
@@ -23,19 +24,17 @@ export default function AddGig() {
           color: "green",
           message: "Concert ajouté avec succès !",
         });
-        isSuccess = true;
+        router.push(`/admin`);
       } catch (error) {
         notifications.show({
           color: "red",
           title: "Erreur à la création d'un concert",
           message: error.message,
         });
-        isSuccess = false;
       } finally {
         setIsLoading(false);
       }
     }
-    return isSuccess;
   };
 
   return (

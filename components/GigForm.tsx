@@ -18,7 +18,7 @@ import {
 import DatePickerInput from "./DatePickerInput";
 import { Genre, Place } from "@prisma/client";
 import { IconTrash } from "@tabler/icons-react";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
 import { MAX_GENRES_PER_BAND } from "../domain/Band/constants";
@@ -28,9 +28,9 @@ import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
-import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
-import { useRouter } from "next/navigation";
+import { CreateGigArgs, EditGigArgs } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -41,12 +41,12 @@ const getNewBand = () => ({
 });
 
 type Props = {
+  gig?: GigWithBandsAndPlace;
   isLoading: boolean;
-  onSubmit: (values: CreateGigArgs) => Promise<boolean>;
+  onSubmit: (values: CreateGigArgs | EditGigArgs) => Promise<void>;
 };
 
-export default function GigForm({ isLoading, onSubmit }: Props) {
-  const router = useRouter();
+export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -84,6 +84,23 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
     validateInputOnBlur: true,
   });
 
+  useEffect(() => {
+    if (!form.values.id && gig?.id) {
+      form.setValues({
+        ...gig,
+        bands: gig.bands
+          .sort((b1, b2) => b1.order - b2.order)
+          .map((band) => ({
+            ...band,
+            genres: band.genres.map((g) => g.id),
+            key: band.id,
+          })),
+        date: new Date(gig.date),
+        slug: "", // slug will be recomputed when saving the gig
+      });
+    }
+  }, [form, gig]);
+
   const handleOnSelectBand = (band: BandWithGenres) => {
     form.insertListItem(`bands`, {
       ...band,
@@ -94,16 +111,11 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const isSuccess = await onSubmit({
+    await onSubmit({
       ...form.values,
       bands: form.values.bands.map((b, i) => ({ ...b, order: i + 1 })),
       date: form.values.date as Date, // date can't be null if the form is submitted
     });
-    if (isSuccess) {
-      // TODO: temporary workaround because form.reset() doesn't work as expected with null string
-      // and we don't want to use empty string as default values
-      router.push("/admin");
-    }
   };
 
   return (
@@ -241,7 +253,7 @@ export default function GigForm({ isLoading, onSubmit }: Props) {
 
       <Group justify="flex-end" mt="md">
         <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
-          Ajouter le concert
+          {form.values.id ? "Éditer le concert" : "Ajouter le concert"}
         </Button>
       </Group>
     </form>

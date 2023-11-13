@@ -13,6 +13,9 @@ import {
   Anchor,
   Skeleton,
   Alert,
+  Menu,
+  rem,
+  ActionIcon,
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -24,8 +27,10 @@ import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { IconX } from "@tabler/icons-react";
+import { IconDots, IconEdit, IconTrash, IconX } from "@tabler/icons-react";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 require("dayjs/locale/fr");
 
 type Props = {
@@ -35,6 +40,8 @@ type Props = {
 const IMAGE_MAX_HEIGHT = 250;
 
 const GigPage = ({ gigSlug }: Props) => {
+  const router = useRouter();
+  const { status } = useSession();
   const { data: gig, isLoading } = useQuery<
     (GigWithBandsAndPlace & GigWithAuthor) | null,
     Error
@@ -68,8 +75,35 @@ const GigPage = ({ gigSlug }: Props) => {
   const bandNames = getBandNames(bands || []);
 
   return (
-    <>
+    <Box pos="relative">
       <Title order={1}>{bandNames}</Title>
+      {status === "authenticated" && (
+        <Box pos="absolute" top={0} right={0}>
+          <Menu shadow="sm" withinPortal position="bottom-end">
+            <Menu.Target>
+              <ActionIcon>
+                <IconDots style={{ width: rem(16), height: rem(16) }} />
+              </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconEdit />}
+                onClick={() => router.push(`/${gig?.slug}/edit`)}
+              >
+                Éditer
+              </Menu.Item>
+              <Menu.Item leftSection={<IconX />} disabled>
+                Annuler (soon™)
+              </Menu.Item>
+              <Menu.Item leftSection={<IconTrash />} disabled>
+                Supprimer (soon™)
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Box>
+      )}
+
       <Flex mt="md" direction={{ base: "column", md: "row" }} gap={"md"}>
         <Box
           mah={IMAGE_MAX_HEIGHT}
@@ -130,7 +164,7 @@ const GigPage = ({ gigSlug }: Props) => {
           <Text>{place?.name}</Text>
         </Flex>
       </Flex>
-    </>
+    </Box>
   );
 };
 

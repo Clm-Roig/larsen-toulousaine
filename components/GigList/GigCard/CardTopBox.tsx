@@ -1,4 +1,4 @@
-import { TOP_BOX_HEIGHT } from "@/components/GigList/GigCard/GigCard";
+import { TOP_BOX_HEIGHT } from "@/components/GigList/GigCard";
 import { Box, useMantineTheme } from "@mantine/core";
 import { ReactNode } from "react";
 
