@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { EditGigArgs } from "@/domain/Gig/Gig.webService";
-import { put as blobPut, del as blobDelete } from "@vercel/blob";
+import { del as blobDelete } from "@vercel/blob";
 import {
   IMG_MAX_HEIGHT,
   IMG_MAX_WIDTH,
@@ -15,9 +15,9 @@ import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import sharp from "sharp";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
+import { downloadImage } from "@/utils/image";
 
 export async function GET(
   request: NextRequest,
@@ -91,20 +91,16 @@ export async function PUT(request: NextRequest) {
   let blobImageUrl: string | undefined = prevImageUrl ?? undefined;
   const hasImageChanged = imageUrl && imageUrl !== prevImageUrl;
   if (hasImageChanged) {
-    // Download image and store it in blob storage
-    const response = await fetch(imageUrl);
-    const arrayBufferImg = await (await response.blob()).arrayBuffer();
-    const bufferImg = Buffer.from(arrayBufferImg);
-    const resizedImg = await sharp(bufferImg)
-      .resize(IMG_MAX_WIDTH, IMG_MAX_HEIGHT, {
+    blobImageUrl = await downloadImage({
+      filename: slug,
+      imageFormat: IMG_OUTPUT_FORMAT,
+      imageUrl: imageUrl,
+      resizeOptions: {
+        height: IMG_MAX_HEIGHT,
+        width: IMG_MAX_WIDTH,
         withoutEnlargement: true,
-      })
-      .toFormat(IMG_OUTPUT_FORMAT)
-      .toBuffer();
-    const { url } = await blobPut(slug + ".jpg", new Blob([resizedImg]), {
-      access: "public",
+      },
     });
-    blobImageUrl = url;
   }
   try {
     // Create inexisting bands

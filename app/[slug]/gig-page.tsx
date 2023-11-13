@@ -19,7 +19,7 @@ import {
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
-import { capitalize, getTextColorBasedOnBgColor } from "../../utils/utils";
+import { capitalize } from "../../utils/utils";
 import ExternalLink from "../../components/ExternalLink";
 import { getGigImgWidth } from "../../domain/image";
 import { getGenreColor } from "../../domain/Genre/Genre.service";
@@ -31,6 +31,7 @@ import { IconDots, IconEdit, IconTrash, IconX } from "@tabler/icons-react";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { getTextColorBasedOnBgColor } from "@/utils/color";
 require("dayjs/locale/fr");
 
 type Props = {

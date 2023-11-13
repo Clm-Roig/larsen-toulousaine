@@ -1,5 +1,5 @@
+import { stringToColor } from "@/utils/color";
 import { Genre } from "@prisma/client";
-import { stringToColor } from "../../utils/utils";
 
 export const getGenreColor = (genre: Genre): string => {
   if (genre?.color) {
