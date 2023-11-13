@@ -23,14 +23,29 @@ const genres = [
   { name: "Stoner", color: "#aaffc3" },
   { name: "Sludge", color: "#800000" },
   { name: "Thrash Metal", color: "#bfef45" },
+
+  { name: "Metal Expérimental" },
+  { name: "Metal Symphonique" },
+
+  { name: "Blues" },
+  { name: "Électro" },
+  { name: "Folk" },
+  { name: "Jazz" },
+  { name: "Rap" },
+  { name: "Rock" },
 ];
 
 const places = [
   "Axis Musique",
-  "Le Bikini",
-  "Le Connexion Live",
-  "Le Rex",
-  "L'Engrenage",
+  "Bikini",
+  "Connexion Live",
+  "Engrenage",
+  "Espace Claude Ducert",
+  "Loupiote",
+  "Metronum",
+  "Rex",
+  "Usine à Musique",
+  "Zénith",
 ];
 
 async function main() {
