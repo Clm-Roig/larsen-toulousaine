@@ -5,14 +5,14 @@ import { verifyAndDecodeJwt } from "@/lib/jwt";
 const isAdminRoute = (pathname: string, req: NextRequest) => {
   const conditions = [
     pathname.startsWith("/api/users") &&
-      ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
+      ["POST", "DELETE"].includes(req.method),
   ];
   return conditions.includes(true);
 };
 
 const isModeratorRoute = (pathname: string, req: NextRequest) => {
   const conditions = [
-    pathname.startsWith("/api/users"),
+    pathname.startsWith("/api/users") && ["PUT", "PATCH"].includes(req.method),
     pathname.startsWith("/api/gigs") &&
       ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
   ];
