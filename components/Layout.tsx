@@ -49,6 +49,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
             AddGig: "Ajout d'un concert",
             Admin: "Administration",
             Gigs: "Concerts",
+            Users: "Utilisateurs",
           };
           text = frenchBreadcrumbDictionnary[text];
         }
