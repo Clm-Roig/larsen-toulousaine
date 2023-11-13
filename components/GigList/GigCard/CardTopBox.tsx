@@ -25,7 +25,17 @@ export default function CardTopBox({ children, position, width }: Props) {
       bg={"primary"}
       ta="center"
       style={{
-        borderBottomRightRadius: theme.radius[theme.defaultRadius] as string,
+        ...(position === "left"
+          ? {
+              borderBottomRightRadius: theme.radius[
+                theme.defaultRadius
+              ] as string,
+            }
+          : {
+              borderBottomLeftRadius: theme.radius[
+                theme.defaultRadius
+              ] as string,
+            }),
       }}
     >
       {children}
