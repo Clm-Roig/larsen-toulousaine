@@ -24,6 +24,14 @@ type Props = {
   withPaper?: boolean;
 };
 
+const frenchBreadcrumbDictionnary = {
+  Account: "Compte",
+  AddGig: "Ajout d'un concert",
+  Admin: "Administration",
+  Gigs: "Concerts",
+  Users: "Utilisateurs",
+};
+
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const pathname = usePathname();
 
@@ -44,13 +52,6 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           text = date + " - " + bandNames.join(V_SEPARATOR);
         } else {
           // TODO: quick dirty fix for french translation
-          const frenchBreadcrumbDictionnary = {
-            Account: "Compte",
-            AddGig: "Ajout d'un concert",
-            Admin: "Administration",
-            Gigs: "Concerts",
-            Users: "Utilisateurs",
-          };
           text = frenchBreadcrumbDictionnary[text];
         }
         return {
@@ -84,10 +85,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   return (
     <AppShell
       header={{ height: 64 }}
-      // Hardcoded height values according to footer content.
-      footer={{ height: { base: 64, xs: 42 } }}
       padding={{ base: "xs", sm: "md" }}
-      layout="alt"
       bg="#efefef"
     >
       <AppShell.Header>
@@ -109,7 +107,8 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         </Container>
       </AppShell.Main>
 
-      <AppShell.Footer p="xs">
+      {/* Can't use AppShell.Footer because it's sticking above the content on mobile view */}
+      <Paper w="100%" mt="md" p="sm">
         <Stack align="center" gap={0}>
           <Text size="sm">
             Développé par{" "}
@@ -125,7 +124,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
             </Anchor>
           </Text>
         </Stack>
-      </AppShell.Footer>
+      </Paper>
     </AppShell>
   );
 };
