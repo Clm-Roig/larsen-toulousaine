@@ -60,9 +60,12 @@ model Genre {
 }
 
 model Place {
-  id   String @id @default(cuid())
-  name String @unique
-  gigs Gig[]
+  id      String  @id @default(cuid())
+  name    String  @unique
+  address String?
+  city    String?
+  website String?
+  gigs    Gig[]
 }
 
 model BandsOnGigs {

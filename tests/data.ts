@@ -129,14 +129,23 @@ export const allPlaces: Place[] = [
   {
     id: "cloev8798l0051rmukb32qe4r6",
     name: "La Cave",
+    address: "8 rue du hasard",
+    city: "Toulouse",
+    website: null,
   },
   {
     id: "cloevz6el0051rmukb32qzz54s",
     name: "L'Elixir",
+    address: "78 avenue Chuck Schuldiner",
+    city: "Labège",
+    website: null,
   },
   {
     id: "cloevz785z051rmukb32qe4r6",
     name: "Le Stadium très grand",
+    address: "5 impasse Lenny",
+    city: "Toulouse",
+    website: null,
   },
 ];
 

@@ -36,16 +36,28 @@ const genres = [
 ];
 
 const places = [
-  "Axis Musique",
-  "Bikini",
-  "Connexion Live",
-  "Engrenage",
-  "Espace Claude Ducert",
-  "Loupiote",
-  "Metronum",
-  "Rex",
-  "Usine à Musique",
-  "Zénith",
+  { name: "Axis Musique", address: "7 impasse Boudeville", city: "Toulouse" },
+  {
+    name: "Bikini",
+    address: "Rue Théodore Monod, Parc Technologique du Canal",
+    city: "Ramonville-Saint-Agne",
+  },
+  { name: "Connexion Live", address: "8 rue Gabriel Péri", city: "Toulouse" },
+  { name: "Engrenage", address: "14 rue Louis Renault", city: "Balma" },
+  {
+    name: "Espace Claude Ducert",
+    address: "1 avenue Paul Riquet",
+    city: "Labège",
+  },
+  { name: "Loupiote", address: "39 rue Reclusane", city: "Toulouse" },
+  {
+    name: "Metronum",
+    address: "2 rond-point Madame de Mondonville",
+    city: "Toulouse",
+  },
+  { name: "Rex", address: "15 avenue Honoré Serres", city: "Toulouse" },
+  { name: "Usine à Musique", address: "Rue Louis Bonin", city: "Toulouse" },
+  { name: "Zénith", address: "11 avenue Raymond Badiou", city: "Toulouse" },
 ];
 
 async function main() {
@@ -60,11 +72,11 @@ async function main() {
   );
 
   await prisma.$transaction(
-    places.map((placeName) =>
+    places.map((place) =>
       prisma.place.upsert({
-        where: { name: placeName },
+        where: { name: place.name },
         update: {},
-        create: { name: placeName },
+        create: place,
       }),
     ),
   );

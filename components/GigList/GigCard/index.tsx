@@ -14,6 +14,7 @@ import CardMenu from "@/components/GigList/GigCard/CardMenu";
 import CardTopBox from "@/components/GigList/GigCard/CardTopBox";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
+import { MAIN_CITY } from "@/domain/Place/constants";
 require("dayjs/locale/fr");
 
 const DATE_WIDTH = 96;
@@ -78,7 +79,14 @@ const GigCard = ({ gig }: Props) => {
               ))}
             </Group>
           </Stack>
-          <Text>{place.name}</Text>
+          <Text>
+            {place.name}
+            {place.city !== MAIN_CITY && (
+              <Text span size="xs">
+                {` (${place.city?.toUpperCase()})`}
+              </Text>
+            )}
+          </Text>
         </Stack>
       </Card>
 

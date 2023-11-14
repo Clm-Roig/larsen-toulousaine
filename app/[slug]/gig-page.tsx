@@ -162,7 +162,20 @@ const GigPage = ({ gigSlug }: Props) => {
             </ExternalLink>
           )}
 
-          <Text>{place?.name}</Text>
+          <Box>
+            <Text fw="bold">
+              {place?.website ? (
+                <ExternalLink href={place?.website}>{place.name}</ExternalLink>
+              ) : (
+                place?.name
+              )}
+            </Text>
+            <Text size="sm" mt={0}>
+              {place?.address &&
+                place.city &&
+                ` ${place?.address} - ${place?.city?.toUpperCase()}`}
+            </Text>
+          </Box>
         </Flex>
       </Flex>
     </Box>
