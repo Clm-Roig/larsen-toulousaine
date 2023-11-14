@@ -16,7 +16,6 @@ import {
   Menu,
   rem,
   ActionIcon,
-  NumberFormatter,
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -33,6 +32,7 @@ import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
+import Price from "@/components/Price";
 require("dayjs/locale/fr");
 
 type Props = {
@@ -179,23 +179,7 @@ const GigPage = ({ gigSlug }: Props) => {
 
           {(!!price || price === 0 || ticketReservationLink) && (
             <Flex gap="sm" align="baseline">
-              {!!price && (
-                <Text>
-                  À partir de{" "}
-                  <Badge size="xl" color="primary" p="xs">
-                    <NumberFormatter
-                      suffix="€"
-                      decimalScale={2}
-                      value={price}
-                    />
-                  </Badge>
-                </Text>
-              )}
-              {price === 0 && (
-                <Badge size="lg" color="primary" p="xs">
-                  Prix libre ou gratuit
-                </Badge>
-              )}
+              {(price || price === 0) && <Price value={price} />}
               {ticketReservationLink && (
                 <ExternalLink href={ticketReservationLink}>
                   Réserver une place

@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
+import Price from "@/components/Price";
 require("dayjs/locale/fr");
 
 const DATE_WIDTH = 96;
@@ -28,7 +29,7 @@ type Props = {
 
 const GigCard = ({ gig }: Props) => {
   const { grayOutPastGigs } = usePreferences();
-  const { bands, date: rawDate, isCanceled, place } = gig;
+  const { bands, date: rawDate, isCanceled, place, price } = gig;
   const { status } = useSession();
   const bandNames = getBandNames(bands.sort((b1, b2) => b1.order - b2.order));
   const bandGenres = getUniqueBandGenres(bands);
@@ -82,14 +83,18 @@ const GigCard = ({ gig }: Props) => {
               ))}
             </Group>
           </Stack>
-          <Text>
-            {place.name}
-            {place.city !== MAIN_CITY && (
-              <Text span size="xs">
-                {` (${place.city?.toUpperCase()})`}
-              </Text>
-            )}
-          </Text>
+
+          <Group justify="space-between">
+            <Text>
+              {place.name}
+              {place.city !== MAIN_CITY && (
+                <Text span size="xs">
+                  {` (${place.city?.toUpperCase()})`}
+                </Text>
+              )}
+            </Text>
+            {(price || price === 0) && <Price value={price} size="sm" />}
+          </Group>
         </Stack>
       </Card>
 
