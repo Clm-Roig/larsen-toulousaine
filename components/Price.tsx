@@ -12,7 +12,17 @@ export default function Price({ size = "md", value }: Props) {
         <Text size={size}>
           À partir de{" "}
           <Badge size={size === "sm" ? "lg" : "xl"} color="primary" p="xs">
-            <NumberFormatter suffix="€" decimalScale={2} value={value} />
+            <NumberFormatter
+              suffix="€"
+              decimalScale={2}
+              /* 
+              Pad with 0 only if there is somehting after the coma
+                51€ ==> 51€
+                22,8€ => 22,80€
+              */
+              fixedDecimalScale={value % 1 !== 0}
+              value={value}
+            />
           </Badge>
         </Text>
       )}
