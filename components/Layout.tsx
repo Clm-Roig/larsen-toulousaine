@@ -97,7 +97,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
       </AppShell.Header>
 
       <AppShell.Main>
-        <Container fluid>
+        <Container fluid px={0}>
           <Box style={{ overflowX: "clip" }}>
             <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
           </Box>

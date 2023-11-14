@@ -26,7 +26,7 @@ type Props = {
   setSelectedMonth: (monthDate: Date) => void;
 };
 
-const optionsLabel = "Préférences";
+const optionsLabel = "Options";
 
 export default function ListControls({
   genres,
@@ -55,7 +55,14 @@ export default function ListControls({
   };
 
   return (
-    <Flex justify="space-between" direction="row" w="100%">
+    <Flex
+      justify="space-between"
+      direction={{ base: "column", xs: "row" }}
+      w="100%"
+      wrap="wrap"
+      gap="xs"
+      style={{ alignItems: "center" }}
+    >
       {/* Hidden button (same as the right on) for flex layout (left / center / right) */}
       <Button visibleFrom="xs" style={{ visibility: "hidden" }}>
         {optionsLabel}
@@ -69,7 +76,7 @@ export default function ListControls({
         >
           <IconChevronLeft />
         </ActionIcon>
-        <Text fw="bold" w={130} ta="center">
+        <Text fw="bold" w={125} ta="center">
           {capitalize(dayjs(selectedMonth).locale("fr").format("MMMM YYYY"))}
         </Text>
         <ActionIcon
