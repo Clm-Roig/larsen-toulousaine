@@ -10,7 +10,7 @@ export default function Price({ size = "md", value }: Props) {
     <>
       {!!value && (
         <Text size={size}>
-          À partir de{" "}
+          {size === "md" && "À partir de "}
           <Badge size={size === "sm" ? "lg" : "xl"} color="primary" p="xs">
             <NumberFormatter
               suffix="€"
