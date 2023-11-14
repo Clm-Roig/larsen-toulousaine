@@ -14,6 +14,7 @@ import {
   TextInput,
   Image,
   Paper,
+  NumberInput,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Genre, Place } from "@prisma/client";
@@ -66,6 +67,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       ticketReservationLink: null,
       title: null,
       slug: "",
+      price: null,
     },
     validate: {
       date: (value) => (value ? null : "La date du concert est requise."),
@@ -115,6 +117,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       ...form.values,
       bands: form.values.bands.map((b, i) => ({ ...b, order: i + 1 })),
       date: form.values.date as Date, // date can't be null if the form is submitted
+      price:
+        form.values.price || form.values.price === 0
+          ? Number(form.values.price)
+          : null,
     });
   };
 
@@ -249,6 +255,16 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       <TextInput
         label="Lien de réservation des tickets"
         {...form.getInputProps("ticketReservationLink")}
+      />
+
+      <NumberInput
+        allowNegative={false}
+        suffix="€"
+        decimalScale={2}
+        label="Prix"
+        description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0"`}
+        decimalSeparator=","
+        {...form.getInputProps("price")}
       />
 
       <Group justify="flex-end" mt="md">

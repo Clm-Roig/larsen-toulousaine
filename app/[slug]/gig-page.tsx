@@ -16,6 +16,7 @@ import {
   Menu,
   rem,
   ActionIcon,
+  NumberFormatter,
 } from "@mantine/core";
 import { getBandNames } from "../../domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -90,6 +91,8 @@ const GigPage = ({ gigSlug }: Props) => {
     imageUrl,
     isCanceled,
     place,
+    price,
+    slug,
     ticketReservationLink,
   } = gig || {};
   const bandNames = getBandNames(bands || []);
@@ -109,7 +112,7 @@ const GigPage = ({ gigSlug }: Props) => {
             <Menu.Dropdown>
               <Menu.Item
                 leftSection={<IconEdit />}
-                onClick={() => router.push(`/${gig?.slug}/edit`)}
+                onClick={() => router.push(`/${slug}/edit`)}
               >
                 Éditer
               </Menu.Item>
@@ -152,13 +155,13 @@ const GigPage = ({ gigSlug }: Props) => {
               }}
             />
           )}
-          <Text fw="bold">
+          <Text fw="bold" bg="primary" c="white" w="fit-content" px="sm">
             {capitalize(dayjs(rawDate).locale("fr").format("dddd DD MMMM"))}
           </Text>
 
           <Stack gap={0}>
             {bands?.map((band) => (
-              <Group key={band.id}>
+              <Group key={band.id} gap="md">
                 <Text>{band.name}</Text>
                 {band.genres.map((genre) => (
                   <Badge
@@ -174,7 +177,36 @@ const GigPage = ({ gigSlug }: Props) => {
               </Group>
             ))}
           </Stack>
+
           {description && <Text>{description}</Text>}
+
+          {(!!price || price === 0 || ticketReservationLink) && (
+            <Flex gap="sm" align="baseline">
+              {!!price && (
+                <Text>
+                  À partir de{" "}
+                  <Badge size="xl" color="primary" p="xs">
+                    <NumberFormatter
+                      suffix="€"
+                      decimalScale={2}
+                      value={price}
+                    />
+                  </Badge>
+                </Text>
+              )}
+              {price === 0 && (
+                <Badge size="lg" color="primary" p="xs">
+                  Prix libre ou gratuit
+                </Badge>
+              )}
+              {ticketReservationLink && (
+                <ExternalLink href={ticketReservationLink}>
+                  Réserver une place
+                </ExternalLink>
+              )}
+            </Flex>
+          )}
+
           <Box>
             <Text fw="bold">
               {place?.website ? (
@@ -189,12 +221,6 @@ const GigPage = ({ gigSlug }: Props) => {
                 ` ${place?.address} - ${place?.city?.toUpperCase()}`}
             </Text>
           </Box>
-
-          {ticketReservationLink && (
-            <ExternalLink href={ticketReservationLink}>
-              Réserver une place
-            </ExternalLink>
-          )}
         </Flex>
       </Flex>
     </Box>
