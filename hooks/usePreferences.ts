@@ -10,11 +10,17 @@ export default function usePreferences() {
     key: "gigList-excludedPlaces",
     defaultValue: [],
   });
+  const [grayOutPastGigs, setGrayOutPastGigs] = useLocalStorage<boolean>({
+    key: "gigList-grayOutPastGigs",
+    defaultValue: false,
+  });
 
   return {
     excludedGenres: excludedGenres || [],
     excludedPlaces: excludedPlaces || [],
+    grayOutPastGigs,
     setExcludedGenres,
     setExcludedPlaces,
+    setGrayOutPastGigs,
   };
 }

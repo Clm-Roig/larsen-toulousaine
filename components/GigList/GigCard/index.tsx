@@ -15,6 +15,7 @@ import CardTopBox from "@/components/GigList/GigCard/CardTopBox";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { MAIN_CITY } from "@/domain/Place/constants";
+import usePreferences from "@/hooks/usePreferences";
 require("dayjs/locale/fr");
 
 const DATE_WIDTH = 96;
@@ -26,12 +27,14 @@ type Props = {
 };
 
 const GigCard = ({ gig }: Props) => {
+  const { grayOutPastGigs } = usePreferences();
   const { bands, date: rawDate, isCanceled, place } = gig;
   const { status } = useSession();
   const bandNames = getBandNames(bands.sort((b1, b2) => b1.order - b2.order));
   const bandGenres = getUniqueBandGenres(bands);
 
   const date = new Date(rawDate);
+  const hasPassed = dayjs(date).endOf("day").isBefore(Date.now());
 
   return (
     <Box style={{ position: "relative" }}>
@@ -40,10 +43,10 @@ const GigCard = ({ gig }: Props) => {
         h={360}
         component={Link}
         href={"/" + gig.slug}
-        opacity={isCanceled ? 0.7 : 1}
-        c={isCanceled ? "gray.6" : ""}
+        opacity={isCanceled || (hasPassed && grayOutPastGigs) ? 0.55 : 1}
+        c={isCanceled || (hasPassed && grayOutPastGigs) ? "gray.6" : ""}
         style={{
-          border: isCanceled ? "1px solid red" : "",
+          border: isCanceled ? "2px solid red" : "",
         }}
       >
         <Card.Section>

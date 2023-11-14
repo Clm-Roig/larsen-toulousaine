@@ -133,12 +133,9 @@ const GigPage = ({ gigSlug }: Props) => {
           maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
           pos="relative"
           m={{ base: "auto", md: 0 }}
+          opacity={isCanceled ? 0.55 : 1}
         >
-          <Image
-            src={imageUrl}
-            alt={"Affiche du concert"}
-            opacity={isCanceled ? 0.7 : 1}
-          />
+          <Image src={imageUrl} alt={"Affiche du concert"} />
           {isCanceled && <CanceledGigOverlay />}
         </Box>
         <Flex direction="column" gap="sm" w="100%">

@@ -9,7 +9,6 @@ import {
   Button,
   Flex,
   Stack,
-  Space,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
@@ -27,6 +26,8 @@ type Props = {
   setSelectedMonth: (monthDate: Date) => void;
 };
 
+const optionsLabel = "Préférences";
+
 export default function ListControls({
   genres,
   places,
@@ -36,8 +37,10 @@ export default function ListControls({
   const {
     excludedGenres,
     excludedPlaces,
+    grayOutPastGigs,
     setExcludedGenres,
     setExcludedPlaces,
+    setGrayOutPastGigs,
   } = usePreferences();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
   const incrementMonth = () => {
@@ -55,7 +58,7 @@ export default function ListControls({
     <Flex justify="space-between" direction="row" w="100%">
       {/* Hidden button (same as the right on) for flex layout (left / center / right) */}
       <Button visibleFrom="xs" style={{ visibility: "hidden" }}>
-        Filtres
+        {optionsLabel}
       </Button>
 
       <Group>
@@ -90,51 +93,59 @@ export default function ListControls({
         >
           <Popover.Target>
             <Button onClick={() => setAreFiltersOpened(!areFiltersOpened)}>
-              Filtres
+              {optionsLabel}
             </Button>
           </Popover.Target>
 
           <Popover.Dropdown maw={350}>
-            <Box pos="absolute" top={0} right={0} m={4}>
-              <CloseButton onClick={() => setAreFiltersOpened(false)} />
-            </Box>
-            <GenreSelect
-              label="Genres exclus"
-              genres={genres}
-              value={excludedGenres.map((g) => g.id)}
-              onChange={handleGenreSelect}
-              clearable
-            />
+            <Stack>
+              <Box pos="absolute" top={0} right={0} m={4}>
+                <CloseButton onClick={() => setAreFiltersOpened(false)} />
+              </Box>
+              <GenreSelect
+                label="Genres exclus"
+                genres={genres}
+                value={excludedGenres.map((g) => g.id)}
+                onChange={handleGenreSelect}
+                clearable
+              />
 
-            <Space h="sm" />
-            <Text size="sm">Salles</Text>
-            <Space h="xs" />
+              <Stack gap="xs">
+                <Text size="sm">Salles</Text>
+                {places.map((place) => (
+                  <Checkbox
+                    key={place.id}
+                    checked={!excludedPlaces.includes(place.id)}
+                    label={place.name}
+                    size="xs"
+                    onChange={(event) => {
+                      const checked = event.currentTarget.checked;
+                      if (checked) {
+                        setExcludedPlaces([
+                          ...new Set([
+                            ...excludedPlaces.filter(
+                              (placeId) => placeId !== place.id,
+                            ),
+                          ]),
+                        ]);
+                      } else {
+                        setExcludedPlaces([
+                          ...new Set([...excludedPlaces, place.id]),
+                        ]);
+                      }
+                    }}
+                  />
+                ))}
+              </Stack>
 
-            <Stack gap="xs">
-              {places.map((place) => (
-                <Checkbox
-                  key={place.id}
-                  checked={!excludedPlaces.includes(place.id)}
-                  label={place.name}
-                  size="xs"
-                  onChange={(event) => {
-                    const checked = event.currentTarget.checked;
-                    if (checked) {
-                      setExcludedPlaces([
-                        ...new Set([
-                          ...excludedPlaces.filter(
-                            (placeId) => placeId !== place.id,
-                          ),
-                        ]),
-                      ]);
-                    } else {
-                      setExcludedPlaces([
-                        ...new Set([...excludedPlaces, place.id]),
-                      ]);
-                    }
-                  }}
-                />
-              ))}
+              <Checkbox
+                checked={grayOutPastGigs}
+                label="Griser les concerts passés"
+                onChange={(event) => {
+                  const checked = event.currentTarget.checked;
+                  setGrayOutPastGigs(checked);
+                }}
+              />
             </Stack>
           </Popover.Dropdown>
         </Popover>
