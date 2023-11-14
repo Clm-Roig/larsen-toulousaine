@@ -54,7 +54,7 @@ const GigPage = ({ gigSlug }: Props) => {
   if (isLoading) {
     return (
       <Stack>
-        <Skeleton h={64} />
+        <Skeleton h={64} maw={1000} />
         <Flex direction={{ base: "column", md: "row" }} gap="sm" w="100%">
           <Skeleton
             h={220}
@@ -175,12 +175,6 @@ const GigPage = ({ gigSlug }: Props) => {
             ))}
           </Stack>
           {description && <Text>{description}</Text>}
-          {ticketReservationLink && (
-            <ExternalLink href={ticketReservationLink}>
-              Réserver une place
-            </ExternalLink>
-          )}
-
           <Box>
             <Text fw="bold">
               {place?.website ? (
@@ -195,6 +189,12 @@ const GigPage = ({ gigSlug }: Props) => {
                 ` ${place?.address} - ${place?.city?.toUpperCase()}`}
             </Text>
           </Box>
+
+          {ticketReservationLink && (
+            <ExternalLink href={ticketReservationLink}>
+              Réserver une place
+            </ExternalLink>
+          )}
         </Flex>
       </Flex>
     </Box>
