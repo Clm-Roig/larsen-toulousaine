@@ -52,7 +52,26 @@ const GigPage = ({ gigSlug }: Props) => {
   });
 
   if (isLoading) {
-    return <Skeleton h={220} />;
+    return (
+      <Stack>
+        <Skeleton h={64} />
+        <Flex direction={{ base: "column", md: "row" }} gap="sm" w="100%">
+          <Skeleton
+            h={220}
+            mah={IMAGE_MAX_HEIGHT}
+            maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
+            m={{ base: "auto", md: 0 }}
+          />
+          <Stack>
+            <Skeleton h={16} w={280} />
+            <Skeleton h={16} w={280} />
+            <Skeleton h={16} w={280} />
+            <Skeleton h={16} w={280} />
+            <Skeleton h={16} w={280} />
+          </Stack>
+        </Flex>
+      </Stack>
+    );
   }
 
   if (gig === null) {
