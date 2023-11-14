@@ -24,7 +24,17 @@ const Header: React.FC = () => {
   return (
     <AppShell.Header bg="primary" p="xs" pl="md">
       <Group justify="space-between" h="100%">
-        <Text size={"xl"} fw="bold" style={{ fontFamily: "Garamond" }}>
+        <Text
+          size={"xl"}
+          fw="bold"
+          style={{ fontFamily: "Garamond", borderRadius: "4px" }}
+          c="primary"
+          bg="black"
+          px={8}
+          py={4}
+          component={Link}
+          href="/"
+        >
           DÉCIBEL
         </Text>
         {status === "authenticated" && (
