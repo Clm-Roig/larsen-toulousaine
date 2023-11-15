@@ -14,13 +14,27 @@ export default function usePreferences() {
     key: "gigList-grayOutPastGigs",
     defaultValue: false,
   });
+  const [maxPrice, setMaxPrice] = useLocalStorage<number | string>({
+    key: "gigList-maxPrice",
+    defaultValue: "",
+  });
+
+  const resetPreferences = () => {
+    setExcludedGenres([]);
+    setExcludedPlaces([]);
+    setGrayOutPastGigs(false);
+    setMaxPrice("");
+  };
 
   return {
     excludedGenres: excludedGenres || [],
     excludedPlaces: excludedPlaces || [],
     grayOutPastGigs,
+    maxPrice,
+    resetPreferences,
     setExcludedGenres,
     setExcludedPlaces,
     setGrayOutPastGigs,
+    setMaxPrice,
   };
 }

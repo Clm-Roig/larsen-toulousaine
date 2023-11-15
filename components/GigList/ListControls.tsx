@@ -9,9 +9,10 @@ import {
   Button,
   Flex,
   Stack,
+  NumberInput,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { capitalize } from "../../utils/utils";
 import GenreSelect from "../GenreSelect";
 import { Genre, Place } from "@prisma/client";
@@ -38,11 +39,15 @@ export default function ListControls({
     excludedGenres,
     excludedPlaces,
     grayOutPastGigs,
+    maxPrice,
+    resetPreferences,
     setExcludedGenres,
     setExcludedPlaces,
     setGrayOutPastGigs,
+    setMaxPrice,
   } = usePreferences();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
+
   const incrementMonth = () => {
     setSelectedMonth(dayjs(selectedMonth).add(1, "month").toDate());
   };
@@ -153,6 +158,22 @@ export default function ListControls({
                   setGrayOutPastGigs(checked);
                 }}
               />
+
+              <NumberInput
+                leftSection={
+                  <ActionIcon size="sm" onClick={() => setMaxPrice("")}>
+                    <IconX />
+                  </ActionIcon>
+                }
+                allowNegative={false}
+                suffix="€"
+                label="Prix maximum"
+                value={maxPrice}
+                allowDecimal={false}
+                onChange={setMaxPrice}
+              />
+
+              <Button onClick={resetPreferences}>Réinitialiser tout</Button>
             </Stack>
           </Popover.Dropdown>
         </Popover>

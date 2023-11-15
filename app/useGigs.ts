@@ -12,7 +12,7 @@ const getQueryKey = (date: Date) => dayjs(date).format("MM-YYYY");
 
 export default function useGigs() {
   const queryClient = useQueryClient();
-  const { excludedGenres, excludedPlaces } = usePreferences();
+  const { excludedGenres, excludedPlaces, maxPrice } = usePreferences();
 
   const [selectedMonth, setSelectedMonth] = useState(
     dayjs(new Date()).startOf("month").toDate().getTime(),
@@ -79,6 +79,14 @@ export default function useGigs() {
     )
     // Place(s) filtering
     .filter((gig) => !excludedPlaces?.includes(gig.placeId))
+    // Price filtering
+    .filter(
+      (gig) =>
+        !gig.price ||
+        !maxPrice ||
+        maxPrice === 0 ||
+        (!Number.isNaN(maxPrice) && gig.price <= Number(maxPrice)),
+    )
     .sort(
       (g1, g2) => new Date(g1.date).getTime() - new Date(g2.date).getTime(),
     );
