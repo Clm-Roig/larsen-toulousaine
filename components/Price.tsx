@@ -1,5 +1,6 @@
 import {
   Badge,
+  Group,
   NumberFormatter,
   Text,
   ThemeIcon,
@@ -16,8 +17,8 @@ export default function Price({ size = "md", value }: Props) {
   return (
     <>
       {!!value && (
-        <Text size={size}>
-          {size === "md" && "À partir de "}
+        <Group gap={4}>
+          {size === "md" && <Text size={size}>À partir de</Text>}
           <Badge size={size === "sm" ? "lg" : "xl"} color="primary" p="xs">
             <NumberFormatter
               suffix="€"
@@ -31,7 +32,7 @@ export default function Price({ size = "md", value }: Props) {
               value={value}
             />
           </Badge>
-        </Text>
+        </Group>
       )}
       {value === 0 && (
         <>
