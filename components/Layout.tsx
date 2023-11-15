@@ -12,6 +12,7 @@ import {
   Paper,
   Title,
   Container,
+  rem,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -25,6 +26,8 @@ type Props = {
   withPaper?: boolean;
 };
 
+const NAVBAR_HEIGHT = 64;
+
 const frenchBreadcrumbDictionnary = {
   Account: "Compte",
   AddGig: "Ajout d'un concert",
@@ -36,7 +39,7 @@ const frenchBreadcrumbDictionnary = {
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const pathname = usePathname();
-  const pinned = useHeadroom({ fixedAt: 100 });
+  const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
   const breadcrumbs = useMemo(
     function generateBreadcrumbs() {
@@ -87,7 +90,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
 
   return (
     <AppShell
-      header={{ height: 64, collapsed: !pinned }}
+      header={{ height: NAVBAR_HEIGHT, collapsed: !pinned, offset: false }}
       padding={{ base: "xs", sm: "md" }}
       withBorder={false}
       bg="#efefef"
@@ -96,7 +99,13 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         <Header />
       </AppShell.Header>
 
-      <AppShell.Main>
+      <AppShell.Main
+        // Keep in sync with <AppShell> padding above
+        pt={{
+          base: `calc(${rem(64)} + var(--mantine-spacing-xs))`,
+          sm: `calc(${rem(64)} + var(--mantine-spacing-md))`,
+        }}
+      >
         <Container fluid px={0}>
           <Box style={{ overflowX: "clip" }}>
             <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
@@ -112,7 +121,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
       </AppShell.Main>
 
       {/* Can't use AppShell.Footer because it's sticking above the content on mobile view */}
-      <Paper w="100%" mt="md" p="sm">
+      <Paper w="100%" mt={0} p="sm">
         <Stack align="center" gap={0}>
           <Text size="sm">
             Développé par{" "}
