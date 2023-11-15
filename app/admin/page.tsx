@@ -19,7 +19,7 @@ function DashboardCard({
   text: string;
 }) {
   return (
-    <Card component={Link} href={href} w={190} p="md" withBorder shadow="sm">
+    <Card component={Link} href={href} miw={190} p="md" withBorder shadow="sm">
       <Stack align="center" gap="xs">
         {icon}
         <Text ta="center">{text}</Text>
@@ -39,7 +39,7 @@ export default function Admin() {
     <Layout title="Panneau d'administration">
       {status === "authenticated" && (
         <>
-          <Flex gap="sm">
+          <Flex gap="sm" wrap="wrap" justify="center">
             {data?.user.role === Role.ADMIN && (
               <DashboardCard
                 href="/admin/users"

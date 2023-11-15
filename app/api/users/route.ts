@@ -2,7 +2,9 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    orderBy: [{ role: "desc" }, { pseudo: "asc" }],
+  });
   // TODO: Prisma doesn't provide a type-safe and automatic way to exclude a field.
   // See this issue: https://github.com/prisma/prisma/issues/5042
   const usersWithoutPassword = users.map((u) => {
