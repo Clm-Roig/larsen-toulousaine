@@ -10,12 +10,20 @@ const gigsStaleTimeInMs = 5 * 60 * 1000;
 // date is an object: it must serialized it before using it as a react-query key
 const getQueryKey = (date: Date) => dayjs(date).format("MM-YYYY");
 
-export default function useGigs() {
+type Options = {
+  initialMonthNb?: number; // Initial month goes from 1 to 12
+  initialYear?: number;
+};
+
+export default function useGigs(options?: Options) {
+  const { initialMonthNb, initialYear } = options || {};
   const queryClient = useQueryClient();
   const { excludedGenres, excludedPlaces, maxPrice } = usePreferences();
 
   const [selectedMonth, setSelectedMonth] = useState(
-    dayjs(new Date()).startOf("month").toDate().getTime(),
+    initialMonthNb && initialYear
+      ? new Date(initialYear, initialMonthNb - 1, 1)
+      : dayjs(new Date()).startOf("month").toDate().getTime(),
   );
   const selectedMonthStart = dayjs(new Date(selectedMonth))
     .startOf("month")

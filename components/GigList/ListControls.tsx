@@ -18,6 +18,7 @@ import GenreSelect from "../GenreSelect";
 import { Genre, Place } from "@prisma/client";
 import { useState } from "react";
 import usePreferences from "../../hooks/usePreferences";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 require("dayjs/locale/fr");
 
 type Props = {
@@ -46,13 +47,33 @@ export default function ListControls({
     setGrayOutPastGigs,
     setMaxPrice,
   } = usePreferences();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
 
   const incrementMonth = () => {
-    setSelectedMonth(dayjs(selectedMonth).add(1, "month").toDate());
+    const nextMonth = dayjs(selectedMonth).add(1, "month").toDate();
+    setSelectedMonth(nextMonth);
+    // Update url search params
+    const urlSearchParams = new URLSearchParams(
+      Array.from(searchParams.entries()),
+    );
+    urlSearchParams.set("année", nextMonth.getFullYear() + "");
+    urlSearchParams.set("mois", nextMonth.getMonth() + 1 + ""); // getMonth() goes from 0 to 11
+    router.push(`${pathname}?${urlSearchParams.toString()}`);
   };
+
   const decrementMonth = () => {
-    setSelectedMonth(dayjs(selectedMonth).subtract(1, "month").toDate());
+    const previousMonth = dayjs(selectedMonth).subtract(1, "month").toDate();
+    setSelectedMonth(previousMonth);
+    // Update url search params
+    const urlSearchParams = new URLSearchParams(
+      Array.from(searchParams.entries()),
+    );
+    urlSearchParams.set("année", previousMonth.getFullYear() + "");
+    urlSearchParams.set("mois", previousMonth.getMonth() + 1 + ""); // getMonth() goes from 0 to 11
+    router.push(`${pathname}?${urlSearchParams.toString()}`);
   };
 
   const handleGenreSelect = (genreIds: string[]) => {
