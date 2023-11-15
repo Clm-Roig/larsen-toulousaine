@@ -3,7 +3,12 @@
 import { Text, Card, Flex, Stack } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { IconUser, IconUsers, IconPlus } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconUsers,
+  IconPlus,
+  IconPalette,
+} from "@tabler/icons-react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/navigation";
 import { ReactElement } from "react";
@@ -56,6 +61,11 @@ export default function Admin() {
               href="/admin/account"
               icon={<IconUser />}
               text="Mon compte"
+            />
+            <DashboardCard
+              href="/admin/genres"
+              icon={<IconPalette />}
+              text="Genres"
             />
           </Flex>
         </>
