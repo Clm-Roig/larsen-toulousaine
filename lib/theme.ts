@@ -29,7 +29,6 @@ export const theme = createTheme({
       "#2b4483",
     ],
   },
-  fontFamily: "sans-serif",
   primaryColor: "primary",
   breakpoints: {
     xs: "30em",
