@@ -40,7 +40,6 @@ const GigCard = ({ gig }: Props) => {
   return (
     <Box style={{ position: "relative" }}>
       <Card
-        shadow="md"
         h={360}
         component={Link}
         href={"/" + gig.slug}

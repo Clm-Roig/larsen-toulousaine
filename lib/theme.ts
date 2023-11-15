@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme } from "@mantine/core";
+import { Card, createTheme } from "@mantine/core";
 
 export const theme = createTheme({
   colors: {
@@ -38,5 +38,13 @@ export const theme = createTheme({
     lg: "74em",
     xl: "82em", // custom xl
     xxl: "96em", // custom xxl
+  },
+  black: "#111",
+  components: {
+    Card: Card.extend({
+      defaultProps: {
+        shadow: "sm",
+      },
+    }),
   },
 });

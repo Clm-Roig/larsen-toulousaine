@@ -19,7 +19,7 @@ function DashboardCard({
   text: string;
 }) {
   return (
-    <Card component={Link} href={href} miw={190} p="md" withBorder shadow="sm">
+    <Card component={Link} href={href} miw={190} p="md" withBorder>
       <Stack align="center" gap="xs">
         {icon}
         <Text ta="center">{text}</Text>

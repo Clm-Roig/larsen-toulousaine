@@ -1,6 +1,6 @@
 "use client";
 
-import { theme } from "@/theme";
+import { theme } from "@/lib/theme";
 import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
