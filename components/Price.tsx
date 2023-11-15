@@ -1,4 +1,11 @@
-import { Badge, NumberFormatter, Text } from "@mantine/core";
+import {
+  Badge,
+  NumberFormatter,
+  Text,
+  ThemeIcon,
+  Tooltip,
+} from "@mantine/core";
+import { IconCurrencyEuroOff } from "@tabler/icons-react";
 
 type Props = {
   size?: "sm" | "md";
@@ -27,9 +34,19 @@ export default function Price({ size = "md", value }: Props) {
         </Text>
       )}
       {value === 0 && (
-        <Badge size="lg" color="primary" p="xs">
-          Prix libre ou gratuit
-        </Badge>
+        <>
+          {size === "sm" ? (
+            <Tooltip label="Prix libre ou gratuit">
+              <ThemeIcon radius="xl" color="secondary">
+                <IconCurrencyEuroOff width={"70%"} height={"70%"} />
+              </ThemeIcon>
+            </Tooltip>
+          ) : (
+            <Badge size="lg" color="secondary" p="xs">
+              Prix libre ou gratuit
+            </Badge>
+          )}
+        </>
       )}
     </>
   );

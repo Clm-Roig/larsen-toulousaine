@@ -96,9 +96,9 @@ export async function PUT(request: NextRequest) {
       imageFormat: IMG_OUTPUT_FORMAT,
       imageUrl: imageUrl,
       resizeOptions: {
+        fit: "fill",
         height: IMG_MAX_HEIGHT,
         width: IMG_MAX_WIDTH,
-        withoutEnlargement: true,
       },
     });
   }
