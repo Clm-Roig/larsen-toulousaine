@@ -9,16 +9,17 @@ import {
   Divider,
   ActionIcon,
   Text,
-  Stack,
   Box,
   TextInput,
   Image,
   Paper,
   NumberInput,
+  rem,
+  Flex,
 } from "@mantine/core";
 import DatePickerInput from "./DatePickerInput";
 import { Genre, Place } from "@prisma/client";
-import { IconTrash } from "@tabler/icons-react";
+import { IconGripVertical, IconTrash } from "@tabler/icons-react";
 import { FormEvent, useEffect } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import GenreSelect from "./GenreSelect";
@@ -126,11 +127,12 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <Stack>
+      <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
         <DatePickerInput
-          label="Date du concert"
+          label="Date"
           valueFormat="DD MMMM YYYY"
           required
+          style={{ flex: 1 }}
           {...form.getInputProps("date")}
         />
 
@@ -143,9 +145,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             value: place.id,
             label: place.name,
           }))}
+          style={{ flex: 1 }}
           {...form.getInputProps("placeId")}
         />
-      </Stack>
+      </Flex>
 
       <Divider my="md" />
 
@@ -185,7 +188,11 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                       {...provided.dragHandleProps}
                       ref={provided.innerRef}
                     >
-                      <Group h={60} style={{ alignItems: "flex-start" }}>
+                      <Group style={{ alignItems: "flex-start" }}>
+                        <IconGripVertical
+                          size={rem(16)}
+                          style={{ alignSelf: "center" }}
+                        />
                         <TextInput
                           required
                           disabled={!!form.values.bands[index].id}
@@ -262,7 +269,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         suffix="€"
         decimalScale={2}
         label="Prix"
-        description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0"`}
+        description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
         decimalSeparator=","
         {...form.getInputProps("price")}
       />
