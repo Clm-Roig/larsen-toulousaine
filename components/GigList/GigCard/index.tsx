@@ -23,6 +23,7 @@ import {
   MENU_ICON_WIDTH,
   TOP_BOX_HEIGHT,
 } from "@/components/GigList/GigCard/constants";
+import { hasPassed } from "@/utils/date";
 
 type Props = {
   gig: GigWithBandsAndPlace;
@@ -30,13 +31,10 @@ type Props = {
 
 const GigCard = ({ gig }: Props) => {
   const { grayOutPastGigs } = usePreferences();
-  const { bands, date: rawDate, isCanceled, place, price } = gig;
+  const { bands, date, isCanceled, place, price } = gig;
   const { status } = useSession();
-  const bandNames = getBandNames(bands.sort((b1, b2) => b1.order - b2.order));
+  const bandNames = getBandNames(bands);
   const bandGenres = getUniqueBandGenres(bands);
-
-  const date = new Date(rawDate);
-  const hasPassed = dayjs(date).endOf("day").isBefore(Date.now());
 
   return (
     <Box style={{ position: "relative" }}>
@@ -44,8 +42,8 @@ const GigCard = ({ gig }: Props) => {
         h={GIG_CARD_HEIGHT}
         component={Link}
         href={"/" + gig.slug}
-        opacity={isCanceled || (hasPassed && grayOutPastGigs) ? 0.55 : 1}
-        c={isCanceled || (hasPassed && grayOutPastGigs) ? "gray.6" : ""}
+        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.55 : 1}
+        c={isCanceled || (hasPassed(date) && grayOutPastGigs) ? "gray.6" : ""}
         style={{
           border: isCanceled ? "2px solid red" : "",
         }}

@@ -6,6 +6,7 @@ import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
+import { hasPassed } from "@/utils/date";
 import {
   Badge,
   Box,
@@ -38,7 +39,6 @@ export default function GigListItem({ gig }: Props) {
   const isLargeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
   const isSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
   const isXSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.xs})`);
-
   const nbGenresDisplayed = isLargeScreen
     ? 6
     : isSmallScreen
@@ -47,17 +47,7 @@ export default function GigListItem({ gig }: Props) {
     ? 3
     : 2;
   const { hovered, ref } = useHover<HTMLDivElement>();
-  const {
-    date: rawDate,
-    bands,
-    isCanceled,
-    imageUrl,
-    place,
-    price,
-    slug,
-  } = gig;
-  const date = new Date(rawDate);
-  const hasPassed = dayjs(date).endOf("day").isBefore(Date.now());
+  const { date, bands, isCanceled, imageUrl, place, price, slug } = gig;
   const bandGenres = getUniqueBandGenres(bands);
   const bandNames = getBandNames(bands);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
@@ -78,8 +68,12 @@ export default function GigListItem({ gig }: Props) {
             {isCanceled && <CanceledGigOverlay />}
           </Stack>
         }
-        opacity={isCanceled || (hasPassed && grayOutPastGigs) ? 0.55 : 1}
-        c={isCanceled || (hasPassed && grayOutPastGigs) ? "gray.6" : "initial"}
+        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.55 : 1}
+        c={
+          isCanceled || (hasPassed(date) && grayOutPastGigs)
+            ? "gray.6"
+            : "initial"
+        }
         component={Link}
         href={`/${slug}`}
         display="block"
