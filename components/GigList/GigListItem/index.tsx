@@ -1,8 +1,10 @@
+import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import Price from "@/components/Price";
 import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGenreColor } from "@/domain/Genre/Genre.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
+import usePreferences from "@/hooks/usePreferences";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import {
   Badge,
@@ -32,6 +34,7 @@ const PolymorphicListItem = createPolymorphicComponent<
 
 export default function GigListItem({ gig }: Props) {
   const theme = useMantineTheme();
+  const { grayOutPastGigs } = usePreferences();
   const isLargeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
   const isSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
   const isXSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.xs})`);
@@ -44,7 +47,17 @@ export default function GigListItem({ gig }: Props) {
     ? 3
     : 2;
   const { hovered, ref } = useHover<HTMLDivElement>();
-  const { date, bands, imageUrl, place, price, slug } = gig;
+  const {
+    date: rawDate,
+    bands,
+    isCanceled,
+    imageUrl,
+    place,
+    price,
+    slug,
+  } = gig;
+  const date = new Date(rawDate);
+  const hasPassed = dayjs(date).endOf("day").isBefore(Date.now());
   const bandGenres = getUniqueBandGenres(bands);
   const bandNames = getBandNames(bands);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
@@ -52,17 +65,24 @@ export default function GigListItem({ gig }: Props) {
     <Box ref={ref} bg={hovered ? "primary.1" : "initial"}>
       <PolymorphicListItem
         icon={
-          <Stack align="center" gap={4}>
+          <Stack
+            align="center"
+            gap={4}
+            style={{ border: isCanceled ? "2px solid red" : "" }}
+            pos="relative"
+          >
             <Badge color="primary" size="lg" radius={0} w={100}>
               {dayjs(date).format("ddd DD/MM")}
             </Badge>
             <Image src={imageUrl} alt={bandNames} w={100} />
+            {isCanceled && <CanceledGigOverlay />}
           </Stack>
         }
+        opacity={isCanceled || (hasPassed && grayOutPastGigs) ? 0.55 : 1}
+        c={isCanceled || (hasPassed && grayOutPastGigs) ? "gray.6" : "initial"}
         component={Link}
         href={`/${slug}`}
         display="block"
-        c="initial"
         py="md"
       >
         <Stack gap={8}>
