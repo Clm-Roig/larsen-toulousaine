@@ -82,20 +82,14 @@ const GigList = ({
                 </Grid>
               ) : (
                 <Center>
-                  <Paper p="xs" maw={750} w="100%">
+                  <Paper p="xs" maw={820} w="100%">
                     <List>
-                      {gigs.map((gig, idx) => (
-                        <>
-                          <GigListItem
-                            gig={gig}
-                            key={gig.id}
-                            withDivider={idx !== gigs.length - 1}
-                          />
-                        </>
+                      {gigs.map((gig) => (
+                        <GigListItem gig={gig} key={gig.id} />
                       ))}
                     </List>
                     {status === "authenticated" && (
-                      <Center>
+                      <Center mt="sm">
                         <AddGigButton />
                       </Center>
                     )}

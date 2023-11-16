@@ -15,17 +15,14 @@ import {
   Stack,
   Text,
   createPolymorphicComponent,
+  useMantineTheme,
 } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
+import { useHover, useMediaQuery } from "@mantine/hooks";
 import dayjs from "dayjs";
 import Link from "next/link";
 
-// TODO: make this number responsive
-const nbGenresDisplayed = 2;
-
 type Props = {
   gig: GigWithBandsAndPlace;
-  withDivider: boolean;
 };
 
 const PolymorphicListItem = createPolymorphicComponent<
@@ -33,7 +30,19 @@ const PolymorphicListItem = createPolymorphicComponent<
   ListItemProps
 >(List.Item);
 
-export default function GigListItem({ gig, withDivider }: Props) {
+export default function GigListItem({ gig }: Props) {
+  const theme = useMantineTheme();
+  const isLargeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
+  const isSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
+  const isXSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.xs})`);
+
+  const nbGenresDisplayed = isLargeScreen
+    ? 6
+    : isSmallScreen
+    ? 5
+    : isXSmallScreen
+    ? 3
+    : 2;
   const { hovered, ref } = useHover<HTMLDivElement>();
   const { date, bands, imageUrl, place, price, slug } = gig;
   const bandGenres = getUniqueBandGenres(bands);
@@ -44,10 +53,10 @@ export default function GigListItem({ gig, withDivider }: Props) {
       <PolymorphicListItem
         icon={
           <Stack align="center" gap={4}>
-            <Badge color="primary" size="lg" radius={0}>
+            <Badge color="primary" size="lg" radius={0} w={100}>
               {dayjs(date).format("ddd DD/MM")}
             </Badge>
-            <Image src={imageUrl} alt={bandNames} w={90} />
+            <Image src={imageUrl} alt={bandNames} w={100} />
           </Stack>
         }
         component={Link}
@@ -90,7 +99,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
           </Group>
         </Stack>
       </PolymorphicListItem>
-      {withDivider && <Divider />}
+      <Divider />
     </Box>
   );
 }
