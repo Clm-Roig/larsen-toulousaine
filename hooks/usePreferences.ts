@@ -1,3 +1,4 @@
+import { ViewType } from "@/domain/ViewType";
 import { useLocalStorage } from "@mantine/hooks";
 import { Genre, Place } from "@prisma/client";
 
@@ -18,6 +19,10 @@ export default function usePreferences() {
     key: "gigList-maxPrice",
     defaultValue: "",
   });
+  const [viewType, setViewType] = useLocalStorage<ViewType>({
+    key: "gigList-viewType",
+    defaultValue: ViewType.GRID,
+  });
 
   const resetPreferences = () => {
     setExcludedGenres([]);
@@ -36,5 +41,7 @@ export default function usePreferences() {
     setExcludedPlaces,
     setGrayOutPastGigs,
     setMaxPrice,
+    setViewType,
+    viewType,
   };
 }

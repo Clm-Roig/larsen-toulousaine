@@ -9,6 +9,8 @@ import {
   Center,
   Transition,
   Stack,
+  List,
+  Paper,
 } from "@mantine/core";
 import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
 import ListControls from "./ListControls";
@@ -16,6 +18,9 @@ import { Genre, Place } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
 import AddGigButton from "@/components/GigList/AddGigButton";
+import usePreferences from "@/hooks/usePreferences";
+import { ViewType } from "@/domain/ViewType";
+import GigListItem from "@/components/GigList/GigListItem";
 
 type Props = {
   genres: Genre[];
@@ -34,6 +39,7 @@ const GigList = ({
   selectedMonth,
   setSelectedMonth,
 }: Props) => {
+  const { viewType } = usePreferences();
   const { status } = useSession();
   return (
     <>
@@ -59,20 +65,43 @@ const GigList = ({
         {(styles) => (
           <div style={styles}>
             {gigs && gigs.length > 0 ? (
-              <Grid>
-                {gigs.map((gig) => (
-                  <Grid.Col key={gig.id} span={GRID_SPAN_PROP}>
-                    <GigCard gig={gig} />
-                  </Grid.Col>
-                ))}
-                {status === "authenticated" && (
-                  <Grid.Col span={GRID_SPAN_PROP}>
-                    <Center h="100%">
-                      <AddGigButton />
-                    </Center>
-                  </Grid.Col>
-                )}
-              </Grid>
+              viewType === ViewType.GRID ? (
+                <Grid>
+                  {gigs.map((gig) => (
+                    <Grid.Col key={gig.id} span={GRID_SPAN_PROP}>
+                      <GigCard gig={gig} />
+                    </Grid.Col>
+                  ))}
+                  {status === "authenticated" && (
+                    <Grid.Col span={GRID_SPAN_PROP}>
+                      <Center h="100%">
+                        <AddGigButton />
+                      </Center>
+                    </Grid.Col>
+                  )}
+                </Grid>
+              ) : (
+                <Center>
+                  <Paper p="xs" maw={750} w="100%">
+                    <List>
+                      {gigs.map((gig, idx) => (
+                        <>
+                          <GigListItem
+                            gig={gig}
+                            key={gig.id}
+                            withDivider={idx !== gigs.length - 1}
+                          />
+                        </>
+                      ))}
+                    </List>
+                    {status === "authenticated" && (
+                      <Center>
+                        <AddGigButton />
+                      </Center>
+                    )}
+                  </Paper>
+                </Center>
+              )
             ) : (
               <Center>
                 <Stack align="center">

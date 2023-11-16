@@ -9,7 +9,7 @@ import {
 import { IconCurrencyEuroOff } from "@tabler/icons-react";
 
 type Props = {
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
   value: number;
 };
 
@@ -19,7 +19,19 @@ export default function Price({ size = "md", value }: Props) {
       {!!value && (
         <Group gap={4}>
           {size === "md" && <Text size={size}>À partir de</Text>}
-          <Badge size={size === "sm" ? "lg" : "xl"} color="primary" p="xs">
+          <Badge
+            size={
+              size === "xs"
+                ? "md"
+                : size === "sm"
+                ? "lg"
+                : size === "md"
+                ? "xl"
+                : undefined
+            }
+            color="primary"
+            p="xs"
+          >
             <NumberFormatter
               suffix="€"
               decimalScale={2}
@@ -36,9 +48,9 @@ export default function Price({ size = "md", value }: Props) {
       )}
       {value === 0 && (
         <>
-          {size === "sm" ? (
+          {["xs", "sm"].includes(size) ? (
             <Tooltip label="Prix libre ou gratuit">
-              <ThemeIcon radius="xl" color="secondary">
+              <ThemeIcon radius="xl" color="secondary" size={"sm"}>
                 <IconCurrencyEuroOff width={"70%"} height={"70%"} />
               </ThemeIcon>
             </Tooltip>

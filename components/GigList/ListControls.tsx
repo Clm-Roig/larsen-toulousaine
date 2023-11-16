@@ -4,12 +4,14 @@ import {
   CloseButton,
   Text,
   ActionIcon,
-  Group,
   Popover,
   Button,
   Flex,
   Stack,
   NumberInput,
+  SegmentedControl,
+  Divider,
+  SimpleGrid,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
@@ -19,6 +21,7 @@ import { Genre, Place } from "@prisma/client";
 import { useState } from "react";
 import usePreferences from "../../hooks/usePreferences";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ViewType } from "@/domain/ViewType";
 
 type Props = {
   genres: Genre[];
@@ -45,6 +48,8 @@ export default function ListControls({
     setExcludedPlaces,
     setGrayOutPastGigs,
     setMaxPrice,
+    setViewType,
+    viewType,
   } = usePreferences();
   const router = useRouter();
   const pathname = usePathname();
@@ -80,20 +85,11 @@ export default function ListControls({
   };
 
   return (
-    <Flex
-      justify="space-between"
-      direction={{ base: "column", xs: "row" }}
-      w="100%"
-      wrap="wrap"
-      gap="xs"
-      style={{ alignItems: "center" }}
-    >
-      {/* Hidden button (same as the right on) for flex layout (left / center / right) */}
-      <Button visibleFrom="xs" style={{ visibility: "hidden" }}>
-        {optionsLabel}
-      </Button>
+    <SimpleGrid cols={{ base: 1, sm: 3 }}>
+      {/* Hidden block to preserve grid layout */}
+      <Box style={{ visibility: "hidden" }}></Box>
 
-      <Group>
+      <Flex gap="xs" justify="center" align="center">
         <ActionIcon
           onClick={decrementMonth}
           aria-label="Décrémenter mois"
@@ -111,9 +107,13 @@ export default function ListControls({
         >
           <IconChevronRight />
         </ActionIcon>
-      </Group>
+      </Flex>
 
-      <Box>
+      <Flex
+        gap="xs"
+        justify={{ base: "center", sm: "flex-end" }}
+        align="center"
+      >
         <Popover
           trapFocus
           position="bottom"
@@ -197,7 +197,17 @@ export default function ListControls({
             </Stack>
           </Popover.Dropdown>
         </Popover>
-      </Box>
-    </Flex>
+        <Divider orientation="vertical" size="xs" />
+        <SegmentedControl
+          data={[
+            { label: "Grille", value: ViewType.GRID },
+            { label: "Liste", value: ViewType.LIST },
+          ]}
+          onChange={(data) => (data ? setViewType(data as ViewType) : null)}
+          value={viewType}
+          pl={0}
+        />
+      </Flex>
+    </SimpleGrid>
   );
 }
