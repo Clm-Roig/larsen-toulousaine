@@ -17,7 +17,6 @@ import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import Price from "@/components/Price";
-require("dayjs/locale/fr");
 
 const DATE_WIDTH = 96;
 const MENU_ICON_WIDTH = 32;
@@ -105,7 +104,7 @@ const GigCard = ({ gig }: Props) => {
           fw="bold"
           c={"white"}
         >
-          {dayjs(date).locale("fr").format("ddd DD/MM")}
+          {dayjs(date).format("ddd DD/MM")}
         </Text>
       </CardTopBox>
 

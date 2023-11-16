@@ -19,7 +19,6 @@ import { Genre, Place } from "@prisma/client";
 import { useState } from "react";
 import usePreferences from "../../hooks/usePreferences";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-require("dayjs/locale/fr");
 
 type Props = {
   genres: Genre[];
@@ -103,7 +102,7 @@ export default function ListControls({
           <IconChevronLeft />
         </ActionIcon>
         <Text fw="bold" w={125} ta="center">
-          {capitalize(dayjs(selectedMonth).locale("fr").format("MMMM YYYY"))}
+          {capitalize(dayjs(selectedMonth).format("MMMM YYYY"))}
         </Text>
         <ActionIcon
           onClick={incrementMonth}

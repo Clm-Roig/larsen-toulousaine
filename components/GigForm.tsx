@@ -17,7 +17,6 @@ import {
   rem,
   Flex,
 } from "@mantine/core";
-import DatePickerInput from "./DatePickerInput";
 import { Genre, Place } from "@prisma/client";
 import { IconGripVertical, IconTrash } from "@tabler/icons-react";
 import { FormEvent, useEffect } from "react";
@@ -33,6 +32,7 @@ import { getPlaces } from "@/domain/Place/Place.webService";
 import { CreateGigArgs, EditGigArgs } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { DatePickerInput } from "@mantine/dates";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 

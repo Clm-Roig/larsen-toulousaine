@@ -70,12 +70,14 @@ export default function useGigs() {
 
   const sortedGigs = gigs
     // Genre(s) filtering
-    ?.filter((gig) =>
-      gig.bands.some((band) =>
-        band.genres.every(
-          (genre) => !excludedGenres?.map((g) => g.id).includes(genre.id),
+    ?.filter(
+      (gig) =>
+        gig.bands.length === 0 ||
+        gig.bands.some((band) =>
+          band.genres.every(
+            (genre) => !excludedGenres?.map((g) => g.id).includes(genre.id),
+          ),
         ),
-      ),
     )
     // Place(s) filtering
     .filter((gig) => !excludedPlaces?.includes(gig.placeId))

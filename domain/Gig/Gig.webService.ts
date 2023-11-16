@@ -9,7 +9,7 @@ export const getGigs = async (
 ): Promise<GigWithBandsAndPlace[]> => {
   try {
     const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
-      `/gigs?from=${from.toString()}&to=${to.toString()}`,
+      `/gigs?from=${from.toISOString()}&to=${to.toISOString()}`,
     );
     return response.data.gigs;
   } catch (error) {
@@ -50,7 +50,10 @@ export const createGig = async (
   gig: CreateGigArgs,
 ): Promise<GigWithBandsAndPlace> => {
   try {
-    const response = await api.post<GigWithBandsAndPlace>(`/gigs`, gig);
+    const response = await api.post<GigWithBandsAndPlace>(`/gigs`, {
+      ...gig,
+      date: gig.date.toISOString(), // serialize date to not lose timezone info
+    });
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -71,10 +74,10 @@ export const editGig = async (
   gig: EditGigArgs,
 ): Promise<GigWithBandsAndPlace> => {
   try {
-    const response = await api.put<GigWithBandsAndPlace>(
-      `/gigs/${gig.id}`,
-      gig,
-    );
+    const response = await api.put<GigWithBandsAndPlace>(`/gigs/${gig.id}`, {
+      ...gig,
+      date: gig.date.toISOString(), // serialize date to not lose timezone info
+    });
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));

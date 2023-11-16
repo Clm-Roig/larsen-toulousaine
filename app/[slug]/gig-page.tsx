@@ -33,7 +33,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import Price from "@/components/Price";
-require("dayjs/locale/fr");
 
 type Props = {
   gigSlug: string;
@@ -153,7 +152,7 @@ const GigPage = ({ gigSlug }: Props) => {
             />
           )}
           <Text fw="bold" bg="primary" c="white" w="fit-content" px="sm">
-            {capitalize(dayjs(rawDate).locale("fr").format("dddd DD MMMM"))}
+            {capitalize(dayjs(rawDate).format("dddd DD MMMM"))}
           </Text>
 
           <Stack gap={0}>
