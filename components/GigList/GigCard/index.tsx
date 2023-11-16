@@ -17,10 +17,12 @@ import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import Price from "@/components/Price";
-
-const DATE_WIDTH = 96;
-const MENU_ICON_WIDTH = 32;
-export const TOP_BOX_HEIGHT = 32;
+import {
+  DATE_WIDTH,
+  GIG_CARD_HEIGHT,
+  MENU_ICON_WIDTH,
+  TOP_BOX_HEIGHT,
+} from "@/components/GigList/GigCard/constants";
 
 type Props = {
   gig: GigWithBandsAndPlace;
@@ -39,7 +41,7 @@ const GigCard = ({ gig }: Props) => {
   return (
     <Box style={{ position: "relative" }}>
       <Card
-        h={360}
+        h={GIG_CARD_HEIGHT}
         component={Link}
         href={"/" + gig.slug}
         opacity={isCanceled || (hasPassed && grayOutPastGigs) ? 0.55 : 1}

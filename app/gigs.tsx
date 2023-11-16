@@ -5,10 +5,6 @@ import GigList from "@/components/GigList";
 import useGigs from "./useGigs";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { Button, Center } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 type Props = {
   genres: Genre[];
@@ -16,7 +12,6 @@ type Props = {
 };
 
 export default function Gigs({ genres = [], places = [] }: Props) {
-  const { status } = useSession();
   const searchParams = useSearchParams();
   const year = searchParams.get("année");
   const monthNb = searchParams.get("mois");
@@ -49,28 +44,13 @@ export default function Gigs({ genres = [], places = [] }: Props) {
   ]);
 
   return (
-    <>
-      <GigList
-        genres={genres}
-        gigs={monthGigs}
-        isLoading={isLoading}
-        places={places}
-        selectedMonth={selectedMonth}
-        setSelectedMonth={(date: Date) => setSelectedMonth(date)}
-      />
-      {status === "authenticated" && (
-        <Center mt="sm">
-          <Button
-            size="lg"
-            radius="xl"
-            leftSection={<IconPlus />}
-            component={Link}
-            href="/admin/addGig"
-          >
-            Ajouter un concert
-          </Button>
-        </Center>
-      )}
-    </>
+    <GigList
+      genres={genres}
+      gigs={monthGigs}
+      isLoading={isLoading}
+      places={places}
+      selectedMonth={selectedMonth}
+      setSelectedMonth={(date: Date) => setSelectedMonth(date)}
+    />
   );
 }
