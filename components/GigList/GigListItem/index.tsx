@@ -26,6 +26,7 @@ import Link from "next/link";
 
 type Props = {
   gig: GigWithBandsAndPlace;
+  withDivider: boolean;
 };
 
 const PolymorphicListItem = createPolymorphicComponent<
@@ -33,7 +34,7 @@ const PolymorphicListItem = createPolymorphicComponent<
   ListItemProps
 >(List.Item);
 
-export default function GigListItem({ gig }: Props) {
+export default function GigListItem({ gig, withDivider }: Props) {
   const theme = useMantineTheme();
   const { grayOutPastGigs } = usePreferences();
   const isLargeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
@@ -113,7 +114,7 @@ export default function GigListItem({ gig }: Props) {
           </Group>
         </Stack>
       </PolymorphicListItem>
-      <Divider />
+      {withDivider && <Divider />}
     </Box>
   );
 }

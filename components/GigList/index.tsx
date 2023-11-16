@@ -84,8 +84,15 @@ const GigList = ({
                 <Center>
                   <Paper p="xs" maw={820} w="100%">
                     <List>
-                      {gigs.map((gig) => (
-                        <GigListItem gig={gig} key={gig.id} />
+                      {gigs.map((gig, idx) => (
+                        <GigListItem
+                          gig={gig}
+                          key={gig.id}
+                          withDivider={
+                            status !== "unauthenticated" ||
+                            idx !== gigs.length - 1
+                          }
+                        />
                       ))}
                     </List>
                     {status === "authenticated" && (
