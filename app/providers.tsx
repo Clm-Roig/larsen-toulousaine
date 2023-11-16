@@ -31,8 +31,12 @@ export const Providers = ({ children }: Props) => {
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <MantineProvider theme={theme}>
-          {/* Changing the locale to "fr" doesn't seem to work... */}
-          <DatesProvider settings={{ locale: "fr" }}>
+          <DatesProvider
+            settings={{
+              locale: "fr",
+              timezone: "Europe/Paris",
+            }}
+          >
             <AuthChecker>{children}</AuthChecker>
           </DatesProvider>
         </MantineProvider>
