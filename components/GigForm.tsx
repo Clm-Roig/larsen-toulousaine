@@ -11,7 +11,6 @@ import {
   Text,
   Box,
   TextInput,
-  Image,
   Paper,
   NumberInput,
   rem,
@@ -33,6 +32,7 @@ import { CreateGigArgs, EditGigArgs } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { DatePickerInput } from "@mantine/dates";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -249,7 +249,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       />
 
       {isValidUrl(form.values.imageUrl) && (
-        <Image
+        <OptimizedImage
           mah={200}
           maw={getGigImgWidth(200)}
           src={form.values.imageUrl}

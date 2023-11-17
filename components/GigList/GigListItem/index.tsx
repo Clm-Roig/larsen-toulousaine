@@ -2,6 +2,7 @@ import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import CardMenu from "@/components/GigList/GigCard/CardMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
+import OptimizedImage from "@/components/OptimizedImage";
 import Price from "@/components/Price";
 import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGenreColor } from "@/domain/Genre/Genre.service";
@@ -15,7 +16,6 @@ import {
   Box,
   Divider,
   Group,
-  Image,
   List,
   ListItemProps,
   Stack,
@@ -70,7 +70,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
             <Badge color="primary" size="lg" radius={0} w={100}>
               {dayjs(date).format("ddd DD/MM")}
             </Badge>
-            <Image src={imageUrl} alt={bandNames} w={100} />
+            <OptimizedImage src={imageUrl} alt={bandNames} w={100} />
             {isCanceled && <CanceledGigOverlay />}
           </Stack>
         }

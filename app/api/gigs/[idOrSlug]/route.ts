@@ -17,7 +17,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
-import { downloadImage } from "@/utils/image";
+import { downloadImage } from "@/app/api/utils/image";
 
 export async function GET(
   request: NextRequest,

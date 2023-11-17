@@ -17,7 +17,7 @@ import {
   IMG_MAX_WIDTH,
   IMG_OUTPUT_FORMAT,
 } from "@/domain/Gig/constants";
-import { downloadImage } from "@/utils/image";
+import { downloadImage } from "@/app/api/utils/image";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

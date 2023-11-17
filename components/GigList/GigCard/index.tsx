@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Card, Stack, Image, Text, Badge, Group } from "@mantine/core";
+import { Box, Card, Stack, Text, Badge, Group } from "@mantine/core";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "dayjs";
@@ -24,6 +24,7 @@ import {
   TOP_BOX_HEIGHT,
 } from "@/components/GigList/GigCard/constants";
 import { hasPassed } from "@/utils/date";
+import OptimizedImage from "@/components/OptimizedImage";
 
 type Props = {
   gig: GigWithBandsAndPlace;
@@ -50,7 +51,7 @@ const GigCard = ({ gig }: Props) => {
       >
         <Card.Section>
           <Box style={{ position: "relative" }}>
-            <Image
+            <OptimizedImage
               src={gig.imageUrl}
               h={getGigImgHeight(CARD_WIDTH)}
               alt={"Concert " + bandNames}

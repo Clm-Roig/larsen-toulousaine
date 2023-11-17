@@ -4,6 +4,9 @@ const nextConfig = {
     serverComponentsExternalPackages: ["@prisma/client", "bcryptjs"],
   },
   reactStrictMode: true,
+  images: {
+    minimumCacheTTL: 300, // in seconds
+  },
 };
 
 module.exports = nextConfig;

@@ -5,7 +5,6 @@ import {
   Badge,
   Box,
   Flex,
-  Image,
   Stack,
   Text,
   Title,
@@ -32,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import Price from "@/components/Price";
+import OptimizedImage from "@/components/OptimizedImage";
 
 type Props = {
   gigSlug: string;
@@ -133,7 +133,7 @@ const GigPage = ({ gigSlug }: Props) => {
           m={{ base: "auto", md: 0 }}
           opacity={isCanceled ? 0.55 : 1}
         >
-          <Image src={imageUrl} alt={"Affiche du concert"} />
+          <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
           {isCanceled && <CanceledGigOverlay />}
         </Box>
         <Flex direction="column" gap="sm" w="100%">
