@@ -37,7 +37,10 @@ export default function GenreGrid({ genres }: Props) {
           ))}
       </SimpleGrid>
 
-      <Text>Les genres ci-dessous sont sans couleur car hors metal.</Text>
+      <Text>
+        Les genres ci-dessous sont sans couleur car hors metal ou représentant
+        un sous-genre qui doit être accolé à un genre principal.
+      </Text>
       <SimpleGrid cols={6} spacing={0} verticalSpacing={0} maw={1200}>
         {withoutColorGenres
           .sort((g1, g2) => g1.name.localeCompare(g2.name))
