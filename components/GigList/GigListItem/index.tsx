@@ -1,4 +1,7 @@
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
+import CardMenu from "@/components/GigList/GigCard/CardMenu";
+import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
+import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
 import Price from "@/components/Price";
 import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGenreColor } from "@/domain/Genre/Genre.service";
@@ -22,6 +25,7 @@ import {
 } from "@mantine/core";
 import { useHover, useMediaQuery } from "@mantine/hooks";
 import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 type Props = {
@@ -36,6 +40,7 @@ const PolymorphicListItem = createPolymorphicComponent<
 
 export default function GigListItem({ gig, withDivider }: Props) {
   const theme = useMantineTheme();
+  const { status } = useSession();
   const { grayOutPastGigs } = usePreferences();
   const isLargeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
   const isSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
@@ -53,7 +58,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
   const bandNames = getBandNames(bands);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
   return (
-    <Box ref={ref} bg={hovered ? "primary.1" : "initial"}>
+    <Box ref={ref} bg={hovered ? "primary.1" : "initial"} pos="relative">
       <PolymorphicListItem
         icon={
           <Stack
@@ -114,6 +119,11 @@ export default function GigListItem({ gig, withDivider }: Props) {
           </Group>
         </Stack>
       </PolymorphicListItem>
+      {status === "authenticated" && (
+        <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
+          <CardMenu gig={gig} />
+        </TopMenuBox>
+      )}
       {withDivider && <Divider />}
     </Box>
   );

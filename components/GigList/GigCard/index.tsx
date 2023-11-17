@@ -11,7 +11,7 @@ import { getGigImgHeight } from "@/domain/image";
 import { getGenreColor } from "@/domain/Genre/Genre.service";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import CardMenu from "@/components/GigList/GigCard/CardMenu";
-import CardTopBox from "@/components/GigList/GigCard/CardTopBox";
+import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { MAIN_CITY } from "@/domain/Place/constants";
@@ -96,7 +96,7 @@ const GigCard = ({ gig }: Props) => {
         </Stack>
       </Card>
 
-      <CardTopBox position="left" width={DATE_WIDTH}>
+      <TopMenuBox position="left" width={DATE_WIDTH}>
         <Text
           h={TOP_BOX_HEIGHT}
           w={DATE_WIDTH}
@@ -106,12 +106,12 @@ const GigCard = ({ gig }: Props) => {
         >
           {dayjs(date).format("ddd DD/MM")}
         </Text>
-      </CardTopBox>
+      </TopMenuBox>
 
       {status === "authenticated" && (
-        <CardTopBox position="right" width={MENU_ICON_WIDTH}>
+        <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
           <CardMenu gig={gig} />
-        </CardTopBox>
+        </TopMenuBox>
       )}
     </Box>
   );

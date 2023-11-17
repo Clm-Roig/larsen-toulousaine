@@ -8,7 +8,7 @@ type Props = {
   width: number;
 };
 
-export default function CardTopBox({ children, position, width }: Props) {
+export default function TopMenuBox({ children, position, width }: Props) {
   const theme = useMantineTheme();
 
   const positionProps = {
