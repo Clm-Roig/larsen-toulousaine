@@ -9,7 +9,7 @@ export default function AddGigButton() {
       radius="xl"
       leftSection={<IconPlus />}
       component={Link}
-      href="/admin/addGig"
+      href="/admin/ajout-concert"
     >
       Ajouter un concert
     </Button>

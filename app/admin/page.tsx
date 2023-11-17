@@ -48,18 +48,18 @@ export default function Admin() {
           <Flex gap="sm" wrap="wrap" justify="center">
             {data?.user.role === Role.ADMIN && (
               <DashboardCard
-                href="/admin/users"
+                href="/admin/utilisateurs"
                 icon={<IconUsers />}
                 text="Gérer les utilisateurs"
               />
             )}
             <DashboardCard
-              href="/admin/addGig"
+              href="/admin/ajout-concert"
               icon={<IconPlus />}
               text="Ajouter un concert"
             />
             <DashboardCard
-              href="/admin/account"
+              href="/admin/compte"
               icon={<IconUser />}
               text="Mon compte"
             />
