@@ -1,9 +1,9 @@
+import { UserWithGigCount } from "@/domain/User/User.type";
 import api, { getErrorMessage } from "@/lib/axios";
-import { User } from "@prisma/client";
 
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (): Promise<UserWithGigCount[]> => {
   try {
-    const response = await api.get<{ users: User[] }>(`/users`);
+    const response = await api.get<{ users: UserWithGigCount[] }>(`/users`);
     return response.data.users;
   } catch (error) {
     throw new Error(getErrorMessage(error));

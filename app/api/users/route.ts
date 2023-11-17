@@ -4,6 +4,11 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const users = await prisma.user.findMany({
     orderBy: [{ role: "desc" }, { pseudo: "asc" }],
+    include: {
+      _count: {
+        select: { gigs: true },
+      },
+    },
   });
   // TODO: Prisma doesn't provide a type-safe and automatic way to exclude a field.
   // See this issue: https://github.com/prisma/prisma/issues/5042
