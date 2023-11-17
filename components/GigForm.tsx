@@ -20,8 +20,6 @@ import { Genre, Place } from "@prisma/client";
 import { IconGripVertical, IconTrash } from "@tabler/icons-react";
 import { FormEvent, useEffect } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
-import GenreSelect from "./GenreSelect";
-import { MAX_GENRES_PER_BAND } from "../domain/Band/constants";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
@@ -33,6 +31,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { DatePickerInput } from "@mantine/dates";
 import OptimizedImage from "@/components/OptimizedImage";
+import BandFields from "@/components/BandFields";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -193,21 +192,17 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                           size={rem(16)}
                           style={{ alignSelf: "center" }}
                         />
-                        <TextInput
-                          required
-                          disabled={!!form.values.bands[index].id}
-                          placeholder="Nom du groupe"
-                          {...form.getInputProps(`bands.${index}.name`)}
-                        />
-
-                        <GenreSelect
-                          withAsterisk
-                          maxValues={MAX_GENRES_PER_BAND}
-                          genres={genres || []}
-                          style={{ flex: 1 }}
-                          placeholder="Genres (3 max)"
-                          disabled={!!form.values.bands[index].id}
-                          {...form.getInputProps(`bands.${index}.genres`)}
+                        <BandFields
+                          nameProps={{
+                            disabled: !!form.values.bands[index].id,
+                            ...form.getInputProps(`bands.${index}.name`),
+                          }}
+                          genreProps={{
+                            genres: genres || [],
+                            style: { flex: 1 },
+                            disabled: !!form.values.bands[index].id,
+                            ...form.getInputProps(`bands.${index}.genres`),
+                          }}
                         />
 
                         <Box>

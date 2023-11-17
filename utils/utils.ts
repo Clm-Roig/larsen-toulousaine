@@ -16,3 +16,13 @@ export function capitalize(string: string) {
 }
 
 export const V_SEPARATOR = "｜";
+
+/**
+ * Remove diacritics and apply toLowerCase()
+ */
+export function normalizeString(string: string) {
+  return string
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+}

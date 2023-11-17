@@ -3,10 +3,14 @@
 import { MultiSelect, MultiSelectProps } from "@mantine/core";
 import { Genre } from "@prisma/client";
 
-type Props = {
+export type GenreSelectProps = {
   genres: Genre[];
 } & MultiSelectProps;
-export default function GenreSelect({ genres, ...selectProps }: Props) {
+
+export default function GenreSelect({
+  genres,
+  ...selectProps
+}: GenreSelectProps) {
   return (
     <MultiSelect
       searchable

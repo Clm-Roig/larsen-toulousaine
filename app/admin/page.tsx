@@ -8,6 +8,7 @@ import {
   IconUsers,
   IconPlus,
   IconPalette,
+  IconMusic,
 } from "@tabler/icons-react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/navigation";
@@ -66,6 +67,11 @@ export default function Admin() {
               href="/admin/genres"
               icon={<IconPalette />}
               text="Genres"
+            />
+            <DashboardCard
+              href="/admin/groupes"
+              icon={<IconMusic />}
+              text="Groupes"
             />
           </Flex>
         </>
