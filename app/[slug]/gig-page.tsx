@@ -4,7 +4,6 @@ import React from "react";
 import {
   Badge,
   Box,
-  Group,
   Flex,
   Image,
   Stack,
@@ -155,9 +154,15 @@ const GigPage = ({ gigSlug }: Props) => {
             {capitalize(dayjs(rawDate).format("dddd DD MMMM"))}
           </Text>
 
-          <Stack gap={0}>
+          <Stack gap={4}>
             {bands?.map((band) => (
-              <Group key={band.id} gap="md">
+              <Flex
+                key={band.id}
+                rowGap={0}
+                columnGap="xs"
+                wrap="wrap"
+                align="center"
+              >
                 <Text>{band.name}</Text>
                 {band.genres.map((genre) => (
                   <Badge
@@ -170,7 +175,7 @@ const GigPage = ({ gigSlug }: Props) => {
                     {genre.name}
                   </Badge>
                 ))}
-              </Group>
+              </Flex>
             ))}
           </Stack>
 
