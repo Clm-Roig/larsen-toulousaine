@@ -15,12 +15,12 @@ import {
   rem,
   ActionIcon,
 } from "@mantine/core";
-import { getBandNames } from "../../domain/Band/Band.service";
+import { getBandNames } from "@/domain/Band/Band.service";
 import dayjs from "dayjs";
-import { capitalize } from "../../utils/utils";
+import { capitalize } from "@/utils/utils";
 import ExternalLink from "../../components/ExternalLink";
-import { getGigImgWidth } from "../../domain/image";
-import { getGenreColor } from "../../domain/Genre/Genre.service";
+import { getGigImgWidth } from "@/domain/image";
+import { getGenreColor } from "@/domain/Genre/Genre.service";
 import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";

@@ -12,7 +12,7 @@ import {
   List,
   Paper,
 } from "@mantine/core";
-import { GigWithBandsAndPlace } from "../../domain/Gig/Gig.type";
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
 import { Genre, Place } from "@prisma/client";
 import { useSession } from "next-auth/react";

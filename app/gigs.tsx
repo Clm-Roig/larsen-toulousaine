@@ -2,7 +2,7 @@
 
 import { Genre, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
-import useGigs from "./useGigs";
+import useGigs from "@/hooks/useGigs";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 

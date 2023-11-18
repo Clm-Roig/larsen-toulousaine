@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Layout from "../../../components/Layout";
+import Layout from "@/components/Layout";
 import { Alert, Center, Skeleton } from "@mantine/core";
-import UserList from "../../../components/UserList";
+import UserList from "@/components/UserList";
 import { getUsers } from "@/domain/User/User.webService";
 import { useQuery } from "@tanstack/react-query";
 import { UserWithGigCount } from "@/domain/User/User.type";

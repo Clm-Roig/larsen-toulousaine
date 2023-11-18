@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { GigWithBandsAndPlace } from "../domain/Gig/Gig.type";
 import { useEffect, useState } from "react";
 import { getGigs } from "../domain/Gig/Gig.webService";
-import usePreferences from "../hooks/usePreferences";
+import usePreferences from "./usePreferences";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const gigsStaleTimeInMs = 5 * 60 * 1000;
