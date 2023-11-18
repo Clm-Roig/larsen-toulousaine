@@ -22,6 +22,12 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
+        <link
+          rel="icon"
+          href="/icon?<generated>"
+          type="image/<generated>"
+          sizes="<generated>"
+        />
       </head>
       <body>
         <Providers>
