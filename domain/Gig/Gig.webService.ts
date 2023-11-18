@@ -94,3 +94,19 @@ export const deleteGig = async (gigId: Gig["id"]): Promise<void> => {
     throw new Error(getErrorMessage(error));
   }
 };
+
+export const cancelGig = async (gigId: Gig["id"]): Promise<void> => {
+  try {
+    await api.post(`/gigs/${gigId}/cancel`);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const uncancelGig = async (gigId: Gig["id"]): Promise<void> => {
+  try {
+    await api.post(`/gigs/${gigId}/uncancel`);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};

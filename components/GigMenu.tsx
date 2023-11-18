@@ -1,20 +1,29 @@
-import { deleteGig } from "@/domain/Gig/Gig.webService";
+import { cancelGig, deleteGig, uncancelGig } from "@/domain/Gig/Gig.webService";
 import { Menu as MantineMenu, ActionIcon, rem } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Gig } from "@prisma/client";
-import { IconDots, IconEdit, IconTrash, IconX } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconDots,
+  IconEdit,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+
+const iconStyle = { width: rem(16), height: rem(16) };
 
 type Props = { afterDeleteCallback?: () => void; gig: Gig };
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
+  const { id, isCanceled, slug } = gig;
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const handleOnDelete = async () => {
     try {
-      await deleteGig(gig.id);
+      await deleteGig(id);
       await queryClient.invalidateQueries({ queryKey: ["gigs"] });
       notifications.show({
         color: "green",
@@ -29,6 +38,27 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
       });
     }
   };
+
+  const handleOnCancel = async () => {
+    try {
+      isCanceled ? await uncancelGig(id) : await cancelGig(id);
+      await queryClient.invalidateQueries({ queryKey: ["gigs"] });
+      const verb = isCanceled ? "désannulé" : "annulé";
+      notifications.show({
+        color: "green",
+        message: `Concert ${verb} avec succès !`,
+      });
+      afterDeleteCallback?.();
+    } catch (e) {
+      const action = isCanceled ? "l'annulation" : "la désannulation";
+      notifications.show({
+        color: "red",
+        title: `Erreur à la ${action} du concert`,
+        message: e.message,
+      });
+    }
+  };
+
   return (
     <MantineMenu position="bottom-end" shadow="sm" withinPortal>
       <MantineMenu.Target>
@@ -39,21 +69,25 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
 
       <MantineMenu.Dropdown>
         <MantineMenu.Item
-          leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => router.push(`/${gig.slug}/edit`)}
+          leftSection={<IconEdit style={iconStyle} />}
+          onClick={() => router.push(`/${slug}/edit`)}
         >
           Éditer
         </MantineMenu.Item>
         <MantineMenu.Item
-          leftSection={<IconX style={{ width: rem(14), height: rem(14) }} />}
-          disabled
+          leftSection={
+            isCanceled ? (
+              <IconCheck style={iconStyle} />
+            ) : (
+              <IconX style={iconStyle} />
+            )
+          }
+          onClick={handleOnCancel}
         >
-          Annuler (soon™)
+          {isCanceled ? "Désannuler" : "Annuler"}
         </MantineMenu.Item>
         <MantineMenu.Item
-          leftSection={
-            <IconTrash style={{ width: rem(14), height: rem(14) }} />
-          }
+          leftSection={<IconTrash style={iconStyle} />}
           onClick={handleOnDelete}
         >
           Supprimer
