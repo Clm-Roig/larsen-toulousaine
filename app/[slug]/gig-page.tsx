@@ -11,9 +11,6 @@ import {
   Anchor,
   Skeleton,
   Alert,
-  Menu,
-  rem,
-  ActionIcon,
 } from "@mantine/core";
 import { getBandNames } from "@/domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -25,13 +22,14 @@ import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { IconDots, IconEdit, IconTrash, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import Price from "@/components/Price";
 import OptimizedImage from "@/components/OptimizedImage";
+import GigMenu from "@/components/GigMenu";
+import { useRouter } from "next/navigation";
 
 type Props = {
   gigSlug: string;
@@ -40,8 +38,8 @@ type Props = {
 const IMAGE_MAX_HEIGHT = 250;
 
 const GigPage = ({ gigSlug }: Props) => {
-  const router = useRouter();
   const { status } = useSession();
+  const router = useRouter();
   const { data: gig, isLoading } = useQuery<
     (GigWithBandsAndPlace & GigWithAuthor) | null,
     Error
@@ -90,38 +88,22 @@ const GigPage = ({ gigSlug }: Props) => {
     isCanceled,
     place,
     price,
-    slug,
     ticketReservationLink,
   } = gig || {};
   const bandNames = getBandNames(bands || []);
 
+  const afterDeleteCallback = () => {
+    router.push("/");
+  };
+
   return (
     <Box pos="relative">
-      <Title order={1}>{bandNames}</Title>
+      {bandNames?.length > 0 && <Title order={1}>{bandNames}</Title>}
       {status === "authenticated" && (
-        <Box pos="absolute" top={0} right={0}>
-          <Menu shadow="sm" withinPortal position="bottom-end">
-            <Menu.Target>
-              <ActionIcon>
-                <IconDots style={{ width: rem(16), height: rem(16) }} />
-              </ActionIcon>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <Menu.Item
-                leftSection={<IconEdit />}
-                onClick={() => router.push(`/${slug}/edit`)}
-              >
-                Éditer
-              </Menu.Item>
-              <Menu.Item leftSection={<IconX />} disabled>
-                Annuler (soon™)
-              </Menu.Item>
-              <Menu.Item leftSection={<IconTrash />} disabled>
-                Supprimer (soon™)
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+        <Box pos="absolute" top={0} right={0} bg="primary">
+          {gig && (
+            <GigMenu afterDeleteCallback={afterDeleteCallback} gig={gig} />
+          )}
         </Box>
       )}
 

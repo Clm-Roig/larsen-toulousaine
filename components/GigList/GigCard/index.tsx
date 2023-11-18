@@ -10,7 +10,7 @@ import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
 import { getGenreColor } from "@/domain/Genre/Genre.service";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
-import CardMenu from "@/components/GigList/GigCard/CardMenu";
+import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { useSession } from "next-auth/react";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
@@ -111,7 +111,7 @@ const GigCard = ({ gig }: Props) => {
 
       {status === "authenticated" && (
         <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
-          <CardMenu gig={gig} />
+          <GigMenu gig={gig} />
         </TopMenuBox>
       )}
     </Box>

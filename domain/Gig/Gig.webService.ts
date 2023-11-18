@@ -86,3 +86,11 @@ export const editGig = async (
     throw new Error(getErrorMessage(error));
   }
 };
+
+export const deleteGig = async (gigId: Gig["id"]): Promise<void> => {
+  try {
+    await api.delete(`/gigs/${gigId}`);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};

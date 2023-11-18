@@ -7,10 +7,12 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddGig() {
   const { data: session } = useSession();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleOnSubmit = async (values: CreateGigArgs) => {
@@ -23,6 +25,7 @@ export default function AddGig() {
           color: "green",
           message: "Concert ajouté avec succès !",
         });
+        await queryClient.invalidateQueries({ queryKey: ["gigs"] });
         router.push(`/admin`);
       } catch (error) {
         notifications.show({

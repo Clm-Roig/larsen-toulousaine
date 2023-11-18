@@ -1,5 +1,5 @@
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
-import CardMenu from "@/components/GigList/GigCard/CardMenu";
+import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
 import OptimizedImage from "@/components/OptimizedImage";
@@ -121,7 +121,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
       </PolymorphicListItem>
       {status === "authenticated" && (
         <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
-          <CardMenu gig={gig} />
+          <GigMenu gig={gig} />
         </TopMenuBox>
       )}
       {withDivider && <Divider />}

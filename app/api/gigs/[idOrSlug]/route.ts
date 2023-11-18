@@ -174,3 +174,50 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { idOrSlug: string } },
+) {
+  const { idOrSlug: rawIdOrSlug } = params;
+  const idOrSlug = decodeURIComponent(rawIdOrSlug);
+  const { user } = (await getServerSession(authOptions)) || {};
+  if (!user) {
+    return toResponse(mustBeAuthenticatedError);
+  }
+  try {
+    await prisma.gig.deleteMany({
+      where: {
+        OR: [
+          {
+            id: {
+              equals: idOrSlug,
+            },
+          },
+          {
+            slug: {
+              equals: idOrSlug,
+            },
+          },
+        ],
+      },
+    });
+    return new Response(null, { status: 204 });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    if (error instanceof PrismaClientValidationError) {
+      return NextResponse.json(
+        {
+          message:
+            "There was an error with your data when trying to delete a gig.",
+        },
+        { status: 400 },
+      );
+    }
+    return NextResponse.json(
+      { message: "An unexpected error occured." },
+      { status: 500 },
+    );
+  }
+}

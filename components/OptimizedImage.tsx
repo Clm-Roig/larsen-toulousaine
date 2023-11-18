@@ -10,7 +10,7 @@ export default function OptimizedImage(
   return (
     <Image
       {...imageProps}
-      src={typeof src === "string" ? getImageUrl(src) : src}
+      src={typeof src === "string" || !src ? getImageUrl(src) : src}
       alt={alt}
     />
   );
