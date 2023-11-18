@@ -56,6 +56,9 @@ export const createGig = async (
     });
     return response.data;
   } catch (error) {
+    if (error?.response?.data?.frMessage) {
+      throw new Error(error?.response?.data?.frMessage);
+    }
     throw new Error(getErrorMessage(error));
   }
 };

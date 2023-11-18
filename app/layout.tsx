@@ -31,7 +31,7 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <Notifications />
+          <Notifications position="top-center" />
           {children}
         </Providers>
       </body>

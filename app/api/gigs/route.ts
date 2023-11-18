@@ -18,6 +18,7 @@ import {
   IMG_OUTPUT_FORMAT,
 } from "@/domain/Gig/constants";
 import { downloadImage } from "@/app/api/utils/image";
+import { getConflictingBandNameError } from "@/domain/Band/errors";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -80,11 +81,13 @@ export async function POST(request: NextRequest) {
       },
     });
   }
+  let causingErrorBand;
   try {
     // Create inexisting bands
     const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
+        causingErrorBand = band;
         const createdBand = await prisma.band.create({
           data: {
             name: band.name,
@@ -123,6 +126,22 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        const { meta } = error;
+        if ((meta?.target as string[])?.includes("name") && causingErrorBand) {
+          return toResponse(getConflictingBandNameError(causingErrorBand.name));
+        } else {
+          return NextResponse.json(
+            {
+              message: "There is a conflict with another gig.",
+              frMessage: "Il y a un conflit avec un autre concert.",
+            },
+            { status: 409 },
+          );
+        }
+      }
+    }
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
         {

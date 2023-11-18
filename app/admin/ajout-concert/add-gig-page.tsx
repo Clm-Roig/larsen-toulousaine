@@ -16,7 +16,6 @@ export default function AddGig() {
   const handleOnSubmit = async (values: CreateGigArgs) => {
     setIsLoading(true);
     const { user } = session || {};
-
     if (user && values) {
       try {
         await createGig(values);

@@ -76,9 +76,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       placeId: (value) => (value ? null : "Le lieu du concert est requis."),
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
-        genres: (value) => {
-          return value?.length > 0 ? null : "Au moins un genre est requis.";
-        },
       },
       ticketReservationLink: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
