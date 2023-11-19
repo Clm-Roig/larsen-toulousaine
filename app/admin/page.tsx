@@ -50,18 +50,13 @@ export default function Admin() {
               <DashboardCard
                 href="/admin/utilisateurs"
                 icon={<IconUsers />}
-                text="Gérer les utilisateurs"
+                text="Utilisateurs"
               />
             )}
             <DashboardCard
               href="/admin/ajout-concert"
               icon={<IconPlus />}
               text="Ajouter un concert"
-            />
-            <DashboardCard
-              href="/admin/compte"
-              icon={<IconUser />}
-              text="Mon compte"
             />
             <DashboardCard
               href="/admin/genres"
@@ -72,6 +67,11 @@ export default function Admin() {
               href="/admin/groupes"
               icon={<IconMusic />}
               text="Groupes"
+            />
+            <DashboardCard
+              href="/admin/compte"
+              icon={<IconUser />}
+              text="Mon compte"
             />
           </Flex>
         </>

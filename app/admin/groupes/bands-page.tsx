@@ -2,7 +2,7 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import { Alert, Button, Center, Drawer, Group, Skeleton } from "@mantine/core";
+import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
 import {
   EditBandArgs,
   editBand,
@@ -52,7 +52,7 @@ const Bands = () => {
   const {
     data: bands,
     error,
-    isLoading,
+    isFetching,
     isError,
     refetch,
   } = useQuery<BandWithGenres[], Error>({
@@ -104,50 +104,48 @@ const Bands = () => {
 
   return (
     <Layout title="Tous les groupes" withPaper>
-      {isLoading && <Skeleton height={150} />}
-      {bands && (
-        <Center>
-          <BandTable
-            bands={bands}
-            genres={genres || []}
-            onEditBand={handleOnEditBand}
-          />
+      <Center>
+        <BandTable
+          bands={bands}
+          genres={genres || []}
+          isLoading={isFetching}
+          onEditBand={handleOnEditBand}
+        />
 
-          <Drawer
-            opened={opened}
-            onClose={handleOnClose}
-            position="right"
-            title="Modifier le groupe"
-          >
-            {!!form.values.id && (
-              <form onSubmit={(event) => handleOnSubmit(event)}>
-                <Group w="100%">
-                  <BandFields
-                    genreProps={{
-                      genres: genres || [],
-                      w: "100%",
-                      ...form.getInputProps(`genres`),
-                    }}
-                    nameProps={{
-                      w: "100%",
-                      ...form.getInputProps(`name`),
-                    }}
-                    withLabels
-                  />
-                  <Group justify="space-between" w="100%">
-                    <Button variant="outline" onClick={handleOnClose}>
-                      Annuler
-                    </Button>
-                    <Button type="submit" loading={isEditLoading}>
-                      Modifier
-                    </Button>
-                  </Group>
+        <Drawer
+          opened={opened}
+          onClose={handleOnClose}
+          position="right"
+          title="Modifier le groupe"
+        >
+          {!!form.values.id && (
+            <form onSubmit={(event) => handleOnSubmit(event)}>
+              <Group w="100%">
+                <BandFields
+                  genreProps={{
+                    genres: genres || [],
+                    w: "100%",
+                    ...form.getInputProps(`genres`),
+                  }}
+                  nameProps={{
+                    w: "100%",
+                    ...form.getInputProps(`name`),
+                  }}
+                  withLabels
+                />
+                <Group justify="space-between" w="100%">
+                  <Button variant="outline" onClick={handleOnClose}>
+                    Annuler
+                  </Button>
+                  <Button type="submit" loading={isEditLoading}>
+                    Modifier
+                  </Button>
                 </Group>
-              </form>
-            )}
-          </Drawer>
-        </Center>
-      )}
+              </Group>
+            </form>
+          )}
+        </Drawer>
+      </Center>
       {isError && <Alert color="red">{error?.message}</Alert>}
     </Layout>
   );
