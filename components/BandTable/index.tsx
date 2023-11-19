@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { ActionIcon, Badge, Group, Table, TextInput } from "@mantine/core";
+import { ActionIcon, Group, Table, TextInput } from "@mantine/core";
 import { BandWithGenres } from "@/domain/Band/Band.type";
-import { getGenreColor } from "@/domain/Genre/Genre.service";
-import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
 import { normalizeString } from "@/utils/utils";
+import GenreBadge from "@/components/GenreBadge";
 
 type Props = {
   bands: BandWithGenres[];
@@ -66,16 +65,7 @@ export default function BandTable({ bands, genres, onEditBand }: Props) {
               <Table.Td>
                 <Group gap={2}>
                   {band.genres?.map((genre) => (
-                    <Badge
-                      key={genre?.id}
-                      color={getGenreColor(genre)}
-                      style={{
-                        color: getTextColorBasedOnBgColor(getGenreColor(genre)),
-                      }}
-                      size="sm"
-                    >
-                      {genre.name}
-                    </Badge>
+                    <GenreBadge key={genre?.id} genre={genre} size="sm" />
                   ))}
                 </Group>
               </Table.Td>

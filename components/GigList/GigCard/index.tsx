@@ -1,19 +1,17 @@
 "use client";
 
 import React from "react";
-import { Box, Card, Stack, Text, Badge, Group } from "@mantine/core";
+import { Box, Card, Stack, Text, Group, useMantineTheme } from "@mantine/core";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
-import { getGenreColor } from "@/domain/Genre/Genre.service";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { useSession } from "next-auth/react";
-import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import Price from "@/components/Price";
@@ -25,12 +23,16 @@ import {
 } from "@/components/GigList/GigCard/constants";
 import { hasPassed } from "@/utils/date";
 import OptimizedImage from "@/components/OptimizedImage";
+import { useHover } from "@mantine/hooks";
+import GenreBadge from "@/components/GenreBadge";
 
 type Props = {
   gig: GigWithBandsAndPlace;
 };
 
 const GigCard = ({ gig }: Props) => {
+  const theme = useMantineTheme();
+  const { hovered, ref } = useHover<HTMLAnchorElement>();
   const { grayOutPastGigs } = usePreferences();
   const { bands, date, isCanceled, place, price } = gig;
   const { status } = useSession();
@@ -38,7 +40,11 @@ const GigCard = ({ gig }: Props) => {
   const bandGenres = getUniqueBandGenres(bands);
 
   return (
-    <Box style={{ position: "relative" }}>
+    <Box
+      style={{
+        position: "relative",
+      }}
+    >
       <Card
         h={GIG_CARD_HEIGHT}
         component={Link}
@@ -47,7 +53,10 @@ const GigCard = ({ gig }: Props) => {
         c={isCanceled || (hasPassed(date) && grayOutPastGigs) ? "gray.6" : ""}
         style={{
           border: isCanceled ? "2px solid red" : "",
+          transition: `box-shadow ${theme.other.transitionDuration}`,
         }}
+        shadow={hovered ? "md" : ""}
+        ref={ref}
       >
         <Card.Section>
           <Box style={{ position: "relative" }}>
@@ -58,6 +67,10 @@ const GigCard = ({ gig }: Props) => {
               fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
                 getGigImgHeight(CARD_WIDTH),
               )}?text=.`}
+              style={{
+                scale: hovered ? 1.05 : 1,
+                transition: `scale ${theme.other.transitionDuration}`,
+              }}
             />
             {isCanceled && <CanceledGigOverlay />}
           </Box>
@@ -70,15 +83,7 @@ const GigCard = ({ gig }: Props) => {
             </Text>
             <Group gap={4}>
               {bandGenres.map((genre) => (
-                <Badge
-                  key={genre?.id}
-                  color={getGenreColor(genre)}
-                  style={{
-                    color: getTextColorBasedOnBgColor(getGenreColor(genre)),
-                  }}
-                >
-                  {genre.name}
-                </Badge>
+                <GenreBadge key={genre?.id} genre={genre} />
               ))}
             </Group>
           </Stack>
@@ -101,9 +106,8 @@ const GigCard = ({ gig }: Props) => {
         <Text
           h={TOP_BOX_HEIGHT}
           w={DATE_WIDTH}
-          lh={TOP_BOX_HEIGHT + "px"}
-          fw="bold"
-          c={"white"}
+          lh={`${TOP_BOX_HEIGHT}px`}
+          c="white"
         >
           {dayjs(date).format("ddd DD/MM")}
         </Text>

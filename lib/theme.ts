@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, createTheme } from "@mantine/core";
+import { Badge, createTheme } from "@mantine/core";
 
 export const theme = createTheme({
   colors: {
@@ -39,10 +39,13 @@ export const theme = createTheme({
     xxl: "96em", // custom xxl
   },
   black: "#111",
+  other: {
+    transitionDuration: "200ms",
+  },
   components: {
-    Card: Card.extend({
+    Badge: Badge.extend({
       defaultProps: {
-        shadow: "sm",
+        radius: "sm",
       },
     }),
   },

@@ -17,7 +17,6 @@ import dayjs from "dayjs";
 import { capitalize } from "@/utils/utils";
 import ExternalLink from "../../components/ExternalLink";
 import { getGigImgWidth } from "@/domain/image";
-import { getGenreColor } from "@/domain/Genre/Genre.service";
 import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -25,11 +24,11 @@ import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { IconX } from "@tabler/icons-react";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import { useSession } from "next-auth/react";
-import { getTextColorBasedOnBgColor } from "@/utils/color";
 import Price from "@/components/Price";
 import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
+import GenreBadge from "@/components/GenreBadge";
 
 type Props = {
   gigSlug: string;
@@ -132,9 +131,9 @@ const GigPage = ({ gigSlug }: Props) => {
               }}
             />
           )}
-          <Text fw="bold" bg="primary" c="white" w="fit-content" px="sm">
+          <Badge size="lg">
             {capitalize(dayjs(rawDate).format("dddd DD MMMM"))}
-          </Text>
+          </Badge>
 
           <Stack gap={4}>
             {bands?.map((band) => (
@@ -147,15 +146,7 @@ const GigPage = ({ gigSlug }: Props) => {
               >
                 <Text>{band.name}</Text>
                 {band.genres.map((genre) => (
-                  <Badge
-                    key={genre?.id}
-                    color={getGenreColor(genre)}
-                    style={{
-                      color: getTextColorBasedOnBgColor(getGenreColor(genre)),
-                    }}
-                  >
-                    {genre.name}
-                  </Badge>
+                  <GenreBadge key={genre?.id} genre={genre} />
                 ))}
               </Flex>
             ))}
