@@ -1,20 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  ActionIcon,
-  Group,
-  Skeleton,
-  Stack,
-  Table,
-  TextInput,
-} from "@mantine/core";
+import { ActionIcon, Group, Skeleton, Stack, Table } from "@mantine/core";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
-import GenreSelect from "@/components/GenreSelect";
 import { normalizeString } from "@/utils/utils";
 import GenreBadge from "@/components/GenreBadge";
+import TableHeader from "@/components/BandTable/TableHeader";
 
 type Props = {
   bands: BandWithGenres[] | undefined;
@@ -44,40 +37,22 @@ export default function BandTable({
       normalizeString(band.name).includes(normalizeString(searchedName)),
     );
 
-  const TableHeader = () => (
-    <Table.Thead style={{ zIndex: 1 }}>
-      {/* zIndex to fix a bug where icons are above the third column text */}
-      <Table.Tr>
-        <Table.Th>Nom</Table.Th>
-        <Table.Th>Genres</Table.Th>
-        <Table.Th>Action</Table.Th>
-      </Table.Tr>
-      <Table.Tr>
-        <Table.Th>
-          <TextInput
-            value={searchedName}
-            onChange={(event) => setSearchedName(event.currentTarget.value)}
-          />
-        </Table.Th>
-        <Table.Th>
-          <GenreSelect
-            clearable
-            genres={genres || []}
-            value={selectedGenres}
-            onChange={setSelectedGenres}
-          />
-        </Table.Th>
-      </Table.Tr>
-    </Table.Thead>
-  );
-
   return (
     <>
       <Table striped stickyHeader highlightOnHover withColumnBorders maw={800}>
         {isLoading ? (
           <Stack>
             <Table>
-              <TableHeader />
+              <TableHeader
+                bands={bands}
+                genres={genres}
+                isLoading={isLoading}
+                onEditBand={onEditBand}
+                searchedName={searchedName}
+                setSearchedName={setSearchedName}
+                selectedGenres={selectedGenres}
+                setSelectedGenres={setSelectedGenres}
+              />
             </Table>
             {Array(20)
               .fill(1)
@@ -86,7 +61,16 @@ export default function BandTable({
               ))}
           </Stack>
         ) : (
-          <TableHeader />
+          <TableHeader
+            bands={bands}
+            genres={genres}
+            isLoading={isLoading}
+            onEditBand={onEditBand}
+            searchedName={searchedName}
+            setSearchedName={setSearchedName}
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
+          />
         )}
         {!isLoading && (
           <Table.Tbody>
