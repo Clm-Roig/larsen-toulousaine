@@ -33,25 +33,21 @@ export default function ListControls({
 
   const incrementMonth = () => {
     const nextMonth = dayjs(selectedMonth).add(1, "month").toDate();
-    setSelectedMonth(nextMonth);
-    // Update url search params
-    const urlSearchParams = new URLSearchParams(
-      Array.from(searchParams.entries()),
-    );
-    urlSearchParams.set("année", nextMonth.getFullYear() + "");
-    urlSearchParams.set("mois", nextMonth.getMonth() + 1 + ""); // getMonth() goes from 0 to 11
-    router.push(`${pathname}?${urlSearchParams.toString()}`);
+    updateMonth(nextMonth);
   };
 
   const decrementMonth = () => {
     const previousMonth = dayjs(selectedMonth).subtract(1, "month").toDate();
-    setSelectedMonth(previousMonth);
-    // Update url search params
+    updateMonth(previousMonth);
+  };
+
+  const updateMonth = (newMonth: Date) => {
+    setSelectedMonth(newMonth);
     const urlSearchParams = new URLSearchParams(
       Array.from(searchParams.entries()),
     );
-    urlSearchParams.set("année", previousMonth.getFullYear() + "");
-    urlSearchParams.set("mois", previousMonth.getMonth() + 1 + ""); // getMonth() goes from 0 to 11
+    urlSearchParams.set("année", newMonth.getFullYear() + "");
+    urlSearchParams.set("mois", newMonth.getMonth() + 1 + ""); // getMonth() goes from 0 to 11
     router.push(`${pathname}?${urlSearchParams.toString()}`);
   };
 
@@ -65,6 +61,7 @@ export default function ListControls({
           decrementMonth={decrementMonth}
           incrementMonth={incrementMonth}
           selectedMonth={selectedMonth}
+          onSelectedMonthUpdate={updateMonth}
         />
       </Flex>
 

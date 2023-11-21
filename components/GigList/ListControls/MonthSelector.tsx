@@ -1,18 +1,19 @@
-import { capitalize } from "@/utils/utils";
-import { ActionIcon, Text } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
+import { MonthPickerInput } from "@mantine/dates";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 type Props = {
   decrementMonth: () => void;
   incrementMonth: () => void;
   selectedMonth: Date;
+  onSelectedMonthUpdate: (date: Date) => void;
 };
 
 export default function MonthSelector({
   decrementMonth,
   incrementMonth,
   selectedMonth,
+  onSelectedMonthUpdate,
 }: Props) {
   return (
     <>
@@ -23,9 +24,16 @@ export default function MonthSelector({
       >
         <IconChevronLeft />
       </ActionIcon>
-      <Text fw="bold" w={125} ta="center">
-        {capitalize(dayjs(selectedMonth).format("MMMM YYYY"))}
-      </Text>
+      <MonthPickerInput
+        value={selectedMonth}
+        onChange={onSelectedMonthUpdate}
+        fw="bold"
+        styles={{
+          input: {
+            textTransform: "capitalize",
+          },
+        }}
+      />
       <ActionIcon
         onClick={incrementMonth}
         aria-label="Incrémenter mois"
