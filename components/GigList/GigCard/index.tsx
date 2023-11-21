@@ -57,7 +57,13 @@ const GigCard = ({ gig }: Props) => {
         ref={ref}
       >
         <Card.Section>
-          <Box style={{ position: "relative" }}>
+          <Box
+            style={{
+              scale: hovered ? 1.075 : 1,
+              transition: `scale ${theme.other.transitionDuration}`,
+              position: "relative",
+            }}
+          >
             <OptimizedImage
               src={gig.imageUrl}
               h={getGigImgHeight(CARD_WIDTH)}
@@ -65,10 +71,6 @@ const GigCard = ({ gig }: Props) => {
               fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
                 getGigImgHeight(CARD_WIDTH),
               )}?text=.`}
-              style={{
-                scale: hovered ? 1.05 : 1,
-                transition: `scale ${theme.other.transitionDuration}`,
-              }}
             />
             {isCanceled && <CanceledGigOverlay />}
           </Box>
