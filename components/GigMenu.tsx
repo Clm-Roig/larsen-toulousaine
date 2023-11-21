@@ -1,7 +1,6 @@
 import { cancelGig, deleteGig, uncancelGig } from "@/domain/Gig/Gig.webService";
 import { Menu as MantineMenu, ActionIcon, rem } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { Gig } from "@prisma/client";
 import {
   IconCheck,
   IconDots,
@@ -11,13 +10,17 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
-type Props = { afterDeleteCallback?: () => void; gig: Gig };
+type Props = { afterDeleteCallback?: () => void; gig: GigWithBandsAndPlace };
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
   const { id, isCanceled, slug } = gig;
+  const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -68,30 +71,36 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
       </MantineMenu.Target>
 
       <MantineMenu.Dropdown>
-        <MantineMenu.Item
-          leftSection={<IconEdit style={iconStyle} />}
-          onClick={() => router.push(`/${slug}/edit`)}
-        >
-          Éditer
-        </MantineMenu.Item>
-        <MantineMenu.Item
-          leftSection={
-            isCanceled ? (
-              <IconCheck style={iconStyle} />
-            ) : (
-              <IconX style={iconStyle} />
-            )
-          }
-          onClick={handleOnCancel}
-        >
-          {isCanceled ? "Désannuler" : "Annuler"}
-        </MantineMenu.Item>
-        <MantineMenu.Item
-          leftSection={<IconTrash style={iconStyle} />}
-          onClick={handleOnDelete}
-        >
-          Supprimer
-        </MantineMenu.Item>
+        {!isCanceled && <AddGigToCalendarButton gig={gig} size="2|2|2" />}
+        {status === "authenticated" && (
+          <>
+            {!isCanceled && <MantineMenu.Divider />}
+            <MantineMenu.Item
+              leftSection={<IconEdit style={iconStyle} />}
+              onClick={() => router.push(`/${slug}/edit`)}
+            >
+              Éditer
+            </MantineMenu.Item>
+            <MantineMenu.Item
+              leftSection={
+                isCanceled ? (
+                  <IconCheck style={iconStyle} />
+                ) : (
+                  <IconX style={iconStyle} />
+                )
+              }
+              onClick={handleOnCancel}
+            >
+              {isCanceled ? "Désannuler" : "Annuler"}
+            </MantineMenu.Item>
+            <MantineMenu.Item
+              leftSection={<IconTrash style={iconStyle} />}
+              onClick={handleOnDelete}
+            >
+              Supprimer
+            </MantineMenu.Item>
+          </>
+        )}
       </MantineMenu.Dropdown>
     </MantineMenu>
   );

@@ -11,6 +11,7 @@ import {
   Anchor,
   Skeleton,
   Alert,
+  Group,
 } from "@mantine/core";
 import { getBandNames } from "@/domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -29,6 +30,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
 import GenreBadge from "@/components/GenreBadge";
+import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 
 type Props = {
   gigSlug: string;
@@ -82,7 +84,7 @@ const GigPage = ({ gigSlug }: Props) => {
   const {
     bands,
     description,
-    date: rawDate,
+    date,
     imageUrl,
     isCanceled,
     place,
@@ -131,10 +133,12 @@ const GigPage = ({ gigSlug }: Props) => {
               }}
             />
           )}
-          <Badge size="lg">
-            {capitalize(dayjs(rawDate).format("dddd DD MMMM"))}
-          </Badge>
-
+          <Group gap="xs">
+            <Badge size="lg">
+              {capitalize(dayjs(date).format("dddd DD MMMM"))}
+            </Badge>
+            {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
+          </Group>
           <Stack gap={4}>
             {bands?.map((band) => (
               <Flex

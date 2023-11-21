@@ -11,7 +11,6 @@ import { getGigImgHeight } from "@/domain/image";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
-import { useSession } from "next-auth/react";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import Price from "@/components/Price";
@@ -35,7 +34,6 @@ const GigCard = ({ gig }: Props) => {
   const { hovered, ref } = useHover<HTMLAnchorElement>();
   const { grayOutPastGigs } = usePreferences();
   const { bands, date, isCanceled, place, price } = gig;
-  const { status } = useSession();
   const bandNames = getBandNames(bands);
   const bandGenres = getUniqueBandGenres(bands);
 
@@ -113,11 +111,9 @@ const GigCard = ({ gig }: Props) => {
         </Text>
       </TopMenuBox>
 
-      {status === "authenticated" && (
-        <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
-          <GigMenu gig={gig} />
-        </TopMenuBox>
-      )}
+      <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
+        <GigMenu gig={gig} />
+      </TopMenuBox>
     </Box>
   );
 };
