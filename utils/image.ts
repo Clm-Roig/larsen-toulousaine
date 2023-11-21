@@ -1,6 +1,5 @@
 /**
- * Images are stored on a Vercel blob storage which is limited (in hobby plan) to 100Mb of bandwidth.
- * To avoid using these 100Mb, other images are displayed in development.
+ * To avoid using all storage hosting bandwidth in development, picsum images are displayed.
  */
 export function getImageUrl(imageUrl: string | null | undefined) {
   if (!imageUrl) {

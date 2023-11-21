@@ -17,7 +17,7 @@ import {
   IMG_MAX_WIDTH,
   IMG_OUTPUT_FORMAT,
 } from "@/domain/Gig/constants";
-import { downloadImage } from "@/app/api/utils/image";
+import { downloadAndStoreImage } from "@/app/api/utils/image";
 import { getConflictingBandNameError } from "@/domain/Band/errors";
 
 export async function GET(request: NextRequest) {
@@ -67,20 +67,7 @@ export async function POST(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { bands, imageUrl, slug } = body;
-  let blobImageUrl: string | undefined = undefined;
-  if (imageUrl) {
-    blobImageUrl = await downloadImage({
-      filename: slug,
-      imageFormat: IMG_OUTPUT_FORMAT,
-      imageUrl: imageUrl,
-      resizeOptions: {
-        height: IMG_MAX_HEIGHT,
-        width: IMG_MAX_WIDTH,
-        withoutEnlargement: true,
-      },
-    });
-  }
+  const { bands, imageUrl } = body;
   let causingErrorBand;
   try {
     // Create inexisting bands
@@ -99,6 +86,20 @@ export async function POST(request: NextRequest) {
     );
     const toConnectBands = bands.filter((b) => b.id);
     const slug = computeGigSlug({ bands: bands, date: body.date });
+
+    let blobImageUrl: string | undefined = undefined;
+    if (imageUrl) {
+      blobImageUrl = await downloadAndStoreImage({
+        filename: slug,
+        imageFormat: IMG_OUTPUT_FORMAT,
+        imageUrl: imageUrl,
+        resizeOptions: {
+          height: IMG_MAX_HEIGHT,
+          width: IMG_MAX_WIDTH,
+          withoutEnlargement: true,
+        },
+      });
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { placeId, ...bodyWithoutPlaceId } = body;

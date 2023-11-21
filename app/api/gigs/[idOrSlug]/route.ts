@@ -1,6 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { EditGigArgs } from "@/domain/Gig/Gig.webService";
-import { del as blobDelete } from "@vercel/blob";
 import {
   IMG_MAX_HEIGHT,
   IMG_MAX_WIDTH,
@@ -17,7 +16,8 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
-import { downloadImage } from "@/app/api/utils/image";
+import { downloadAndStoreImage } from "@/app/api/utils/image";
+import cloudinaryV2 from "@/lib/cloudinary";
 
 export async function GET(
   request: NextRequest,
@@ -72,7 +72,8 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { bands, id, imageUrl, slug } = body;
+  const { bands, date, id, imageUrl } = body;
+  const slug = computeGigSlug({ bands: bands, date: date });
   const previousGig = await prisma.gig.findFirst({
     where: { id: id },
     include: {
@@ -91,7 +92,7 @@ export async function PUT(request: NextRequest) {
   let blobImageUrl: string | undefined = prevImageUrl ?? undefined;
   const hasImageChanged = imageUrl && imageUrl !== prevImageUrl;
   if (hasImageChanged) {
-    blobImageUrl = await downloadImage({
+    blobImageUrl = await downloadAndStoreImage({
       filename: slug,
       imageFormat: IMG_OUTPUT_FORMAT,
       imageUrl: imageUrl,
@@ -148,7 +149,7 @@ export async function PUT(request: NextRequest) {
 
     if (hasImageChanged && prevImageUrl) {
       try {
-        await blobDelete(prevImageUrl);
+        await cloudinaryV2.uploader.destroy(prevImageUrl);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error.message);
