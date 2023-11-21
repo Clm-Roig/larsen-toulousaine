@@ -63,13 +63,12 @@ export async function downloadAndStoreImage({
     cloudinaryV2.uploader
       .upload_stream(options, (error, result) => {
         if (error) {
-          reject(error);
+          return reject(error);
         }
         if (!result?.url) {
-          reject("Cloudinary's steam did not return a file URL.");
-        } else {
-          resolve(result.secure_url);
+          return reject("Cloudinary's steam did not return a file URL.");
         }
+        return resolve(result.secure_url);
       })
       .end(resizedImg),
   );

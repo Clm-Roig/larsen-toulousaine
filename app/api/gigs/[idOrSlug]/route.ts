@@ -72,8 +72,7 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { bands, date, id, imageUrl } = body;
-  const slug = computeGigSlug({ bands: bands, date: date });
+  const { bands, id, imageUrl } = body;
   const previousGig = await prisma.gig.findFirst({
     where: { id: id },
     include: {
@@ -91,18 +90,6 @@ export async function PUT(request: NextRequest) {
   const prevImageUrl = previousGig?.imageUrl;
   let blobImageUrl: string | undefined = prevImageUrl ?? undefined;
   const hasImageChanged = imageUrl && imageUrl !== prevImageUrl;
-  if (hasImageChanged) {
-    blobImageUrl = await downloadAndStoreImage({
-      filename: slug,
-      imageFormat: IMG_OUTPUT_FORMAT,
-      imageUrl: imageUrl,
-      resizeOptions: {
-        fit: "fill",
-        height: IMG_MAX_HEIGHT,
-        width: IMG_MAX_WIDTH,
-      },
-    });
-  }
   try {
     // Create inexisting bands
     const toConnectBands = bands.filter((b) => b.id);
@@ -125,6 +112,19 @@ export async function PUT(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { placeId, authorId, ...bodyWithoutPlaceIdAndAuthorId } = body;
     const slug = computeGigSlug({ bands: bands, date: body.date });
+
+    if (hasImageChanged) {
+      blobImageUrl = await downloadAndStoreImage({
+        filename: slug,
+        imageFormat: IMG_OUTPUT_FORMAT,
+        imageUrl: imageUrl,
+        resizeOptions: {
+          fit: "fill",
+          height: IMG_MAX_HEIGHT,
+          width: IMG_MAX_WIDTH,
+        },
+      });
+    }
     const createdGig = await prisma.gig.update({
       where: { id: body.id },
       data: Prisma.validator<Prisma.GigUpdateInput>()({
