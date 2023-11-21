@@ -8,7 +8,10 @@ export function getImageUrl(imageUrl: string | null | undefined) {
   }
   if (process.env.NODE_ENV === "development") {
     const splittedUrl = imageUrl?.split("/");
-    const seedUrl = splittedUrl?.[splittedUrl?.length - 1];
+    const seedUrl = splittedUrl?.[splittedUrl?.length - 1].replace(
+      /[`~!@#$%^&*()_|+\-=?;:'",.<>{}[\]\\/]/gi, // remove all special
+      "",
+    );
     return `https://picsum.photos/seed/${seedUrl}/${640}/${360}`;
   }
   return imageUrl;
