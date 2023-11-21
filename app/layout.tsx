@@ -5,6 +5,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Décibel",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <Notifications position="top-center" />
           {children}
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
