@@ -119,7 +119,7 @@ const GigPage = ({ gigSlug }: Props) => {
           <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
           {isCanceled && <CanceledGigOverlay />}
         </Box>
-        <Flex direction="column" gap="sm" w="100%">
+        <Flex direction="column" gap="md" w="100%">
           {isCanceled && (
             <Alert
               color="red.9"
