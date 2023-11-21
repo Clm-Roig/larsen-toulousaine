@@ -1,6 +1,6 @@
 import cloudinaryV2 from "@/lib/cloudinary";
 import { Gig } from "@prisma/client";
-import { UploadApiOptions } from "cloudinary";
+import { UploadApiOptions, UploadApiResponse } from "cloudinary";
 import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 
 const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
@@ -53,6 +53,10 @@ export async function downloadAndStoreImage({
     .toFormat(imageFormat)
     .toBuffer();
 
+  // Workaround using base64, see : https://community.cloudinary.com/discussion/439/405-cloudinary-only-on-production-using-vercel-nextjs
+  const base64Data = resizedImg.toString("base64");
+  const fileUri = `data:image/jpeg;base64,${base64Data}`;
+
   const options: UploadApiOptions = {
     unique_filename: false,
     overwrite: true,
@@ -64,24 +68,21 @@ export async function downloadAndStoreImage({
 
   // eslint-disable-next-line no-console
   console.log("Uploading image to Cloudinary...");
-  const fileUrl = await new Promise<string>((resolve, reject) => {
-    cloudinaryV2.uploader
-      .upload_stream(options, (error, result) => {
+  const uploadToCloudinary = (): Promise<UploadApiResponse> => {
+    return new Promise((resolve, reject) =>
+      cloudinaryV2.uploader.upload(fileUri, options, (error, result) => {
         if (error) {
-          // eslint-disable-next-line no-console
-          console.error(
-            "Error when uploading image to Cloudinary: " + error.message,
-          );
           return reject(error);
         }
-        if (!result?.url) {
-          return reject("Cloudinary's stream did not return a file URL.");
+        if (result) {
+          return resolve(result);
         }
-        return resolve(result.secure_url);
-      })
-      .end(resizedImg);
-  });
-  return fileUrl;
+      }),
+    );
+  };
+  const result = await uploadToCloudinary();
+  const cloudinaryImageUrl = result.secure_url;
+  return cloudinaryImageUrl;
 }
 
 export async function deleteGigImage(imageUrl: Gig["imageUrl"]) {
