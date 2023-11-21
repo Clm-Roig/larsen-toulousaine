@@ -16,8 +16,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
-import { downloadAndStoreImage } from "@/app/api/utils/image";
-import cloudinaryV2 from "@/lib/cloudinary";
+import { deleteGigImage, downloadAndStoreImage } from "@/app/api/utils/image";
 
 export async function GET(
   request: NextRequest,
@@ -149,7 +148,7 @@ export async function PUT(request: NextRequest) {
 
     if (hasImageChanged && prevImageUrl) {
       try {
-        await cloudinaryV2.uploader.destroy(prevImageUrl);
+        await deleteGigImage(prevImageUrl);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error.message);
@@ -187,6 +186,22 @@ export async function DELETE(
     return toResponse(mustBeAuthenticatedError);
   }
   try {
+    const toBeDeletedGigs = await prisma.gig.findMany({
+      where: {
+        OR: [
+          {
+            id: {
+              equals: idOrSlug,
+            },
+          },
+          {
+            slug: {
+              equals: idOrSlug,
+            },
+          },
+        ],
+      },
+    });
     await prisma.gig.deleteMany({
       where: {
         OR: [
@@ -203,6 +218,11 @@ export async function DELETE(
         ],
       },
     });
+    await Promise.all(
+      toBeDeletedGigs.map(async (gig) => {
+        await deleteGigImage(gig.imageUrl);
+      }),
+    );
     return new Response(null, { status: 204 });
   } catch (error) {
     // eslint-disable-next-line no-console

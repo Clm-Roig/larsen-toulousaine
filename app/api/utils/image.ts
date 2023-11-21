@@ -1,6 +1,9 @@
 import cloudinaryV2 from "@/lib/cloudinary";
+import { Gig } from "@prisma/client";
 import { UploadApiOptions } from "cloudinary";
 import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
+
+const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
 
 // Vercel blob storage is not used anymore because of it's bandwidth limit
 
@@ -56,7 +59,7 @@ export async function downloadAndStoreImage({
     discard_original_filename: true,
     display_name: filename,
     public_id: filename,
-    folder: "gig-posters",
+    folder: GIG_POSTERS_FOLDER_NAME,
   };
 
   // eslint-disable-next-line no-console
@@ -79,4 +82,23 @@ export async function downloadAndStoreImage({
       .end(resizedImg);
   });
   return fileUrl;
+}
+
+export async function deleteGigImage(imageUrl: Gig["imageUrl"]) {
+  if (imageUrl) {
+    const publicId = getGigImagePublicId(imageUrl);
+    // eslint-disable-next-line no-console
+    console.log("Trying to delete image with public id '" + publicId + "'.");
+    const result = await cloudinaryV2.uploader.destroy(
+      getGigImagePublicId(imageUrl),
+    );
+    // eslint-disable-next-line no-console
+    console.log(result);
+  }
+}
+
+export function getGigImagePublicId(imageUrl: string) {
+  const splittedUrl = imageUrl.split("/");
+  const imagePublicId = splittedUrl[splittedUrl.length - 1].replace(".jpg", "");
+  return GIG_POSTERS_FOLDER_NAME + "/" + imagePublicId;
 }
