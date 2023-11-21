@@ -59,18 +59,24 @@ export async function downloadAndStoreImage({
     folder: "gig-posters",
   };
 
-  const fileUrl = await new Promise<string>((resolve, reject) =>
+  // eslint-disable-next-line no-console
+  console.log("Uploading image to Cloudinary...");
+  const fileUrl = await new Promise<string>((resolve, reject) => {
     cloudinaryV2.uploader
       .upload_stream(options, (error, result) => {
         if (error) {
+          // eslint-disable-next-line no-console
+          console.error(
+            "Error when uploading image to Cloudinary: " + error.message,
+          );
           return reject(error);
         }
         if (!result?.url) {
-          return reject("Cloudinary's steam did not return a file URL.");
+          return reject("Cloudinary's stream did not return a file URL.");
         }
         return resolve(result.secure_url);
       })
-      .end(resizedImg),
-  );
+      .end(resizedImg);
+  });
   return fileUrl;
 }
