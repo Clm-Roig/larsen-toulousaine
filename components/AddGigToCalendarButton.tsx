@@ -1,4 +1,5 @@
 import { getBandNames } from "@/domain/Band/Band.service";
+import { getGigCalendarDescription } from "@/domain/Gig/Gig.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { useMantineTheme } from "@mantine/core";
 import {
@@ -17,8 +18,7 @@ export default function AddGigToCalendarButton({
 }: Props) {
   const theme = useMantineTheme();
   const style = `--btn-underline: ${theme.colors.primary[6]};`;
-  const { bands, date, imageUrl, place, price, ticketReservationLink } =
-    gig || {};
+  const { bands, date, imageUrl, place } = gig || {};
   const bandNames = getBandNames(bands || []);
   const name = `Concert : ${bandNames}`;
   const iCalName = `Concert ${bandNames}`; // remove the ":" for file name
@@ -50,15 +50,9 @@ export default function AddGigToCalendarButton({
       }
       startDate={dayjs(date).format("YYYY-MM-DD")}
       endDate={dayjs(date).format("YYYY-MM-DD")}
-      timeZone="America/Los_Angeles"
+      timeZone="Europe/Paris"
       images={imageUrl ? [imageUrl] : []}
-      // Apple doesn't support most of html markdown (<i>, <p>, <ul>). That's it's using <br />, which is supported, to break lines.
-      description={`${
-        ticketReservationLink && `Ticket : [url]${ticketReservationLink}[/url]`
-      }${
-        price &&
-        `[br][br]Prix : ${price === 0 ? "Prix libre ou gratuit" : `${price}€`}`
-      }[br][br][i]Évènement créé par Décibel, votre agenda metal toulousain[/i]`}
+      description={getGigCalendarDescription(gig)}
       {...calendarProps}
     />
   );
