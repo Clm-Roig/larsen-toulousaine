@@ -8,7 +8,7 @@ import {
   editBand,
   getBands,
 } from "@/domain/Band/Band.webService";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandTable from "@/components/BandTable";
 import { useSession } from "next-auth/react";
@@ -23,6 +23,7 @@ const Bands = () => {
   const { data: session } = useSession();
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
+  const queryClient = useQueryClient();
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -54,7 +55,6 @@ const Bands = () => {
     error,
     isFetching,
     isError,
-    refetch,
   } = useQuery<BandWithGenres[], Error>({
     queryKey: ["bands"],
     queryFn: async () => await getBands(),
@@ -84,12 +84,12 @@ const Bands = () => {
     if (user && values) {
       try {
         await editBand(values);
+        await queryClient.invalidateQueries({ queryKey: ["bands"] });
         notifications.show({
           color: "green",
           message: "Groupe édité avec succès !",
         });
         handleOnClose();
-        await refetch();
       } catch (error) {
         notifications.show({
           color: "red",
