@@ -114,7 +114,7 @@ const GigPage = ({ gigSlug }: Props) => {
           maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
           pos="relative"
           m={{ base: "auto", md: 0 }}
-          opacity={isCanceled ? 0.55 : 1}
+          opacity={isCanceled ? 0.6 : 1}
         >
           <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
           {isCanceled && <CanceledGigOverlay />}

@@ -77,7 +77,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
             {isCanceled && <CanceledGigOverlay />}
           </Stack>
         }
-        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.55 : 1}
+        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.6 : 1}
         c={
           isCanceled || (hasPassed(date) && grayOutPastGigs)
             ? "gray.6"

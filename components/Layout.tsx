@@ -13,6 +13,7 @@ import {
   Title,
   Container,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -38,6 +39,7 @@ const frenchBreadcrumbDictionnary = {
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
+  const theme = useMantineTheme();
   const pathname = usePathname();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
@@ -104,6 +106,9 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         pt={{
           base: `calc(${rem(64)} + var(--mantine-spacing-xs))`,
           sm: `calc(${rem(64)} + var(--mantine-spacing-md))`,
+        }}
+        style={{
+          background: `radial-gradient(circle, ${theme.colors.primary[1]} 0%, white 100%)`,
         }}
       >
         <Container fluid px={0}>

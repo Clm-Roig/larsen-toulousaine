@@ -49,7 +49,7 @@ const GigCard = ({ gig }: Props) => {
         h={GIG_CARD_HEIGHT}
         component={Link}
         href={"/" + gig.slug}
-        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.55 : 1}
+        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.6 : 1}
         c={isCanceled || (hasPassed(date) && grayOutPastGigs) ? "gray.6" : ""}
         style={{
           border: isCanceled ? "2px solid red" : "",
