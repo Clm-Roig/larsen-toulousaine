@@ -12,6 +12,7 @@ import {
   Skeleton,
   Alert,
   Group,
+  Divider,
 } from "@mantine/core";
 import { getBandNames } from "@/domain/Band/Band.service";
 import dayjs from "dayjs";
@@ -22,7 +23,13 @@ import { getGig } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { IconX } from "@tabler/icons-react";
+import {
+  IconCalendar,
+  IconCurrencyEuro,
+  IconMapPin,
+  IconMusic,
+  IconX,
+} from "@tabler/icons-react";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import { useSession } from "next-auth/react";
 import Price from "@/components/Price";
@@ -133,56 +140,74 @@ const GigPage = ({ gigSlug }: Props) => {
               }}
             />
           )}
-          <Group gap="xs">
+
+          <Group>
+            <IconCalendar size={28} />
+            <Divider orientation="vertical" />
             <Badge size="lg">
               {capitalize(dayjs(date).format("dddd DD MMMM"))}
             </Badge>
             {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
           </Group>
-          <Stack gap={4}>
-            {bands?.map((band) => (
-              <Flex
-                key={band.id}
-                rowGap={0}
-                columnGap="xs"
-                wrap="wrap"
-                align="center"
-              >
-                <Text>{band.name}</Text>
-                {band.genres.map((genre) => (
-                  <GenreBadge key={genre?.id} genre={genre} />
-                ))}
-              </Flex>
-            ))}
-          </Stack>
+
+          <Group>
+            <IconMusic size={28} />
+            <Divider orientation="vertical" />
+            <Stack gap={4}>
+              {bands?.map((band) => (
+                <Flex
+                  key={band.id}
+                  rowGap={0}
+                  columnGap="xs"
+                  wrap="wrap"
+                  align="center"
+                >
+                  <Text>{band.name}</Text>
+                  {band.genres.map((genre) => (
+                    <GenreBadge key={genre?.id} genre={genre} />
+                  ))}
+                </Flex>
+              ))}
+            </Stack>
+          </Group>
 
           {description && <Text>{description}</Text>}
 
           {(!!price || price === 0 || ticketReservationLink) && (
-            <Flex gap="sm" align="baseline">
-              {(price || price === 0) && <Price value={price} />}
-              {ticketReservationLink && (
-                <ExternalLink href={ticketReservationLink}>
-                  Réserver une place
-                </ExternalLink>
-              )}
-            </Flex>
+            <Group>
+              <IconCurrencyEuro size={28} />
+              <Divider orientation="vertical" />
+              <Flex gap="sm" align="baseline">
+                {(price || price === 0) && <Price value={price} />}
+                {ticketReservationLink && (
+                  <ExternalLink href={ticketReservationLink}>
+                    Réserver une place
+                  </ExternalLink>
+                )}
+              </Flex>
+            </Group>
           )}
 
-          <Box>
-            <Text fw="bold">
-              {place?.website ? (
-                <ExternalLink href={place?.website}>{place.name}</ExternalLink>
-              ) : (
-                place?.name
-              )}
-            </Text>
-            <Text size="sm" mt={0}>
-              {place?.address &&
-                place.city &&
-                ` ${place?.address} - ${place?.city?.toUpperCase()}`}
-            </Text>
-          </Box>
+          <Group>
+            <IconMapPin size={28} />
+            <Divider orientation="vertical" />
+            <Stack gap={0}>
+              <Text fw="bold">
+                {place?.website ? (
+                  <ExternalLink href={place?.website}>
+                    {place.name}
+                  </ExternalLink>
+                ) : (
+                  place?.name
+                )}
+              </Text>
+              <Text size="sm" mt={0}>
+                {place?.address &&
+                  place.city &&
+                  ` ${place?.address} - ${place?.city?.toUpperCase()}`}
+              </Text>
+            </Stack>
+          </Group>
         </Flex>
       </Flex>
     </Box>
