@@ -6,7 +6,10 @@ import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
+import {
+  getBandNames,
+  getSortedUniqueBandGenres,
+} from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import GigMenu from "@/components/GigMenu";
@@ -35,8 +38,7 @@ const GigCard = ({ gig }: Props) => {
   const { grayOutPastGigs } = usePreferences();
   const { bands, date, isCanceled, place, price } = gig;
   const bandNames = getBandNames(bands);
-  const bandGenres = getUniqueBandGenres(bands);
-
+  const bandGenres = getSortedUniqueBandGenres(bands);
   return (
     <Box
       style={{

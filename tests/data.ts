@@ -98,8 +98,13 @@ export const allGenres: Genre[] = [
     color: "#bfef45",
   },
   {
-    id: "clolmb2of0000rm6opn38twlv",
-    name: "Heavy Symphonique",
+    id: "clolmb2of000595m6opn38twlv",
+    name: "Rock",
+    color: null,
+  },
+  {
+    id: "clolm95zof000485m6opn38twlv",
+    name: "Rap",
     color: null,
   },
 ];

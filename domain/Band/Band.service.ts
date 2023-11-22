@@ -14,11 +14,38 @@ export function getBandNames(bands: Band[] | BandWithOrder[]): string {
     .join(V_SEPARATOR);
 }
 
-export function getUniqueBandGenres(bands: BandWithGenres[]): Genre[] {
-  return bands.reduce((uniqueGenres: Genre[], band) => {
-    const newGenres = band.genres.filter((genre) =>
-      uniqueGenres.every((uniqueGenre) => uniqueGenre.id !== genre.id),
+type CountedGenre = { count: number } & Genre;
+
+// Genres are sorted by nb of occurences then by name
+export function getSortedUniqueBandGenres(bands: BandWithGenres[]): Genre[] {
+  const countedGenres = bands.reduce((countedGenres: CountedGenre[], band) => {
+    const updatedGenres = band.genres.map((genre) => {
+      const foundCountGenre = countedGenres.find(
+        (uniqueGenre) => uniqueGenre.id === genre.id,
+      );
+      if (!foundCountGenre) {
+        return { ...genre, count: 1 };
+      }
+      return { ...foundCountGenre, count: foundCountGenre.count + 1 };
+    });
+
+    const previousGenres = countedGenres.filter((g) =>
+      updatedGenres.every((g2) => g2.id !== g.id),
     );
-    return [...uniqueGenres, ...newGenres];
+
+    return [...previousGenres, ...updatedGenres];
   }, []);
+  return countedGenres
+    .sort((g1, g2) => {
+      const diff = g2.count - g1.count;
+      if (diff !== 0) {
+        return diff;
+      }
+      return g1.name.localeCompare(g2.name);
+    })
+    .map((g) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { count, ...rest } = g;
+      return rest;
+    });
 }

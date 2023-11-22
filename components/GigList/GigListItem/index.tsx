@@ -4,7 +4,10 @@ import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
 import OptimizedImage from "@/components/OptimizedImage";
 import Price from "@/components/Price";
-import { getBandNames, getUniqueBandGenres } from "@/domain/Band/Band.service";
+import {
+  getBandNames,
+  getSortedUniqueBandGenres,
+} from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
@@ -54,7 +57,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
     : 2;
   const { hovered, ref } = useHover<HTMLDivElement>();
   const { date, bands, isCanceled, imageUrl, place, price, slug } = gig;
-  const bandGenres = getUniqueBandGenres(bands);
+  const bandGenres = getSortedUniqueBandGenres(bands);
   const bandNames = getBandNames(bands);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
   return (
