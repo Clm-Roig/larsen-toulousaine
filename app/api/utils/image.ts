@@ -34,6 +34,9 @@ const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
 //   return url;
 // }
 
+/**
+ * Download a remote image and upload it to Cloudinary and override the previous image if any
+ */
 export async function downloadAndStoreImage({
   filename,
   imageFormat,

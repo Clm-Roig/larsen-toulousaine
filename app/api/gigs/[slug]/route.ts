@@ -66,9 +66,6 @@ export async function PUT(request: NextRequest) {
       },
     },
   });
-  const prevImageUrl = previousGig?.imageUrl;
-  let blobImageUrl: string | undefined = prevImageUrl ?? undefined;
-  const hasImageChanged = imageUrl && imageUrl !== prevImageUrl;
   try {
     // Create inexisting bands
     const toConnectBands = bands.filter((b) => b.id);
@@ -92,8 +89,11 @@ export async function PUT(request: NextRequest) {
     const { placeId, authorId, ...bodyWithoutPlaceIdAndAuthorId } = body;
     const slug = computeGigSlug({ bands: bands, date: body.date });
 
+    const prevImageUrl = previousGig?.imageUrl;
+    let newImageUrl: string | undefined = prevImageUrl ?? undefined;
+    const hasImageChanged = imageUrl && imageUrl !== prevImageUrl;
     if (hasImageChanged) {
-      blobImageUrl = await downloadAndStoreImage({
+      newImageUrl = await downloadAndStoreImage({
         filename: slug,
         imageFormat: IMG_OUTPUT_FORMAT,
         imageUrl: imageUrl,
@@ -118,23 +118,13 @@ export async function PUT(request: NextRequest) {
             order: band.order,
           })),
         },
-        imageUrl: blobImageUrl,
+        imageUrl: newImageUrl,
         author: { connect: { id: user.id } },
         slug: slug,
         place: { connect: { id: body.placeId } },
       }),
       include: { bands: true },
     });
-
-    if (hasImageChanged && prevImageUrl) {
-      try {
-        await deleteGigImage(prevImageUrl);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error.message);
-      }
-    }
-
     return NextResponse.json(createdGig);
   } catch (error) {
     // eslint-disable-next-line no-console
