@@ -19,14 +19,14 @@ const iconStyle = { width: rem(16), height: rem(16) };
 type Props = { afterDeleteCallback?: () => void; gig: GigWithBandsAndPlace };
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
-  const { id, isCanceled, slug } = gig;
+  const { isCanceled, slug } = gig;
   const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const handleOnDelete = async () => {
     try {
-      await deleteGig(id);
+      await deleteGig(slug);
       await queryClient.invalidateQueries({ queryKey: ["gigs"] });
       notifications.show({
         color: "green",
@@ -44,7 +44,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
 
   const handleOnCancel = async () => {
     try {
-      isCanceled ? await uncancelGig(id) : await cancelGig(id);
+      isCanceled ? await uncancelGig(slug) : await cancelGig(slug);
       await queryClient.invalidateQueries({ queryKey: ["gigs"] });
       const verb = isCanceled ? "désannulé" : "annulé";
       notifications.show({

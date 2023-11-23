@@ -115,25 +115,25 @@ export const editGig = async (
   }
 };
 
-export const deleteGig = async (gigId: Gig["id"]): Promise<void> => {
+export const deleteGig = async (gigSlug: Gig["slug"]): Promise<void> => {
   try {
-    await api.delete(`/gigs/${gigId}`);
+    await api.delete(`/gigs/${gigSlug}`);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
 };
 
-export const cancelGig = async (gigId: Gig["id"]): Promise<void> => {
+export const cancelGig = async (gigSlug: Gig["slug"]): Promise<void> => {
   try {
-    await api.post(`/gigs/${gigId}/cancel`);
+    await api.post(`/gigs/${gigSlug}/cancel`);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
 };
 
-export const uncancelGig = async (gigId: Gig["id"]): Promise<void> => {
+export const uncancelGig = async (gigSlug: Gig["slug"]): Promise<void> => {
   try {
-    await api.post(`/gigs/${gigId}/uncancel`);
+    await api.post(`/gigs/${gigSlug}/uncancel`);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
