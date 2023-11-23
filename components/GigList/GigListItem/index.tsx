@@ -25,11 +25,12 @@ import {
   createPolymorphicComponent,
   useMantineTheme,
 } from "@mantine/core";
-import { useHover, useMediaQuery } from "@mantine/hooks";
+import { useHover } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import GenreBadge from "@/components/GenreBadge";
+import useScreenSize from "@/hooks/useScreenSize";
 
 type Props = {
   gig: GigWithBandsAndPlace;
@@ -45,16 +46,17 @@ export default function GigListItem({ gig, withDivider }: Props) {
   const theme = useMantineTheme();
   const { status } = useSession();
   const { grayOutPastGigs } = usePreferences();
-  const isLargeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
-  const isSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
-  const isXSmallScreen = useMediaQuery(`(min-width: ${theme.breakpoints.xs})`);
-  const nbGenresDisplayed = isLargeScreen
-    ? 6
+  const { isLargeScreen, isMediumScreen, isSmallScreen, isXSmallScreen } =
+    useScreenSize();
+  const nbGenresDisplayed = isXSmallScreen
+    ? 2
     : isSmallScreen
-    ? 5
-    : isXSmallScreen
     ? 3
-    : 2;
+    : isMediumScreen
+    ? 4
+    : isLargeScreen
+    ? 5
+    : 6;
   const { hovered, ref } = useHover<HTMLDivElement>();
   const { date, bands, isCanceled, imageUrl, place, price, slug } = gig;
   const bandGenres = getSortedUniqueBandGenres(bands);

@@ -24,7 +24,7 @@ export default function AddGigToCalendarButton({
   const iCalName = `Concert ${bandNames}`; // remove the ":" for file name
   return (
     <AddToCalendarButton
-      label="Ajouter à mon agenda"
+      label="Ajouter à l'agenda"
       language="fr"
       buttonStyle="text"
       size="3|3|2"

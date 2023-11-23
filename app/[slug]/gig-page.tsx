@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Badge,
   Box,
@@ -11,7 +11,6 @@ import {
   Anchor,
   Skeleton,
   Alert,
-  Group,
   Divider,
 } from "@mantine/core";
 import { getBandNames } from "@/domain/Band/Band.service";
@@ -38,6 +37,7 @@ import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
 import GenreBadge from "@/components/GenreBadge";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
+import useScreenSize from "@/hooks/useScreenSize";
 
 type Props = {
   gigSlug: string;
@@ -45,9 +45,16 @@ type Props = {
 
 const IMAGE_MAX_HEIGHT = 250;
 
+const Row = ({ children }: { children: ReactNode }) => (
+  <Flex gap={{ base: "xs", sm: "md" }} align="center">
+    {children}
+  </Flex>
+);
+
 const GigPage = ({ gigSlug }: Props) => {
   const { status } = useSession();
   const router = useRouter();
+  const { isXSmallScreen, isSmallScreen } = useScreenSize();
   const { data: gig, isLoading } = useQuery<
     (GigWithBandsAndPlace & GigWithAuthor) | null,
     Error
@@ -55,6 +62,10 @@ const GigPage = ({ gigSlug }: Props) => {
     queryKey: ["gig", gigSlug],
     queryFn: async () => await getGig(gigSlug),
   });
+
+  const afterDeleteCallback = () => {
+    router.push("/");
+  };
 
   if (isLoading) {
     return (
@@ -100,13 +111,18 @@ const GigPage = ({ gigSlug }: Props) => {
   } = gig || {};
   const bandNames = getBandNames(bands || []);
 
-  const afterDeleteCallback = () => {
-    router.push("/");
-  };
+  const iconProps = { size: isXSmallScreen ? 20 : 28 };
 
   return (
     <Box pos="relative">
-      {bandNames?.length > 0 && <Title order={1}>{bandNames}</Title>}
+      {bandNames?.length > 0 && (
+        <Title
+          order={1}
+          size={isXSmallScreen ? "h3" : isSmallScreen ? "h2" : "h1"}
+        >
+          {bandNames}
+        </Title>
+      )}
       {status === "authenticated" && (
         <Box pos="absolute" top={0} right={0} bg="primary">
           {gig && (
@@ -141,17 +157,21 @@ const GigPage = ({ gigSlug }: Props) => {
             />
           )}
 
-          <Group>
-            <IconCalendar size={28} />
+          <Row>
+            <IconCalendar {...iconProps} />
             <Divider orientation="vertical" />
             <Badge size="lg">
-              {capitalize(dayjs(date).format("dddd DD MMMM"))}
+              {capitalize(
+                dayjs(date).format(
+                  isXSmallScreen ? "DD/MM/YYYY" : "dddd DD MMMM YYYY",
+                ),
+              )}
             </Badge>
             {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
-          </Group>
+          </Row>
 
-          <Group>
-            <IconMusic size={28} />
+          <Row>
+            <IconMusic {...iconProps} />
             <Divider orientation="vertical" />
             <Stack gap={4}>
               {bands?.map((band) => (
@@ -169,13 +189,13 @@ const GigPage = ({ gigSlug }: Props) => {
                 </Flex>
               ))}
             </Stack>
-          </Group>
+          </Row>
 
           {description && <Text>{description}</Text>}
 
           {(!!price || price === 0 || ticketReservationLink) && (
-            <Group>
-              <IconCurrencyEuro size={28} />
+            <Row>
+              <IconCurrencyEuro {...iconProps} />
               <Divider orientation="vertical" />
               <Flex gap="sm" align="baseline">
                 {(price || price === 0) && <Price value={price} />}
@@ -185,11 +205,11 @@ const GigPage = ({ gigSlug }: Props) => {
                   </ExternalLink>
                 )}
               </Flex>
-            </Group>
+            </Row>
           )}
 
-          <Group>
-            <IconMapPin size={28} />
+          <Row>
+            <IconMapPin {...iconProps} />
             <Divider orientation="vertical" />
             <Stack gap={0}>
               <Text fw="bold">
@@ -207,7 +227,7 @@ const GigPage = ({ gigSlug }: Props) => {
                   ` ${place?.address} - ${place?.city?.toUpperCase()}`}
               </Text>
             </Stack>
-          </Group>
+          </Row>
         </Flex>
       </Flex>
     </Box>
