@@ -7,10 +7,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { idOrSlug: string } },
+  { params }: { params: { slug: string } },
 ) {
-  const { idOrSlug: rawIdOrSlug } = params;
-  const idOrSlug = decodeURIComponent(rawIdOrSlug);
+  const { slug: rawSlug } = params;
+  const slug = decodeURIComponent(rawSlug);
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
@@ -18,18 +18,7 @@ export async function POST(
   try {
     await prisma.gig.updateMany({
       where: {
-        OR: [
-          {
-            id: {
-              equals: idOrSlug,
-            },
-          },
-          {
-            slug: {
-              equals: idOrSlug,
-            },
-          },
-        ],
+        slug: slug,
       },
       data: {
         isCanceled: true,

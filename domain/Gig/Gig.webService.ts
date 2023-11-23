@@ -18,12 +18,12 @@ export const getGigs = async (
 };
 
 export const getGig = async (
-  idOrSlug: string,
+  slug: string,
 ): Promise<(GigWithBandsAndPlace & GigWithAuthor) | null> => {
   try {
     const response = await api.get<
       (GigWithBandsAndPlace & GigWithAuthor) | undefined
-    >(`/gigs/${encodeURIComponent(idOrSlug)}`);
+    >(`/gigs/${encodeURIComponent(slug)}`);
     return response.data ?? null;
   } catch (error) {
     throw new Error(getErrorMessage(error));

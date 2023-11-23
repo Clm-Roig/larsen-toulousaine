@@ -9,16 +9,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { idOrSlug: string } },
+  { params }: { params: { slug: string } },
 ) {
-  const { idOrSlug: rawIdOrSlug } = params;
-  const idOrSlug = decodeURIComponent(rawIdOrSlug);
+  const { slug: rawSlug } = params;
+  const slug = decodeURIComponent(rawSlug);
   try {
     const gig = await prisma.gig.findFirst({
-      take: -1,
+      take: 1,
       skip: 1,
       cursor: {
-        slug: idOrSlug,
+        slug: slug,
       },
       orderBy: gigListOrderBy,
       include: gigWithBandsAndGenresInclude,

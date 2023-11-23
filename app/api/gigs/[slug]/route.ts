@@ -24,24 +24,13 @@ import {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { idOrSlug: string } },
+  { params }: { params: { slug: string } },
 ) {
-  const { idOrSlug: rawIdOrSlug } = params;
-  const idOrSlug = decodeURIComponent(rawIdOrSlug);
+  const { slug: rawSlug } = params;
+  const slug = decodeURIComponent(rawSlug);
   const gig = await prisma.gig.findFirst({
     where: {
-      OR: [
-        {
-          id: {
-            equals: idOrSlug,
-          },
-        },
-        {
-          slug: {
-            equals: idOrSlug,
-          },
-        },
-      ],
+      slug: slug,
     },
     include: gigWithBandsAndGenresInclude,
   });
@@ -168,52 +157,28 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { idOrSlug: string } },
+  { params }: { params: { slug: string } },
 ) {
-  const { idOrSlug: rawIdOrSlug } = params;
-  const idOrSlug = decodeURIComponent(rawIdOrSlug);
+  const { slug: rawSlug } = params;
+  const slug = decodeURIComponent(rawSlug);
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
   try {
-    const toBeDeletedGigs = await prisma.gig.findMany({
+    const toBeDeletedGig = await prisma.gig.findFirst({
       where: {
-        OR: [
-          {
-            id: {
-              equals: idOrSlug,
-            },
-          },
-          {
-            slug: {
-              equals: idOrSlug,
-            },
-          },
-        ],
+        slug: slug,
       },
     });
-    await prisma.gig.deleteMany({
+    await prisma.gig.delete({
       where: {
-        OR: [
-          {
-            id: {
-              equals: idOrSlug,
-            },
-          },
-          {
-            slug: {
-              equals: idOrSlug,
-            },
-          },
-        ],
+        slug: slug,
       },
     });
-    await Promise.all(
-      toBeDeletedGigs.map(async (gig) => {
-        await deleteGigImage(gig.imageUrl);
-      }),
-    );
+    if (toBeDeletedGig) {
+      await deleteGigImage(toBeDeletedGig.imageUrl);
+    }
     return new Response(null, { status: 204 });
   } catch (error) {
     // eslint-disable-next-line no-console
