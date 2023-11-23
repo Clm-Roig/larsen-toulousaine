@@ -1,5 +1,4 @@
 import {
-  flattenGigBands,
   gigListOrderBy,
   gigWithBandsAndGenresInclude,
 } from "@/app/api/utils/gigs";
@@ -26,8 +25,7 @@ export async function GET(
     if (!gig) {
       return new Response(null, { status: 404 });
     }
-    const flattenedGig = flattenGigBands(gig);
-    return NextResponse.json(flattenedGig);
+    return NextResponse.json(gig.slug);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

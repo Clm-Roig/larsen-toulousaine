@@ -30,6 +30,34 @@ export const getGig = async (
   }
 };
 
+export const getNextGigSlug = async (
+  slug: string,
+): Promise<Gig["slug"] | null> => {
+  try {
+    const response = await api.get<Gig["slug"] | undefined>(
+      `/gigs/${encodeURIComponent(slug)}/next`,
+    );
+    return response.data ?? null;
+  } catch (error) {
+    if (error.response.status === 404) return null;
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const getPreviousGigSlug = async (
+  slug: string,
+): Promise<Gig["slug"] | null> => {
+  try {
+    const response = await api.get<Gig["slug"] | undefined>(
+      `/gigs/${encodeURIComponent(slug)}/previous`,
+    );
+    return response.data ?? null;
+  } catch (error) {
+    if (error.response.status === 404) return null;
+    throw new Error(getErrorMessage(error));
+  }
+};
+
 export type CreateGigArgs = Omit<
   Gig,
   "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled"

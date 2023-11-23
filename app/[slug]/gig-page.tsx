@@ -1,43 +1,27 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import {
-  Badge,
-  Box,
-  Flex,
-  Stack,
-  Text,
-  Title,
-  Anchor,
-  Skeleton,
-  Alert,
-  Divider,
-} from "@mantine/core";
+import React from "react";
+import { Box, Flex, Stack, Text, Title, Anchor, Skeleton } from "@mantine/core";
 import { getBandNames } from "@/domain/Band/Band.service";
-import dayjs from "dayjs";
-import { capitalize } from "@/utils/utils";
-import ExternalLink from "../../components/ExternalLink";
 import { getGigImgWidth } from "@/domain/image";
-import { getGig } from "@/domain/Gig/Gig.webService";
+import {
+  getGig,
+  getNextGigSlug,
+  getPreviousGigSlug,
+} from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import {
-  IconCalendar,
-  IconCurrencyEuro,
-  IconMapPin,
-  IconMusic,
-  IconX,
-} from "@tabler/icons-react";
 import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import { useSession } from "next-auth/react";
-import Price from "@/components/Price";
 import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
-import GenreBadge from "@/components/GenreBadge";
-import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import useScreenSize from "@/hooks/useScreenSize";
+import GigInfo from "@/components/GigInfo";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { Gig } from "@prisma/client";
+import ConditionnalButtonLink from "@/components/ConditionnalButtonLink";
 
 type Props = {
   gigSlug: string;
@@ -45,16 +29,11 @@ type Props = {
 
 const IMAGE_MAX_HEIGHT = 250;
 
-const Row = ({ children }: { children: ReactNode }) => (
-  <Flex gap={{ base: "xs", sm: "md" }} align="center">
-    {children}
-  </Flex>
-);
-
 const GigPage = ({ gigSlug }: Props) => {
   const { status } = useSession();
   const router = useRouter();
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
+
   const { data: gig, isLoading } = useQuery<
     (GigWithBandsAndPlace & GigWithAuthor) | null,
     Error
@@ -62,6 +41,20 @@ const GigPage = ({ gigSlug }: Props) => {
     queryKey: ["gig", gigSlug],
     queryFn: async () => await getGig(gigSlug),
   });
+
+  const { data: nextGigSlug, isLoading: isLoadingNextGigSlug } = useQuery<
+    Gig["slug"] | null,
+    Error
+  >({
+    queryKey: ["nextGigSlug", gigSlug],
+    queryFn: async () => await getNextGigSlug(gigSlug),
+  });
+
+  const { data: previousGigSlug, isLoading: isLoadingPreviousGigSlug } =
+    useQuery<Gig["slug"] | null, Error>({
+      queryKey: ["previousGigSlug", gigSlug],
+      queryFn: async () => await getPreviousGigSlug(gigSlug),
+    });
 
   const afterDeleteCallback = () => {
     router.push("/");
@@ -99,19 +92,8 @@ const GigPage = ({ gigSlug }: Props) => {
     );
   }
 
-  const {
-    bands,
-    description,
-    date,
-    imageUrl,
-    isCanceled,
-    place,
-    price,
-    ticketReservationLink,
-  } = gig || {};
+  const { bands, imageUrl, isCanceled } = gig || {};
   const bandNames = getBandNames(bands || []);
-
-  const iconProps = { size: isXSmallScreen ? 20 : 28 };
 
   return (
     <Box pos="relative">
@@ -142,93 +124,27 @@ const GigPage = ({ gigSlug }: Props) => {
           <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
           {isCanceled && <CanceledGigOverlay />}
         </Box>
-        <Flex direction="column" gap="md" w="100%">
-          {isCanceled && (
-            <Alert
-              color="red.9"
-              title="CONCERT ANNULÉ"
-              icon={<IconX />}
-              p={"sm"}
-              styles={{
-                title: {
-                  marginBottom: 0,
-                },
-              }}
-            />
-          )}
 
-          <Row>
-            <IconCalendar {...iconProps} />
-            <Divider orientation="vertical" />
-            <Badge size="lg">
-              {capitalize(
-                dayjs(date).format(
-                  isXSmallScreen ? "DD/MM/YYYY" : "dddd DD MMMM YYYY",
-                ),
-              )}
-            </Badge>
-            {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
-          </Row>
+        {gig && <GigInfo gig={gig} />}
+      </Flex>
 
-          <Row>
-            <IconMusic {...iconProps} />
-            <Divider orientation="vertical" />
-            <Stack gap={4}>
-              {bands?.map((band) => (
-                <Flex
-                  key={band.id}
-                  rowGap={0}
-                  columnGap="xs"
-                  wrap="wrap"
-                  align="center"
-                >
-                  <Text>{band.name}</Text>
-                  {band.genres.map((genre) => (
-                    <GenreBadge key={genre?.id} genre={genre} />
-                  ))}
-                </Flex>
-              ))}
-            </Stack>
-          </Row>
-
-          {description && <Text>{description}</Text>}
-
-          {(!!price || price === 0 || ticketReservationLink) && (
-            <Row>
-              <IconCurrencyEuro {...iconProps} />
-              <Divider orientation="vertical" />
-              <Flex gap="sm" align="baseline">
-                {(price || price === 0) && <Price value={price} />}
-                {ticketReservationLink && (
-                  <ExternalLink href={ticketReservationLink}>
-                    Réserver une place
-                  </ExternalLink>
-                )}
-              </Flex>
-            </Row>
-          )}
-
-          <Row>
-            <IconMapPin {...iconProps} />
-            <Divider orientation="vertical" />
-            <Stack gap={0}>
-              <Text fw="bold">
-                {place?.website ? (
-                  <ExternalLink href={place?.website}>
-                    {place.name}
-                  </ExternalLink>
-                ) : (
-                  place?.name
-                )}
-              </Text>
-              <Text size="sm" mt={0}>
-                {place?.address &&
-                  place.city &&
-                  ` ${place?.address} - ${place?.city?.toUpperCase()}`}
-              </Text>
-            </Stack>
-          </Row>
-        </Flex>
+      <Flex mt="md" justify="space-between">
+        <ConditionnalButtonLink
+          leftSection={<IconChevronLeft />}
+          disabled={previousGigSlug === null}
+          loading={isLoadingPreviousGigSlug}
+          href={previousGigSlug ? `/${previousGigSlug}` : undefined}
+        >
+          Précédent
+        </ConditionnalButtonLink>
+        <ConditionnalButtonLink
+          rightSection={<IconChevronRight />}
+          disabled={nextGigSlug === null}
+          loading={isLoadingNextGigSlug}
+          href={nextGigSlug ? `/${nextGigSlug}` : undefined}
+        >
+          Suivant
+        </ConditionnalButtonLink>
       </Flex>
     </Box>
   );
