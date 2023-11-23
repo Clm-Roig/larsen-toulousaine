@@ -19,6 +19,7 @@ import {
 } from "@/domain/Gig/constants";
 import { downloadAndStoreImage } from "@/app/api/utils/image";
 import { getConflictingBandNameError } from "@/domain/Band/errors";
+import { gigListOrderBy } from "@/app/api/utils/gigs";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -45,6 +46,7 @@ export async function GET(request: NextRequest) {
         },
       },
     },
+    orderBy: gigListOrderBy,
   });
 
   const cleanedGigs = gigs.map((gig) => ({

@@ -17,6 +17,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
 import { deleteGigImage, downloadAndStoreImage } from "@/app/api/utils/image";
+import {
+  flattenGigBands,
+  gigWithBandsAndGenresInclude,
+} from "@/app/api/utils/gigs";
 
 export async function GET(
   request: NextRequest,
@@ -39,26 +43,13 @@ export async function GET(
         },
       ],
     },
-    include: {
-      author: true,
-      place: true,
-      bands: {
-        include: {
-          band: {
-            include: {
-              genres: true,
-            },
-          },
-        },
-      },
-    },
+    include: gigWithBandsAndGenresInclude,
   });
-  const cleanedGig = {
-    ...gig,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-    bands: gig?.bands.map((b) => ({ ...b.band, order: b.order })),
-  };
-  return NextResponse.json(cleanedGig);
+  if (!gig) {
+    return new Response(null, { status: 404 });
+  }
+  const flattenedGig = flattenGigBands(gig);
+  return NextResponse.json(flattenedGig);
 }
 
 export async function PUT(request: NextRequest) {

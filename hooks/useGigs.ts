@@ -88,9 +88,6 @@ export default function useGigs() {
         !maxPrice ||
         maxPrice === 0 ||
         (!Number.isNaN(maxPrice) && gig.price <= Number(maxPrice)),
-    )
-    .sort(
-      (g1, g2) => new Date(g1.date).getTime() - new Date(g2.date).getTime(),
     );
 
   return {
