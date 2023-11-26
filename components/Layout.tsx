@@ -8,18 +8,19 @@ import {
   Box,
   Breadcrumbs,
   Text,
-  Stack,
   Paper,
   Title,
   Container,
   rem,
   useMantineTheme,
+  Flex,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { V_SEPARATOR, capitalize } from "../utils/utils";
 import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 import { useHeadroom } from "@mantine/hooks";
+import KofiButton from "kofi-button";
 
 type Props = {
   children: ReactNode;
@@ -108,7 +109,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           sm: `calc(${rem(64)} + var(--mantine-spacing-md))`,
         }}
         style={{
-          background: `radial-gradient(circle, ${theme.colors.primary[1]} 0%, white 100%)`,
+          background: `#f4f4f4`,
         }}
       >
         <Container fluid px={0}>
@@ -126,22 +127,35 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
       </AppShell.Main>
 
       {/* Can't use AppShell.Footer because it's sticking above the content on mobile view */}
-      <Paper w="100%" mt={0} p="sm">
-        <Stack align="center" gap={0}>
+      <Paper w="100%" mt={0} p="sm" bg="white">
+        <Flex
+          align={{ base: "center", sm: "baseline" }}
+          gap="sm"
+          direction={{ base: "column", sm: "row" }}
+          justify="center"
+        >
           <Text size="sm">
             Développé par{" "}
             <Anchor href="https://clm-roig.github.io/" target="_blank">
               Clément ROIG
             </Anchor>{" "}
-            © {new Date().getFullYear()} - Code source disponible sur{" "}
+            © {new Date().getFullYear()}
+            {" - "}
             <Anchor
               href="https://github.com/Clm-Roig/larsen-toulousaine"
               target="_blank"
             >
-              GitHub
+              Code source
             </Anchor>
           </Text>
-        </Stack>
+          <Box>
+            <KofiButton
+              color={theme.colors.primary[6]}
+              title="Achetez-moi un café"
+              kofiID="clementroig"
+            />
+          </Box>
+        </Flex>
       </Paper>
     </AppShell>
   );
