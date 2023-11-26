@@ -135,7 +135,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
             </Anchor>{" "}
             © {new Date().getFullYear()} - Code source disponible sur{" "}
             <Anchor
-              href="https://github.com/Clm-Roig/decibel-agenda"
+              href="https://github.com/Clm-Roig/larsen-toulousaine"
               target="_blank"
             >
               GitHub

@@ -63,6 +63,6 @@ export const getGigCalendarDescription = (gig: Gig): string => {
   }
 
   // Bottom signature
-  description += `${getNewLine()}[i]Évènement créé par Décibel, votre agenda metal toulousain[/i]`;
+  description += `${getNewLine()}[i]Évènement créé par Larsen Toulousaine, votre agenda metal toulousain[/i]`;
   return description;
 };

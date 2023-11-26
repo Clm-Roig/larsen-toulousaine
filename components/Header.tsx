@@ -25,7 +25,7 @@ const Header: React.FC = () => {
     <AppShell.Header bg="primary" p="xs" pl="md">
       <Group justify="space-between" h="100%">
         <Text
-          size={"xl"}
+          size={"lg"}
           fw="bold"
           style={{ fontFamily: "Garamond", borderRadius: "4px" }}
           c="primary"
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
           component={Link}
           href="/"
         >
-          DÉCIBEL
+          LARSEN TOULOUSAINE
         </Text>
         {status === "authenticated" && (
           <Stack gap={0} align="center">

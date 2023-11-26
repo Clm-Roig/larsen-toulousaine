@@ -8,7 +8,7 @@ import { Notifications } from "@mantine/notifications";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Décibel",
+  title: "Larsen Toulousaine",
   description: "Votre agenda metal à Toulouse",
 };
 
