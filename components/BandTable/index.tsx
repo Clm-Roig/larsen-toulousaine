@@ -66,6 +66,7 @@ export default function BandTable({
           highlightOnHover
           withColumnBorders
           maw={800}
+          layout="fixed"
         >
           <TableHeader
             bands={bands}
