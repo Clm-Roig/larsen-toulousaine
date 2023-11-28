@@ -17,6 +17,21 @@ export const getGigs = async (
   }
 };
 
+export const getGigByDateAndPlaceId = async (
+  date: Date,
+  placeId: string,
+): Promise<GigWithBandsAndPlace | null> => {
+  try {
+    const response = await api.get<GigWithBandsAndPlace | undefined>(
+      `/gigs?date=${date.toISOString()}&placeId=${placeId}`,
+    );
+    return response.data ?? null;
+  } catch (error) {
+    if (error.response.status === 404) return null;
+    throw new Error(getErrorMessage(error));
+  }
+};
+
 export const getGig = async (
   slug: string,
 ): Promise<(GigWithBandsAndPlace & GigWithAuthor) | null> => {

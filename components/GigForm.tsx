@@ -15,9 +15,17 @@ import {
   NumberInput,
   rem,
   Flex,
+  Alert,
+  Stack,
+  Loader,
+  Center,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
-import { IconGripVertical, IconTrash } from "@tabler/icons-react";
+import {
+  IconGripVertical,
+  IconInfoCircle,
+  IconTrash,
+} from "@tabler/icons-react";
 import { FormEvent, useEffect } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import BandSelect from "./BandSelect";
@@ -26,12 +34,17 @@ import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
-import { CreateGigArgs, EditGigArgs } from "@/domain/Gig/Gig.webService";
+import {
+  CreateGigArgs,
+  EditGigArgs,
+  getGigByDateAndPlaceId,
+} from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { DatePickerInput } from "@mantine/dates";
 import OptimizedImage from "@/components/OptimizedImage";
 import BandFields from "@/components/BandFields";
+import { getBandNames } from "@/domain/Band/Band.service";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -80,7 +93,22 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       ticketReservationLink: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
     },
-    validateInputOnBlur: true,
+  });
+
+  const {
+    data: samePlaceSameDayGig,
+    isFetching: isLoadingSamePlaceSameDayGig,
+  } = useQuery<GigWithBandsAndPlace | null, Error>({
+    queryKey: ["samePlaceSameDayGig", form.values.date, form.values.placeId],
+    queryFn: async () => {
+      const { date, placeId } = form.values;
+      if (date && placeId) {
+        const res = await getGigByDateAndPlaceId(date, placeId);
+        return res;
+      } else {
+        return null;
+      }
+    },
   });
 
   useEffect(() => {
@@ -123,28 +151,58 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
-        <DatePickerInput
-          label="Date"
-          valueFormat="DD MMMM YYYY"
-          required
-          style={{ flex: 1 }}
-          {...form.getInputProps("date")}
-        />
+      <Stack>
+        <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
+          <DatePickerInput
+            label="Date"
+            valueFormat="DD MMMM YYYY"
+            required
+            style={{ flex: 1 }}
+            {...form.getInputProps("date")}
+          />
 
-        <Select
-          label="Lieu"
-          placeholder="Sélectionner un lieu"
-          required
-          searchable
-          data={places?.map((place) => ({
-            value: place.id,
-            label: place.name,
-          }))}
-          style={{ flex: 1 }}
-          {...form.getInputProps("placeId")}
-        />
-      </Flex>
+          <Select
+            label="Lieu"
+            placeholder="Sélectionner un lieu"
+            required
+            searchable
+            data={places?.map((place) => ({
+              value: place.id,
+              label: place.name,
+            }))}
+            style={{ flex: 1 }}
+            {...form.getInputProps("placeId")}
+          />
+        </Flex>
+        {isLoadingSamePlaceSameDayGig &&
+          form.values.date &&
+          form.values.placeId && (
+            <Center>
+              <Group>
+                <Loader type="dots" />
+                <Text fs="italic">{`Vérification de la présence d'un concert...`}</Text>
+              </Group>
+            </Center>
+          )}
+        {!isLoadingSamePlaceSameDayGig && !!samePlaceSameDayGig && (
+          <>
+            <Alert
+              color="yellow"
+              title="Un concert a déjà lieu au jour et lieu sélectionnés :"
+              icon={<IconInfoCircle />}
+              p="xs"
+            >
+              <b>{getBandNames(samePlaceSameDayGig.bands)}</b>
+              <br />
+              <i>
+                Vous pouvez tout de même continuer à ajouter un nouveau concert
+                : il est possible que deux concerts aient lieu le même jour au
+                même endroit.
+              </i>
+            </Alert>
+          </>
+        )}
+      </Stack>
 
       <Divider my="md" />
 

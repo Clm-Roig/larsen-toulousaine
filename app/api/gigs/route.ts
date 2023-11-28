@@ -25,38 +25,92 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const from = searchParams.get("from");
   const to = searchParams.get("to");
-  const gigs = await prisma.gig.findMany({
-    where: {
-      date: {
-        gte: from
-          ? new Date(from)
-          : dayjs(new Date()).startOf("month").toDate(),
-        lte: to ? new Date(to) : dayjs(new Date()).endOf("month").toDate(),
+  const placeId = searchParams.get("placeId");
+  const date = searchParams.get("date");
+  let byDateAndPlaceGig, gigs;
+
+  // Get a gig list
+  if (from && to) {
+    const rawGigs = await prisma.gig.findMany({
+      where: {
+        date: {
+          gte: from
+            ? new Date(from)
+            : dayjs(new Date()).startOf("month").toDate(),
+          lte: to ? new Date(to) : dayjs(new Date()).endOf("month").toDate(),
+        },
       },
-    },
-    include: {
-      place: true,
-      bands: {
-        include: {
-          band: {
-            include: {
-              genres: true,
+      include: {
+        place: true,
+        bands: {
+          include: {
+            band: {
+              include: {
+                genres: true,
+              },
             },
           },
         },
       },
-    },
-    orderBy: gigListOrderBy,
-  });
+      orderBy: gigListOrderBy,
+    });
+    gigs = rawGigs.map((gig) => ({
+      ...gig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+      bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
+    }));
+    return NextResponse.json({
+      gigs: gigs,
+    });
+  }
 
-  const cleanedGigs = gigs.map((gig) => ({
-    ...gig,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-    bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
-  }));
-  return NextResponse.json({
-    gigs: cleanedGigs,
-  });
+  // Search a gig by date and place
+  if (placeId || date) {
+    const whereClause = {
+      ...(date
+        ? {
+            date: {
+              gte: dayjs(date).startOf("day").toDate(),
+              lte: dayjs(date).endOf("day").toDate(),
+            },
+          }
+        : {}),
+      ...(placeId ? { placeId: placeId } : {}),
+    };
+    const rawGig = await prisma.gig.findFirst({
+      where: whereClause,
+      include: {
+        place: true,
+        bands: {
+          include: {
+            band: {
+              include: {
+                genres: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: gigListOrderBy,
+    });
+    if (!rawGig) {
+      return NextResponse.json({}, { status: 404 });
+    }
+    byDateAndPlaceGig = {
+      ...rawGig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+      bands: rawGig.bands.map((b) => ({ ...b.band, order: b.order })),
+    };
+    return NextResponse.json(byDateAndPlaceGig);
+  }
+
+  return NextResponse.json(
+    {
+      message:
+        'Bad request, you must specify some criterias too find gigs (date "from" and "to", or "placeId" and "date").',
+    },
+    { status: 400 },
+  );
 }
 
 export async function POST(request: NextRequest) {
