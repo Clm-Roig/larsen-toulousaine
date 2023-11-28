@@ -39,28 +39,34 @@ export default function BandTable({
 
   return (
     <>
-      <Table striped stickyHeader highlightOnHover withColumnBorders maw={800}>
-        {isLoading ? (
-          <Stack>
-            <Table>
-              <TableHeader
-                bands={bands}
-                genres={genres}
-                isLoading={isLoading}
-                onEditBand={onEditBand}
-                searchedName={searchedName}
-                setSearchedName={setSearchedName}
-                selectedGenres={selectedGenres}
-                setSelectedGenres={setSelectedGenres}
-              />
-            </Table>
-            {Array(20)
-              .fill(1)
-              .map((v, idx) => (
-                <Skeleton key={idx} height={30} width={800} />
-              ))}
-          </Stack>
-        ) : (
+      {isLoading ? (
+        <Stack>
+          <Table>
+            <TableHeader
+              bands={bands}
+              genres={genres}
+              isLoading={isLoading}
+              onEditBand={onEditBand}
+              searchedName={searchedName}
+              setSearchedName={setSearchedName}
+              selectedGenres={selectedGenres}
+              setSelectedGenres={setSelectedGenres}
+            />
+          </Table>
+          {Array(20)
+            .fill(1)
+            .map((v, idx) => (
+              <Skeleton key={idx} height={30} width={800} />
+            ))}
+        </Stack>
+      ) : (
+        <Table
+          striped
+          stickyHeader
+          highlightOnHover
+          withColumnBorders
+          maw={800}
+        >
           <TableHeader
             bands={bands}
             genres={genres}
@@ -71,8 +77,7 @@ export default function BandTable({
             selectedGenres={selectedGenres}
             setSelectedGenres={setSelectedGenres}
           />
-        )}
-        {!isLoading && (
+
           <Table.Tbody>
             {filteredBands?.map((band) => (
               <Table.Tr key={band.id}>
@@ -97,8 +102,8 @@ export default function BandTable({
               </Table.Tr>
             ))}
           </Table.Tbody>
-        )}
-      </Table>
+        </Table>
+      )}
     </>
   );
 }

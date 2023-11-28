@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
 import {
@@ -8,7 +8,7 @@ import {
   editBand,
   getBands,
 } from "@/domain/Band/Band.webService";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandTable from "@/components/BandTable";
 import { useSession } from "next-auth/react";
@@ -21,7 +21,6 @@ import BandFields from "@/components/BandFields";
 
 const Bands = () => {
   const { data: session } = useSession();
-  const [isEditLoading, setIsEditLoading] = useState(false);
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
   const queryClient = useQueryClient();
 
@@ -52,52 +51,57 @@ const Bands = () => {
 
   const {
     data: bands,
-    error,
+    error: getBandsError,
     isFetching,
     isError,
   } = useQuery<BandWithGenres[], Error>({
     queryKey: ["bands"],
     queryFn: async () => await getBands(),
   });
-
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });
 
-  const handleOnClose = () => {
+  const { isPending, isSuccess, mutate } = useMutation({
+    mutationFn: async (values: EditBandArgs) => await editBand(values),
+  });
+
+  const handleOnClose = useCallback(() => {
     setEditedBand(undefined);
     close();
-  };
+  }, [close]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      notifications.show({
+        color: "green",
+        message: "Groupe édité avec succès !",
+      });
+      handleOnClose();
+      void queryClient.invalidateQueries({ queryKey: ["bands"] });
+    }
+  }, [handleOnClose, isSuccess, queryClient]);
 
   const handleOnEditBand = (band: BandWithGenres) => {
     setEditedBand(band);
     open();
   };
 
-  const handleOnSubmit = async (event: FormEvent) => {
+  const handleOnSubmit = (event: FormEvent) => {
     event.preventDefault();
-    setIsEditLoading(true);
     const { user } = session || {};
     const { values } = form;
 
     if (user && values) {
       try {
-        await editBand(values);
-        await queryClient.invalidateQueries({ queryKey: ["bands"] });
-        notifications.show({
-          color: "green",
-          message: "Groupe édité avec succès !",
-        });
-        handleOnClose();
+        mutate(values);
       } catch (error) {
         notifications.show({
           color: "red",
           title: "Erreur à l'édition du groupe",
           message: error.message,
         });
-      } finally {
-        setIsEditLoading(false);
       }
     }
   };
@@ -137,7 +141,7 @@ const Bands = () => {
                   <Button variant="outline" onClick={handleOnClose}>
                     Annuler
                   </Button>
-                  <Button type="submit" loading={isEditLoading}>
+                  <Button type="submit" loading={isPending}>
                     Modifier
                   </Button>
                 </Group>
@@ -146,7 +150,7 @@ const Bands = () => {
           )}
         </Drawer>
       </Center>
-      {isError && <Alert color="red">{error?.message}</Alert>}
+      {isError && <Alert color="red">{getBandsError?.message}</Alert>}
     </Layout>
   );
 };
