@@ -1,16 +1,19 @@
 import React from "react";
+import NextImage from "next/image";
 import {
   AppShell,
   Button,
   Group,
-  Text,
   Stack,
   ActionIcon,
+  Image,
+  Box,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { IconLogin2 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import logo from "@/public/images/logo.png";
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -24,19 +27,16 @@ const Header: React.FC = () => {
   return (
     <AppShell.Header bg="primary" p="xs" pl="md">
       <Group justify="space-between" h="100%">
-        <Text
-          size={"lg"}
-          fw="bold"
-          style={{ fontFamily: "Garamond", borderRadius: "4px" }}
-          c="primary"
-          bg="black"
-          px={8}
-          py={4}
-          component={Link}
-          href="/"
-        >
-          LARSEN TOULOUSAINE
-        </Text>
+        <Box h="100%">
+          <Link href="/">
+            <Image
+              component={NextImage}
+              src={logo}
+              alt="Logo Larsen Toulousaine"
+              mah="100%"
+            />
+          </Link>
+        </Box>
         {status === "authenticated" && (
           <Stack gap={0} align="center">
             <Group>
