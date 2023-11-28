@@ -31,8 +31,10 @@ export default function MonthSelector({
         styles={{
           input: {
             textTransform: "capitalize",
+            textAlign: "center",
           },
         }}
+        w={150}
       />
       <ActionIcon
         onClick={incrementMonth}
