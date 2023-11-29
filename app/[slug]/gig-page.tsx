@@ -120,6 +120,7 @@ const GigPage = ({ gigSlug }: Props) => {
           pos="relative"
           m={{ base: "auto", md: 0 }}
           opacity={isCanceled ? 0.6 : 1}
+          style={{ overflowY: "hidden" }} // prevent too high image to overflow
         >
           <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
           {isCanceled && <CanceledGigOverlay />}
