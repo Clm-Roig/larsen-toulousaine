@@ -16,7 +16,12 @@ export function getBandNames(bands: Band[] | BandWithOrder[]): string {
 
 type CountedGenre = { count: number } & Genre;
 
-// Genres are sorted by nb of occurences then by name
+/**
+ * Genres are sorted by:
+ *  1. "metal" genres first (= with a defined color)
+ *  2. nb of genre occurences
+ *  3. alphabetical order
+ */
 export function getSortedUniqueBandGenres(bands: BandWithGenres[]): Genre[] {
   const countedGenres = bands.reduce((countedGenres: CountedGenre[], band) => {
     const updatedGenres = band.genres.map((genre) => {
@@ -37,10 +42,17 @@ export function getSortedUniqueBandGenres(bands: BandWithGenres[]): Genre[] {
   }, []);
   return countedGenres
     .sort((g1, g2) => {
+      // With color = metal genre = has priority over the other one
+      if (!g1.color) return 1;
+      if (!g2.color) return -1;
+
+      // More occurences
       const diff = g2.count - g1.count;
       if (diff !== 0) {
         return diff;
       }
+
+      // Alphabetical order
       return g1.name.localeCompare(g2.name);
     })
     .map((g) => {
