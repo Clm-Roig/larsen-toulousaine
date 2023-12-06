@@ -15,6 +15,7 @@ import GenreBadge from "@/components/GenreBadge";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import useScreenSize from "@/hooks/useScreenSize";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import SoldOutIcon from "@/components/SoldOutIcon";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -33,6 +34,7 @@ export default function GigInfo({ gig }: Props) {
     description,
     date,
     isCanceled,
+    isSoldOut,
     place,
     price,
     ticketReservationLink,
@@ -95,8 +97,9 @@ export default function GigInfo({ gig }: Props) {
         <Row>
           <IconCurrencyEuro {...iconProps} />
           <Divider orientation="vertical" />
-          <Flex gap="sm" align="baseline">
+          <Flex gap="sm" align="center">
             {(price || price === 0) && <Price value={price} />}
+            {isSoldOut && <SoldOutIcon />}
             {ticketReservationLink && (
               <ExternalLink href={ticketReservationLink}>
                 Réserver une place

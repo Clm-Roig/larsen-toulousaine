@@ -36,6 +36,7 @@ model Gig {
   ticketReservationLink String?
   slug                  String        @unique
   isCanceled            Boolean       @default(false)
+  isSoldOut             Boolean       @default(false)
   bands                 BandsOnGigs[]
   price                 Float?
 }

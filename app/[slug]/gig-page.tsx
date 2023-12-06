@@ -12,7 +12,6 @@ import {
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithAuthor, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import { useSession } from "next-auth/react";
 import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
@@ -22,6 +21,7 @@ import GigInfo from "@/components/GigInfo";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { Gig } from "@prisma/client";
 import ConditionnalButtonLink from "@/components/ConditionnalButtonLink";
+import GigImgOverlay from "@/components/GigImgOverlay";
 
 type Props = {
   gigSlug: string;
@@ -92,7 +92,7 @@ const GigPage = ({ gigSlug }: Props) => {
     );
   }
 
-  const { bands, imageUrl, isCanceled } = gig || {};
+  const { bands, imageUrl, isCanceled, isSoldOut } = gig || {};
   const bandNames = getBandNames(bands || []);
 
   return (
@@ -119,11 +119,11 @@ const GigPage = ({ gigSlug }: Props) => {
           maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
           pos="relative"
           m={{ base: "auto", md: 0 }}
-          opacity={isCanceled ? 0.6 : 1}
+          opacity={isCanceled || isSoldOut ? 0.6 : 1}
           style={{ overflowY: "hidden" }} // prevent too high image to overflow
         >
           <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
-          {isCanceled && <CanceledGigOverlay />}
+          <GigImgOverlay gig={gig} />
         </Box>
 
         {gig && <GigInfo gig={gig} />}

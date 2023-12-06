@@ -75,7 +75,7 @@ export const getPreviousGigSlug = async (
 
 export type CreateGigArgs = Omit<
   Gig,
-  "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled"
+  "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled" | "isSoldOut"
 > & {
   id?: string;
   createdAt?: Date;
@@ -149,6 +149,24 @@ export const cancelGig = async (gigSlug: Gig["slug"]): Promise<void> => {
 export const uncancelGig = async (gigSlug: Gig["slug"]): Promise<void> => {
   try {
     await api.post(`/gigs/${gigSlug}/uncancel`);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const markGigAsSoldOut = async (gigSlug: Gig["slug"]): Promise<void> => {
+  try {
+    await api.post(`/gigs/${gigSlug}/markAsSoldOut`);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const markGigAsNotSoldOut = async (
+  gigSlug: Gig["slug"],
+): Promise<void> => {
+  try {
+    await api.post(`/gigs/${gigSlug}/markAsNotSoldOut`);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

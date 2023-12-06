@@ -1,4 +1,3 @@
-import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
@@ -31,6 +30,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import GenreBadge from "@/components/GenreBadge";
 import useScreenSize from "@/hooks/useScreenSize";
+import GigImgOverlay from "@/components/GigImgOverlay";
 
 type Props = {
   gig: GigWithBandsAndPlace;
@@ -58,7 +58,8 @@ export default function GigListItem({ gig, withDivider }: Props) {
     ? 5
     : 6;
   const { hovered, ref } = useHover<HTMLDivElement>();
-  const { date, bands, isCanceled, imageUrl, place, price, slug } = gig;
+  const { date, bands, isCanceled, isSoldOut, imageUrl, place, price, slug } =
+    gig;
   const bandGenres = getSortedUniqueBandGenres(bands);
   const bandNames = getBandNames(bands);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
@@ -69,19 +70,33 @@ export default function GigListItem({ gig, withDivider }: Props) {
           <Stack
             align="center"
             gap={4}
-            style={{ border: isCanceled ? "2px solid red" : "" }}
+            style={{
+              border: isCanceled
+                ? "2px solid red"
+                : isSoldOut
+                ? "2px solid var(--mantine-color-orange-filled)"
+                : "",
+              ...((isCanceled || isSoldOut) && {
+                borderTopLeftRadius: "6px",
+                borderTopRightRadius: "6px",
+              }),
+            }}
             pos="relative"
           >
             <Badge color="primary" size="lg" w={100}>
               {dayjs(date).format("ddd DD/MM")}
             </Badge>
             <OptimizedImage src={imageUrl} alt={bandNames} w={100} />
-            {isCanceled && <CanceledGigOverlay />}
+            <GigImgOverlay gig={gig} />
           </Stack>
         }
-        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.6 : 1}
+        opacity={
+          isCanceled || (hasPassed(date) && grayOutPastGigs) || isSoldOut
+            ? 0.6
+            : 1
+        }
         c={
-          isCanceled || (hasPassed(date) && grayOutPastGigs)
+          isCanceled || (hasPassed(date) && grayOutPastGigs) || isSoldOut
             ? "gray.6"
             : "initial"
         }

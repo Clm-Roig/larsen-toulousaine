@@ -11,7 +11,6 @@ import {
   getSortedUniqueBandGenres,
 } from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
-import CanceledGigOverlay from "@/components/CanceledGigOverlay";
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MAIN_CITY } from "@/domain/Place/constants";
@@ -27,6 +26,8 @@ import { hasPassed } from "@/utils/date";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useHover } from "@mantine/hooks";
 import GenreBadge from "@/components/GenreBadge";
+import GigImgOverlay from "@/components/GigImgOverlay";
+import SoldOutIcon from "@/components/SoldOutIcon";
 
 type Props = {
   gig: GigWithBandsAndPlace;
@@ -36,7 +37,7 @@ const GigCard = ({ gig }: Props) => {
   const theme = useMantineTheme();
   const { hovered, ref } = useHover<HTMLAnchorElement>();
   const { grayOutPastGigs } = usePreferences();
-  const { bands, date, isCanceled, place, price } = gig;
+  const { bands, date, isCanceled, isSoldOut, place, price } = gig;
   const bandNames = getBandNames(bands);
   const bandGenres = getSortedUniqueBandGenres(bands);
   return (
@@ -49,10 +50,22 @@ const GigCard = ({ gig }: Props) => {
         h={GIG_CARD_HEIGHT}
         component={Link}
         href={"/" + gig.slug}
-        opacity={isCanceled || (hasPassed(date) && grayOutPastGigs) ? 0.6 : 1}
-        c={isCanceled || (hasPassed(date) && grayOutPastGigs) ? "gray.6" : ""}
+        opacity={
+          isCanceled || (hasPassed(date) && grayOutPastGigs) || isSoldOut
+            ? 0.6
+            : 1
+        }
+        c={
+          isCanceled || (hasPassed(date) && grayOutPastGigs) || isSoldOut
+            ? "gray.6"
+            : ""
+        }
         style={{
-          border: isCanceled ? "2px solid red" : "",
+          border: isCanceled
+            ? "2px solid red"
+            : isSoldOut
+            ? "2px solid var(--mantine-color-orange-filled)"
+            : "",
           transition: `box-shadow ${theme.other.transitionDuration}`,
         }}
         shadow={hovered ? "md" : ""}
@@ -74,7 +87,7 @@ const GigCard = ({ gig }: Props) => {
                 getGigImgHeight(CARD_WIDTH),
               )}?text=.`}
             />
-            {isCanceled && <CanceledGigOverlay />}
+            <GigImgOverlay gig={gig} />
           </Box>
         </Card.Section>
 
@@ -99,7 +112,10 @@ const GigCard = ({ gig }: Props) => {
                 </Text>
               )}
             </Text>
-            {(price || price === 0) && <Price value={price} size="sm" />}
+            <Group gap="xs">
+              {isSoldOut && <SoldOutIcon />}
+              {(price || price === 0) && <Price value={price} size="sm" />}
+            </Group>
           </Group>
         </Stack>
       </Card>
