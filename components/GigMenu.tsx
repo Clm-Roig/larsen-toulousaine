@@ -5,7 +5,12 @@ import {
   markGigAsSoldOut,
   uncancelGig,
 } from "@/domain/Gig/Gig.webService";
-import { Menu as MantineMenu, ActionIcon, rem } from "@mantine/core";
+import {
+  Menu as MantineMenu,
+  ActionIcon,
+  rem,
+  LoadingOverlay,
+} from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
   IconCheck,
@@ -17,7 +22,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
@@ -32,67 +37,79 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const handleOnDelete = async () => {
-    try {
+  const { isPending: isDeletePending, mutate: handleOnDelete } = useMutation({
+    mutationFn: async () => {
       await deleteGig(slug);
+    },
+    onError: (error) =>
+      notifications.show({
+        color: "red",
+        title: "Erreur à la suppression du concert",
+        message: error.message,
+      }),
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["gigs"] });
       notifications.show({
         color: "green",
         message: "Concert supprimé avec succès !",
       });
       afterDeleteCallback?.();
-    } catch (e) {
+    },
+  });
+
+  const { isPending: isCancelPending, mutate: handleOnCancel } = useMutation({
+    mutationFn: async () => {
+      isCanceled ? await uncancelGig(slug) : await cancelGig(slug);
+    },
+    onError: (error) => {
+      const action = isCanceled ? "l'annulation" : "la désannulation";
       notifications.show({
         color: "red",
-        title: "Erreur à la suppression du concert",
-        message: e.message,
+        title: `Erreur à ${action} du concert.`,
+        message: error.message,
       });
-    }
-  };
-
-  const handleOnCancel = async () => {
-    try {
-      isCanceled ? await uncancelGig(slug) : await cancelGig(slug);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["gigs"] });
       const verb = isCanceled ? "désannulé" : "annulé";
       notifications.show({
         color: "green",
         message: `Concert ${verb} avec succès !`,
       });
-      afterDeleteCallback?.();
-    } catch (e) {
-      const action = isCanceled ? "l'annulation" : "la désannulation";
-      notifications.show({
-        color: "red",
-        title: `Erreur à ${action} du concert.`,
-        message: e.message,
-      });
-    }
-  };
+    },
+  });
 
-  const handleOnSoldOut = async () => {
-    const newState = isSoldOut ? "non-complet" : "complet";
-    try {
-      isSoldOut
-        ? await markGigAsNotSoldOut(slug)
-        : await markGigAsSoldOut(slug);
-      await queryClient.invalidateQueries({ queryKey: ["gigs"] });
-      notifications.show({
-        color: "green",
-        message: `Concert marqué comme "${newState}" avec succès !`,
-      });
-      afterDeleteCallback?.();
-    } catch (e) {
-      notifications.show({
-        color: "red",
-        title: `Erreur lors du marquage du concert comme "${newState}".`,
-        message: e.message,
-      });
-    }
-  };
+  const { isPending: isOnSoldOutPending, mutate: handleOnSoldOut } =
+    useMutation({
+      mutationFn: async () => {
+        isSoldOut
+          ? await markGigAsNotSoldOut(slug)
+          : await markGigAsSoldOut(slug);
+      },
+      onError: (error) => {
+        const newState = isSoldOut ? "non-complet" : "complet";
+        notifications.show({
+          color: "red",
+          title: `Erreur lors du marquage du concert comme "${newState}".`,
+          message: error.message,
+        });
+      },
+      onSuccess: async () => {
+        const newState = isSoldOut ? "non-complet" : "complet";
+        await queryClient.invalidateQueries({ queryKey: ["gigs"] });
+        notifications.show({
+          color: "green",
+          message: `Concert marqué comme "${newState}" avec succès !`,
+        });
+      },
+    });
 
   return (
     <MantineMenu position="bottom-end" shadow="sm" withinPortal>
+      <LoadingOverlay
+        visible={isCancelPending || isDeletePending || isOnSoldOutPending}
+        loaderProps={{ size: "sm" }}
+      />
       <MantineMenu.Target>
         <ActionIcon variant="subtle" color="white">
           <IconDots style={{ width: rem(16), height: rem(16) }} />
@@ -118,7 +135,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
                   <IconX style={iconStyle} />
                 )
               }
-              onClick={handleOnCancel}
+              onClick={() => handleOnCancel()}
             >
               {isCanceled ? "Désannuler" : "Annuler"}
             </MantineMenu.Item>
@@ -130,13 +147,13 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
                   <IconTicketOff style={iconStyle} />
                 )
               }
-              onClick={handleOnSoldOut}
+              onClick={() => handleOnSoldOut()}
             >
               {isSoldOut ? "Non-complet" : "Complet"}
             </MantineMenu.Item>
             <MantineMenu.Item
               leftSection={<IconTrash style={iconStyle} />}
-              onClick={handleOnDelete}
+              onClick={() => handleOnDelete()}
             >
               Supprimer
             </MantineMenu.Item>
