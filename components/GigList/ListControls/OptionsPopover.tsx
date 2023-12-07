@@ -24,19 +24,19 @@ export default function OptionsPopover({ genres, places }: Props) {
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
 
   const {
-    excludedGenres,
+    filteredGenres,
     excludedPlaces,
     grayOutPastGigs,
     maxPrice,
     resetPreferences,
-    setExcludedGenres,
+    setFilteredGenres,
     setExcludedPlaces,
     setGrayOutPastGigs,
     setMaxPrice,
   } = usePreferences();
 
   const handleGenreSelect = (genreIds: string[]) => {
-    setExcludedGenres(genres.filter((g) => genreIds.includes(g.id)));
+    setFilteredGenres(genres.filter((g) => genreIds.includes(g.id)));
   };
 
   return (
@@ -61,9 +61,9 @@ export default function OptionsPopover({ genres, places }: Props) {
             <CloseButton onClick={() => setAreFiltersOpened(false)} />
           </Box>
           <GenreSelect
-            label="Genres exclus"
+            label="Genres"
             genres={genres}
-            value={excludedGenres.map((g) => g.id)}
+            value={filteredGenres.map((g) => g.id)}
             onChange={handleGenreSelect}
             clearable
           />

@@ -3,8 +3,8 @@ import { useLocalStorage } from "@mantine/hooks";
 import { Genre, Place } from "@prisma/client";
 
 export default function usePreferences() {
-  const [excludedGenres, setExcludedGenres] = useLocalStorage<Genre[]>({
-    key: "gigList-excludedGenres",
+  const [filteredGenres, setFilteredGenres] = useLocalStorage<Genre[]>({
+    key: "gigList-filteredGenres",
     defaultValue: [],
   });
   const [excludedPlaces, setExcludedPlaces] = useLocalStorage<Place["id"][]>({
@@ -25,19 +25,19 @@ export default function usePreferences() {
   });
 
   const resetPreferences = () => {
-    setExcludedGenres([]);
+    setFilteredGenres([]);
     setExcludedPlaces([]);
     setGrayOutPastGigs(false);
     setMaxPrice("");
   };
 
   return {
-    excludedGenres: excludedGenres || [],
+    filteredGenres: filteredGenres || [],
     excludedPlaces: excludedPlaces || [],
     grayOutPastGigs,
     maxPrice,
     resetPreferences,
-    setExcludedGenres,
+    setFilteredGenres,
     setExcludedPlaces,
     setGrayOutPastGigs,
     setMaxPrice,
