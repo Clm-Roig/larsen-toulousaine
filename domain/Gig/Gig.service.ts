@@ -1,3 +1,4 @@
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { capitalize } from "@/utils/utils";
 import { Band, Gig } from "@prisma/client";
 import dayjs from "dayjs";
@@ -45,7 +46,53 @@ export const getGigCalendarDescription = (gig: Gig): string => {
     description += `Ticket : [url]${ticketReservationLink}[/url]`;
   }
 
-  // Price handling
+  // Price
+  const priceString = getPriceString(price);
+  if (priceString !== "") {
+    description += `${getNewLine()}Prix : ${priceString}`;
+  }
+
+  // Bottom signature
+  description += `${getNewLine()}[i]Évènement créé par Larsen Toulousaine, votre agenda metal toulousain[/i]`;
+  return description;
+};
+
+export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
+  let description = "";
+  const { bands, place, price, ticketReservationLink } = gig;
+
+  const getNewLine = () => {
+    return description === "" ? "" : "<br />";
+  };
+
+  // Bands
+  if (bands) {
+    const formattedBands = bands.map(
+      (b) => `${b.name} (${b.genres.map((g) => g.name).join(", ")})`,
+    );
+    description += formattedBands.join(" - ");
+  }
+
+  // Price
+  const priceString = getPriceString(price);
+  if (priceString !== "") {
+    description += `${getNewLine()}Prix : ${priceString}`;
+  }
+
+  // Ticket reservation link
+  if (ticketReservationLink) {
+    description += `${getNewLine()}Ticket : <a href="${ticketReservationLink}">${ticketReservationLink}</a>`;
+  }
+
+  // Place
+  if (place?.name) {
+    description += `${getNewLine()}Lieu : ${place.name}`;
+  }
+
+  return description;
+};
+
+const getPriceString = (price?: number | null): string => {
   let priceString = "";
   if (price === 0) {
     priceString = "libre ou gratuit";
@@ -58,11 +105,5 @@ export const getGigCalendarDescription = (gig: Gig): string => {
       .format(price)
       .replace(",00", "");
   }
-  if (priceString !== "") {
-    description += `${getNewLine()}Prix : ${priceString}`;
-  }
-
-  // Bottom signature
-  description += `${getNewLine()}[i]Évènement créé par Larsen Toulousaine, votre agenda metal toulousain[/i]`;
-  return description;
+  return priceString;
 };

@@ -27,6 +27,7 @@
     "@prisma/client": "^5.5.2",
     "@tabler/icons-react": "^2.40.0",
     "@tanstack/react-query": "^5.7.2",
+    "@types/rss": "^0.0.32",
     "@vercel/analytics": "^1.1.1",
     "add-to-calendar-button-react": "^2.4.3",
     "axios": "^1.6.0",
@@ -39,6 +40,7 @@
     "next-auth": "^4.24.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rss": "^1.2.2",
     "sharp": "^0.32.6"
   },
   "devDependencies": {
