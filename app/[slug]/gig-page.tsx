@@ -34,10 +34,11 @@ const GigPage = ({ gigSlug }: Props) => {
   const router = useRouter();
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
 
-  const { data: gig, isLoading } = useQuery<
-    (GigWithBandsAndPlace & GigWithAuthor) | null,
-    Error
-  >({
+  const {
+    data: gig,
+    isLoading,
+    isError,
+  } = useQuery<(GigWithBandsAndPlace & GigWithAuthor) | null, Error>({
     queryKey: ["gig", gigSlug],
     queryFn: async () => await getGig(gigSlug),
   });
@@ -83,7 +84,7 @@ const GigPage = ({ gigSlug }: Props) => {
     );
   }
 
-  if (gig === null) {
+  if (isError || !gig) {
     return (
       <Stack ta="center">
         <Text size="xl">Concert introuvable ! :(</Text>
