@@ -4,10 +4,10 @@ import {
   AppShell,
   Button,
   Group,
-  Stack,
   ActionIcon,
   Image,
   Box,
+  Burger,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { IconLogin2 } from "@tabler/icons-react";
@@ -15,7 +15,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import logo from "@/public/images/logo.png";
 
-const Header: React.FC = () => {
+type Props = {
+  navbarOpened: boolean;
+  toggleNavbar: () => void;
+};
+
+const Header = ({ navbarOpened, toggleNavbar }: Props) => {
   const router = useRouter();
   const { status } = useSession();
 
@@ -27,19 +32,47 @@ const Header: React.FC = () => {
   return (
     <AppShell.Header bg="primary" p="xs" pl="md">
       <Group justify="space-between" h="100%">
-        <Box h="100%">
-          <Link href="/">
-            <Image
-              component={NextImage}
-              src={logo}
-              alt="Logo Larsen Toulousaine"
-              mah="100%"
-            />
-          </Link>
-        </Box>
-        {status === "authenticated" && (
-          <Stack gap={0} align="center">
-            <Group>
+        <Group h="100%">
+          <Burger
+            opened={navbarOpened}
+            onClick={toggleNavbar}
+            hiddenFrom="sm"
+            size="sm"
+          />
+          <Box h="100%">
+            <Link href="/">
+              <Image
+                component={NextImage}
+                src={logo}
+                alt="Logo Larsen Toulousaine"
+                mah="100%"
+              />
+            </Link>
+          </Box>
+        </Group>
+
+        <Group>
+          <Button
+            size="compact-md"
+            color="primary.3"
+            component={Link}
+            href="/"
+            visibleFrom="sm"
+          >
+            Accueil
+          </Button>
+          <Button
+            size="compact-md"
+            color="primary.3"
+            component={Link}
+            href="/a-propos"
+            visibleFrom="sm"
+          >
+            À Propos
+          </Button>
+
+          {status === "authenticated" && (
+            <>
               <Button
                 size="compact-md"
                 color="primary.3"
@@ -51,19 +84,19 @@ const Header: React.FC = () => {
               <ActionIcon size="md" bg="primary.3" onClick={handleSignOut}>
                 <IconLogin2 />
               </ActionIcon>
-            </Group>
-          </Stack>
-        )}
-        {status === "unauthenticated" && (
-          <Button
-            size="compact-md"
-            color="primary.3"
-            component={Link}
-            href="/admin"
-          >
-            Se connecter
-          </Button>
-        )}
+            </>
+          )}
+          {status === "unauthenticated" && (
+            <Button
+              size="compact-md"
+              color="primary.3"
+              component={Link}
+              href="/admin"
+            >
+              Se connecter
+            </Button>
+          )}
+        </Group>
       </Group>
     </AppShell.Header>
   );

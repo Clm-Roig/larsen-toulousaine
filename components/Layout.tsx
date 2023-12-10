@@ -14,12 +14,14 @@ import {
   rem,
   useMantineTheme,
   Flex,
+  Button,
+  Stack,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { V_SEPARATOR, capitalize } from "../utils/utils";
 import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
-import { useHeadroom } from "@mantine/hooks";
+import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import KofiButton from "kofi-button";
 
 type Props = {
@@ -37,10 +39,12 @@ const frenchBreadcrumbDictionnary = {
   Gigs: "Concerts",
   Utilisateurs: "Utilisateurs",
   Edit: "Éditer",
+  "A-propos": "À Propos",
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const theme = useMantineTheme();
+  const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
@@ -93,14 +97,30 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
 
   return (
     <AppShell
-      header={{ height: NAVBAR_HEIGHT, collapsed: !pinned, offset: false }}
+      header={{ height: NAVBAR_HEIGHT, collapsed: !pinned }}
       padding={{ base: "xs", sm: "md" }}
+      navbar={{
+        width: 120,
+        breakpoint: "sm",
+        collapsed: { desktop: true, mobile: !opened },
+      }}
       withBorder={false}
       bg="#efefef"
     >
-      <AppShell.Header style={{ boxShadow: "0px 0px 3px black" }}>
-        <Header />
+      <AppShell.Header>
+        <Header navbarOpened={opened} toggleNavbar={toggle} />
       </AppShell.Header>
+
+      <AppShell.Navbar p="xs" maw={250}>
+        <Stack mt="sm">
+          <Button component={Link} href="/">
+            Accueil
+          </Button>
+          <Button component={Link} href="/a-propos">
+            À Propos
+          </Button>
+        </Stack>
+      </AppShell.Navbar>
 
       <AppShell.Main
         // Keep in sync with <AppShell> padding above

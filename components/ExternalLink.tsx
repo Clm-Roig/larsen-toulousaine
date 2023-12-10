@@ -9,7 +9,7 @@ export default function ExternalLink(anchorProps: Props) {
   return (
     <>
       <Anchor {...anchorProps} target="_blank">
-        {anchorProps.children}{" "}
+        {anchorProps.children}
         <IconExternalLink size="0.8rem" style={{ verticalAlign: "top" }} />
       </Anchor>
     </>
