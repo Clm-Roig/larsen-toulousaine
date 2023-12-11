@@ -38,6 +38,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
             onClick={toggleNavbar}
             hiddenFrom="sm"
             size="sm"
+            aria-label="menu"
           />
           <Box h="100%">
             <Link href="/">

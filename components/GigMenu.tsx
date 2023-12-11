@@ -111,7 +111,13 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
         loaderProps={{ size: "sm" }}
       />
       <MantineMenu.Target>
-        <ActionIcon variant="subtle" color="white">
+        <ActionIcon
+          variant="subtle"
+          color="white"
+          w="100%"
+          h="100%"
+          aria-label="gig-menu"
+        >
           <IconDots style={{ width: rem(16), height: rem(16) }} />
         </ActionIcon>
       </MantineMenu.Target>
