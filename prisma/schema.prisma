@@ -68,6 +68,7 @@ model Place {
   city    String?
   website String?
   gigs    Gig[]
+  isSafe  Boolean @default(true)
 }
 
 model BandsOnGigs {

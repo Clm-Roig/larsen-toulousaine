@@ -39,6 +39,9 @@ export async function GET(request: NextRequest) {
             : dayjs(new Date()).startOf("month").toDate(),
           lte: to ? new Date(to) : dayjs(new Date()).endOf("month").toDate(),
         },
+        place: {
+          isSafe: true,
+        },
       },
       include: {
         place: true,

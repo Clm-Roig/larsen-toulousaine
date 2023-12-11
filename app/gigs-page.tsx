@@ -15,5 +15,7 @@ export default function GigsPage() {
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
-  return <Gigs genres={genres || []} places={places || []} />;
+
+  const safePlaces = places?.filter((p) => p.isSafe);
+  return <Gigs genres={genres || []} places={safePlaces || []} />;
 }

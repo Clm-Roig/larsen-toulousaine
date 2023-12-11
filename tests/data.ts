@@ -137,6 +137,7 @@ export const allPlaces: Place[] = [
     address: "8 rue du hasard",
     city: "Toulouse",
     website: null,
+    isSafe: true,
   },
   {
     id: "cloevz6el0051rmukb32qzz54s",
@@ -144,6 +145,7 @@ export const allPlaces: Place[] = [
     address: "78 avenue Chuck Schuldiner",
     city: "Labège",
     website: null,
+    isSafe: true,
   },
   {
     id: "cloevz785z051rmukb32qe4r6",
@@ -151,6 +153,7 @@ export const allPlaces: Place[] = [
     address: "5 impasse Lenny",
     city: "Toulouse",
     website: null,
+    isSafe: true,
   },
 ];
 
