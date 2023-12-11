@@ -16,6 +16,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.0.0",
     "@hello-pangea/dnd": "^16.3.0",
     "@mantine/core": "^7.2.2",
     "@mantine/dates": "^7.2.2",
@@ -27,6 +28,7 @@
     "@prisma/client": "^5.5.2",
     "@tabler/icons-react": "^2.40.0",
     "@tanstack/react-query": "^5.7.2",
+    "@types/next-pwa": "^5.6.9",
     "@types/rss": "^0.0.32",
     "@vercel/analytics": "^1.1.1",
     "add-to-calendar-button-react": "^2.4.3",
@@ -66,6 +68,7 @@
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.0.3",
     "prisma": "^5.5.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0"
   }
 }

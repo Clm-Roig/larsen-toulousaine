@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { ColorSchemeScript } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -10,6 +10,14 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "Larsen Toulousaine",
   description: "Votre agenda metal à Toulouse",
+  manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#b99f51",
 };
 
 export default function RootLayout({
@@ -22,6 +30,8 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
+        <meta name="mobile-wep-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <ColorSchemeScript defaultColorScheme="auto" />
         <link
           rel="icon"

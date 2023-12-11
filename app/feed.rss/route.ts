@@ -20,7 +20,7 @@ export async function GET() {
     feed_url: `${process.env.NEXT_PUBLIC_URL}/feed.xml`,
     site_url: process.env.NEXT_PUBLIC_URL + "",
     language: "fr",
-    image_url: `${process.env.NEXT_PUBLIC_URL}/icon.png`,
+    image_url: `${process.env.NEXT_PUBLIC_URL}/images/icon.png`,
     categories: ["musique"],
   };
   const feed = new RSS(feedOptions);
