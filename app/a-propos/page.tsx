@@ -1,5 +1,6 @@
 import ExternalLink from "@/components/ExternalLink";
 import Layout from "@/components/Layout";
+import { discordInviteLink } from "@/domain/constants";
 import { Center, Stack, Text, Title } from "@mantine/core";
 
 export default function Page() {
@@ -23,9 +24,7 @@ export default function Page() {
             {`La saisie de concerts s'effectue manuellement par une équipe de
             modérateur·rices. Vous pouvez suggérer d'ajouter un concert à Larsen
             Toulousaine via notre serveur `}
-            <ExternalLink href="https://discord.gg/nWXsyt5ZRv">
-              Discord
-            </ExternalLink>
+            <ExternalLink href={discordInviteLink}>Discord</ExternalLink>
             {`, dans le salon `}
             <i>concerts-à-ajouter</i>.
           </Text>

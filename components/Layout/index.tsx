@@ -1,28 +1,25 @@
 "use client";
 
 import React, { FC, ReactNode, useMemo } from "react";
-import Header from "./Header";
+import Header from "../Header";
 import {
   Anchor,
   AppShell,
   Box,
   Breadcrumbs,
-  Text,
   Paper,
   Title,
   Container,
   rem,
-  useMantineTheme,
-  Flex,
   Button,
   Stack,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { V_SEPARATOR, capitalize } from "../utils/utils";
+import { V_SEPARATOR, capitalize } from "../../utils/utils";
 import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
-import KofiButton from "kofi-button";
+import Footer from "@/components/Layout/Footer";
 
 type Props = {
   children: ReactNode;
@@ -43,7 +40,6 @@ const frenchBreadcrumbDictionnary = {
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
-  const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
@@ -146,37 +142,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         </Container>
       </AppShell.Main>
 
-      {/* Can't use AppShell.Footer because it's sticking above the content on mobile view */}
-      <Paper w="100%" mt={0} p="sm" bg="white">
-        <Flex
-          align={{ base: "center", sm: "baseline" }}
-          gap="sm"
-          direction={{ base: "column", sm: "row" }}
-          justify="center"
-        >
-          <Text size="sm">
-            Développé par{" "}
-            <Anchor href="https://clm-roig.github.io/" target="_blank">
-              Clément ROIG
-            </Anchor>{" "}
-            © {new Date().getFullYear()}
-            {" - "}
-            <Anchor
-              href="https://github.com/Clm-Roig/larsen-toulousaine"
-              target="_blank"
-            >
-              Code source
-            </Anchor>
-          </Text>
-          <Box>
-            <KofiButton
-              color={theme.colors.primary[6]}
-              title="Achetez-moi un café"
-              kofiID="clementroig"
-            />
-          </Box>
-        </Flex>
-      </Paper>
+      <Footer />
     </AppShell>
   );
 };
