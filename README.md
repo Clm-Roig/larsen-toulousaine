@@ -1,6 +1,6 @@
 # Larsen Toulousaine
 
-Votre agenda metal à Toulouse !
+Votre agenda metal toulousain !
 
 # Starter project
 

@@ -9,7 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Larsen Toulousaine",
-  description: "Votre agenda metal à Toulouse",
+  description: "Votre agenda metal toulousain",
   manifest: "/manifest.json",
 };
 
