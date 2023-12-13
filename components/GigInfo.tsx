@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Badge, Flex, Stack, Text, Alert, Divider } from "@mantine/core";
 import dayjs from "dayjs";
-import { capitalize } from "@/utils/utils";
+import { capitalize, isMobile } from "@/utils/utils";
 import ExternalLink from "@/components/ExternalLink";
 import {
   IconCalendar,
@@ -39,6 +39,10 @@ export default function GigInfo({ gig }: Props) {
     price,
     ticketReservationLink,
   } = gig;
+  const addressAndCity =
+    place.address && place?.city
+      ? `${place?.address} - ${place?.city?.toUpperCase()}`
+      : undefined;
   const iconProps = { size: isXSmallScreen ? 20 : 28 };
 
   return (
@@ -113,18 +117,24 @@ export default function GigInfo({ gig }: Props) {
         <IconMapPin {...iconProps} />
         <Divider orientation="vertical" />
         <Stack gap={0}>
-          <Text fw="bold">
-            {place?.website ? (
-              <ExternalLink href={place?.website}>{place.name}</ExternalLink>
-            ) : (
-              place?.name
-            )}
-          </Text>
-          <Text size="sm" mt={0}>
-            {place?.address &&
-              place.city &&
-              ` ${place?.address} - ${place?.city?.toUpperCase()}`}
-          </Text>
+          {place?.website ? (
+            <ExternalLink href={place?.website} fw="bold">
+              {place.name}
+            </ExternalLink>
+          ) : (
+            <Text fw="bold">{place?.name}</Text>
+          )}
+          {addressAndCity && (
+            <ExternalLink
+              href={
+                isMobile()
+                  ? `geo:${place.latitude},${place.longitude}?q=${place.name} ${addressAndCity}`
+                  : `https://citymapper.com/directions?endcoord=${place.latitude},${place.longitude}&endname=${place.name}&endaddress=${place.address}`
+              }
+            >
+              {addressAndCity}
+            </ExternalLink>
+          )}
         </Stack>
       </Row>
     </Flex>

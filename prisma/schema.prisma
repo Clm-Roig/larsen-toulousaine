@@ -62,13 +62,15 @@ model Genre {
 }
 
 model Place {
-  id      String  @id @default(cuid())
-  name    String  @unique
-  address String?
-  city    String?
-  website String?
-  gigs    Gig[]
-  isSafe  Boolean @default(true)
+  id        String  @id @default(cuid())
+  name      String  @unique
+  address   String?
+  city      String?
+  website   String?
+  gigs      Gig[]
+  isSafe    Boolean @default(true)
+  latitude  Float?
+  longitude Float?
 }
 
 model BandsOnGigs {
