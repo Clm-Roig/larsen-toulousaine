@@ -7,6 +7,7 @@ import RSS, { FeedOptions } from "rss";
 import "dayjs/locale/fr";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { getBandNames } from "@/domain/Band/Band.service";
 // dayjs configuration
 dayjs.locale("fr");
 dayjs.extend(utc);
@@ -51,7 +52,7 @@ export async function GET() {
       title:
         dayjs.tz(gig.date).format("DD/MM/YYYY") +
         " : " +
-        gig.bands?.map((b) => b.name).join(" | "),
+        getBandNames(gig.bands),
       date: gig.createdAt,
       description: getGigRSSFeedDescription(gig),
       url: gig.slug,

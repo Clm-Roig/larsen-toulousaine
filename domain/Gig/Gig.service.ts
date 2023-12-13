@@ -1,4 +1,5 @@
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { MAIN_CITY } from "@/domain/Place/constants";
 import { capitalize } from "@/utils/utils";
 import { Band, Gig } from "@prisma/client";
 import dayjs from "dayjs";
@@ -86,7 +87,9 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
 
   // Place
   if (place?.name) {
-    description += `${getNewLine()}Lieu : ${place.name}`;
+    description += `${getNewLine()}Lieu : ${place.name}${
+      place.city !== MAIN_CITY ? ` (${place.city})` : ""
+    }`;
   }
 
   return description;
