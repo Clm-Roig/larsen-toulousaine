@@ -3,6 +3,7 @@ import { ColorSchemeScript } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
+import "./custom.css";
 import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { Analytics } from "@vercel/analytics/react";
@@ -44,6 +45,13 @@ export default function RootLayout({
           type="application/rss+xml"
           title="RSS 2.0"
           href="/feed.rss"
+        />
+
+        {/* Lighthouse performance optimization */}
+        <link
+          rel="preconnect"
+          href="https://picsum.photos
+"
         />
       </head>
       <body>
