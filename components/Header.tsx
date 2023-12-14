@@ -57,15 +57,6 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
             size="compact-md"
             color="primary.3"
             component={Link}
-            href="/"
-            visibleFrom="sm"
-          >
-            Accueil
-          </Button>
-          <Button
-            size="compact-md"
-            color="primary.3"
-            component={Link}
             href="/a-propos"
             visibleFrom="sm"
           >

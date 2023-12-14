@@ -44,35 +44,35 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const pathname = usePathname();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
-  const breadcrumbs = useMemo(
-    function generateBreadcrumbs() {
-      const asPathWithoutQuery = pathname.split("?")[0];
-      const asPathNestedRoutes = asPathWithoutQuery
-        .split("/")
-        .filter((v) => v.length > 0);
+  const breadcrumbs = useMemo(() => {
+    const asPathWithoutQuery = pathname.split("?")[0];
+    const asPathNestedRoutes = asPathWithoutQuery
+      .split("/")
+      .filter((v) => v.length > 0);
 
-      const crumblist = asPathNestedRoutes.map((subpath, idx) => {
-        let text = capitalize(subpath);
-        const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
-        // Gig slug detection
-        if (subpath.includes("_")) {
-          const slugData = getDataFromGigSlug(decodeURIComponent(subpath));
-          const { date, bandNames } = slugData;
-          text = date + " - " + bandNames.join(V_SEPARATOR);
-        } else {
-          // TODO: quick dirty fix for french translation
-          text = frenchBreadcrumbDictionnary[text] || text;
-        }
-        return {
-          href,
-          text: text,
-        };
-      });
+    const crumbList = asPathNestedRoutes.map((subpath, idx) => {
+      let text = capitalize(subpath);
+      const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
+      // Gig slug detection
+      if (subpath.includes("_")) {
+        const slugData = getDataFromGigSlug(decodeURIComponent(subpath));
+        const { date, bandNames } = slugData;
+        text = date + " - " + bandNames.join(V_SEPARATOR);
+      } else {
+        // TODO: quick dirty fix for french translation
+        text = frenchBreadcrumbDictionnary[text] || text;
+      }
+      return {
+        href,
+        text: text,
+      };
+    });
 
-      return [{ href: "/", text: "Accueil" }, ...crumblist];
-    },
-    [pathname],
-  );
+    if (crumbList?.length === 0) {
+      return [];
+    }
+    return [{ href: "/", text: "Accueil" }, ...crumbList];
+  }, [pathname]);
 
   const breadcrumbsItems = breadcrumbs.map((item, index) => (
     <Anchor href={item.href} key={index} component={Link}>
