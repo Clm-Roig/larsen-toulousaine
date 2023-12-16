@@ -72,7 +72,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           {status === "authenticated" && (
             <>
               <Button size="compact-md" component={Link} href="/admin">
-                {`Panneau d'admin`}
+                Admin
               </Button>
               <ActionIcon size="md" onClick={handleSignOut}>
                 <IconLogin2 />
