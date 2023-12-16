@@ -26,13 +26,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import Link from "next/link";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
 type Props = { afterDeleteCallback?: () => void; gig: GigWithBandsAndPlace };
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
-  const { isCanceled, isSoldOut, slug } = gig;
+  const { isCanceled, isSoldOut, slug, ticketReservationLink } = gig;
   const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -124,6 +125,16 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
 
       <MantineMenu.Dropdown>
         {!isCanceled && <AddGigToCalendarButton gig={gig} size="2|2|2" />}
+        {ticketReservationLink && (
+          <MantineMenu.Item
+            leftSection={<IconTicket style={iconStyle} />}
+            component={Link}
+            href={ticketReservationLink}
+            target="_blank"
+          >
+            Réserver un ticket
+          </MantineMenu.Item>
+        )}
         {status === "authenticated" && (
           <>
             {!isCanceled && <MantineMenu.Divider />}
