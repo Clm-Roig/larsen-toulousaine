@@ -50,12 +50,12 @@ export default function Price({ size = "md", value }: Props) {
         <>
           {["xs", "sm"].includes(size) ? (
             <Tooltip label="Prix libre ou gratuit">
-              <ThemeIcon radius="xl" color="secondary" size={"sm"}>
+              <ThemeIcon radius="xl" size={"sm"} color="gray.3" c="gray.8">
                 <IconCurrencyEuroOff width={"70%"} height={"70%"} />
               </ThemeIcon>
             </Tooltip>
           ) : (
-            <Badge size="lg" color="secondary" p="xs">
+            <Badge size="lg" color="gray.3" p="xs" c="gray.8">
               Prix libre ou gratuit
             </Badge>
           )}
