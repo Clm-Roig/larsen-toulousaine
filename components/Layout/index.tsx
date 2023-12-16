@@ -13,14 +13,14 @@ import {
   rem,
   Button,
   Stack,
-  useComputedColorScheme,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { V_SEPARATOR, capitalize } from "../../utils/utils";
+import { V_SEPARATOR, capitalize } from "@/utils/utils";
 import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import Footer from "@/components/Layout/Footer";
+import classes from "./Layout.module.css";
 
 type Props = {
   children: ReactNode;
@@ -42,7 +42,6 @@ const frenchBreadcrumbDictionnary = {
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const [opened, { toggle }] = useDisclosure(false);
-  const computedColorScheme = useComputedColorScheme("light");
   const pathname = usePathname();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
@@ -103,7 +102,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         collapsed: { desktop: true, mobile: !opened },
       }}
       withBorder={false}
-      bg={computedColorScheme === "light" ? "#efefef" : "black"}
+      className={classes.appShell}
     >
       <AppShell.Header>
         <Header navbarOpened={opened} toggleNavbar={toggle} />

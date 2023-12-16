@@ -33,7 +33,7 @@ export default function RootLayout({
       <head>
         <meta name="mobile-wep-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <ColorSchemeScript defaultColorScheme="auto" />
+        <ColorSchemeScript />
         <link
           rel="icon"
           href="/icon?<generated>"
