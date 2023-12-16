@@ -22,6 +22,7 @@ import {
   Text,
   Title,
   createPolymorphicComponent,
+  useComputedColorScheme,
   useMantineTheme,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
@@ -46,6 +47,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
   const theme = useMantineTheme();
   const { status } = useSession();
   const { grayOutPastGigs } = usePreferences();
+  const colorScheme = useComputedColorScheme("light");
   const { isLargeScreen, isMediumScreen, isSmallScreen, isXSmallScreen } =
     useScreenSize();
   const nbGenresDisplayed = isXSmallScreen
@@ -64,7 +66,13 @@ export default function GigListItem({ gig, withDivider }: Props) {
   const bandNames = getBandNames(bands);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
   return (
-    <Box ref={ref} bg={hovered ? "primary.1" : "initial"} pos="relative">
+    <Box
+      ref={ref}
+      bg={
+        hovered ? (colorScheme === "light" ? "primary.1" : "black") : "initial"
+      }
+      pos="relative"
+    >
       <PolymorphicListItem
         icon={
           <Stack
@@ -98,7 +106,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
         c={
           isCanceled || (hasPassed(date) && grayOutPastGigs) || isSoldOut
             ? "gray.6"
-            : "initial"
+            : "inherit"
         }
         component={Link}
         href={`/${slug}`}

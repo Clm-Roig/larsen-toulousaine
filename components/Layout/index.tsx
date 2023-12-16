@@ -13,6 +13,7 @@ import {
   rem,
   Button,
   Stack,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -41,6 +42,7 @@ const frenchBreadcrumbDictionnary = {
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const [opened, { toggle }] = useDisclosure(false);
+  const computedColorScheme = useComputedColorScheme("light");
   const pathname = usePathname();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
@@ -101,7 +103,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         collapsed: { desktop: true, mobile: !opened },
       }}
       withBorder={false}
-      bg="#efefef"
+      bg={computedColorScheme === "light" ? "#efefef" : "black"}
     >
       <AppShell.Header>
         <Header navbarOpened={opened} toggleNavbar={toggle} />
@@ -124,16 +126,13 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           base: `calc(${rem(64)} + var(--mantine-spacing-xs))`,
           sm: `calc(${rem(64)} + var(--mantine-spacing-md))`,
         }}
-        style={{
-          background: `#f4f4f4`,
-        }}
       >
         <Container fluid px={0}>
           <Box style={{ overflowX: "clip" }}>
             <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
           </Box>
           {withPaper ? (
-            <Paper p="md" mt="sm" bg="white" shadow="sm">
+            <Paper p="md" mt="sm" shadow="sm">
               {childrenWithTitle}
             </Paper>
           ) : (

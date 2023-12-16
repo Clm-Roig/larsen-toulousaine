@@ -1,7 +1,7 @@
 import { getBandNames } from "@/domain/Band/Band.service";
 import { getGigCalendarDescription } from "@/domain/Gig/Gig.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { useMantineTheme } from "@mantine/core";
+import { useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import {
   AddToCalendarButton,
   AddToCalendarButtonType,
@@ -17,7 +17,8 @@ export default function AddGigToCalendarButton({
   ...calendarProps
 }: Props) {
   const theme = useMantineTheme();
-  const style = `--btn-underline: ${theme.colors.primary[6]};`;
+  const computedColorSchem = useComputedColorScheme("light");
+  const style = `--btn-underline: ${theme.colors.primary[6]} !important;`;
   const { bands, date, imageUrl, place } = gig || {};
   const bandNames = getBandNames(bands || []);
   const name = `Concert : ${bandNames}`;
@@ -32,6 +33,7 @@ export default function AddGigToCalendarButton({
       hideCheckmark
       styleLight={style}
       styleDark={style}
+      lightMode={computedColorSchem}
       name={name}
       iCalFileName={iCalName}
       options={[

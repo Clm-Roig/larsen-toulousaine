@@ -17,7 +17,7 @@ import { discordInviteLink, facebookLink } from "@/domain/constants";
 export default function Footer() {
   const theme = useMantineTheme();
   return (
-    <Paper w="100%" mt={0} p="sm" bg="white">
+    <Paper w="100%" mt={0} p="sm">
       {/* Can't use AppShell.Footer because it's sticking above the content on mobile view */}
       <Flex
         align={{ base: "center" }}

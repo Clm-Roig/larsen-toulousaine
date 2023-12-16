@@ -42,7 +42,7 @@ export default function Admin() {
   }
 
   return (
-    <Layout title="Panneau d'administration">
+    <Layout title="Panneau d'administration" withPaper>
       {status === "authenticated" && (
         <>
           <Flex gap="sm" wrap="wrap" justify="center">

@@ -40,7 +40,7 @@ export const Providers = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <MantineProvider theme={theme}>
+        <MantineProvider theme={theme} defaultColorScheme="auto">
           <DatesProvider
             settings={{
               locale: "fr",

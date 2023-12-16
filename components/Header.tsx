@@ -8,9 +8,11 @@ import {
   Image,
   Box,
   Burger,
+  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
-import { IconLogin2 } from "@tabler/icons-react";
+import { IconLogin2, IconMoon, IconSun } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import logo from "@/public/images/logo.png";
@@ -22,6 +24,10 @@ type Props = {
 
 const Header = ({ navbarOpened, toggleNavbar }: Props) => {
   const router = useRouter();
+  const { setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
   const { status } = useSession();
 
   const handleSignOut = async () => {
@@ -47,6 +53,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                 src={logo}
                 alt="Logo Larsen Toulousaine"
                 mah="100%"
+                style={{ filter: "brightness(10%)" }}
               />
             </Link>
           </Box>
@@ -55,7 +62,6 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
         <Group>
           <Button
             size="compact-md"
-            color="primary.3"
             component={Link}
             href="/a-propos"
             visibleFrom="sm"
@@ -65,29 +71,33 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
 
           {status === "authenticated" && (
             <>
-              <Button
-                size="compact-md"
-                color="primary.3"
-                component={Link}
-                href="/admin"
-              >
+              <Button size="compact-md" component={Link} href="/admin">
                 {`Panneau d'admin`}
               </Button>
-              <ActionIcon size="md" bg="primary.3" onClick={handleSignOut}>
+              <ActionIcon size="md" onClick={handleSignOut}>
                 <IconLogin2 />
               </ActionIcon>
             </>
           )}
           {status === "unauthenticated" && (
-            <Button
-              size="compact-md"
-              color="primary.3"
-              component={Link}
-              href="/admin"
-            >
+            <Button size="compact-md" component={Link} href="/admin">
               Se connecter
             </Button>
           )}
+          <ActionIcon
+            onClick={() =>
+              setColorScheme(computedColorScheme === "light" ? "dark" : "light")
+            }
+            aria-label="Toggle color scheme"
+            size="compact-md"
+          >
+            <Box lightHidden>
+              <IconSun stroke={1.5} />
+            </Box>
+            <Box darkHidden>
+              <IconMoon stroke={1.5} />
+            </Box>
+          </ActionIcon>
         </Group>
       </Group>
     </AppShell.Header>
