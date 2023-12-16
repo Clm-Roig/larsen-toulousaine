@@ -1,3 +1,4 @@
+import { getSortedGenres } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { capitalize } from "@/utils/utils";
@@ -69,7 +70,10 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   // Bands
   if (bands) {
     const formattedBands = bands.map(
-      (b) => `${b.name} (${b.genres.map((g) => g.name).join(", ")})`,
+      (b) =>
+        `${b.name} (${getSortedGenres(b.genres)
+          .map((g) => g.name)
+          .join(", ")})`,
     );
     description += formattedBands.join(" - ");
   }

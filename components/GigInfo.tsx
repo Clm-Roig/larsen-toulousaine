@@ -16,6 +16,7 @@ import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import useScreenSize from "@/hooks/useScreenSize";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import SoldOutIcon from "@/components/SoldOutIcon";
+import { getSortedGenres } from "@/domain/Band/Band.service";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -87,7 +88,7 @@ export default function GigInfo({ gig }: Props) {
               align="center"
             >
               <Text>{band.name}</Text>
-              {band.genres.map((genre) => (
+              {getSortedGenres(band.genres).map((genre) => (
                 <GenreBadge key={genre?.id} genre={genre} />
               ))}
             </Flex>
