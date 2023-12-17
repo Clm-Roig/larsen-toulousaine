@@ -48,12 +48,6 @@ import { getBandNames } from "@/domain/Band/Band.service";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
-const getNewBand = () => ({
-  name: "",
-  genres: [],
-  key: randomId(),
-});
-
 type Props = {
   gig?: GigWithBandsAndPlace;
   isLoading: boolean;
@@ -151,6 +145,15 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     });
   };
 
+  const insertNewBand = (bandName?: string) => {
+    const newBand = {
+      name: bandName || "",
+      genres: [],
+      key: randomId(),
+    };
+    form.insertListItem("bands", newBand);
+  };
+
   return (
     <form onSubmit={handleOnSubmit}>
       <Stack>
@@ -211,10 +214,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       <Text>Groupes</Text>
 
       <BandSelect
-        excludedBandIds={
-          form.values.bands.filter((b) => !!b.id).map((b) => b.id) as string[]
-        }
+        excludedBands={form.values.bands}
         onBandSelect={handleOnSelectBand}
+        onNoSuggestions={insertNewBand}
       />
 
       <DragDropContext
@@ -283,10 +285,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       </DragDropContext>
 
       <Group justify="center" mt="sm">
-        <Button
-          variant="outline"
-          onClick={() => form.insertListItem("bands", getNewBand())}
-        >
+        <Button variant="outline" onClick={() => insertNewBand()}>
           Ajouter un nouveau groupe
         </Button>
       </Group>

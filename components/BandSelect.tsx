@@ -1,17 +1,20 @@
 "use client";
 
-import { Select } from "@mantine/core";
+import { ActionIcon, Select, SelectProps } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import { searchBandsByName } from "../domain/Band/Band.webService";
 import { Band } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";
+import { IconPlus } from "@tabler/icons-react";
+import { normalizeString } from "@/utils/utils";
 
 type Props = {
-  excludedBandIds?: Array<Band["id"]>;
+  excludedBands?: Array<{ id?: Band["id"]; name: string }>;
   onBandSelect: (selectedBand: BandWithGenres) => void;
-};
+  onNoSuggestions?: (currentValue: string) => void;
+} & SelectProps;
 
 type BandSuggestion = {
   label: string;
@@ -21,11 +24,13 @@ type BandSuggestion = {
 const NB_CHAR_TO_LAUNCH_BAND_SEARCH = 2;
 
 export default function BandSelect({
-  excludedBandIds,
+  excludedBands,
   onBandSelect: onSelect,
+  onNoSuggestions,
+  ...selectProps
 }: Props) {
-  const [searchQueryInput, setSearchQueryInput] = useState("");
-  const [debouncedSearchQueryInput] = useDebouncedValue(searchQueryInput, 400);
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearchInput] = useDebouncedValue(searchInput, 400);
   const [value, setValue] = useState<string | null>("");
 
   const {
@@ -33,10 +38,10 @@ export default function BandSelect({
     isLoading,
     isFetched,
   } = useQuery<BandWithGenres[] | null, Error>({
-    queryKey: ["bandSearch", debouncedSearchQueryInput],
+    queryKey: ["bandSearch", debouncedSearchInput],
     queryFn: async () =>
-      debouncedSearchQueryInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
-        ? await searchBandsByName(debouncedSearchQueryInput)
+      debouncedSearchInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
+        ? await searchBandsByName(debouncedSearchInput)
         : null,
   });
 
@@ -44,7 +49,7 @@ export default function BandSelect({
   useEffect(() => {
     if (value) {
       setValue("");
-      setSearchQueryInput("");
+      setSearchInput("");
     }
   }, [value]);
 
@@ -52,10 +57,8 @@ export default function BandSelect({
     foundBands
       ?.filter(
         (band) =>
-          !excludedBandIds ||
-          excludedBandIds?.every(
-            (excludedBandId) => excludedBandId !== band?.id,
-          ),
+          !excludedBands ||
+          excludedBands?.every((excludedBand) => excludedBand.id !== band?.id),
       )
       .map((band) => ({
         label: band.name,
@@ -67,8 +70,24 @@ export default function BandSelect({
     if (foundBand) {
       onSelect(foundBand);
     }
-    setSearchQueryInput("");
+    setSearchInput("");
   };
+
+  const searchInputIsASelectedBand = excludedBands?.some(
+    (excludedBand) =>
+      normalizeString(excludedBand.name) === normalizeString(searchInput),
+  );
+
+  const possibilityToAddBandMsg = onNoSuggestions
+    ? " Vous pouvez l'ajouter en cliquant sur l'icône + à droite."
+    : "";
+  const nothingFoundMessage = isLoading
+    ? "Chargement..."
+    : isFetched && !!debouncedSearchInput
+    ? searchInputIsASelectedBand
+      ? `Groupe déjà sélectionné pour ce concert.`
+      : `Groupe non-référencé. ${possibilityToAddBandMsg}`
+    : "";
 
   return (
     <Select
@@ -81,18 +100,26 @@ export default function BandSelect({
           value: s.value.id,
         })) || []
       }
-      onSearchChange={setSearchQueryInput}
-      searchValue={searchQueryInput}
-      onOptionSubmit={handleOnSelectBand}
-      nothingFoundMessage={
-        isLoading
-          ? "Chargement..."
-          : isFetched && suggestions?.length === 0
-          ? "Groupe non-référencé ou déjà sélectionné pour ce concert"
-          : ""
+      rightSection={
+        !!onNoSuggestions &&
+        suggestions?.length === 0 &&
+        !searchInputIsASelectedBand && (
+          <ActionIcon
+            // TODO: ugly fix because searchInput is being cleared just before this onClick is fired
+            onClick={() => onNoSuggestions(debouncedSearchInput)}
+          >
+            <IconPlus />
+          </ActionIcon>
+        )
       }
+      rightSectionPointerEvents="auto"
+      onSearchChange={setSearchInput}
+      searchValue={searchInput}
+      onOptionSubmit={handleOnSelectBand}
+      nothingFoundMessage={nothingFoundMessage}
       value={value}
       onChange={setValue}
+      {...selectProps}
     />
   );
 }
