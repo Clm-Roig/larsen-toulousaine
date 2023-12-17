@@ -101,13 +101,15 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   } = useQuery<GigWithBandsAndPlace | null, Error>({
     queryKey: ["samePlaceSameDayGig", form.values.date, form.values.placeId],
     queryFn: async () => {
-      const { date, placeId } = form.values;
+      const { date, placeId, id } = form.values;
       if (date && placeId) {
         const res = await getGigByDateAndPlaceId(date, placeId);
+        if (res?.id === id) {
+          return null;
+        }
         return res;
-      } else {
-        return null;
       }
+      return null;
     },
   });
 
