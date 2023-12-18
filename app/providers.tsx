@@ -7,16 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { ReactNode, useState } from "react";
 
-import "dayjs/locale/fr";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-// dayjs configuration
-dayjs.locale("fr");
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Europe/Paris");
-
 type Props = {
   children?: ReactNode;
 };

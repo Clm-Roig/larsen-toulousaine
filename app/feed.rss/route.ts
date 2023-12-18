@@ -1,18 +1,9 @@
 import { gigListOrderBy } from "@/app/api/utils/gigs";
 import { getGigRSSFeedDescription } from "@/domain/Gig/Gig.service";
 import prisma from "@/lib/prisma";
-import dayjs from "dayjs";
 import RSS, { FeedOptions } from "rss";
-
-import "dayjs/locale/fr";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import dayjs from "@/lib/dayjs";
 import { getBandNames } from "@/domain/Band/Band.service";
-// dayjs configuration
-dayjs.locale("fr");
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Europe/Paris");
 
 export async function GET() {
   const feedOptions: FeedOptions = {
