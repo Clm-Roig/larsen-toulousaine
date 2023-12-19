@@ -128,7 +128,12 @@ export default function GigListItem({ gig, withDivider }: Props) {
           </Title>
           <Group gap={2}>
             {bandGenres.slice(0, nbGenresDisplayed).map((genre) => (
-              <GenreBadge key={genre.id} size="sm" genre={genre} />
+              <GenreBadge
+                key={genre.id}
+                filterOnClick
+                size="sm"
+                genre={genre}
+              />
             ))}
             {nbHiddenGenres > 0 && (
               <Badge color="gray.5">+{nbHiddenGenres}</Badge>

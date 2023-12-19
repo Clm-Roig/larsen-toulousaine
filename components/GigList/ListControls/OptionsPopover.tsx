@@ -39,6 +39,9 @@ export default function OptionsPopover({ genres, places }: Props) {
     setFilteredGenres(genres.filter((g) => genreIds.includes(g.id)));
   };
 
+  const optionSum =
+    filteredGenres?.length + (maxPrice ? 1 : 0) + excludedPlaces?.length;
+
   return (
     <Popover
       trapFocus
@@ -51,7 +54,7 @@ export default function OptionsPopover({ genres, places }: Props) {
     >
       <Popover.Target>
         <Button onClick={() => setAreFiltersOpened(!areFiltersOpened)}>
-          Options
+          Options{optionSum > 0 ? ` (${optionSum})` : ""}
         </Button>
       </Popover.Target>
 

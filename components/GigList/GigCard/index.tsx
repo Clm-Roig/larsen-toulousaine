@@ -98,7 +98,7 @@ const GigCard = ({ gig }: Props) => {
             </Text>
             <Group gap={4}>
               {bandGenres.map((genre) => (
-                <GenreBadge key={genre?.id} genre={genre} />
+                <GenreBadge key={genre?.id} genre={genre} filterOnClick />
               ))}
             </Group>
           </Stack>
