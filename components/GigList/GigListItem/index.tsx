@@ -34,7 +34,9 @@ import useScreenSize from "@/hooks/useScreenSize";
 import GigImgOverlay from "@/components/GigImgOverlay";
 
 type Props = {
+  displayDate?: boolean;
   gig: GigWithBandsAndPlace;
+  listItemProps?: ListItemProps;
   withDivider: boolean;
 };
 
@@ -43,7 +45,12 @@ const PolymorphicListItem = createPolymorphicComponent<
   ListItemProps
 >(List.Item);
 
-export default function GigListItem({ gig, withDivider }: Props) {
+export default function GigListItem({
+  gig,
+  withDivider,
+  displayDate = true,
+  ...listItemProps
+}: Props) {
   const theme = useMantineTheme();
   const { status } = useSession();
   const { grayOutPastGigs } = usePreferences();
@@ -91,9 +98,11 @@ export default function GigListItem({ gig, withDivider }: Props) {
             }}
             pos="relative"
           >
-            <Badge color="primary" size="lg" w={100}>
-              {dayjs(date).format("ddd DD/MM")}
-            </Badge>
+            {displayDate && (
+              <Badge color="primary" size="lg" w={100}>
+                {dayjs(date).format("ddd DD/MM")}
+              </Badge>
+            )}
             <OptimizedImage src={imageUrl} alt={bandNames} w={100} />
             <GigImgOverlay gig={gig} />
           </Stack>
@@ -112,6 +121,7 @@ export default function GigListItem({ gig, withDivider }: Props) {
         href={`/${slug}`}
         display="block"
         py={"md"}
+        {...listItemProps}
       >
         <Stack gap={8}>
           <Title

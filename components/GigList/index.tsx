@@ -21,6 +21,7 @@ import AddGigButton from "@/components/GigList/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import GigListItem from "@/components/GigList/GigListItem";
+import dayjs from "dayjs";
 
 type Props = {
   genres: Genre[];
@@ -84,16 +85,28 @@ const GigList = ({
                 <Center>
                   <Paper p="xs" maw={820} w="100%">
                     <List>
-                      {gigs.map((gig, idx) => (
-                        <GigListItem
-                          gig={gig}
-                          key={gig.id}
-                          withDivider={
-                            status !== "unauthenticated" ||
-                            idx !== gigs.length - 1
-                          }
-                        />
-                      ))}
+                      {gigs.map((gig, idx) => {
+                        const isNextGigSameDay = dayjs(
+                          gigs[idx + 1]?.date,
+                        ).isSame(gig.date);
+                        const isPreviousGigSameDay = dayjs(
+                          gigs[idx - 1]?.date,
+                        ).isSame(gig.date);
+                        return (
+                          <GigListItem
+                            gig={gig}
+                            key={gig.id}
+                            withDivider={
+                              (status !== "unauthenticated" ||
+                                idx !== gigs.length - 1) &&
+                              !isNextGigSameDay
+                            }
+                            {...(isNextGigSameDay ? { pb: 0 } : {})}
+                            {...(isPreviousGigSameDay ? { pt: "sm" } : {})}
+                            displayDate={!isPreviousGigSameDay}
+                          />
+                        );
+                      })}
                     </List>
                     {status === "authenticated" && (
                       <Center mt="sm">
