@@ -30,6 +30,7 @@ export default function TableHeader({
       <Table.Tr>
         <Table.Th>Nom</Table.Th>
         <Table.Th>Genres</Table.Th>
+        <Table.Th w={{ base: 70, md: 120 }}>Nb. concerts</Table.Th>
         <Table.Th>Action</Table.Th>
       </Table.Tr>
       <Table.Tr>
@@ -49,6 +50,8 @@ export default function TableHeader({
             fw="initial"
           />
         </Table.Th>
+        <Table.Th></Table.Th>
+        <Table.Th></Table.Th>
       </Table.Tr>
     </Table.Thead>
   );

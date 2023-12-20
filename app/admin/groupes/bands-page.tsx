@@ -5,11 +5,15 @@ import Layout from "@/components/Layout";
 import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
 import {
   EditBandArgs,
+  deleteBand,
   editBand,
   getBands,
 } from "@/domain/Band/Band.webService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BandWithGenres } from "@/domain/Band/Band.type";
+import {
+  BandWithGenres,
+  BandWithGenresAndGigCount,
+} from "@/domain/Band/Band.type";
 import BandTable from "@/components/BandTable";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
@@ -54,7 +58,7 @@ const Bands = () => {
     error: getBandsError,
     isFetching,
     isError,
-  } = useQuery<BandWithGenres[], Error>({
+  } = useQuery<BandWithGenresAndGigCount[], Error>({
     queryKey: ["bands"],
     queryFn: async () => await getBands(),
   });
@@ -65,6 +69,25 @@ const Bands = () => {
 
   const { isPending, isSuccess, mutate } = useMutation({
     mutationFn: async (values: EditBandArgs) => await editBand(values),
+  });
+
+  const { isPending: isDeletePending, mutate: handleOnDelete } = useMutation({
+    mutationFn: async (bandId: string) => {
+      await deleteBand(bandId);
+    },
+    onError: (error) =>
+      notifications.show({
+        color: "red",
+        title: "Erreur à la suppression du groupe",
+        message: error.message,
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["bands"] });
+      notifications.show({
+        color: "green",
+        message: "Groupe supprimé avec succès !",
+      });
+    },
   });
 
   const handleOnClose = useCallback(() => {
@@ -86,6 +109,10 @@ const Bands = () => {
   const handleOnEditBand = (band: BandWithGenres) => {
     setEditedBand(band);
     open();
+  };
+
+  const handleOnDeleteBand = (band: BandWithGenres) => {
+    handleOnDelete(band.id);
   };
 
   const handleOnSubmit = (event: FormEvent) => {
@@ -112,7 +139,8 @@ const Bands = () => {
         <BandTable
           bands={bands}
           genres={genres || []}
-          isLoading={isFetching}
+          isLoading={isFetching || isDeletePending}
+          onDeleteBand={handleOnDeleteBand}
           onEditBand={handleOnEditBand}
         />
 

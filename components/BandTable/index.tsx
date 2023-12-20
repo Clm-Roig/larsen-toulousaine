@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { ActionIcon, Group, Skeleton, Stack, Table } from "@mantine/core";
-import { BandWithGenres } from "@/domain/Band/Band.type";
+import {
+  ActionIcon,
+  Group,
+  Skeleton,
+  Stack,
+  Table,
+  Tooltip,
+} from "@mantine/core";
+import { BandWithGenresAndGigCount } from "@/domain/Band/Band.type";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
 import { normalizeString } from "@/utils/utils";
@@ -10,9 +17,10 @@ import GenreBadge from "@/components/GenreBadge";
 import TableHeader from "@/components/BandTable/TableHeader";
 
 type Props = {
-  bands: BandWithGenres[] | undefined;
+  bands: BandWithGenresAndGigCount[] | undefined;
   genres: Genre[];
   isLoading: boolean;
+  onDeleteBand: (band: Band) => void;
   onEditBand: (band: Band) => void;
 };
 
@@ -20,6 +28,7 @@ export default function BandTable({
   bands,
   genres,
   isLoading,
+  onDeleteBand,
   onEditBand,
 }: Props) {
   const [selectedGenres, setSelectedGenres] = useState<Genre["id"][]>([]);
@@ -35,6 +44,19 @@ export default function BandTable({
     // filter by name
     .filter((band) =>
       normalizeString(band.name).includes(normalizeString(searchedName)),
+    );
+
+  const getBandThrashIcon = (band: BandWithGenresAndGigCount) =>
+    band._count.gigs > 0 ? (
+      <Tooltip label="Ce groupe est à l'affiche d'au moins un concert : vous ne pouvez pas le supprimer.">
+        <ActionIcon color="red" onClick={() => onDeleteBand(band)} disabled>
+          <IconTrash />
+        </ActionIcon>
+      </Tooltip>
+    ) : (
+      <ActionIcon color="red" onClick={() => onDeleteBand(band)}>
+        <IconTrash />
+      </ActionIcon>
     );
 
   return (
@@ -90,14 +112,13 @@ export default function BandTable({
                     ))}
                   </Group>
                 </Table.Td>
+                <Table.Td>{band._count.gigs}</Table.Td>
                 <Table.Td>
                   <Group>
                     <ActionIcon onClick={() => onEditBand(band)}>
                       <IconEdit />
                     </ActionIcon>
-                    <ActionIcon disabled color="red">
-                      <IconTrash />
-                    </ActionIcon>
+                    {getBandThrashIcon(band)}
                   </Group>
                 </Table.Td>
               </Table.Tr>

@@ -1,5 +1,5 @@
 import api, { getErrorMessage } from "@/lib/axios";
-import { BandWithGenres } from "./Band.type";
+import { BandWithGenres, BandWithGenresAndGigCount } from "./Band.type";
 import { Genre } from "@prisma/client";
 
 export const searchBandsByName = async (
@@ -15,9 +15,11 @@ export const searchBandsByName = async (
   }
 };
 
-export const getBands = async (): Promise<BandWithGenres[]> => {
+export const getBands = async (): Promise<BandWithGenresAndGigCount[]> => {
   try {
-    const response = await api.get<{ bands: BandWithGenres[] }>(`/bands`);
+    const response = await api.get<{ bands: BandWithGenresAndGigCount[] }>(
+      `/bands`,
+    );
     return response.data.bands;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -33,6 +35,17 @@ export const editBand = async (band: EditBandArgs): Promise<BandWithGenres> => {
     const response = await api.put<BandWithGenres>(`/bands/${band.id}`, band);
     return response.data;
   } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const deleteBand = async (bandId: string): Promise<void> => {
+  try {
+    await api.delete<void>(`/bands/${bandId}`);
+  } catch (error) {
+    if (error?.response?.data?.frMessage) {
+      throw new Error(error?.response?.data?.frMessage);
+    }
     throw new Error(getErrorMessage(error));
   }
 };

@@ -8,6 +8,9 @@ export async function GET() {
     },
     include: {
       genres: true,
+      _count: {
+        select: { gigs: true },
+      },
     },
   });
   return NextResponse.json({
