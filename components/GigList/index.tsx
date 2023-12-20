@@ -27,15 +27,17 @@ type Props = {
   genres: Genre[];
   gigs?: GigWithBandsAndPlace[];
   isLoading: boolean;
+  noGigsFoundMessage: string;
   places: Place[];
-  selectedMonth: Date;
-  setSelectedMonth: (monthDate: Date) => void;
+  selectedMonth?: Date;
+  setSelectedMonth?: (monthDate: Date) => void;
 };
 
 const GigList = ({
   genres,
   gigs,
   isLoading,
+  noGigsFoundMessage,
   places,
   selectedMonth,
   setSelectedMonth,
@@ -119,7 +121,13 @@ const GigList = ({
             ) : (
               <Center>
                 <Stack align="center">
-                  <Text size="lg">{`Aucun concert trouvé pour ce mois-ci :(`}</Text>
+                  <Text
+                    size="lg"
+                    style={{ whiteSpace: "pre-wrap" }}
+                    ta="center"
+                  >
+                    {noGigsFoundMessage}
+                  </Text>
                   <AddGigButton />
                 </Stack>
               </Center>

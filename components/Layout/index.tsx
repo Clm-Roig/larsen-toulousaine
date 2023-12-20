@@ -38,6 +38,7 @@ const frenchBreadcrumbDictionnary = {
   Utilisateurs: "Utilisateurs",
   Edit: "Éditer",
   "A-propos": "À Propos",
+  "Cette-semaine": "Cette semaine",
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
@@ -112,6 +113,9 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         <Stack mt="sm">
           <Button component={Link} href="/">
             Accueil
+          </Button>
+          <Button component={Link} href="/cette-semaine">
+            Cette semaine
           </Button>
           <Button component={Link} href="/a-propos">
             À Propos

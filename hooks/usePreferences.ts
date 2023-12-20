@@ -1,6 +1,7 @@
 import { ViewType } from "@/domain/ViewType";
 import { useLocalStorage } from "@mantine/hooks";
 import { Genre, Place } from "@prisma/client";
+import { useMemo } from "react";
 
 export default function usePreferences() {
   const [filteredGenres, setFilteredGenres] = useLocalStorage<Genre[]>({
@@ -31,11 +32,17 @@ export default function usePreferences() {
     setMaxPrice("");
   };
 
+  const preferencesSum = useMemo(
+    () => filteredGenres?.length + (maxPrice ? 1 : 0) + excludedPlaces?.length,
+    [excludedPlaces?.length, filteredGenres?.length, maxPrice],
+  );
+
   return {
     filteredGenres: filteredGenres || [],
     excludedPlaces: excludedPlaces || [],
     grayOutPastGigs,
     maxPrice,
+    preferencesSum,
     resetPreferences,
     setFilteredGenres,
     setExcludedPlaces,

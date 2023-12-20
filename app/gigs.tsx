@@ -2,17 +2,23 @@
 
 import { Genre, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
-import useGigs from "@/hooks/useGigs";
+import useMonthGigs from "@/hooks/useMonthGigs";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { getGenres } from "@/domain/Genre/Genre.webService";
+import { getPlaces } from "@/domain/Place/Place.webService";
+import { useQuery } from "@tanstack/react-query";
 
-type Props = {
-  genres: Genre[];
-  places: Place[];
-};
-
-export default function Gigs({ genres = [], places = [] }: Props) {
+export default function Gigs() {
   const searchParams = useSearchParams();
+  const { data: genres } = useQuery<Genre[], Error>({
+    queryKey: ["genres"],
+    queryFn: async () => await getGenres(),
+  });
+  const { data: places } = useQuery<Place[], Error>({
+    queryKey: ["places"],
+    queryFn: async () => await getPlaces(),
+  });
   const year = searchParams.get("année");
   const monthNb = searchParams.get("mois");
 
@@ -27,7 +33,8 @@ export default function Gigs({ genres = [], places = [] }: Props) {
           initialMonthNb: new Date().getMonth() + 1,
         };
 
-  const { isLoading, monthGigs, selectedMonth, setSelectedMonth } = useGigs();
+  const { isLoading, monthGigs, selectedMonth, setSelectedMonth } =
+    useMonthGigs();
 
   useEffect(() => {
     setSelectedMonth(
@@ -43,12 +50,15 @@ export default function Gigs({ genres = [], places = [] }: Props) {
     setSelectedMonth,
   ]);
 
+  const safePlaces = places?.filter((p) => p.isSafe);
+
   return (
     <GigList
-      genres={genres}
+      genres={genres || []}
       gigs={monthGigs}
       isLoading={isLoading}
-      places={places}
+      noGigsFoundMessage="Aucun concert trouvé pour ce mois-ci 🙁"
+      places={safePlaces || []}
       selectedMonth={selectedMonth}
       setSelectedMonth={(date: Date) => setSelectedMonth(date)}
     />

@@ -1,100 +1,24 @@
-import dayjs from "dayjs";
-import { GigWithBandsAndPlace } from "../domain/Gig/Gig.type";
-import { useEffect, useState } from "react";
-import { getGigs } from "../domain/Gig/Gig.webService";
-import usePreferences from "./usePreferences";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { getGigs } from "@/domain/Gig/Gig.webService";
+import useSortedGigs from "@/hooks/useSortedGigs";
+import { useQuery } from "@tanstack/react-query";
 
-const gigsStaleTimeInMs = 5 * 60 * 1000;
-
-// date is an object: it must serialized it before using it as a react-query key
-const getQueryKey = (date: Date) => dayjs(date).format("MM-YYYY");
-
-export default function useGigs() {
-  const queryClient = useQueryClient();
-  const { filteredGenres, excludedPlaces, maxPrice } = usePreferences();
-
-  const [selectedMonth, setSelectedMonth] = useState(
-    dayjs(new Date()).startOf("month").toDate(),
-  );
-  const selectedMonthStart = dayjs(new Date(selectedMonth))
-    .startOf("month")
-    .toDate();
-  const selectedMonthEnd = dayjs(new Date(selectedMonth))
-    .endOf("month")
-    .toDate();
-
+export default function useWeekGigs({
+  endDate,
+  startDate,
+}: {
+  endDate: Date;
+  startDate: Date;
+}) {
   const { data: gigs, isLoading } = useQuery<GigWithBandsAndPlace[], Error>({
-    queryKey: [
-      "gigs",
-      getQueryKey(selectedMonthStart),
-      getQueryKey(selectedMonthEnd),
-    ],
-    queryFn: async () => await getGigs(selectedMonthStart, selectedMonthEnd),
-    staleTime: gigsStaleTimeInMs,
+    queryKey: ["gigs", startDate.toISOString(), endDate.toISOString()],
+    queryFn: async () => await getGigs(startDate, endDate),
   });
 
-  // Prefetch next month gigs
-  useEffect(() => {
-    const nextMonthStart = dayjs(selectedMonthStart).add(1, "month").toDate();
-    const nextMonthEnd = dayjs(selectedMonthEnd).add(1, "month").toDate();
-    void queryClient.prefetchQuery({
-      queryKey: [
-        "gigs",
-        getQueryKey(nextMonthStart),
-        getQueryKey(nextMonthEnd),
-      ],
-      queryFn: async () => await getGigs(nextMonthStart, nextMonthEnd),
-      staleTime: gigsStaleTimeInMs,
-    });
-  }, [queryClient, selectedMonthEnd, selectedMonthStart]);
-
-  // Prefetch previous month gigs
-  useEffect(() => {
-    const previousMonthStart = dayjs(selectedMonthStart)
-      .subtract(1, "month")
-      .toDate();
-    const previousMonthEnd = dayjs(selectedMonthEnd)
-      .subtract(1, "month")
-      .toDate();
-    void queryClient.prefetchQuery({
-      queryKey: [
-        "gigs",
-        getQueryKey(previousMonthStart),
-        getQueryKey(previousMonthEnd),
-      ],
-      queryFn: async () => await getGigs(previousMonthStart, previousMonthEnd),
-      staleTime: gigsStaleTimeInMs,
-    });
-  }, [queryClient, selectedMonthEnd, selectedMonthStart]);
-
-  const sortedGigs = gigs
-    // Genre(s) filtering
-    ?.filter(
-      (gig) =>
-        gig.bands.length === 0 ||
-        filteredGenres?.length === 0 ||
-        gig.bands.some((band) =>
-          band.genres.some(
-            (genre) => filteredGenres?.map((g) => g.id).includes(genre.id),
-          ),
-        ),
-    )
-    // Place(s) filtering
-    .filter((gig) => !excludedPlaces?.includes(gig.placeId))
-    // Price filtering
-    .filter(
-      (gig) =>
-        !gig.price ||
-        !maxPrice ||
-        maxPrice === 0 ||
-        (!Number.isNaN(maxPrice) && gig.price <= Number(maxPrice)),
-    );
+  const sortedGigs = useSortedGigs(gigs || []);
 
   return {
     isLoading: isLoading,
-    monthGigs: sortedGigs,
-    selectedMonth: new Date(selectedMonth),
-    setSelectedMonth,
+    gigs: sortedGigs,
   };
 }

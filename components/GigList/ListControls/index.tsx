@@ -16,8 +16,8 @@ import MonthSelector from "@/components/GigList/ListControls/MonthSelector";
 type Props = {
   genres: Genre[];
   places: Place[];
-  selectedMonth: Date;
-  setSelectedMonth: (monthDate: Date) => void;
+  selectedMonth?: Date;
+  setSelectedMonth?: (monthDate: Date) => void;
 };
 
 export default function ListControls({
@@ -42,7 +42,7 @@ export default function ListControls({
   };
 
   const updateMonth = (newMonth: Date) => {
-    setSelectedMonth(newMonth);
+    setSelectedMonth?.(newMonth);
     const urlSearchParams = new URLSearchParams(
       Array.from(searchParams.entries()),
     );
@@ -56,14 +56,21 @@ export default function ListControls({
       {/* Hidden block to preserve grid layout */}
       <Box style={{ visibility: "hidden" }}></Box>
 
-      <Flex gap="xs" justify="center" align="center">
-        <MonthSelector
-          decrementMonth={decrementMonth}
-          incrementMonth={incrementMonth}
-          selectedMonth={selectedMonth}
-          onSelectedMonthUpdate={updateMonth}
-        />
-      </Flex>
+      {selectedMonth ? (
+        <Flex gap="xs" justify="center" align="center">
+          <MonthSelector
+            decrementMonth={decrementMonth}
+            incrementMonth={incrementMonth}
+            selectedMonth={selectedMonth}
+            onSelectedMonthUpdate={updateMonth}
+          />
+        </Flex>
+      ) : (
+        <>
+          {/* Hidden block to preserve grid layout */}
+          <Box style={{ visibility: "hidden" }}></Box>
+        </>
+      )}
 
       <Flex
         gap="xs"

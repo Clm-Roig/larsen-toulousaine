@@ -28,6 +28,7 @@ export default function OptionsPopover({ genres, places }: Props) {
     excludedPlaces,
     grayOutPastGigs,
     maxPrice,
+    preferencesSum,
     resetPreferences,
     setFilteredGenres,
     setExcludedPlaces,
@@ -38,9 +39,6 @@ export default function OptionsPopover({ genres, places }: Props) {
   const handleGenreSelect = (genreIds: string[]) => {
     setFilteredGenres(genres.filter((g) => genreIds.includes(g.id)));
   };
-
-  const optionSum =
-    filteredGenres?.length + (maxPrice ? 1 : 0) + excludedPlaces?.length;
 
   return (
     <Popover
@@ -54,7 +52,7 @@ export default function OptionsPopover({ genres, places }: Props) {
     >
       <Popover.Target>
         <Button onClick={() => setAreFiltersOpened(!areFiltersOpened)}>
-          Options{optionSum > 0 ? ` (${optionSum})` : ""}
+          Options{preferencesSum > 0 ? ` (${preferencesSum})` : ""}
         </Button>
       </Popover.Target>
 

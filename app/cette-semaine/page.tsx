@@ -1,7 +1,7 @@
 import { Box, Center, Loader } from "@mantine/core";
-import Layout from "../components/Layout";
+import Layout from "@/components/Layout";
 import { Suspense } from "react";
-import Gigs from "@/app/gigs";
+import WeekGigs from "./WeekGigs";
 
 export default function Page() {
   return (
@@ -14,7 +14,7 @@ export default function Page() {
             </Center>
           }
         >
-          <Gigs />
+          <WeekGigs />
         </Suspense>
       </Box>
     </Layout>

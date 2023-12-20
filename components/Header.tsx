@@ -63,6 +63,14 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           <Button
             size="compact-md"
             component={Link}
+            href="/cette-semaine"
+            visibleFrom="sm"
+          >
+            Cette semaine
+          </Button>
+          <Button
+            size="compact-md"
+            component={Link}
             href="/a-propos"
             visibleFrom="sm"
           >
