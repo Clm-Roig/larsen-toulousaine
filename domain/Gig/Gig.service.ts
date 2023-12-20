@@ -1,7 +1,7 @@
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
-import { capitalize } from "@/utils/utils";
+import { V_SEPARATOR, capitalize } from "@/utils/utils";
 import { Band, Gig } from "@prisma/client";
 import dayjs from "@/lib/dayjs";
 
@@ -28,7 +28,12 @@ export const getDataFromGigSlug = (
       .map((w) => capitalize(w))
       .join(" "),
   );
-  return { date: date, bandNames: bandNames };
+  return { date, bandNames };
+};
+
+export const getGigTitleFromGigSlug = (slug: string) => {
+  const { date, bandNames } = getDataFromGigSlug(slug);
+  return date + " - " + bandNames.join(V_SEPARATOR);
 };
 
 /**

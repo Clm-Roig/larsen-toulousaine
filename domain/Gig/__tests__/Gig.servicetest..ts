@@ -23,6 +23,7 @@ describe("Gig service", () => {
     imageUrl: null,
     ticketReservationLink: null,
     price: null,
+    isSoldOut: false,
   };
 
   describe("computeGigSlug", () => {

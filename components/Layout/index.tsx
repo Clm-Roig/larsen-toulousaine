@@ -16,8 +16,8 @@ import {
 } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { V_SEPARATOR, capitalize } from "@/utils/utils";
-import { getDataFromGigSlug } from "@/domain/Gig/Gig.service";
+import { capitalize } from "@/utils/utils";
+import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import Footer from "@/components/Layout/Footer";
 import classes from "./Layout.module.css";
@@ -57,9 +57,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
       const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
       // Gig slug detection
       if (subpath.includes("_")) {
-        const slugData = getDataFromGigSlug(decodeURIComponent(subpath));
-        const { date, bandNames } = slugData;
-        text = date + " - " + bandNames.join(V_SEPARATOR);
+        text = getGigTitleFromGigSlug(decodeURIComponent(subpath));
       } else {
         // TODO: quick dirty fix for french translation
         text = frenchBreadcrumbDictionnary[text] || text;

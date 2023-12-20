@@ -2,6 +2,13 @@ import ExternalLink from "@/components/ExternalLink";
 import Layout from "@/components/Layout";
 import { discordInviteLink } from "@/domain/constants";
 import { Center, Stack, Text, Title } from "@mantine/core";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "À Propos",
+  description:
+    "Présentation, principe de fonctionnement, choix éditorial et financement de Larsen Toulousaine",
+};
 
 export default function Page() {
   return (
