@@ -103,8 +103,8 @@ const GigList = ({
                                 idx !== gigs.length - 1) &&
                               !isNextGigSameDay
                             }
-                            {...(isNextGigSameDay ? { pb: 0 } : {})}
-                            {...(isPreviousGigSameDay ? { pt: "sm" } : {})}
+                            {...(isNextGigSameDay && { pb: 0 })}
+                            {...(isPreviousGigSameDay && { pt: "xs" })}
                             displayDate={!isPreviousGigSameDay}
                           />
                         );
