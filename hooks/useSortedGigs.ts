@@ -25,8 +25,7 @@ export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
         .filter(
           (gig) =>
             !gig.price ||
-            !maxPrice ||
-            maxPrice === 0 ||
+            (!maxPrice && maxPrice !== 0) ||
             (!Number.isNaN(maxPrice) && gig.price <= Number(maxPrice)),
         ),
     [excludedPlaces, filteredGenres, gigs, maxPrice],

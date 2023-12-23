@@ -57,10 +57,33 @@ export default function OptionsPopover({ genres, places }: Props) {
       </Popover.Target>
 
       <Popover.Dropdown maw={350}>
-        <Stack>
-          <Box pos="absolute" top={0} right={0} m={4}>
-            <CloseButton onClick={() => setAreFiltersOpened(false)} />
-          </Box>
+        <Box pos="absolute" top={0} right={0} m={4}>
+          <CloseButton onClick={() => setAreFiltersOpened(false)} />
+        </Box>
+        <Stack gap="sm">
+          <Checkbox
+            checked={grayOutPastGigs}
+            label="Griser les concerts passés"
+            onChange={(event) => {
+              const checked = event.currentTarget.checked;
+              setGrayOutPastGigs(checked);
+            }}
+          />
+
+          <NumberInput
+            leftSection={
+              <ActionIcon size="sm" onClick={() => setMaxPrice("")}>
+                <IconX />
+              </ActionIcon>
+            }
+            allowNegative={false}
+            suffix="€"
+            label="Prix maximum"
+            value={maxPrice}
+            allowDecimal={false}
+            onChange={setMaxPrice}
+          />
+
           <GenreSelect
             label="Genres"
             genres={genres}
@@ -96,29 +119,6 @@ export default function OptionsPopover({ genres, places }: Props) {
               />
             ))}
           </Stack>
-
-          <Checkbox
-            checked={grayOutPastGigs}
-            label="Griser les concerts passés"
-            onChange={(event) => {
-              const checked = event.currentTarget.checked;
-              setGrayOutPastGigs(checked);
-            }}
-          />
-
-          <NumberInput
-            leftSection={
-              <ActionIcon size="sm" onClick={() => setMaxPrice("")}>
-                <IconX />
-              </ActionIcon>
-            }
-            allowNegative={false}
-            suffix="€"
-            label="Prix maximum"
-            value={maxPrice}
-            allowDecimal={false}
-            onChange={setMaxPrice}
-          />
 
           <Button onClick={resetPreferences}>Réinitialiser tout</Button>
         </Stack>
