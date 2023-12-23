@@ -284,12 +284,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         </Droppable>
       </DragDropContext>
 
-      <Group justify="center" mt="sm">
-        <Button variant="outline" onClick={() => insertNewBand()}>
-          Ajouter un nouveau groupe
-        </Button>
-      </Group>
-
       <Divider my="md" />
 
       <TextInput

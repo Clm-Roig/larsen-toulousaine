@@ -91,7 +91,7 @@ export default function BandSelect({
 
   return (
     <Select
-      label={"Chercher un groupe existant"}
+      label={"Chercher un groupe existant ou en créer un nouveau"}
       searchable
       withCheckIcon={false}
       data={
@@ -105,8 +105,11 @@ export default function BandSelect({
         suggestions?.length === 0 &&
         !searchInputIsASelectedBand && (
           <ActionIcon
-            // TODO: ugly fix because searchInput is being cleared just before this onClick is fired
-            onClick={() => onNoSuggestions(debouncedSearchInput)}
+            onClick={() => {
+              // TODO: ugly fix by using debouncedSearchInput
+              // because searchInput is being cleared just before this onClick is fired
+              onNoSuggestions(debouncedSearchInput);
+            }}
           >
             <IconPlus />
           </ActionIcon>
