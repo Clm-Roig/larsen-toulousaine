@@ -6,6 +6,11 @@ export async function GET() {
     orderBy: {
       name: "asc",
     },
+    include: {
+      _count: {
+        select: { gigs: true },
+      },
+    },
   });
   return NextResponse.json({
     places: places,
