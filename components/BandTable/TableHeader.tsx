@@ -2,15 +2,11 @@
 
 import React from "react";
 import { Table, TextInput } from "@mantine/core";
-import { BandWithGenres } from "@/domain/Band/Band.type";
-import { Band, Genre } from "@prisma/client";
+import { Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
 
 type Props = {
-  bands: BandWithGenres[] | undefined;
   genres: Genre[];
-  isLoading: boolean;
-  onEditBand: (band: Band) => void;
   searchedName: string;
   selectedGenres: Genre["id"][];
   setSearchedName: (value: string) => void;

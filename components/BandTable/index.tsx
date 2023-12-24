@@ -14,7 +14,7 @@ import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
 import { normalizeString } from "@/utils/utils";
 import GenreBadge from "@/components/GenreBadge";
-import TableHeader from "@/components/BandTable/TableHeader";
+import TableHeader from "./TableHeader";
 
 type Props = {
   bands: BandWithGenresAndGigCount[] | undefined;
@@ -65,10 +65,7 @@ export default function BandTable({
         <Stack>
           <Table>
             <TableHeader
-              bands={bands}
               genres={genres}
-              isLoading={isLoading}
-              onEditBand={onEditBand}
               searchedName={searchedName}
               setSearchedName={setSearchedName}
               selectedGenres={selectedGenres}
@@ -78,7 +75,7 @@ export default function BandTable({
           {Array(20)
             .fill(1)
             .map((v, idx) => (
-              <Skeleton key={idx} height={30} width={800} />
+              <Skeleton key={idx} height={30} width={"100%"} maw={800} />
             ))}
         </Stack>
       ) : (
@@ -91,10 +88,7 @@ export default function BandTable({
           layout="fixed"
         >
           <TableHeader
-            bands={bands}
             genres={genres}
-            isLoading={isLoading}
-            onEditBand={onEditBand}
             searchedName={searchedName}
             setSearchedName={setSearchedName}
             selectedGenres={selectedGenres}
