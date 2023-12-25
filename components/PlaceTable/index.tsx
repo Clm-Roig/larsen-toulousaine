@@ -29,11 +29,16 @@ export default function PlaceTable({
   onEditPlace,
 }: Props) {
   const [searchedName, setSearchedName] = useState<string>("");
+  const [searchedCity, setSearchedCity] = useState<string>("");
 
   const filteredPlaces = places
     // filter by name
     ?.filter((place) =>
       normalizeString(place.name).includes(normalizeString(searchedName)),
+    )
+    // filter by city
+    ?.filter((place) =>
+      normalizeString(place.city).includes(normalizeString(searchedCity)),
     );
 
   const getPlaceThrashIcon = (place: PlaceWithGigCount) =>
@@ -57,6 +62,8 @@ export default function PlaceTable({
             <TableHeader
               searchedName={searchedName}
               setSearchedName={setSearchedName}
+              searchedCity={searchedCity}
+              setSearchedCity={setSearchedCity}
             />
           </Table>
           {Array(20)
@@ -71,20 +78,25 @@ export default function PlaceTable({
           stickyHeader
           highlightOnHover
           withColumnBorders
-          maw={800}
+          maw={900}
           layout="fixed"
         >
           <TableHeader
             searchedName={searchedName}
             setSearchedName={setSearchedName}
+            searchedCity={searchedCity}
+            setSearchedCity={setSearchedCity}
           />
 
           <Table.Tbody>
             {filteredPlaces?.map((place) => {
               const {
+                address,
+                city,
                 id,
-                name,
                 isSafe,
+                name,
+                website,
                 _count: { gigs: gigsCount },
               } = place;
               return (
@@ -95,6 +107,16 @@ export default function PlaceTable({
                       {!isSafe && <IconAlertTriangle color="red" size={18} />}
                     </Group>
                   </Table.Td>
+                  <Table.Td>{address}</Table.Td>
+                  <Table.Td>{city}</Table.Td>
+                  <Table.Td
+                    style={{
+                      wordBreak: "break-all",
+                    }}
+                  >
+                    {website}
+                  </Table.Td>
+
                   <Table.Td>{gigsCount}</Table.Td>
                   <Table.Td>
                     <Group>

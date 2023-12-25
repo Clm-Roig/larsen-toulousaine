@@ -2,7 +2,10 @@ import api, { getErrorMessage } from "@/lib/axios";
 import { Place } from "@prisma/client";
 import { PlaceWithGigCount } from "./Place.type";
 
-export type EditPlaceArgs = Pick<Place, "id" | "name">;
+export type EditPlaceArgs = Pick<
+  Place,
+  "id" | "address" | "city" | "isSafe" | "name" | "website"
+>;
 
 export const getPlaces = async (): Promise<PlaceWithGigCount[]> => {
   try {

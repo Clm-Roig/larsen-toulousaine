@@ -29,9 +29,15 @@ const Lieux = () => {
   const form = useForm<EditPlaceArgs>({
     initialValues: {
       id: "",
+      address: "",
+      city: "",
+      isSafe: true,
       name: "",
+      website: "",
     },
     validate: {
+      address: (value) => (value ? null : "L'adresse est requise."),
+      city: (value) => (value ? null : "La ville est requise."),
       name: (value) => (value ? null : "Le nom est requis."),
     },
   });
@@ -140,9 +146,26 @@ const Lieux = () => {
             <form onSubmit={(event) => handleOnSubmit(event)}>
               <Group w="100%">
                 <PlaceFields
+                  addressProps={{
+                    w: "100%",
+                    ...form.getInputProps(`address`),
+                  }}
+                  cityProps={{
+                    w: "100%",
+                    ...form.getInputProps(`city`),
+                  }}
+                  isSafeProps={{
+                    w: "100%",
+                    checked: !!form.getInputProps("isSafe").value,
+                    ...form.getInputProps(`isSafe`),
+                  }}
                   nameProps={{
                     w: "100%",
                     ...form.getInputProps(`name`),
+                  }}
+                  websiteProps={{
+                    w: "100%",
+                    ...form.getInputProps(`website`),
                   }}
                   withLabels
                 />

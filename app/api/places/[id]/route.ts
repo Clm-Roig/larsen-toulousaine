@@ -21,12 +21,16 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { id, name } = body;
+  const { id, address, city, isSafe, name, website } = body;
   try {
     const updatedPlace = await prisma.place.update({
       where: { id: id },
       data: Prisma.validator<Prisma.PlaceUpdateInput>()({
+        address: address,
+        city: city,
+        isSafe: isSafe,
         name: name,
+        website: website,
       }),
     });
 
