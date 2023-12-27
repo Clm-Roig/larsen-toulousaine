@@ -17,6 +17,8 @@ const isModeratorRoute = (pathname: string, req: NextRequest) => {
       ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
     pathname.startsWith("/api/bands") &&
       ["POST", "DELETE", "PUT", "PATCH", "GET"].includes(req.method),
+    pathname.startsWith("/api/places") &&
+      ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
   ];
   return conditions.includes(true);
 };

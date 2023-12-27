@@ -146,6 +146,7 @@ const Lieux = () => {
             <form onSubmit={(event) => handleOnSubmit(event)}>
               <Group w="100%">
                 <PlaceFields
+                  w="100%"
                   addressProps={{
                     w: "100%",
                     ...form.getInputProps(`address`),
@@ -158,6 +159,14 @@ const Lieux = () => {
                     w: "100%",
                     checked: !!form.getInputProps("isSafe").value,
                     ...form.getInputProps(`isSafe`),
+                  }}
+                  latitudeProps={{
+                    w: "100%",
+                    ...form.getInputProps(`latitude`),
+                  }}
+                  longitudeProps={{
+                    w: "100%",
+                    ...form.getInputProps(`longitude`),
                   }}
                   nameProps={{
                     w: "100%",

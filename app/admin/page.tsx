@@ -14,7 +14,7 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/navigation";
 import { ReactElement } from "react";
 import { Role } from "@prisma/client";
-import AddGigButton from "@/components/GigList/AddGigButton";
+import AddGigButton from "@/components/AddButton/AddGigButton";
 
 function DashboardCard({
   href,

@@ -2,11 +2,14 @@ import api, { getErrorMessage } from "@/lib/axios";
 import { Place } from "@prisma/client";
 import { PlaceWithGigCount } from "./Place.type";
 
+export type CreatePlaceArgs = Omit<Place, "id"> & {
+  id?: string;
+};
+
 export type EditPlaceArgs = Pick<
   Place,
   "id" | "address" | "city" | "isSafe" | "name" | "website"
 >;
-
 export const getPlaces = async (): Promise<PlaceWithGigCount[]> => {
   try {
     const response = await api.get<{ places: PlaceWithGigCount[] }>(`/places`);
@@ -28,6 +31,20 @@ export const editPlace = async (place: EditPlaceArgs): Promise<Place> => {
 export const deletePlace = async (placeId: string): Promise<void> => {
   try {
     await api.delete<void>(`/places/${placeId}`);
+  } catch (error) {
+    if (error?.response?.data?.frMessage) {
+      throw new Error(error?.response?.data?.frMessage);
+    }
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const createPlace = async (place: CreatePlaceArgs): Promise<Place> => {
+  try {
+    const response = await api.post<Place>(`/places`, {
+      ...place,
+    });
+    return response.data;
   } catch (error) {
     if (error?.response?.data?.frMessage) {
       throw new Error(error?.response?.data?.frMessage);

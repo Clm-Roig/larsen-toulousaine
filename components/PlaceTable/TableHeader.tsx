@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Table, TextInput } from "@mantine/core";
+import AddPlaceButton from "../AddButton/AddPlaceButton";
 
 type Props = {
   searchedName: string;
@@ -45,7 +46,9 @@ export default function TableHeader({
         </Table.Th>
         <Table.Th></Table.Th>
         <Table.Th></Table.Th>
-        <Table.Th></Table.Th>
+        <Table.Th>
+          <AddPlaceButton size="xs" />
+        </Table.Th>
       </Table.Tr>
     </Table.Thead>
   );

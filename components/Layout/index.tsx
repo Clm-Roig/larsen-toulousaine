@@ -39,6 +39,7 @@ const frenchBreadcrumbDictionnary = {
   Edit: "Éditer",
   "A-propos": "À Propos",
   "Cette-semaine": "Cette semaine",
+  "Ajout-lieu": "Ajout d'un lieu",
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {

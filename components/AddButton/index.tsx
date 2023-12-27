@@ -2,17 +2,24 @@ import { Button, ButtonProps } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 
-export default function AddGigButton({ ...buttonProps }: ButtonProps) {
+type Props = {
+  href: string;
+  label?: string;
+} & ButtonProps;
+
+export type AddButtonProps = Omit<Props, "label" | "href">;
+
+export default function AddButton({ href, label, ...buttonProps }: Props) {
   return (
     <Button
       size="md"
       radius="xl"
       leftSection={<IconPlus />}
       component={Link}
-      href="/admin/ajout-concert"
+      href={href}
       {...buttonProps}
     >
-      Ajouter un concert
+      {label}
     </Button>
   );
 }

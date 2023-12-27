@@ -17,7 +17,7 @@ import ListControls from "./ListControls";
 import { Genre, Place } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
-import AddGigButton from "@/components/GigList/AddGigButton";
+import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import GigListItem from "@/components/GigList/GigListItem";
