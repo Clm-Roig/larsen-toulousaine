@@ -40,6 +40,7 @@ const frenchBreadcrumbDictionnary = {
   "A-propos": "À Propos",
   "Cette-semaine": "Cette semaine",
   "Ajout-lieu": "Ajout d'un lieu",
+  "Mentions-legales": "Mentions légales",
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
