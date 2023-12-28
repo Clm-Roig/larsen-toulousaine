@@ -2,13 +2,15 @@ import { Band, Genre } from "@prisma/client";
 import { BandWithGenres, BandWithOrder } from "./Band.type";
 import { V_SEPARATOR } from "@/utils/utils";
 
-export function getBandNames(bands: Band[] | BandWithOrder[]): string {
+export function getBandNames(
+  bands: { order?: number; name: string }[],
+): string {
   return bands
     .sort((b1, b2) => {
       if ("order" in b1 && "order" in b2) {
         return (b1 as BandWithOrder).order - (b2 as BandWithOrder).order;
       }
-      return 0;
+      return b1.name.localeCompare(b2.name);
     })
     .map((b: Band) => b.name)
     .join(V_SEPARATOR);
