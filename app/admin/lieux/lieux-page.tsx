@@ -31,6 +31,7 @@ const Lieux = () => {
       id: "",
       address: "",
       city: "",
+      isClosed: false,
       isSafe: true,
       name: "",
       website: "",
@@ -154,6 +155,11 @@ const Lieux = () => {
                   cityProps={{
                     w: "100%",
                     ...form.getInputProps(`city`),
+                  }}
+                  isClosedProps={{
+                    w: "100%",
+                    checked: !!form.getInputProps("isClosed").value,
+                    ...form.getInputProps(`isClosed`),
                   }}
                   isSafeProps={{
                     w: "100%",

@@ -171,10 +171,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             placeholder="Sélectionner un lieu"
             required
             searchable
-            data={places?.map((place) => ({
-              value: place.id,
-              label: place.name,
-            }))}
+            data={places
+              ?.sort((p1) => (p1.isClosed ? 1 : -1))
+              .map((place) => ({
+                value: place.id,
+                label: place.name + (place.isClosed ? " (fermé)" : ""),
+                disabled: place.isClosed,
+              }))}
             style={{ flex: 1 }}
             {...form.getInputProps("placeId")}
           />

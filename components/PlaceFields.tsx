@@ -16,6 +16,7 @@ type Props = {
   addressProps: Omit<TextInputProps, "required" | "placeholder">;
   cityProps: Omit<TextInputProps, "required" | "placeholder">;
   isSafeProps: Omit<SwitchProps, "required">;
+  isClosedProps: Omit<SwitchProps, "required">;
   latitudeProps: Omit<NumberInputProps, "required" | "placeholder">;
   longitudeProps: Omit<NumberInputProps, "required" | "placeholder">;
   nameProps: Omit<TextInputProps, "required" | "placeholder">;
@@ -33,6 +34,7 @@ const websiteLabel = "Site web";
 export default function PlaceFields({
   addressProps,
   cityProps,
+  isClosedProps,
   isSafeProps,
   latitudeProps,
   longitudeProps,
@@ -100,6 +102,29 @@ export default function PlaceFields({
           ) : (
             <IconX
               color={theme.colors.red[9]}
+              style={{ width: rem(12), height: rem(12) }}
+            />
+          )
+        }
+      />
+      <Switch
+        {...isClosedProps}
+        checked={!isClosedProps.checked}
+        description={`Quand un lieu est marquée comme "fermé", il n'est plus possible de le sélectionner pour y ajouter un nouveau concert et il n'est plus affiché dans les options de filtrage de la liste de concerts.`}
+        label={
+          isClosedProps.value ? "Le lieu est fermé" : "Le lieu est en activité"
+        }
+        // @ts-ignore onChange is wrongly typed here by Mantine I think (but not sure)
+        onChange={(e) => isClosedProps.onChange?.(!e.currentTarget?.checked)}
+        thumbIcon={
+          isClosedProps.checked ? (
+            <IconX
+              color={theme.colors.red[9]}
+              style={{ width: rem(12), height: rem(12) }}
+            />
+          ) : (
+            <IconCheck
+              color={theme.colors.green[6]}
               style={{ width: rem(12), height: rem(12) }}
             />
           )

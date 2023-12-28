@@ -8,7 +8,7 @@ export type CreatePlaceArgs = Omit<Place, "id"> & {
 
 export type EditPlaceArgs = Pick<
   Place,
-  "id" | "address" | "city" | "isSafe" | "name" | "website"
+  "id" | "address" | "city" | "isClosed" | "isSafe" | "name" | "website"
 >;
 export const getPlaces = async (): Promise<PlaceWithGigCount[]> => {
   try {

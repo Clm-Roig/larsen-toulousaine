@@ -43,6 +43,7 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
       address: "",
       website: "",
       city: "",
+      isClosed: false,
       isSafe: true,
       latitude: null,
       longitude: null,
@@ -77,6 +78,10 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
       <PlaceFields
         addressProps={form.getInputProps("address")}
         cityProps={form.getInputProps("city")}
+        isClosedProps={{
+          checked: !!form.getInputProps("isClosed").value,
+          ...form.getInputProps("isClosed"),
+        }}
         isSafeProps={{
           checked: !!form.getInputProps("isSafe").value,
           ...form.getInputProps("isSafe"),

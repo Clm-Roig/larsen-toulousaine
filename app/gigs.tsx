@@ -50,7 +50,7 @@ export default function Gigs() {
     setSelectedMonth,
   ]);
 
-  const safePlaces = places?.filter((p) => p.isSafe);
+  const filteredPlaces = places?.filter((p) => p.isSafe && !p.isClosed);
 
   return (
     <GigList
@@ -58,7 +58,7 @@ export default function Gigs() {
       gigs={monthGigs}
       isLoading={isLoading}
       noGigsFoundMessage="Aucun concert trouvé pour ce mois-ci 🙁"
-      places={safePlaces || []}
+      places={filteredPlaces || []}
       selectedMonth={selectedMonth}
       setSelectedMonth={(date: Date) => setSelectedMonth(date)}
     />

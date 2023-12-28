@@ -19,7 +19,7 @@ export default function WeekGigs() {
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
-  const safePlaces = places?.filter((p) => p.isSafe);
+  const filteredPlaces = places?.filter((p) => p.isSafe && !p.isClosed);
 
   const { gigs, isLoading } = useGigs({
     startDate: dayjs().startOf("week").toDate(),
@@ -37,7 +37,7 @@ export default function WeekGigs() {
           ? "\nVos options masquent peut-être certains concerts..."
           : "")
       }
-      places={safePlaces || []}
+      places={filteredPlaces || []}
     />
   );
 }
