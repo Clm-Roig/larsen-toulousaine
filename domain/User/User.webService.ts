@@ -25,9 +25,6 @@ export const updatePassword = async (
       previousPassword: values.previousPassword,
     });
   } catch (error) {
-    if (error?.response?.data?.frMessage) {
-      throw new Error(error?.response?.data?.frMessage);
-    }
     throw new Error(getErrorMessage(error));
   }
 };

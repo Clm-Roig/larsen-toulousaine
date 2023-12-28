@@ -32,9 +32,6 @@ export const deletePlace = async (placeId: string): Promise<void> => {
   try {
     await api.delete<void>(`/places/${placeId}`);
   } catch (error) {
-    if (error?.response?.data?.frMessage) {
-      throw new Error(error?.response?.data?.frMessage);
-    }
     throw new Error(getErrorMessage(error));
   }
 };
@@ -46,9 +43,6 @@ export const createPlace = async (place: CreatePlaceArgs): Promise<Place> => {
     });
     return response.data;
   } catch (error) {
-    if (error?.response?.data?.frMessage) {
-      throw new Error(error?.response?.data?.frMessage);
-    }
     throw new Error(getErrorMessage(error));
   }
 };

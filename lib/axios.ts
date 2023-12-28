@@ -22,6 +22,9 @@ api.interceptors.request.use(
 export const getErrorMessage = (error: AxiosError | Error): string => {
   let message = "Une erreur inattendue s'est produite.";
   if (isAxiosError(error)) {
+    if (error?.response?.data?.frMessage) {
+      return error.response.data.frMessage as string;
+    }
     if (error.response !== undefined) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx

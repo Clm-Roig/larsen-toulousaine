@@ -43,9 +43,6 @@ export const deleteBand = async (bandId: string): Promise<void> => {
   try {
     await api.delete<void>(`/bands/${bandId}`);
   } catch (error) {
-    if (error?.response?.data?.frMessage) {
-      throw new Error(error?.response?.data?.frMessage);
-    }
     throw new Error(getErrorMessage(error));
   }
 };
