@@ -46,7 +46,6 @@ export default function OptionsPopover({ genres, places }: Props) {
       position="bottom"
       withArrow
       shadow="md"
-      closeOnClickOutside={false}
       opened={areFiltersOpened}
       onChange={setAreFiltersOpened}
     >
@@ -90,6 +89,9 @@ export default function OptionsPopover({ genres, places }: Props) {
             value={filteredGenres.map((g) => g.id)}
             onChange={handleGenreSelect}
             clearable
+            // Fix a bug where the Popover is closed when selecting a genre
+            // https://github.com/mantinedev/mantine/issues/5173
+            comboboxProps={{ withinPortal: false }}
           />
 
           <Stack gap="xs">
