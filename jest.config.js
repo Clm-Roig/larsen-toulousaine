@@ -10,9 +10,17 @@ const createJestConfig = nextJest({
 const config = {
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-
+  collectCoverageFrom: ["<rootDir>/**/*.{js,jsx,ts,tsx}"],
+  coveragePathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/.next/",
+    "\\.type\\.ts$",
+    "constants\\.ts$",
+    "__tests__",
+  ],
   testEnvironment: "jest-environment-jsdom",
   setupFiles: ["<rootDir>/tests/data.ts"],
+  testPathIgnorePatterns: ["__tests__/data.ts"],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call

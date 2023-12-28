@@ -104,7 +104,7 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   return description;
 };
 
-const getPriceString = (price?: number | null): string => {
+export const getPriceString = (price?: number | null): string => {
   let priceString = "";
   if (price === 0) {
     priceString = "libre ou gratuit";
