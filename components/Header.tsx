@@ -1,5 +1,4 @@
 import React from "react";
-import NextImage from "next/image";
 import {
   AppShell,
   Button,
@@ -15,7 +14,6 @@ import { signOut, useSession } from "next-auth/react";
 import { IconLogin2, IconMoon, IconSun } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import logo from "@/public/images/logo.png";
 
 type Props = {
   navbarOpened: boolean;
@@ -48,8 +46,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           />
           <Box component={Link} href="/">
             <Image
-              component={NextImage}
-              src={logo}
+              src={"images/logo.png"}
               alt="Logo Larsen Toulousaine"
               mah="100%"
               style={{ filter: "brightness(10%)" }}
