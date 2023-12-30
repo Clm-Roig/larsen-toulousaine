@@ -4,6 +4,11 @@ import { Genre, Place } from "@prisma/client";
 import { useMemo } from "react";
 
 export default function usePreferences() {
+  const [displayNotSafePlaces, setDisplayNotSafePlaces] =
+    useLocalStorage<boolean>({
+      key: "gigList-displayNotSafePlaces",
+      defaultValue: false,
+    });
   const [filteredGenres, setFilteredGenres] = useLocalStorage<Genre[]>({
     key: "gigList-filteredGenres",
     defaultValue: [],
@@ -38,14 +43,16 @@ export default function usePreferences() {
   );
 
   return {
-    filteredGenres: filteredGenres || [],
+    displayNotSafePlaces,
     excludedPlaces: excludedPlaces || [],
+    filteredGenres: filteredGenres || [],
     grayOutPastGigs,
     maxPrice,
     preferencesSum,
     resetPreferences,
-    setFilteredGenres,
+    setDisplayNotSafePlaces,
     setExcludedPlaces,
+    setFilteredGenres,
     setGrayOutPastGigs,
     setMaxPrice,
     setViewType,

@@ -22,6 +22,7 @@ import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { gigListOrderBy } from "@/app/api/utils/gigs";
 
 export async function GET(request: NextRequest) {
+  const { user } = (await getServerSession(authOptions)) || {};
   const searchParams = request.nextUrl.searchParams;
   const from = searchParams.get("from");
   const to = searchParams.get("to");
@@ -39,9 +40,7 @@ export async function GET(request: NextRequest) {
             : dayjs(new Date()).startOf("month").toDate(),
           lte: to ? new Date(to) : dayjs(new Date()).endOf("month").toDate(),
         },
-        place: {
-          isSafe: true,
-        },
+        place: { ...(!user ? { isSafe: true } : {}) },
       },
       include: {
         place: true,

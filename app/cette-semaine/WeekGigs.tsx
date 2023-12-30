@@ -10,7 +10,7 @@ import dayjs from "@/lib/dayjs";
 import usePreferences from "@/hooks/usePreferences";
 
 export default function WeekGigs() {
-  const { preferencesSum } = usePreferences();
+  const { displayNotSafePlaces, preferencesSum } = usePreferences();
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -19,7 +19,9 @@ export default function WeekGigs() {
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
-  const filteredPlaces = places?.filter((p) => p.isSafe && !p.isClosed);
+  const filteredPlaces = places?.filter(
+    (p) => (displayNotSafePlaces || p.isSafe) && !p.isClosed,
+  );
 
   const { gigs, isLoading } = useGigs({
     startDate: dayjs().startOf("week").toDate(),

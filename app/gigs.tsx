@@ -8,9 +8,11 @@ import { useEffect } from "react";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import { useQuery } from "@tanstack/react-query";
+import usePreferences from "@/hooks/usePreferences";
 
 export default function Gigs() {
   const searchParams = useSearchParams();
+  const { displayNotSafePlaces } = usePreferences();
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -50,7 +52,9 @@ export default function Gigs() {
     setSelectedMonth,
   ]);
 
-  const filteredPlaces = places?.filter((p) => p.isSafe && !p.isClosed);
+  const filteredPlaces = places?.filter(
+    (p) => (displayNotSafePlaces || p.isSafe) && !p.isClosed,
+  );
 
   return (
     <GigList

@@ -9,11 +9,12 @@ import {
   Table,
   Tooltip,
 } from "@mantine/core";
-import { IconAlertTriangle, IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Place } from "@prisma/client";
 import { normalizeString } from "@/utils/utils";
 import TableHeader from "./TableHeader";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
+import NotSafePlaceIcon from "../NotSafePlaceIcon";
 
 type Props = {
   places: PlaceWithGigCount[] | undefined;
@@ -104,7 +105,7 @@ export default function PlaceTable({
                   <Table.Td>
                     <Group gap={2}>
                       {name}
-                      {!isSafe && <IconAlertTriangle color="red" size={18} />}
+                      {!isSafe && <NotSafePlaceIcon size={18} />}
                     </Group>
                   </Table.Td>
                   <Table.Td>{address}</Table.Td>

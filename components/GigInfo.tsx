@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Badge, Flex, Stack, Text, Alert, Divider } from "@mantine/core";
+import { Badge, Flex, Stack, Text, Alert, Divider, Group } from "@mantine/core";
 import dayjs from "dayjs";
 import { capitalize, isMobile } from "@/utils/utils";
 import ExternalLink from "@/components/ExternalLink";
@@ -17,6 +17,7 @@ import useScreenSize from "@/hooks/useScreenSize";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import { getSortedGenres } from "@/domain/Band/Band.service";
+import NotSafePlaceIcon from "./NotSafePlaceIcon";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -118,13 +119,16 @@ export default function GigInfo({ gig }: Props) {
         <IconMapPin {...iconProps} />
         <Divider orientation="vertical" />
         <Stack gap={0}>
-          {place?.website ? (
-            <ExternalLink href={place?.website} fw="bold">
-              {place.name}
-            </ExternalLink>
-          ) : (
-            <Text fw="bold">{place?.name}</Text>
-          )}
+          <Group gap="xs" style={{ alignItems: "center" }}>
+            {place?.website ? (
+              <ExternalLink href={place?.website} fw="bold">
+                {place.name}
+              </ExternalLink>
+            ) : (
+              <Text fw="bold">{place?.name}</Text>
+            )}
+            {!place.isSafe && <NotSafePlaceIcon size={14} />}
+          </Group>
           {addressAndCity && (
             <ExternalLink
               href={

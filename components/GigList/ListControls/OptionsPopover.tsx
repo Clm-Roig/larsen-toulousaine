@@ -1,4 +1,5 @@
 import GenreSelect from "@/components/GenreSelect";
+import NotSafePlaceIcon from "@/components/NotSafePlaceIcon";
 import usePreferences from "@/hooks/usePreferences";
 import {
   ActionIcon,
@@ -6,6 +7,7 @@ import {
   Button,
   Checkbox,
   CloseButton,
+  Group,
   NumberInput,
   Popover,
   Stack,
@@ -13,6 +15,7 @@ import {
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
 import { IconX } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 type Props = {
@@ -21,15 +24,18 @@ type Props = {
 };
 
 export default function OptionsPopover({ genres, places }: Props) {
+  const { status } = useSession();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
 
   const {
+    displayNotSafePlaces,
     filteredGenres,
     excludedPlaces,
     grayOutPastGigs,
     maxPrice,
     preferencesSum,
     resetPreferences,
+    setDisplayNotSafePlaces,
     setFilteredGenres,
     setExcludedPlaces,
     setGrayOutPastGigs,
@@ -69,6 +75,17 @@ export default function OptionsPopover({ genres, places }: Props) {
             }}
           />
 
+          {status === "authenticated" && (
+            <Checkbox
+              checked={displayNotSafePlaces}
+              label="Afficher les concerts dans des lieux non-safes"
+              onChange={(event) => {
+                const checked = event.currentTarget.checked;
+                setDisplayNotSafePlaces(checked);
+              }}
+            />
+          )}
+
           <NumberInput
             leftSection={
               <ActionIcon size="sm" onClick={() => setMaxPrice("")}>
@@ -100,7 +117,12 @@ export default function OptionsPopover({ genres, places }: Props) {
               <Checkbox
                 key={place.id}
                 checked={!excludedPlaces.includes(place.id)}
-                label={place.name}
+                label={
+                  <Group gap={4} style={{ alignItems: "center" }}>
+                    <Box>{place.name} </Box>
+                    {!place.isSafe && <NotSafePlaceIcon size={14} />}
+                  </Group>
+                }
                 size="xs"
                 onChange={(event) => {
                   const checked = event.currentTarget.checked;

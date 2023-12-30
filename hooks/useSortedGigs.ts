@@ -3,7 +3,8 @@ import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import usePreferences from "./usePreferences";
 
 export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
-  const { filteredGenres, excludedPlaces, maxPrice } = usePreferences();
+  const { displayNotSafePlaces, filteredGenres, excludedPlaces, maxPrice } =
+    usePreferences();
 
   const sortedGigs = useMemo(
     () =>
@@ -20,7 +21,11 @@ export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
             ),
         )
         // Place(s) filtering
-        .filter((gig) => !excludedPlaces?.includes(gig.placeId))
+        .filter(
+          (gig) =>
+            !excludedPlaces?.includes(gig.placeId) &&
+            (displayNotSafePlaces || gig.place.isSafe),
+        )
         // Price filtering
         .filter(
           (gig) =>
@@ -28,7 +33,7 @@ export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
             (!maxPrice && maxPrice !== 0) ||
             (!Number.isNaN(maxPrice) && gig.price <= Number(maxPrice)),
         ),
-    [excludedPlaces, filteredGenres, gigs, maxPrice],
+    [excludedPlaces, filteredGenres, gigs, maxPrice, displayNotSafePlaces],
   );
 
   return sortedGigs;
