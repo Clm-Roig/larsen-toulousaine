@@ -14,13 +14,14 @@ import {
   Button,
   Stack,
 } from "@mantine/core";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { capitalize } from "@/utils/utils";
 import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import Footer from "@/components/Layout/Footer";
 import classes from "./Layout.module.css";
+import { signOut, useSession } from "next-auth/react";
 
 type Props = {
   children: ReactNode;
@@ -46,6 +47,8 @@ const frenchBreadcrumbDictionnary = {
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { status } = useSession();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
   const breadcrumbs = useMemo(() => {
@@ -93,6 +96,11 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
     <>{children}</>
   );
 
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  };
+
   return (
     <AppShell
       header={{ height: NAVBAR_HEIGHT, collapsed: !pinned }}
@@ -120,6 +128,16 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           <Button component={Link} href="/a-propos">
             À Propos
           </Button>
+          {status === "unauthenticated" && (
+            <Button component={Link} href="/admin" variant="outline">
+              Se connecter
+            </Button>
+          )}
+          {status === "authenticated" && (
+            <Button onClick={handleSignOut} variant="outline">
+              Se déconnecter
+            </Button>
+          )}
         </Stack>
       </AppShell.Navbar>
 

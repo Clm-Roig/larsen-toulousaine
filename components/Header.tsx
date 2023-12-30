@@ -46,16 +46,16 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
             size="sm"
             aria-label="menu"
           />
-          <Box h="100%">
-            <Link href="/">
-              <Image
-                component={NextImage}
-                src={logo}
-                alt="Logo Larsen Toulousaine"
-                mah="100%"
-                style={{ filter: "brightness(10%)" }}
-              />
-            </Link>
+          <Box component={Link} href="/">
+            <Image
+              component={NextImage}
+              src={logo}
+              alt="Logo Larsen Toulousaine"
+              mah="100%"
+              style={{ filter: "brightness(10%)" }}
+              h="auto"
+              w={{ base: 30, sm: 50 }}
+            />
           </Box>
         </Group>
 
@@ -82,13 +82,18 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
               <Button size="compact-md" component={Link} href="/admin">
                 Admin
               </Button>
-              <ActionIcon size="md" onClick={handleSignOut}>
+              <ActionIcon size="md" onClick={handleSignOut} visibleFrom="sm">
                 <IconLogin2 />
               </ActionIcon>
             </>
           )}
           {status === "unauthenticated" && (
-            <Button size="compact-md" component={Link} href="/admin">
+            <Button
+              size="compact-md"
+              component={Link}
+              href="/admin"
+              visibleFrom="sm"
+            >
               Se connecter
             </Button>
           )}
