@@ -47,10 +47,7 @@ export default function Page() {
             {`L'équipe de Larsen Toulousaine met en oeuvre tous les moyens dont
             elle dispose, pour assurer une information et une mise à jour fiable
             de son site Internet. Toutefois, des erreurs ou omissions peuvent
-            survenir. L'internaute devra donc s'assurer de l'exactitude des
-            informations auprès de l'équipe de Larsen Toulousaine, et
-            signaler toutes modifications du site qu'il jugerait utile.
-            L'équipe de Larsen Toulousaine n'est en aucun cas
+            survenir. L'équipe de Larsen Toulousaine n'est en aucun cas
             responsable de l'utilisation faite de ces informations, et de tout
             préjudice direct ou indirect pouvant en découler.`}
           </Text>
