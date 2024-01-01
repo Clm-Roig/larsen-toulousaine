@@ -1,7 +1,19 @@
 import ExternalLink from "@/components/ExternalLink";
 import Layout from "@/components/Layout";
-import { discordInviteLink, facebookLink } from "@/domain/constants";
-import { Anchor, Center, Stack, Text, Title } from "@mantine/core";
+import {
+  contactEmail,
+  discordInviteLink,
+  facebookLink,
+} from "@/domain/constants";
+import {
+  Anchor,
+  Center,
+  List,
+  ListItem,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,10 +32,8 @@ export default function Page() {
             est Clément ROIG.
           </Text>
           <Text ta="justify">
-            Téléphone : 06 43 50 35 96
-            <br />
             Courrier électronique :{" "}
-            <Anchor href="mailto:clm.roig@gmail.com">clm.roig@gmail.com</Anchor>
+            <Anchor href={`mailto:${contactEmail}`}>{contactEmail}</Anchor>
           </Text>
 
           <Text ta="justify">
@@ -93,11 +103,23 @@ export default function Page() {
 
           <Title order={2}>Nous contacter</Title>
           <Text ta="justify">
-            Vous pouvez nous contacter via notre serveur{" "}
-            <ExternalLink href={discordInviteLink}>Discord</ExternalLink> ou par
-            message privé sur{" "}
-            <ExternalLink href={facebookLink}>notre page Facebook</ExternalLink>
-            .
+            Vous pouvez nous contacter :
+            <List withPadding>
+              <ListItem>
+                par email à{" "}
+                <Anchor href={`mailto:${contactEmail}`}>{contactEmail}</Anchor>
+              </ListItem>
+              <ListItem>
+                via notre serveur{" "}
+                <ExternalLink href={discordInviteLink}>Discord</ExternalLink>
+              </ListItem>
+              <ListItem>
+                par message privé sur{" "}
+                <ExternalLink href={facebookLink}>
+                  notre page Facebook
+                </ExternalLink>
+              </ListItem>
+            </List>
           </Text>
         </Stack>
       </Center>

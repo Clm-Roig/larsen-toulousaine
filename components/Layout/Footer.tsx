@@ -33,13 +33,15 @@ export default function Footer() {
               Clément ROIG
             </Anchor>{" "}
             © {new Date().getFullYear()}
-            {" - "}
+            {" | "}
             <Anchor
               href="https://github.com/Clm-Roig/larsen-toulousaine"
               target="_blank"
             >
               Code source
             </Anchor>
+            {" | "}
+            <Anchor href="/mentions-legales">Mentions légales</Anchor>
           </Text>
           <Box>
             <KofiButton
@@ -67,9 +69,6 @@ export default function Footer() {
             </ActionIcon>
           </Group>
         </Flex>
-        <Anchor href="/mentions-legales" size="xs">
-          Mentions légales
-        </Anchor>
       </Stack>
     </Paper>
   );
