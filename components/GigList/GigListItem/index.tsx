@@ -2,36 +2,27 @@ import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
 import OptimizedImage from "@/components/OptimizedImage";
-import Price from "@/components/Price";
-import {
-  getBandNames,
-  getSortedUniqueBandGenres,
-} from "@/domain/Band/Band.service";
+import { getBandNames } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import { hasPassed } from "@/utils/date";
 import {
   Badge,
   Box,
   Divider,
-  Group,
   List,
   ListItemProps,
   Stack,
-  Text,
-  Title,
   createPolymorphicComponent,
   useComputedColorScheme,
-  useMantineTheme,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import GenreBadge from "@/components/GenreBadge";
 import useScreenSize from "@/hooks/useScreenSize";
 import GigImgOverlay from "@/components/GigImgOverlay";
+import GigCompactInfo from "@/components/GigCompactInfo";
 
 type Props = {
   displayDate?: boolean;
@@ -51,7 +42,6 @@ export default function GigListItem({
   displayDate = true,
   ...listItemProps
 }: Props) {
-  const theme = useMantineTheme();
   const { status } = useSession();
   const { grayOutPastGigs } = usePreferences();
   const colorScheme = useComputedColorScheme("light");
@@ -67,11 +57,8 @@ export default function GigListItem({
     ? 5
     : 6;
   const { hovered, ref } = useHover<HTMLDivElement>();
-  const { date, bands, isCanceled, isSoldOut, imageUrl, place, price, slug } =
-    gig;
-  const bandGenres = getSortedUniqueBandGenres(bands);
+  const { date, bands, isCanceled, isSoldOut, imageUrl, slug } = gig;
   const bandNames = getBandNames(bands);
-  const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
   return (
     <Box
       ref={ref}
@@ -123,44 +110,13 @@ export default function GigListItem({
         py={"md"}
         {...listItemProps}
       >
-        <Stack gap={8}>
-          <Title
-            order={3}
-            fw="bold"
-            lh="xs"
-            size={hovered ? "h3" : "h4"}
-            style={{
-              fontSize: hovered ? "1.05rem" : "1rem",
-              transition: `font-size ${theme.other.transitionDuration}`,
-            }}
-          >
-            {bandNames}
-          </Title>
-          <Group gap={2}>
-            {bandGenres.slice(0, nbGenresDisplayed).map((genre) => (
-              <GenreBadge
-                key={genre.id}
-                filterOnClick
-                size="sm"
-                genre={genre}
-              />
-            ))}
-            {nbHiddenGenres > 0 && (
-              <Badge color="gray.5">+{nbHiddenGenres}</Badge>
-            )}
-          </Group>
-          <Group>
-            {(price || price === 0) && <Price value={price} size="xs" />}
-            <Text>
-              {place.name}
-              {place.city !== MAIN_CITY && (
-                <Text span size="xs">
-                  {` (${place.city?.toUpperCase()})`}
-                </Text>
-              )}
-            </Text>
-          </Group>
-        </Stack>
+        <GigCompactInfo
+          displayDate={false}
+          filterOnGenreClick
+          gig={gig}
+          hovered={hovered}
+          nbGenresDisplayed={nbGenresDisplayed}
+        />
       </PolymorphicListItem>
       {status === "authenticated" && (
         <TopMenuBox position="right" width={MENU_ICON_WIDTH}>

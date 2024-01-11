@@ -21,14 +21,73 @@ import { downloadAndStoreImage } from "@/app/api/utils/image";
 import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { gigListOrderBy } from "@/app/api/utils/gigs";
 
+const defaultInclude = {
+  place: true,
+  bands: {
+    include: {
+      band: {
+        include: {
+          genres: true,
+        },
+      },
+    },
+  },
+};
+
 export async function GET(request: NextRequest) {
   const { user } = (await getServerSession(authOptions)) || {};
   const searchParams = request.nextUrl.searchParams;
   const from = searchParams.get("from");
   const to = searchParams.get("to");
+  const query = searchParams.get("query");
   const placeId = searchParams.get("placeId");
   const date = searchParams.get("date");
   let byDateAndPlaceGig, gigs;
+
+  // Search gigs
+  if (query) {
+    const rawGigs = await prisma.gig.findMany({
+      where: {
+        OR: [
+          {
+            bands: {
+              some: {
+                band: {
+                  name: {
+                    contains: query,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          },
+          {
+            place: {
+              ...(!user ? { isSafe: true } : {}),
+              name: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      },
+      include: defaultInclude,
+      orderBy: [
+        { date: Prisma.SortOrder.desc },
+        ...gigListOrderBy.filter((obj) => !obj.date),
+      ],
+      take: 10,
+    });
+    gigs = rawGigs.map((gig) => ({
+      ...gig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+      bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
+    }));
+    return NextResponse.json({
+      gigs: gigs,
+    });
+  }
 
   // Get a gig list
   if (from && to) {
@@ -42,18 +101,7 @@ export async function GET(request: NextRequest) {
         },
         place: { ...(!user ? { isSafe: true } : {}) },
       },
-      include: {
-        place: true,
-        bands: {
-          include: {
-            band: {
-              include: {
-                genres: true,
-              },
-            },
-          },
-        },
-      },
+      include: defaultInclude,
       orderBy: gigListOrderBy,
     });
     gigs = rawGigs.map((gig) => ({
@@ -81,18 +129,7 @@ export async function GET(request: NextRequest) {
     };
     const rawGig = await prisma.gig.findFirst({
       where: whereClause,
-      include: {
-        place: true,
-        bands: {
-          include: {
-            band: {
-              include: {
-                genres: true,
-              },
-            },
-          },
-        },
-      },
+      include: defaultInclude,
       orderBy: gigListOrderBy,
     });
     if (!rawGig) {

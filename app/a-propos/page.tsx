@@ -5,14 +5,14 @@ import { Center, Stack, Text, Title } from "@mantine/core";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "À Propos",
+  title: "À propos",
   description:
     "Présentation, principe de fonctionnement, choix éditorial et financement de Larsen Toulousaine",
 };
 
 export default function Page() {
   return (
-    <Layout title="À Propos" withPaper>
+    <Layout title="À propos" withPaper>
       <Center ta="center">
         <Stack maw={650}>
           <Title order={2}>Présentation</Title>

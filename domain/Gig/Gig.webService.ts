@@ -168,3 +168,16 @@ export const markGigAsNotSoldOut = async (
     throw new Error(getErrorMessage(error));
   }
 };
+
+export const searchGigs = async (
+  query: string,
+): Promise<GigWithBandsAndPlace[]> => {
+  try {
+    const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
+      `/gigs?query=${query}`,
+    );
+    return response.data.gigs;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};

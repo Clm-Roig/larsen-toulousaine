@@ -13,6 +13,8 @@ import {
   rem,
   Button,
   Stack,
+  Image,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,6 +24,7 @@ import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import Footer from "@/components/Layout/Footer";
 import classes from "./Layout.module.css";
 import { signOut, useSession } from "next-auth/react";
+import SchemeSwitcher from "@/components/SchemeSwitcher";
 
 type Props = {
   children: ReactNode;
@@ -38,7 +41,7 @@ const frenchBreadcrumbDictionnary = {
   Gigs: "Concerts",
   Utilisateurs: "Utilisateurs",
   Edit: "Éditer",
-  "A-propos": "À Propos",
+  "A-propos": "À propos",
   "Cette-semaine": "Cette semaine",
   "Ajout-lieu": "Ajout d'un lieu",
   "Mentions-legales": "Mentions légales",
@@ -47,6 +50,7 @@ const frenchBreadcrumbDictionnary = {
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
+  const colorScheme = useComputedColorScheme("light");
   const router = useRouter();
   const { status } = useSession();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
@@ -119,14 +123,30 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
 
       <AppShell.Navbar p="xs" maw={250}>
         <Stack mt="sm">
+          <Box component={Link} href="/" hiddenFrom="xs">
+            <Image
+              src={"images/logo.png"}
+              alt="Logo Larsen Toulousaine"
+              mah="100%"
+              style={{
+                filter: colorScheme === "dark" ? "invert(100%)" : "",
+              }}
+              h="auto"
+              w={30}
+              m="auto"
+            />
+          </Box>
           <Button component={Link} href="/">
             Accueil
+          </Button>
+          <Button component={Link} href="/admin">
+            Admin
           </Button>
           <Button component={Link} href="/cette-semaine">
             Cette semaine
           </Button>
           <Button component={Link} href="/a-propos">
-            À Propos
+            À propos
           </Button>
           {status === "unauthenticated" && (
             <Button component={Link} href="/admin" variant="outline">
@@ -138,6 +158,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
               Se déconnecter
             </Button>
           )}
+          <SchemeSwitcher w={"fit-content"} p={4} m="auto" />
         </Stack>
       </AppShell.Navbar>
 
