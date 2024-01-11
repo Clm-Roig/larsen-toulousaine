@@ -3,7 +3,12 @@ import GigPage from "./gig-page";
 import Layout from "@/components/Layout";
 import { Center, Loader } from "@mantine/core";
 import type { Metadata } from "next";
-import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
+import {
+  getDataFromGigSlug,
+  getGigTitleFromGigSlug,
+} from "@/domain/Gig/Gig.service";
+import dayjs from "dayjs";
+import { V_SEPARATOR } from "@/utils/utils";
 
 type Props = {
   params: { slug: string };
@@ -11,9 +16,14 @@ type Props = {
 
 export function generateMetadata({ params }: Props): Metadata {
   const { slug } = params;
-  const gigTitle = getGigTitleFromGigSlug(decodeURIComponent(slug));
+  const decodedSlug = decodeURIComponent(slug);
+  const { dateObject: gigDate, bandNames } = getDataFromGigSlug(decodedSlug);
+  const gigTitle = getGigTitleFromGigSlug(decodedSlug);
   return {
     title: gigTitle,
+    description: `${bandNames.join(V_SEPARATOR)} le ${dayjs(gigDate).format(
+      "dddd D MMMM YYYY",
+    )} - Larsen Toulousaine, votre agenda metal toulousain`,
   };
 }
 

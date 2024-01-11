@@ -19,16 +19,21 @@ export const computeGigSlug = (gig: {
 
 export const getDataFromGigSlug = (
   slug: string,
-): { date: string; bandNames: string[] } => {
+): { bandNames: string[]; date: string; dateObject: Date } => {
   const splittedSlug = slug.split("_");
-  const date = splittedSlug[0];
   const bandNames = splittedSlug.slice(1).map((bandName) =>
     bandName
       .split("-")
       .map((w) => capitalize(w))
       .join(" "),
   );
-  return { date, bandNames };
+  const date = splittedSlug[0];
+  const parts = date.split("-");
+  const year = parseInt(parts[2], 10);
+  const month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date object
+  const day = parseInt(parts[0], 10);
+  const dateObject = new Date(year, month, day);
+  return { bandNames, date, dateObject };
 };
 
 export const getGigTitleFromGigSlug = (slug: string) => {
