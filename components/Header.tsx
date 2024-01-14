@@ -42,7 +42,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           />
           <Box component={Link} href="/" visibleFrom="xs">
             <Image
-              src={"images/logo.png"}
+              src={"/images/logo.png"}
               alt="Logo Larsen Toulousaine"
               mah="100%"
               style={{ filter: "brightness(10%)" }}

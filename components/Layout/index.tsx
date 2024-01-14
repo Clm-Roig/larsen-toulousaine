@@ -125,7 +125,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         <Stack mt="sm">
           <Box component={Link} href="/" hiddenFrom="xs">
             <Image
-              src={"images/logo.png"}
+              src={"/images/logo.png"}
               alt="Logo Larsen Toulousaine"
               mah="100%"
               style={{
