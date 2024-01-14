@@ -19,7 +19,7 @@ import PlaceFields from "./PlaceFields";
 type Props = {
   place?: PlaceWithGigCount;
   isLoading: boolean;
-  onSubmit: (values: CreatePlaceArgs | EditPlaceArgs) => Promise<void>;
+  onSubmit: (values: CreatePlaceArgs | EditPlaceArgs) => void;
 };
 
 export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
@@ -66,11 +66,9 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
     }
   }, [form, place]);
 
-  const handleOnSubmit = async (e: FormEvent) => {
+  const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
-    await onSubmit({
-      ...form.values,
-    });
+    onSubmit(form.values);
   };
 
   return (

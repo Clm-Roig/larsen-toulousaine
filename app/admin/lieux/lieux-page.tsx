@@ -5,7 +5,6 @@ import Layout from "@/components/Layout";
 import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PlaceTable from "@/components/PlaceTable";
-import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -20,7 +19,6 @@ import PlaceFields from "@/components/PlaceFields";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 
 const Lieux = () => {
-  const { data: session } = useSession();
   const [editedPlace, setEditedPlace] = useState<Place>();
   const queryClient = useQueryClient();
 
@@ -61,13 +59,28 @@ const Lieux = () => {
     queryFn: async () => await getPlaces(),
   });
 
-  const { isPending, isSuccess, mutate } = useMutation({
-    mutationFn: async (values: EditPlaceArgs) => await editPlace(values),
+  const { isPending, mutate } = useMutation({
+    mutationFn: async () => await editPlace(form.values),
+    onError: (error) => {
+      notifications.show({
+        color: "red",
+        title: "Erreur à l'édition du lieu",
+        message: error.message,
+      });
+    },
+    onSuccess: () => {
+      notifications.show({
+        color: "green",
+        message: "Lieu édité avec succès !",
+      });
+      handleOnClose();
+      void queryClient.invalidateQueries({ queryKey: ["places"] });
+    },
   });
 
   const { isPending: isDeletePending, mutate: handleOnDelete } = useMutation({
-    mutationFn: async (placeId: Place["id"]) => {
-      await deletePlace(placeId);
+    mutationFn: async (place: Place) => {
+      await deletePlace(place.id);
     },
     onError: (error) =>
       notifications.show({
@@ -89,42 +102,14 @@ const Lieux = () => {
     close();
   }, [close]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      notifications.show({
-        color: "green",
-        message: "Lieu édité avec succès !",
-      });
-      handleOnClose();
-      void queryClient.invalidateQueries({ queryKey: ["places"] });
-    }
-  }, [handleOnClose, isSuccess, queryClient]);
-
   const handleOnEditPlace = (place: Place) => {
     setEditedPlace(place);
     open();
   };
 
-  const handleOnDeletePlace = (place: Place) => {
-    handleOnDelete(place.id);
-  };
-
   const handleOnSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const { user } = session || {};
-    const { values } = form;
-
-    if (user && values) {
-      try {
-        mutate(values);
-      } catch (error) {
-        notifications.show({
-          color: "red",
-          title: "Erreur à l'édition du lieu",
-          message: error.message,
-        });
-      }
-    }
+    mutate();
   };
 
   return (
@@ -133,7 +118,7 @@ const Lieux = () => {
         <PlaceTable
           places={places}
           isLoading={isFetching || isDeletePending}
-          onDeletePlace={handleOnDeletePlace}
+          onDeletePlace={handleOnDelete}
           onEditPlace={handleOnEditPlace}
         />
 
@@ -144,7 +129,7 @@ const Lieux = () => {
           title="Modifier le lieu"
         >
           {!!form.values.id && (
-            <form onSubmit={(event) => handleOnSubmit(event)}>
+            <form onSubmit={handleOnSubmit}>
               <Group w="100%">
                 <PlaceFields
                   w="100%"
