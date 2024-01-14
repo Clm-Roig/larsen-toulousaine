@@ -11,7 +11,6 @@ import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -19,21 +18,14 @@ export default function AccountPage() {
   const { isPending, isSuccess, mutate, error } = useMutation({
     mutationFn: async (values: UpdatePasswordValues) =>
       await updatePassword(values),
-  });
-
-  const handleOnSubmit = (values: UpdatePasswordValues) => {
-    mutate(values);
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
+    onSuccess: () => {
       notifications.show({
         color: "green",
         message: "Mot de passe mis à jour avec succès !",
       });
       router.push("/admin");
-    }
-  }, [isSuccess, router]);
+    },
+  });
 
   return (
     <Center>
@@ -68,7 +60,7 @@ export default function AccountPage() {
           </Title>
           <PasswordChangeForm
             isLoading={isPending}
-            onSubmit={handleOnSubmit}
+            onSubmit={mutate}
             isSuccess={isSuccess}
           />
           {error && (
