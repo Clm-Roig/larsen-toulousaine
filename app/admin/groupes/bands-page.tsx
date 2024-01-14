@@ -15,7 +15,6 @@ import {
   BandWithGenresAndGigCount,
 } from "@/domain/Band/Band.type";
 import BandTable from "@/components/BandTable";
-import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -24,7 +23,6 @@ import { Genre } from "@prisma/client";
 import BandFields from "@/components/BandFields";
 
 const Bands = () => {
-  const { data: session } = useSession();
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
   const queryClient = useQueryClient();
 
@@ -68,7 +66,14 @@ const Bands = () => {
   });
 
   const { isPending, mutate } = useMutation({
-    mutationFn: async (values: EditBandArgs) => await editBand(values),
+    mutationFn: async () => await editBand(form.values),
+    onError: (error) => {
+      notifications.show({
+        color: "red",
+        title: "Erreur à l'édition du groupe",
+        message: error.message,
+      });
+    },
     onSuccess: () => {
       notifications.show({
         color: "green",
@@ -114,20 +119,7 @@ const Bands = () => {
 
   const handleOnSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const { user } = session || {};
-    const { values } = form;
-
-    if (user && values) {
-      try {
-        mutate(values);
-      } catch (error) {
-        notifications.show({
-          color: "red",
-          title: "Erreur à l'édition du groupe",
-          message: error.message,
-        });
-      }
-    }
+    mutate();
   };
 
   return (
