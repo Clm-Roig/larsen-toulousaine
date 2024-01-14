@@ -19,6 +19,7 @@ import {
   Stack,
   Loader,
   Center,
+  LoadingOverlay,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
 import {
@@ -51,7 +52,7 @@ const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 type Props = {
   gig?: GigWithBandsAndPlace;
   isLoading: boolean;
-  onSubmit: (values: CreateGigArgs | EditGigArgs) => Promise<void>;
+  onSubmit: (values: CreateGigArgs | EditGigArgs) => void;
 };
 
 export default function GigForm({ gig, isLoading, onSubmit }: Props) {
@@ -132,9 +133,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     });
   };
 
-  const handleOnSubmit = async (e: FormEvent) => {
+  const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
-    await onSubmit({
+    onSubmit({
       ...form.values,
       bands: form.values.bands.map((b, i) => ({ ...b, order: i + 1 })),
       date: form.values.date as Date, // date can't be null if the form is submitted
@@ -156,177 +157,182 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <Stack>
-        <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
-          <DatePickerInput
-            label="Date"
-            valueFormat="DD MMMM YYYY"
-            required
-            style={{ flex: 1 }}
-            {...form.getInputProps("date")}
-          />
+      <Box pos="relative" p="xs">
+        <LoadingOverlay visible={isLoading} />
+        <Stack>
+          <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
+            <DatePickerInput
+              label="Date"
+              valueFormat="DD MMMM YYYY"
+              required
+              style={{ flex: 1 }}
+              {...form.getInputProps("date")}
+            />
 
-          <Select
-            label="Lieu"
-            placeholder="Sélectionner un lieu"
-            required
-            searchable
-            data={places
-              ?.sort((p1) => (p1.isClosed ? 1 : -1))
-              .map((place) => ({
-                value: place.id,
-                label: place.name + (place.isClosed ? " (fermé)" : ""),
-                disabled: place.isClosed,
-              }))}
-            style={{ flex: 1 }}
-            {...form.getInputProps("placeId")}
-          />
-        </Flex>
-        {isLoadingSamePlaceSameDayGig &&
-          form.values.date &&
-          form.values.placeId && (
-            <Center>
-              <Group>
-                <Loader type="dots" />
-                <Text fs="italic">{`Vérification de la présence d'un concert...`}</Text>
-              </Group>
-            </Center>
+            <Select
+              label="Lieu"
+              placeholder="Sélectionner un lieu"
+              required
+              searchable
+              data={places
+                ?.sort((p1) => (p1.isClosed ? 1 : -1))
+                .map((place) => ({
+                  value: place.id,
+                  label: place.name + (place.isClosed ? " (fermé)" : ""),
+                  disabled: place.isClosed,
+                }))}
+              style={{ flex: 1 }}
+              {...form.getInputProps("placeId")}
+            />
+          </Flex>
+          {isLoadingSamePlaceSameDayGig &&
+            form.values.date &&
+            form.values.placeId && (
+              <Center>
+                <Group>
+                  <Loader type="dots" />
+                  <Text fs="italic">{`Vérification de la présence d'un concert...`}</Text>
+                </Group>
+              </Center>
+            )}
+          {!isLoadingSamePlaceSameDayGig && !!samePlaceSameDayGig && (
+            <>
+              <Alert
+                color="yellow"
+                title="Un concert a déjà lieu au jour et lieu sélectionnés :"
+                icon={<IconInfoCircle />}
+                p="xs"
+              >
+                <b>{getBandNames(samePlaceSameDayGig.bands)}</b>
+                <br />
+                <i>
+                  Vous pouvez tout de même continuer à ajouter un nouveau
+                  concert : il est possible que deux concerts aient lieu le même
+                  jour au même endroit.
+                </i>
+              </Alert>
+            </>
           )}
-        {!isLoadingSamePlaceSameDayGig && !!samePlaceSameDayGig && (
-          <>
-            <Alert
-              color="yellow"
-              title="Un concert a déjà lieu au jour et lieu sélectionnés :"
-              icon={<IconInfoCircle />}
-              p="xs"
-            >
-              <b>{getBandNames(samePlaceSameDayGig.bands)}</b>
-              <br />
-              <i>
-                Vous pouvez tout de même continuer à ajouter un nouveau concert
-                : il est possible que deux concerts aient lieu le même jour au
-                même endroit.
-              </i>
-            </Alert>
-          </>
-        )}
-      </Stack>
+        </Stack>
 
-      <Divider my="md" />
+        <Divider my="md" />
 
-      <Text>Groupes</Text>
+        <Text>Groupes</Text>
 
-      <BandSelect
-        excludedBands={form.values.bands}
-        onBandSelect={handleOnSelectBand}
-        onNoSuggestions={insertNewBand}
-      />
-
-      <DragDropContext
-        onDragEnd={({ destination, source }) =>
-          form.reorderListItem("bands", {
-            from: source.index,
-            to: destination?.index || 0,
-          })
-        }
-      >
-        <Droppable droppableId="dnd-list" direction="vertical">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {form.values.bands.map((band, index) => (
-                <Draggable
-                  key={band.id || band.key}
-                  index={index}
-                  draggableId={band.id || band.key}
-                >
-                  {(provided) => (
-                    <Paper
-                      p="xs"
-                      mt="xs"
-                      withBorder
-                      shadow="none"
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      <Group style={{ alignItems: "flex-start" }}>
-                        <IconGripVertical
-                          size={rem(16)}
-                          style={{ alignSelf: "center" }}
-                        />
-                        <BandFields
-                          nameProps={{
-                            disabled: !!form.values.bands[index].id,
-                            ...form.getInputProps(`bands.${index}.name`),
-                          }}
-                          genreProps={{
-                            genres: genres || [],
-                            style: { flex: 1 },
-                            disabled: !!form.values.bands[index].id,
-                            ...form.getInputProps(`bands.${index}.genres`),
-                          }}
-                        />
-
-                        <Box>
-                          <ActionIcon
-                            color="red"
-                            onClick={() => form.removeListItem("bands", index)}
-                            size="lg"
-                          >
-                            <IconTrash size="1rem" />
-                          </ActionIcon>
-                        </Box>
-                      </Group>
-                    </Paper>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-
-      <Divider my="md" />
-
-      <TextInput
-        label="URL de l'affiche du concert"
-        description={`URL de l'image de couverture de l'évènement Facebook 
-        (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio ${GIG_IMG_RATIO_STRING}.`}
-        {...form.getInputProps("imageUrl")}
-      />
-
-      {isValidUrl(form.values.imageUrl) && (
-        <OptimizedImage
-          mah={200}
-          maw={getGigImgWidth(200)}
-          src={form.values.imageUrl}
-          alt="Affiche du concert"
-          m={"auto"}
-          mt={"sm"}
+        <BandSelect
+          excludedBands={form.values.bands}
+          onBandSelect={handleOnSelectBand}
+          onNoSuggestions={insertNewBand}
         />
-      )}
 
-      <TextInput
-        label="Lien de réservation des tickets"
-        {...form.getInputProps("ticketReservationLink")}
-      />
+        <DragDropContext
+          onDragEnd={({ destination, source }) =>
+            form.reorderListItem("bands", {
+              from: source.index,
+              to: destination?.index || 0,
+            })
+          }
+        >
+          <Droppable droppableId="dnd-list" direction="vertical">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {form.values.bands.map((band, index) => (
+                  <Draggable
+                    key={band.id || band.key}
+                    index={index}
+                    draggableId={band.id || band.key}
+                  >
+                    {(provided) => (
+                      <Paper
+                        p="xs"
+                        mt="xs"
+                        withBorder
+                        shadow="none"
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                      >
+                        <Group style={{ alignItems: "flex-start" }}>
+                          <IconGripVertical
+                            size={rem(16)}
+                            style={{ alignSelf: "center" }}
+                          />
+                          <BandFields
+                            nameProps={{
+                              disabled: !!form.values.bands[index].id,
+                              ...form.getInputProps(`bands.${index}.name`),
+                            }}
+                            genreProps={{
+                              genres: genres || [],
+                              style: { flex: 1 },
+                              disabled: !!form.values.bands[index].id,
+                              ...form.getInputProps(`bands.${index}.genres`),
+                            }}
+                          />
 
-      <NumberInput
-        allowNegative={false}
-        suffix="€"
-        decimalScale={2}
-        label="Prix"
-        description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
-        decimalSeparator=","
-        {...form.getInputProps("price")}
-      />
+                          <Box>
+                            <ActionIcon
+                              color="red"
+                              onClick={() =>
+                                form.removeListItem("bands", index)
+                              }
+                              size="lg"
+                            >
+                              <IconTrash size="1rem" />
+                            </ActionIcon>
+                          </Box>
+                        </Group>
+                      </Paper>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
 
-      <Group justify="flex-end" mt="md">
-        <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
-          {form.values.id ? "Éditer le concert" : "Ajouter le concert"}
-        </Button>
-      </Group>
+        <Divider my="md" />
+
+        <TextInput
+          label="URL de l'affiche du concert"
+          description={`URL de l'image de couverture de l'évènement Facebook 
+        (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio ${GIG_IMG_RATIO_STRING}.`}
+          {...form.getInputProps("imageUrl")}
+        />
+
+        {isValidUrl(form.values.imageUrl) && (
+          <OptimizedImage
+            mah={200}
+            maw={getGigImgWidth(200)}
+            src={form.values.imageUrl}
+            alt="Affiche du concert"
+            m={"auto"}
+            mt={"sm"}
+          />
+        )}
+
+        <TextInput
+          label="Lien de réservation des tickets"
+          {...form.getInputProps("ticketReservationLink")}
+        />
+
+        <NumberInput
+          allowNegative={false}
+          suffix="€"
+          decimalScale={2}
+          label="Prix"
+          description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
+          decimalSeparator=","
+          {...form.getInputProps("price")}
+        />
+
+        <Group justify="flex-end" mt="md">
+          <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
+            {form.values.id ? "Éditer le concert" : "Ajouter le concert"}
+          </Button>
+        </Group>
+      </Box>
     </form>
   );
 }
