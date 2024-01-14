@@ -67,8 +67,16 @@ const Bands = () => {
     queryFn: async () => await getGenres(),
   });
 
-  const { isPending, isSuccess, mutate } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: async (values: EditBandArgs) => await editBand(values),
+    onSuccess: () => {
+      notifications.show({
+        color: "green",
+        message: "Groupe édité avec succès !",
+      });
+      handleOnClose();
+      void queryClient.invalidateQueries({ queryKey: ["bands"] });
+    },
   });
 
   const { isPending: isDeletePending, mutate: handleOnDelete } = useMutation({
@@ -94,17 +102,6 @@ const Bands = () => {
     setEditedBand(undefined);
     close();
   }, [close]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      notifications.show({
-        color: "green",
-        message: "Groupe édité avec succès !",
-      });
-      handleOnClose();
-      void queryClient.invalidateQueries({ queryKey: ["bands"] });
-    }
-  }, [handleOnClose, isSuccess, queryClient]);
 
   const handleOnEditBand = (band: BandWithGenres) => {
     setEditedBand(band);
