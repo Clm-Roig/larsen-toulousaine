@@ -8,7 +8,7 @@ import {
   getGigTitleFromGigSlug,
 } from "@/domain/Gig/Gig.service";
 import dayjs from "dayjs";
-import { V_SEPARATOR } from "@/utils/utils";
+import { V_SEPARATOR, getMetadata } from "@/utils/utils";
 import { getGig } from "@/domain/Gig/Gig.webService";
 
 type Props = {
@@ -24,16 +24,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = `${bandNames.join(V_SEPARATOR)} le ${dayjs(
     gigDate,
   ).format("dddd D MMMM YYYY")} - ${gig?.place.name}`;
-  return {
-    title: gigTitle,
-    description,
-    assets: gig?.imageUrl,
-    openGraph: {
+
+  return getMetadata(
+    {
+      title: gigTitle,
+      description,
+      assets: gig?.imageUrl,
+    },
+    {
       ...(gig?.imageUrl ? { images: gig.imageUrl } : {}),
       title: gigTitle,
       description,
     },
-  };
+  );
 }
 
 export default function Page({ params }: Props) {

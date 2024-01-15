@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { getGigs } from "@/domain/Gig/Gig.webService";
 import dayjs from "dayjs";
 import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
+import { getMetadata } from "@/utils/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Concerts metal de la semaine à Toulouse";
@@ -20,16 +21,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const description: string = gigs
     .map((gig) => getGigTitleFromGigSlug(gig.slug))
     .join("\n");
-  return {
-    title: title,
-    description,
-    assets: images,
-    openGraph: {
+  return getMetadata(
+    {
+      title: title,
+      description,
+      assets: images,
+    },
+    {
       images: images,
       title: title,
       description,
     },
-  };
+  );
 }
 
 export default function Page() {

@@ -1,3 +1,7 @@
+import { fbAppId } from "@/domain/constants";
+import { Metadata } from "next";
+import { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
+
 export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -42,3 +46,22 @@ export function isMobile() {
     return navigator.userAgent.match(toMatchItem);
   });
 }
+
+export const getMetadata = (
+  metadata: Omit<Metadata, "openGraph">,
+  openGraph?: OpenGraph,
+): Metadata => ({
+  applicationName: "Larsen Toulousaine",
+  icons: "icons.png",
+  themeColor: "#b99f51",
+  manifest: "/manifest.json",
+  ...metadata,
+  openGraph: {
+    siteName: "Larsen Toulousaine",
+    type: "website",
+    ...openGraph,
+  },
+  other: {
+    "fb:app_id": fbAppId,
+  },
+});

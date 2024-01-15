@@ -5,6 +5,7 @@ import {
   discordInviteLink,
   facebookLink,
 } from "@/domain/constants";
+import { getMetadata } from "@/utils/utils";
 import {
   Anchor,
   Center,
@@ -16,10 +17,10 @@ import {
 } from "@mantine/core";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = getMetadata({
   title: "Mentions légales",
   description: "Mentions légales de Larsen Toulousaine",
-};
+});
 
 export default function Page() {
   return (

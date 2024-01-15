@@ -7,12 +7,13 @@ import "./custom.css";
 import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { Analytics } from "@vercel/analytics/react";
+import { getMetadata } from "@/utils/utils";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = getMetadata({
   title: "Larsen Toulousaine",
   description: "Votre agenda metal toulousain",
   manifest: "/manifest.json",
-};
+});
 
 export const viewport: Viewport = {
   width: "device-width",
