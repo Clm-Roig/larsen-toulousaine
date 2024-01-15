@@ -9,21 +9,30 @@ import {
 } from "@/domain/Gig/Gig.service";
 import dayjs from "dayjs";
 import { V_SEPARATOR } from "@/utils/utils";
+import { getGig } from "@/domain/Gig/Gig.webService";
 
 type Props = {
   params: { slug: string };
 };
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = params;
   const decodedSlug = decodeURIComponent(slug);
+  const gig = await getGig(decodedSlug);
   const { dateObject: gigDate, bandNames } = getDataFromGigSlug(decodedSlug);
   const gigTitle = getGigTitleFromGigSlug(decodedSlug);
+  const description = `${bandNames.join(V_SEPARATOR)} le ${dayjs(
+    gigDate,
+  ).format("dddd D MMMM YYYY")} - ${gig?.place.name}`;
   return {
     title: gigTitle,
-    description: `${bandNames.join(V_SEPARATOR)} le ${dayjs(gigDate).format(
-      "dddd D MMMM YYYY",
-    )} - Larsen Toulousaine, votre agenda metal toulousain`,
+    description,
+    assets: gig?.imageUrl,
+    openGraph: {
+      ...(gig?.imageUrl ? { images: gig.imageUrl } : {}),
+      title: gigTitle,
+      description,
+    },
   };
 }
 
