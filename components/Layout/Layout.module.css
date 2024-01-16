@@ -1,3 +1,7 @@
-.appShell {
-  background: light-dark(#efefef, var(--mantine-color-black));
+[data-mantine-color-scheme="light"] .appShell {
+  background: #efefef;
+}
+
+[data-mantine-color-scheme="dark"] .appShell {
+  background: var(--mantine-color-black);
 }
