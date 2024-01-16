@@ -8,6 +8,7 @@ import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { Analytics } from "@vercel/analytics/react";
 import { getMetadata } from "@/utils/utils";
+import { themeColor } from "@/domain/constants";
 
 export const metadata: Metadata = getMetadata({
   title: "Larsen Toulousaine",
@@ -19,7 +20,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#b99f51",
+  themeColor: themeColor,
 };
 
 export default function RootLayout({

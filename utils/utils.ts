@@ -53,7 +53,6 @@ export const getMetadata = (
 ): Metadata => ({
   applicationName: "Larsen Toulousaine",
   icons: "icons.png",
-  themeColor: "#b99f51",
   manifest: "/manifest.json",
   ...metadata,
   openGraph: {

@@ -11,7 +11,7 @@ export const theme = createTheme({
       "#d3c392",
       "#c4b072",
       "#bda55d",
-      "#b99f51",
+      "#b99f51", // theme color
       "#a28a41",
       "#907b37",
       "#7d6a2a",
