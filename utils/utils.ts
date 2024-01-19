@@ -58,6 +58,7 @@ export const getMetadata = (
   openGraph: {
     siteName: "Larsen Toulousaine",
     type: "website",
+    images: "https://larsen-toulousaine.fr/icon.png",
     ...openGraph,
   },
   other: {
