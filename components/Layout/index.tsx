@@ -15,16 +15,19 @@ import {
   Stack,
   Image,
   useComputedColorScheme,
+  Affix,
+  Transition,
 } from "@mantine/core";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { capitalize } from "@/utils/utils";
 import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
-import { useDisclosure, useHeadroom } from "@mantine/hooks";
+import { useDisclosure, useHeadroom, useWindowScroll } from "@mantine/hooks";
 import Footer from "@/components/Layout/Footer";
 import classes from "./Layout.module.css";
 import { signOut, useSession } from "next-auth/react";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
+import { IconArrowUp } from "@tabler/icons-react";
 
 type Props = {
   children: ReactNode;
@@ -48,6 +51,7 @@ const frenchBreadcrumbDictionnary = {
 };
 
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
+  const [scroll, scrollTo] = useWindowScroll();
   const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
   const colorScheme = useComputedColorScheme("light");
@@ -182,6 +186,22 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           ) : (
             <Box mt={0}>{childrenWithTitle}</Box>
           )}
+          <Affix position={{ bottom: 20, right: 20 }}>
+            <Transition transition="slide-up" mounted={scroll.y > 0}>
+              {(transitionStyles) => (
+                <Button
+                  leftSection={
+                    <IconArrowUp style={{ width: rem(16), height: rem(16) }} />
+                  }
+                  style={transitionStyles}
+                  onClick={() => scrollTo({ y: 0 })}
+                  color="dark"
+                >
+                  Haut de page
+                </Button>
+              )}
+            </Transition>
+          </Affix>
         </Container>
       </AppShell.Main>
 
