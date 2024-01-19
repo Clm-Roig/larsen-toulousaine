@@ -14,10 +14,12 @@ type Props = {
 const AuthChecker = ({ children }: Props) => {
   const session = useSession();
   if (
-    session.status === "authenticated" &&
-    (!session.data?.expires ||
-      new Date(session.data?.expires).getTime() < new Date().getTime()) &&
-    window.location.pathname.startsWith("/admin")
+    typeof window !== "undefined" &&
+    window?.location.pathname.startsWith("/admin") &&
+    ((session.status === "authenticated" &&
+      (!session.data?.expires ||
+        new Date(session.data?.expires).getTime() < new Date().getTime())) ||
+      session.status === "unauthenticated")
   ) {
     void signOut();
   }
