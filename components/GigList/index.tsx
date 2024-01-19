@@ -128,7 +128,7 @@ const GigList = ({
                   >
                     {noGigsFoundMessage}
                   </Text>
-                  <AddGigButton />
+                  {status === "authenticated" && <AddGigButton />}
                 </Stack>
               </Center>
             )}
