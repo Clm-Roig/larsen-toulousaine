@@ -8,7 +8,6 @@ export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
 ];
 
 export const gigWithBandsAndGenresInclude = {
-  author: true,
   place: true,
   bands: {
     include: {

@@ -1,5 +1,5 @@
 import { Band, Genre, Gig } from "@prisma/client";
-import { GigWithAuthor, GigWithBandsAndPlace } from "./Gig.type";
+import { GigWithBandsAndPlace } from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 
@@ -34,11 +34,11 @@ export const getGigByDateAndPlaceId = async (
 
 export const getGig = async (
   slug: string,
-): Promise<(GigWithBandsAndPlace & GigWithAuthor) | null> => {
+): Promise<GigWithBandsAndPlace | null> => {
   try {
-    const response = await api.get<
-      (GigWithBandsAndPlace & GigWithAuthor) | undefined
-    >(`/gigs/${encodeURIComponent(slug)}`);
+    const response = await api.get<GigWithBandsAndPlace | undefined>(
+      `/gigs/${encodeURIComponent(slug)}`,
+    );
     return response.data ?? null;
   } catch (error) {
     throw new Error(getErrorMessage(error));
