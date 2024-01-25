@@ -25,13 +25,13 @@ export default function EditGig({ gigSlug }: Props) {
 
   const { mutate, isPending: isEditPending } = useMutation({
     mutationFn: async (values: EditGigArgs) => await editGig(values),
-    onSuccess: () => {
+    onSuccess: (editedGig) => {
       notifications.show({
         color: "green",
         message: "Concert édité avec succès !",
       });
       void queryClient.invalidateQueries({ queryKey: ["gigs"] });
-      router.push(`/${gigSlug}`);
+      router.push(`/${editedGig.slug}`);
     },
     onError: (error) => {
       notifications.show({
