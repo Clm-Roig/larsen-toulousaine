@@ -14,12 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
     dayjs().startOf("week").toDate(),
     dayjs().endOf("week").toDate(),
   );
-  const images: string[] = gigs.reduce((images, gig) => {
+  const filteredGigs = gigs.filter((g) => !g.isCanceled);
+  const images: string[] = filteredGigs.reduce((images, gig) => {
     if (!gig.imageUrl) return images;
     return [...images, gig.imageUrl];
   }, []);
-  const description: string = gigs
-    .map((gig) => getGigTitleFromGigSlug(gig.slug))
+  const description: string = filteredGigs
+    .map((gig) => getGigTitleFromGigSlug(gig.slug) + " - " + gig.place.name)
     .join("\n");
   return getMetadata(
     {
