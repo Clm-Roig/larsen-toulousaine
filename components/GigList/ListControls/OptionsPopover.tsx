@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   CloseButton,
+  Flex,
   Group,
   NumberInput,
   Popover,
@@ -14,7 +15,7 @@ import {
   Text,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
-import { IconX } from "@tabler/icons-react";
+import { IconDeselect, IconSelectAll, IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -26,7 +27,6 @@ type Props = {
 export default function OptionsPopover({ genres, places }: Props) {
   const { status } = useSession();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
-
   const {
     displayNotSafePlaces,
     filteredGenres,
@@ -42,8 +42,18 @@ export default function OptionsPopover({ genres, places }: Props) {
     setMaxPrice,
   } = usePreferences();
 
+  const areAllPlacesIncluded = excludedPlaces?.length === 0;
+
   const handleGenreSelect = (genreIds: string[]) => {
     setFilteredGenres(genres.filter((g) => genreIds.includes(g.id)));
+  };
+
+  const handleToggleSelectPlaces = () => {
+    if (areAllPlacesIncluded) {
+      setExcludedPlaces(places.map((p) => p.id));
+    } else {
+      setExcludedPlaces([]);
+    }
   };
 
   return (
@@ -112,7 +122,18 @@ export default function OptionsPopover({ genres, places }: Props) {
           />
 
           <Stack gap="xs">
-            <Text size="sm">Salles</Text>
+            <Flex justify="space-between" align="center">
+              <Text size="sm">Salles</Text>
+              <Button
+                variant="subtle"
+                onClick={handleToggleSelectPlaces}
+                rightSection={
+                  areAllPlacesIncluded ? <IconDeselect /> : <IconSelectAll />
+                }
+              >
+                {areAllPlacesIncluded ? "Masquer toutes" : "Afficher toutes"}
+              </Button>
+            </Flex>
             {places.map((place) => (
               <Checkbox
                 key={place.id}
