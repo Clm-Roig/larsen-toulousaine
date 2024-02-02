@@ -152,11 +152,6 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           <Button component={Link} href="/a-propos">
             À propos
           </Button>
-          {status === "unauthenticated" && (
-            <Button component={Link} href="/admin" variant="outline">
-              Se connecter
-            </Button>
-          )}
           {status === "authenticated" && (
             <Button onClick={handleSignOut} variant="outline">
               Se déconnecter

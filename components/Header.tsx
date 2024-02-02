@@ -9,11 +9,11 @@ import {
   Burger,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
-import { IconLogin2 } from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import GigSearchInput from "@/components/GigSearchInput";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
+import { useRouter } from "next/navigation";
 
 type Props = {
   navbarOpened: boolean;
@@ -82,19 +82,9 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                 Admin
               </Button>
               <ActionIcon size="md" onClick={handleSignOut} visibleFrom="sm">
-                <IconLogin2 />
+                <IconLogout />
               </ActionIcon>
             </>
-          )}
-          {status === "unauthenticated" && (
-            <Button
-              size="compact-md"
-              component={Link}
-              href="/admin"
-              visibleFrom="sm"
-            >
-              Se connecter
-            </Button>
           )}
           <SchemeSwitcher visibleFrom="sm" />
         </Group>
