@@ -86,9 +86,3 @@ describe("Gig service", () => {
     });
   });
 });
-
-describe("A failing test", () => {
-  it("fails", () => {
-    expect(true).toBe(false);
-  });
-});
