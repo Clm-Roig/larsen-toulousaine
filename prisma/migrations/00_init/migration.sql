@@ -24,6 +24,8 @@ CREATE TABLE "Gig" (
     "ticketReservationLink" TEXT,
     "slug" TEXT NOT NULL,
     "isCanceled" BOOLEAN NOT NULL DEFAULT false,
+    "isSoldOut" BOOLEAN NOT NULL DEFAULT false,
+    "price" DOUBLE PRECISION,
 
     CONSTRAINT "Gig_pkey" PRIMARY KEY ("id")
 );
@@ -54,8 +56,24 @@ CREATE TABLE "Genre" (
 CREATE TABLE "Place" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "website" TEXT,
+    "isClosed" BOOLEAN NOT NULL DEFAULT false,
+    "isSafe" BOOLEAN NOT NULL DEFAULT true,
+    "latitude" DOUBLE PRECISION,
+    "longitude" DOUBLE PRECISION,
 
     CONSTRAINT "Place_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BandsOnGigs" (
+    "bandId" TEXT NOT NULL,
+    "gigId" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
+
+    CONSTRAINT "BandsOnGigs_pkey" PRIMARY KEY ("bandId","gigId")
 );
 
 -- CreateTable
@@ -64,11 +82,8 @@ CREATE TABLE "_BandToGenre" (
     "B" TEXT NOT NULL
 );
 
--- CreateTable
-CREATE TABLE "_BandToGig" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
-);
+-- CreateIndex
+CREATE UNIQUE INDEX "Band_name_key" ON "Band"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gig_slug_key" ON "Gig"("slug");
@@ -91,12 +106,6 @@ CREATE UNIQUE INDEX "_BandToGenre_AB_unique" ON "_BandToGenre"("A", "B");
 -- CreateIndex
 CREATE INDEX "_BandToGenre_B_index" ON "_BandToGenre"("B");
 
--- CreateIndex
-CREATE UNIQUE INDEX "_BandToGig_AB_unique" ON "_BandToGig"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_BandToGig_B_index" ON "_BandToGig"("B");
-
 -- AddForeignKey
 ALTER TABLE "Gig" ADD CONSTRAINT "Gig_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -104,14 +113,14 @@ ALTER TABLE "Gig" ADD CONSTRAINT "Gig_authorId_fkey" FOREIGN KEY ("authorId") RE
 ALTER TABLE "Gig" ADD CONSTRAINT "Gig_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "Place"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "BandsOnGigs" ADD CONSTRAINT "BandsOnGigs_bandId_fkey" FOREIGN KEY ("bandId") REFERENCES "Band"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BandsOnGigs" ADD CONSTRAINT "BandsOnGigs_gigId_fkey" FOREIGN KEY ("gigId") REFERENCES "Gig"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_BandToGenre" ADD CONSTRAINT "_BandToGenre_A_fkey" FOREIGN KEY ("A") REFERENCES "Band"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_BandToGenre" ADD CONSTRAINT "_BandToGenre_B_fkey" FOREIGN KEY ("B") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BandToGig" ADD CONSTRAINT "_BandToGig_A_fkey" FOREIGN KEY ("A") REFERENCES "Band"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BandToGig" ADD CONSTRAINT "_BandToGig_B_fkey" FOREIGN KEY ("B") REFERENCES "Gig"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
