@@ -13,7 +13,6 @@ import {
   TextInput,
   Paper,
   NumberInput,
-  rem,
   Flex,
   Alert,
   Stack,
@@ -254,7 +253,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                       >
                         <Group style={{ alignItems: "flex-start" }}>
                           <IconGripVertical
-                            size={rem(16)}
+                            size={16}
                             style={{ alignSelf: "center" }}
                           />
                           <BandFields
