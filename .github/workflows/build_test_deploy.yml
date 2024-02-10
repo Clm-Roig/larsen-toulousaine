@@ -1,0 +1,86 @@
+# Taken from https://aaronfrancis.com/2021/the-perfect-vercel-github-actions-deployment-pipeline
+
+name: Build, test & deploy Larsen Toulousaine
+on: [push, pull_request]
+jobs:
+  build_test_deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      POSTGRES_PRISMA_URL: postgres://postgres:postgres@localhost:5432/test-db
+      # Not sure about the following line here...
+      POSTGRES_URL_NON_POOLING: postgres://postgres:postgres@localhost:5432/test-db
+
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test-db
+        ports:
+          - "5432:5432"
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Init database
+        run: npx prisma migrate deploy
+
+      - name: Seed database
+        run: npx prisma db seed
+
+      - name: Run Tests Locally
+        run: npm run test
+
+      # === Currently not used
+
+      # - name: Deploy to Staging
+      #   id: deploy-vercel-staging
+      #   uses: amondnet/vercel-action@v25
+      #   with:
+      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_TL_ENGINE }}
+      #     scope: ${{ secrets.VERCEL_ORG_ID }}
+
+      # - name: Run Tests Against Vercel
+      #   env:
+      #     VERCEL_URL: ${{ steps.deploy-vercel-staging.outputs.preview-url }}
+      #   run: npm run test
+
+      # - name: Deploy to Production
+      #   uses: amondnet/vercel-action@v25
+      #   id: deploy-vercel-production
+      #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      #   with:
+      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+      #     vercel-args: "--prod"
+      #     scope: ${{ secrets.VERCEL_ORG_ID }}
