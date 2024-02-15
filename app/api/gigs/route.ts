@@ -20,6 +20,7 @@ import {
 import { downloadAndStoreImage } from "@/app/api/utils/image";
 import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { gigListOrderBy } from "@/app/api/utils/gigs";
+import { invalidImageUrlError } from "@/domain/Gig/errors";
 
 const defaultInclude = {
   place: true,
@@ -246,6 +247,9 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 },
       );
+    }
+    if (error.name === invalidImageUrlError.name) {
+      return toResponse(error);
     }
     return NextResponse.json(
       { message: "An unexpected error occured." },

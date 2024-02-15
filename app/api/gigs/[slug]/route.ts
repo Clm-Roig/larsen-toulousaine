@@ -21,6 +21,7 @@ import {
   flattenGigBands,
   gigWithBandsAndGenresInclude,
 } from "@/app/api/utils/gigs";
+import { invalidImageUrlError } from "@/domain/Gig/errors";
 
 export async function GET(
   request: NextRequest,
@@ -137,6 +138,9 @@ export async function PUT(request: NextRequest) {
         },
         { status: 400 },
       );
+    }
+    if (error.name === invalidImageUrlError.name) {
+      return toResponse(error);
     }
     return NextResponse.json(
       { message: "An unexpected error occured." },

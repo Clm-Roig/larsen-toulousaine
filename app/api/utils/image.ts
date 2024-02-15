@@ -1,6 +1,8 @@
+import { invalidImageUrlError } from "@/domain/Gig/errors";
 import cloudinaryV2 from "@/lib/cloudinary";
 import { Gig } from "@prisma/client";
 import { UploadApiOptions, UploadApiResponse } from "cloudinary";
+import imageType from "image-type";
 import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 
 const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
@@ -51,6 +53,10 @@ export async function downloadAndStoreImage({
   const response = await fetch(imageUrl);
   const arrayBufferImg = await (await response.blob()).arrayBuffer();
   const bufferImg = Buffer.from(arrayBufferImg);
+  const type = await imageType(bufferImg);
+  if (!type) {
+    throw invalidImageUrlError;
+  }
   const resizedImg = await sharp(bufferImg)
     .resize(resizeOptions)
     .toFormat(imageFormat)
