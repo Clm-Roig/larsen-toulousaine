@@ -4,7 +4,6 @@ import GigCard from "./GigCard";
 import {
   Grid,
   Box,
-  Loader,
   Text,
   Center,
   Transition,
@@ -22,6 +21,8 @@ import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import GigListItem from "@/components/GigList/GigListItem";
 import dayjs from "dayjs";
+import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
+import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 
 type Props = {
   genres: Genre[];
@@ -55,9 +56,10 @@ const GigList = ({
         />
       </Box>
       {isLoading && (
-        <Center>
-          <Loader />
-        </Center>
+        <>
+          {viewType === ViewType.GRID && <GridViewSkeleton />}
+          {viewType === ViewType.LIST && <ListViewSkeleton />}
+        </>
       )}
       <Transition
         mounted={!isLoading && !!gigs}
