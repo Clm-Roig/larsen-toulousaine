@@ -1,10 +1,9 @@
 import { GIG_CARD_HEIGHT } from "@/components/GigList/GigCard/constants";
-import { CARD_WIDTH } from "@/components/GigList/constants";
 import { Box, Flex, Skeleton, Stack } from "@mantine/core";
 
 export default function GigCardSkeleton() {
   return (
-    <Stack h={GIG_CARD_HEIGHT} w={CARD_WIDTH} justify="space-between">
+    <Stack h={GIG_CARD_HEIGHT} justify="space-between">
       <Stack h="70%">
         <Skeleton height={"80%"} />
         <Box>
