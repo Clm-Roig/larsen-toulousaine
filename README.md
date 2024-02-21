@@ -22,9 +22,13 @@ Run server:
 
 ### Prisma
 
-You need to update the database every time your Prisma schema file is changing by running the following command:
+You need to update the database every time your Prisma schema file is changing by running the following commands:
 
 `npx prisma generate`
+
+`npx prisma db push`
+
+:warning: These commands wil update the production database: be careful!
 
 ### Tools
 
