@@ -103,15 +103,19 @@ export default function GigInfo({ gig }: Props) {
         <Row>
           <IconCurrencyEuro {...iconProps} />
           <Divider orientation="vertical" />
-          <Flex gap="sm" align="center">
-            {(price || price === 0) && <Price value={price} />}
-            {isSoldOut && <SoldOutIcon />}
-            {ticketReservationLink && (
+          <Stack gap={4}>
+            <Group>
+              {(price || price === 0) && <Price value={price} />}
+              {isSoldOut && <SoldOutIcon />}
+            </Group>
+            {ticketReservationLink ? (
               <ExternalLink href={ticketReservationLink}>
                 Réserver une place
               </ExternalLink>
+            ) : (
+              <Text>Pas de billeterie</Text>
             )}
-          </Flex>
+          </Stack>
         </Row>
       )}
 
