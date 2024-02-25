@@ -6,6 +6,7 @@ import ExternalLink from "@/components/ExternalLink";
 import {
   IconCalendar,
   IconCurrencyEuro,
+  IconHome,
   IconMapPin,
   IconMusic,
   IconX,
@@ -92,6 +93,15 @@ export default function GigInfo({ gig }: Props) {
               {getSortedGenres(band.genres).map((genre) => (
                 <GenreBadge key={genre?.id} genre={genre} />
               ))}
+              {band.isLocal && (
+                <Badge
+                  variant="outline"
+                  p={4}
+                  leftSection={<IconHome width={"1rem"} />}
+                >
+                  Local
+                </Badge>
+              )}
             </Flex>
           ))}
         </Stack>

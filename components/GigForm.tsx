@@ -256,19 +256,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                             size={16}
                             style={{ alignSelf: "center" }}
                           />
-                          <BandFields
-                            nameProps={{
-                              disabled: !!form.values.bands[index].id,
-                              ...form.getInputProps(`bands.${index}.name`),
-                            }}
-                            genreProps={{
-                              genres: genres || [],
-                              style: { flex: 1 },
-                              disabled: !!form.values.bands[index].id,
-                              ...form.getInputProps(`bands.${index}.genres`),
-                            }}
-                          />
-
                           <Box>
                             <ActionIcon
                               color="red"
@@ -280,6 +267,23 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                               <IconTrash size="1rem" />
                             </ActionIcon>
                           </Box>
+                          <BandFields
+                            nameProps={{
+                              disabled: !!form.values.bands[index].id,
+                              ...form.getInputProps(`bands.${index}.name`),
+                            }}
+                            genreProps={{
+                              genres: genres || [],
+                              style: { flex: 1 },
+                              disabled: !!form.values.bands[index].id,
+                              ...form.getInputProps(`bands.${index}.genres`),
+                            }}
+                            isLocalProps={{
+                              disabled: !!form.values.bands[index].id,
+                              ...form.getInputProps(`bands.${index}.isLocal`),
+                            }}
+                            withShortIsLocalDescription
+                          />
                         </Group>
                       </Paper>
                     )}

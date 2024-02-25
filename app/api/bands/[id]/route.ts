@@ -23,7 +23,7 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { id, genres, name } = body;
+  const { id, genres, isLocal, name } = body;
   try {
     const updatedBand = await prisma.band.update({
       where: { id: id },
@@ -32,6 +32,7 @@ export async function PUT(request: NextRequest) {
         genres: {
           set: genres.map((gId) => ({ id: gId })),
         },
+        isLocal: isLocal,
       }),
       include: { genres: true },
     });

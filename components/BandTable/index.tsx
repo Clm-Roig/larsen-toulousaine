@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { BandWithGenresAndGigCount } from "@/domain/Band/Band.type";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
 import { normalizeString } from "@/utils/utils";
 import GenreBadge from "@/components/GenreBadge";
@@ -105,6 +105,9 @@ export default function BandTable({
                       <GenreBadge key={genre?.id} genre={genre} size="sm" />
                     ))}
                   </Group>
+                </Table.Td>
+                <Table.Td ta="center">
+                  {band.isLocal && <IconCheck color="green" />}
                 </Table.Td>
                 <Table.Td>{band._count.gigs}</Table.Td>
                 <Table.Td>

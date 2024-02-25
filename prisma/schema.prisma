@@ -19,6 +19,7 @@ model Band {
   name      String        @unique
   genres    Genre[]
   gigs      BandsOnGigs[]
+  isLocal   Boolean       @default(false)
 }
 
 model Gig {

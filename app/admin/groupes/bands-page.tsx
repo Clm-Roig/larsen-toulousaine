@@ -33,6 +33,7 @@ const Bands = () => {
       id: "",
       name: "",
       genres: [],
+      isLocal: false,
     },
     validate: {
       name: (value) => (value ? null : "Le nom est requis."),
@@ -147,6 +148,11 @@ const Bands = () => {
                     genres: genres || [],
                     w: "100%",
                     ...form.getInputProps(`genres`),
+                  }}
+                  isLocalProps={{
+                    w: "100%",
+                    checked: !!form.getInputProps("isLocal").value,
+                    ...form.getInputProps(`isLocal`),
                   }}
                   nameProps={{
                     w: "100%",
