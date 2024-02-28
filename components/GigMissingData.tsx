@@ -16,7 +16,7 @@ function ListItem(props: PropsWithChildren) {
 }
 
 export default function GigMissingData({ gig }: Props) {
-  const { bands, imageUrl, price, ticketReservationLink } = gig;
+  const { bands, hasTicketReservationLink, imageUrl, price } = gig;
   return (
     <>
       <List
@@ -28,11 +28,13 @@ export default function GigMissingData({ gig }: Props) {
         }
       >
         {!imageUrl && <ListItem>Affiche</ListItem>}
-        {!ticketReservationLink && price !== 0 && (
-          <ListItem>Lien de réservation</ListItem>
+        {hasTicketReservationLink === null && (
+          <ListItem>Présence d&apos;une billeterie à confirmer</ListItem>
         )}
         {!price && price !== 0 && <ListItem>Prix</ListItem>}
-        {bands?.length <= 1 && <ListItem>Groupe(s)</ListItem>}
+        {bands?.length <= 1 && (
+          <ListItem>Groupe(s) potentiellement manquant(s)</ListItem>
+        )}
       </List>
     </>
   );

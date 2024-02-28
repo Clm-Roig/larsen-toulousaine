@@ -43,9 +43,7 @@ export async function GET() {
         g.price === null ||
         g.imageUrl === null ||
         g.imageUrl === "" ||
-        // If price is set to 0, you can't buy a ticket
-        (g.price !== 0 &&
-          (g.ticketReservationLink === null || g.ticketReservationLink === "")),
+        g.hasTicketReservationLink === null,
     );
 
   const gigs = rawGigs.map((gig) => ({
