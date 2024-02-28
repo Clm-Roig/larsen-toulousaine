@@ -25,6 +25,7 @@ import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 
 type Props = {
+  displayMissingDataOnly?: boolean;
   genres: Genre[];
   gigs?: GigWithBandsAndPlace[];
   isLoading: boolean;
@@ -35,6 +36,7 @@ type Props = {
 };
 
 const GigList = ({
+  displayMissingDataOnly = false,
   genres,
   gigs,
   isLoading,
@@ -74,7 +76,10 @@ const GigList = ({
                 <Grid>
                   {gigs.map((gig) => (
                     <Grid.Col key={gig.id} span={GRID_SPAN_PROP}>
-                      <GigCard gig={gig} />
+                      <GigCard
+                        displayMissingDataOnly={displayMissingDataOnly}
+                        gig={gig}
+                      />
                     </Grid.Col>
                   ))}
                   {status === "authenticated" && (
@@ -98,6 +103,7 @@ const GigList = ({
                         ).isSame(gig.date);
                         return (
                           <GigListItem
+                            displayMissingDataOnly={displayMissingDataOnly}
                             gig={gig}
                             key={gig.id}
                             withDivider={

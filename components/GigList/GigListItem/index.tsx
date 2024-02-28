@@ -1,6 +1,5 @@
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
-import { MENU_ICON_WIDTH } from "@/components/GigList/GigCard/constants";
 import OptimizedImage from "@/components/OptimizedImage";
 import { getBandNames } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
@@ -26,6 +25,7 @@ import GigCompactInfo from "@/components/GigCompactInfo";
 
 type Props = {
   displayDate?: boolean;
+  displayMissingDataOnly?: boolean;
   gig: GigWithBandsAndPlace;
   listItemProps?: ListItemProps;
   withDivider: boolean;
@@ -39,6 +39,7 @@ const PolymorphicListItem = createPolymorphicComponent<
 export default function GigListItem({
   gig,
   withDivider,
+  displayMissingDataOnly = false,
   displayDate = true,
   ...listItemProps
 }: Props) {
@@ -112,6 +113,7 @@ export default function GigListItem({
       >
         <GigCompactInfo
           displayDate={false}
+          displayMissingDataOnly={displayMissingDataOnly}
           filterOnGenreClick
           gig={gig}
           hovered={hovered}
@@ -119,7 +121,7 @@ export default function GigListItem({
         />
       </PolymorphicListItem>
       {status === "authenticated" && (
-        <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
+        <TopMenuBox position="right">
           <GigMenu gig={gig} />
         </TopMenuBox>
       )}

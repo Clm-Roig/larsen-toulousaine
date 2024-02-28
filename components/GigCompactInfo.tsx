@@ -15,9 +15,11 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
+import GigMissingData from "@/components/GigMissingData";
 
 type Props = {
   displayDate: boolean;
+  displayMissingDataOnly: boolean;
   filterOnGenreClick: boolean;
   gig: GigWithBandsAndPlace;
   hovered?: boolean;
@@ -26,6 +28,7 @@ type Props = {
 
 export default function GigCompactInfo({
   displayDate,
+  displayMissingDataOnly,
   filterOnGenreClick,
   gig,
   hovered,
@@ -55,17 +58,23 @@ export default function GigCompactInfo({
       >
         {bandNames}
       </Title>
-      <Group gap={2}>
-        {bandGenres.slice(0, nbGenresDisplayed).map((genre) => (
-          <GenreBadge
-            key={genre.id}
-            filterOnClick={filterOnGenreClick}
-            size="sm"
-            genre={genre}
-          />
-        ))}
-        {nbHiddenGenres > 0 && <Badge color="gray.5">+{nbHiddenGenres}</Badge>}
-      </Group>
+      {displayMissingDataOnly ? (
+        <GigMissingData gig={gig} />
+      ) : (
+        <Group gap={2}>
+          {bandGenres.slice(0, nbGenresDisplayed).map((genre) => (
+            <GenreBadge
+              key={genre.id}
+              filterOnClick={filterOnGenreClick}
+              size="sm"
+              genre={genre}
+            />
+          ))}
+          {nbHiddenGenres > 0 && (
+            <Badge color="gray.5">+{nbHiddenGenres}</Badge>
+          )}
+        </Group>
+      )}
       <Group>
         {(price || price === 0) && <Price value={price} size="xs" />}
         <Text>

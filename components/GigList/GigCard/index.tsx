@@ -16,24 +16,21 @@ import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import Price from "@/components/Price";
-import {
-  DATE_WIDTH,
-  GIG_CARD_HEIGHT,
-  MENU_ICON_WIDTH,
-  TOP_BOX_HEIGHT,
-} from "@/components/GigList/GigCard/constants";
+import { GIG_CARD_HEIGHT } from "@/components/GigList/GigCard/constants";
 import { hasPassed } from "@/utils/date";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useHover } from "@mantine/hooks";
 import GenreBadge from "@/components/GenreBadge";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import SoldOutIcon from "@/components/SoldOutIcon";
+import GigMissingData from "@/components/GigMissingData";
 
 type Props = {
+  displayMissingDataOnly?: boolean;
   gig: GigWithBandsAndPlace;
 };
 
-const GigCard = ({ gig }: Props) => {
+const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const theme = useMantineTheme();
   const { hovered, ref } = useHover<HTMLAnchorElement>();
   const { grayOutPastGigs } = usePreferences();
@@ -96,12 +93,16 @@ const GigCard = ({ gig }: Props) => {
             <Text fw="bold" lineClamp={2} lh={1.25}>
               {bandNames}
             </Text>
-            <Group gap={4}>
-              {bandGenres.map((genre) => (
-                <GenreBadge key={genre?.id} genre={genre} filterOnClick />
-              ))}
-            </Group>
+            {!displayMissingDataOnly && (
+              <Group gap={4}>
+                {bandGenres.map((genre) => (
+                  <GenreBadge key={genre?.id} genre={genre} filterOnClick />
+                ))}
+              </Group>
+            )}
           </Stack>
+
+          {displayMissingDataOnly && <GigMissingData gig={gig} />}
 
           <Group justify="space-between">
             <Text>
@@ -120,18 +121,11 @@ const GigCard = ({ gig }: Props) => {
         </Stack>
       </Card>
 
-      <TopMenuBox position="left" width={DATE_WIDTH}>
-        <Text
-          h={TOP_BOX_HEIGHT}
-          w={DATE_WIDTH}
-          lh={`${TOP_BOX_HEIGHT}px`}
-          c="white"
-        >
-          {dayjs(date).format("ddd DD/MM")}
-        </Text>
+      <TopMenuBox position="left" px={8} py={4}>
+        <Text c="white">{dayjs(date).format("ddd DD/MM")}</Text>
       </TopMenuBox>
 
-      <TopMenuBox position="right" width={MENU_ICON_WIDTH}>
+      <TopMenuBox position="right">
         <GigMenu gig={gig} />
       </TopMenuBox>
     </Box>

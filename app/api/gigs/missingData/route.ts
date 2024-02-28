@@ -35,8 +35,9 @@ export async function GET() {
         // Prisma doesn't provide a way to check both null and "" at the same type
         { imageUrl: null },
         { imageUrl: "" },
-        { ticketReservationLink: null },
-        { ticketReservationLink: "" },
+        // If price is set to 0, you can't buy a ticket
+        { AND: [{ ticketReservationLink: null }, { price: { not: 0 } }] },
+        { AND: [{ ticketReservationLink: "" }, { price: { not: 0 } }] },
       ],
     },
     include: defaultInclude,

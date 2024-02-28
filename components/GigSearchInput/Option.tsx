@@ -12,6 +12,7 @@ export default function Option({ gig }: Props) {
   const children = (
     <GigCompactInfo
       displayDate
+      displayMissingDataOnly={false}
       filterOnGenreClick={false}
       gig={gig}
       nbGenresDisplayed={2}

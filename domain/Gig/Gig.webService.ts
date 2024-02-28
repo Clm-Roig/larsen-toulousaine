@@ -181,3 +181,14 @@ export const searchGigs = async (
     throw new Error(getErrorMessage(error));
   }
 };
+
+export const getMissingDataGigs = async (): Promise<GigWithBandsAndPlace[]> => {
+  try {
+    const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
+      `/gigs/missingData`,
+    );
+    return response.data.gigs;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};

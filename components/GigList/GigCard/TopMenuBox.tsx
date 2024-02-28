@@ -1,14 +1,12 @@
-import { TOP_BOX_HEIGHT } from "@/components/GigList/GigCard/constants";
-import { Box, useMantineTheme } from "@mantine/core";
+import { Box, BoxProps, useMantineTheme } from "@mantine/core";
 import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
   position: "left" | "right";
-  width: number;
-};
+} & BoxProps;
 
-export default function TopMenuBox({ children, position, width }: Props) {
+export default function TopMenuBox({ children, position, ...boxProps }: Props) {
   const theme = useMantineTheme();
 
   const positionProps = {
@@ -18,8 +16,9 @@ export default function TopMenuBox({ children, position, width }: Props) {
 
   return (
     <Box
-      w={width}
-      h={TOP_BOX_HEIGHT}
+      w={"fit-content"}
+      h={"fit-content"}
+      p={2}
       pos="absolute"
       {...positionProps}
       bg={"primary"}
@@ -37,6 +36,7 @@ export default function TopMenuBox({ children, position, width }: Props) {
               ] as string,
             }),
       }}
+      {...boxProps}
     >
       {children}
     </Box>

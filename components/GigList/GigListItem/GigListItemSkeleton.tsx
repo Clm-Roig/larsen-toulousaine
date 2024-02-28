@@ -1,4 +1,3 @@
-import { TOP_BOX_HEIGHT } from "@/components/GigList/GigCard/constants";
 import { Divider, Group, ListItem, Skeleton, Stack } from "@mantine/core";
 
 export default function GigListItemSkeleton() {
@@ -15,13 +14,7 @@ export default function GigListItemSkeleton() {
         w="100%"
         mt="sm"
       >
-        <Skeleton
-          w={TOP_BOX_HEIGHT}
-          h={TOP_BOX_HEIGHT}
-          pos="absolute"
-          top={0}
-          right={0}
-        />
+        <Skeleton w={32} h={32} pos="absolute" top={0} right={0} />
         <Stack gap="xs">
           <Skeleton h={20} maw={300} />
           <Skeleton h={20} maw={300} />
