@@ -124,3 +124,19 @@ export const getPriceString = (price?: number | null): string => {
   }
   return priceString;
 };
+
+export type HasTicketLinkFormValue = "true" | "false" | "";
+export const hasTicketLinkFormValueToBool = (value: string): boolean | null => {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  if (value === "") return null;
+  throw new Error("Unexpected value: " + value);
+};
+export const hasTicketLinkBoolToFormValue = (
+  value: Gig["hasTicketReservationLink"],
+): HasTicketLinkFormValue => {
+  if (value === null || value === undefined) return "";
+  if (value) return "true";
+  if (!value) return "false";
+  throw new Error("Unexpected value: " + value);
+};

@@ -202,6 +202,9 @@ export async function POST(request: NextRequest) {
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
         ...bodyWithoutPlaceId,
+        ticketReservationLink: bodyWithoutPlaceId.hasTicketReservationLink
+          ? bodyWithoutPlaceId.ticketReservationLink
+          : null,
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {

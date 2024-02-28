@@ -19,12 +19,19 @@ import {
   Loader,
   Center,
   LoadingOverlay,
+  SegmentedControl,
+  VisuallyHidden,
+  InputLabel,
+  InputDescription,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
 import {
+  IconCheck,
   IconGripVertical,
   IconInfoCircle,
+  IconQuestionMark,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import { FormEvent, useEffect } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
@@ -45,6 +52,10 @@ import { DatePickerInput } from "@mantine/dates";
 import OptimizedImage from "@/components/OptimizedImage";
 import BandFields from "@/components/BandFields";
 import { getBandNames } from "@/domain/Band/Band.service";
+import {
+  hasTicketLinkBoolToFormValue,
+  hasTicketLinkFormValueToBool,
+} from "@/domain/Gig/Gig.service";
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -64,11 +75,17 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     queryFn: async () => await getPlaces(),
   });
 
-  const form = useForm<Omit<CreateGigArgs, "date"> & { date: Date | null }>({
+  const form = useForm<
+    Omit<CreateGigArgs, "date"> & {
+      date: Date | null;
+    }
+  >({
+    validateInputOnBlur: true,
     initialValues: {
       bands: [],
       date: null,
       description: null,
+      hasTicketReservationLink: null,
       imageUrl: null,
       placeId: "",
       ticketReservationLink: null,
@@ -84,8 +101,12 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
       },
-      ticketReservationLink: (value) =>
-        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
+      ticketReservationLink: (value, values) =>
+        !value && values.hasTicketReservationLink === true
+          ? "Le lien de réservation est requis."
+          : !value || isValidUrl(value)
+          ? null
+          : INVALID_URL_ERROR_MSG,
     },
   });
 
@@ -120,6 +141,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           })),
         date: new Date(gig.date),
         slug: "", // slug will be recomputed when saving the gig
+        hasTicketReservationLink: gig.hasTicketReservationLink,
       });
     }
   }, [form, gig]);
@@ -315,10 +337,64 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           />
         )}
 
-        <TextInput
-          label="Lien de réservation des tickets"
-          {...form.getInputProps("ticketReservationLink")}
+        <InputLabel display="block">
+          Le concert a-t-il une billeterie ?
+        </InputLabel>
+        <InputDescription mb={5}>
+          <>Oui = il y a une billeterie et le lien est connu</>
+          <br />
+          Inconnu = on ne sait pas s&apos;il y aura une billeterie ou pas
+          <br /> Non = il n&apos;y a pas de billeterie
+        </InputDescription>
+        <SegmentedControl
+          size="xs"
+          data={[
+            {
+              value: "true",
+              label: (
+                <>
+                  <IconCheck color="green" />
+                  <VisuallyHidden>Oui</VisuallyHidden>
+                </>
+              ),
+            },
+            {
+              value: "",
+              label: (
+                <>
+                  <IconQuestionMark />
+                  <VisuallyHidden>Inconnu</VisuallyHidden>
+                </>
+              ),
+            },
+            {
+              value: "false",
+              label: (
+                <>
+                  <IconX color="red" />
+                  <VisuallyHidden>Non</VisuallyHidden>
+                </>
+              ),
+            },
+          ]}
+          {...form.getInputProps("hasTicketReservationLink")}
+          value={hasTicketLinkBoolToFormValue(
+            form.getInputProps("hasTicketReservationLink").value,
+          )}
+          onChange={(value: string) =>
+            form.setFieldValue(
+              "hasTicketReservationLink",
+              hasTicketLinkFormValueToBool(value),
+            )
+          }
         />
+
+        {!!form.values.hasTicketReservationLink && (
+          <TextInput
+            label="Lien de réservation des tickets"
+            {...form.getInputProps("ticketReservationLink")}
+          />
+        )}
 
         <NumberInput
           allowNegative={false}

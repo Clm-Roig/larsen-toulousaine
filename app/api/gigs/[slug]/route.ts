@@ -105,10 +105,14 @@ export async function PUT(request: NextRequest) {
         },
       });
     }
-    const createdGig = await prisma.gig.update({
+    const updatedGig = await prisma.gig.update({
       where: { id: body.id },
       data: Prisma.validator<Prisma.GigUpdateInput>()({
         ...bodyWithoutPlaceIdAndAuthorId,
+        ticketReservationLink:
+          bodyWithoutPlaceIdAndAuthorId.hasTicketReservationLink
+            ? bodyWithoutPlaceIdAndAuthorId.ticketReservationLink
+            : null,
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {
@@ -126,7 +130,7 @@ export async function PUT(request: NextRequest) {
       }),
       include: { bands: true },
     });
-    return NextResponse.json(createdGig);
+    return NextResponse.json(updatedGig);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

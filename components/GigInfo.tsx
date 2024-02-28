@@ -36,6 +36,7 @@ export default function GigInfo({ gig }: Props) {
     bands,
     description,
     date,
+    hasTicketReservationLink,
     isCanceled,
     isSoldOut,
     place,
@@ -118,11 +119,12 @@ export default function GigInfo({ gig }: Props) {
               {(price || price === 0) && <Price value={price} />}
               {isSoldOut && <SoldOutIcon />}
             </Group>
-            {ticketReservationLink ? (
+            {ticketReservationLink && (
               <ExternalLink href={ticketReservationLink}>
                 Réserver une place
               </ExternalLink>
-            ) : (
+            )}
+            {hasTicketReservationLink === false && (
               <Text>Pas de billeterie</Text>
             )}
           </Stack>
