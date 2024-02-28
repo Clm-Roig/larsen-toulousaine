@@ -1,10 +1,10 @@
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { mustBeAuthenticatedError, toResponse } from "@/domain/errors";
+import { Prisma } from "@prisma/client";
 
 const defaultInclude = {
   place: true,
@@ -25,24 +25,29 @@ export async function GET() {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const rawGigs = await prisma.gig.findMany({
-    where: {
-      date: {
-        gte: dayjs(new Date()).toDate(),
+  const rawGigs = (
+    await prisma.gig.findMany({
+      where: {
+        date: {
+          gte: dayjs(new Date()).toDate(),
+        },
       },
-      OR: [
-        { price: null },
-        // Prisma doesn't provide a way to check both null and "" at the same type
-        { imageUrl: null },
-        { imageUrl: "" },
+      include: defaultInclude,
+      orderBy: { date: Prisma.SortOrder.asc },
+    })
+  )
+    // Filtering here because Prisma can't filter gigs with only 1 or 0 bands.
+    .filter(
+      (g) =>
+        g.bands?.length <= 1 ||
+        g.price === null ||
+        g.imageUrl === null ||
+        g.imageUrl === "" ||
         // If price is set to 0, you can't buy a ticket
-        { AND: [{ ticketReservationLink: null }, { price: { not: 0 } }] },
-        { AND: [{ ticketReservationLink: "" }, { price: { not: 0 } }] },
-      ],
-    },
-    include: defaultInclude,
-    orderBy: [{ date: Prisma.SortOrder.asc }],
-  });
+        (g.price !== 0 &&
+          (g.ticketReservationLink === null || g.ticketReservationLink === "")),
+    );
+
   const gigs = rawGigs.map((gig) => ({
     ...gig,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
