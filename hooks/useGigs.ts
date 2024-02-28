@@ -3,7 +3,7 @@ import { getGigs } from "@/domain/Gig/Gig.webService";
 import useSortedGigs from "@/hooks/useSortedGigs";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useWeekGigs({
+export default function useGigs({
   endDate,
   startDate,
 }: {
