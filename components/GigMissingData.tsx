@@ -29,7 +29,7 @@ export default function GigMissingData({ gig }: Props) {
       >
         {!imageUrl && <ListItem>Affiche</ListItem>}
         {hasTicketReservationLink === null && (
-          <ListItem>Présence d&apos;une billeterie à confirmer</ListItem>
+          <ListItem>Présence d&apos;une billetterie à confirmer</ListItem>
         )}
         {!price && price !== 0 && <ListItem>Prix</ListItem>}
         {bands?.length <= 1 && (

@@ -125,7 +125,7 @@ export default function GigInfo({ gig }: Props) {
               </ExternalLink>
             )}
             {hasTicketReservationLink === false && (
-              <Text>Pas de billeterie</Text>
+              <Text>Pas de billetterie</Text>
             )}
           </Stack>
         </Row>

@@ -338,13 +338,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         )}
 
         <InputLabel display="block">
-          Le concert a-t-il une billeterie ?
+          Le concert a-t-il une billetterie ?
         </InputLabel>
         <InputDescription mb={5}>
-          <>Oui = il y a une billeterie et le lien est connu</>
+          <>Oui = il y a une billetterie et le lien est connu</>
           <br />
-          Inconnu = on ne sait pas s&apos;il y aura une billeterie ou pas
-          <br /> Non = il n&apos;y a pas de billeterie
+          Inconnu = on ne sait pas s&apos;il y aura une billetterie ou pas
+          <br /> Non = il n&apos;y a pas de billetterie
         </InputDescription>
         <SegmentedControl
           size="xs"
