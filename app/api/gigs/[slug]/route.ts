@@ -75,8 +75,9 @@ export async function PUT(request: NextRequest) {
       toCreateBands.map(async (band) => {
         const createdBand = await prisma.band.create({
           data: {
-            name: band.name,
+            isLocal: band.isLocal,
             genres: { connect: band.genres.map((g) => ({ id: g })) },
+            name: band.name,
           },
         });
         return { ...createdBand, order: band.order };

@@ -173,8 +173,9 @@ export async function POST(request: NextRequest) {
         causingErrorBand = band;
         const createdBand = await prisma.band.create({
           data: {
-            name: band.name,
             genres: { connect: band.genres.map((g) => ({ id: g })) },
+            isLocal: band.isLocal,
+            name: band.name,
           },
         });
         return { ...createdBand, order: band.order };
