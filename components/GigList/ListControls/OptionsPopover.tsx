@@ -1,5 +1,6 @@
 import GenreSelect from "@/components/GenreSelect";
 import NotSafePlaceIcon from "@/components/NotSafePlaceIcon";
+import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import {
   ActionIcon,
@@ -13,9 +14,16 @@ import {
   Popover,
   Stack,
   Text,
+  Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
-import { IconDeselect, IconSelectAll, IconX } from "@tabler/icons-react";
+import {
+  IconDeselect,
+  IconHomeCancel,
+  IconSelectAll,
+  IconX,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -26,6 +34,7 @@ type Props = {
 
 export default function OptionsPopover({ genres, places }: Props) {
   const { status } = useSession();
+  const theme = useMantineTheme();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
   const {
     displayNotSafePlaces,
@@ -134,35 +143,48 @@ export default function OptionsPopover({ genres, places }: Props) {
                 {areAllPlacesIncluded ? "Masquer toutes" : "Afficher toutes"}
               </Button>
             </Flex>
-            {places.map((place) => (
-              <Checkbox
-                key={place.id}
-                checked={!excludedPlaces.includes(place.id)}
-                label={
-                  <Group gap={4} style={{ alignItems: "center" }}>
-                    <Box>{place.name} </Box>
-                    {!place.isSafe && <NotSafePlaceIcon size={14} />}
-                  </Group>
-                }
-                size="xs"
-                onChange={(event) => {
-                  const checked = event.currentTarget.checked;
-                  if (checked) {
-                    setExcludedPlaces([
-                      ...new Set([
-                        ...excludedPlaces.filter(
-                          (placeId) => placeId !== place.id,
-                        ),
-                      ]),
-                    ]);
-                  } else {
-                    setExcludedPlaces([
-                      ...new Set([...excludedPlaces, place.id]),
-                    ]);
+            {places
+              .sort((p1) => (p1.isClosed ? 1 : -1))
+              .map((place) => (
+                <Checkbox
+                  key={place.id}
+                  checked={!excludedPlaces.includes(place.id)}
+                  label={
+                    <Group gap={4} style={{ alignItems: "center" }}>
+                      <Box>
+                        {place.name}
+                        {place.city !== MAIN_CITY ? ` (${place.city})` : ""}
+                      </Box>
+                      {place.isClosed && (
+                        <Tooltip label="Lieu fermé">
+                          <IconHomeCancel
+                            color={theme.colors.orange[9]}
+                            size={14}
+                          />
+                        </Tooltip>
+                      )}
+                      {!place.isSafe && <NotSafePlaceIcon size={14} />}
+                    </Group>
                   }
-                }}
-              />
-            ))}
+                  size="xs"
+                  onChange={(event) => {
+                    const checked = event.currentTarget.checked;
+                    if (checked) {
+                      setExcludedPlaces([
+                        ...new Set([
+                          ...excludedPlaces.filter(
+                            (placeId) => placeId !== place.id,
+                          ),
+                        ]),
+                      ]);
+                    } else {
+                      setExcludedPlaces([
+                        ...new Set([...excludedPlaces, place.id]),
+                      ]);
+                    }
+                  }}
+                />
+              ))}
           </Stack>
 
           <Button onClick={resetPreferences}>Réinitialiser tout</Button>

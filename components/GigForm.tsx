@@ -61,6 +61,7 @@ import {
   hasTicketLinkBoolToFormValue,
   hasTicketLinkFormValueToBool,
 } from "@/domain/Gig/Gig.service";
+import { MAIN_CITY } from "@/domain/Place/constants";
 
 const { FESTIVAL, GIG } = GigType;
 
@@ -262,9 +263,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 ?.sort((p1) => (p1.isClosed ? 1 : -1))
                 .map((place) => ({
                   value: place.id,
-                  label: `${place.name} (${place.city}) ${
-                    place.isClosed ? " (fermé)" : ""
-                  }`,
+                  label: `${place.name} ${
+                    place.city !== MAIN_CITY ? `(${place.city})` : ""
+                  } ${place.isClosed ? " (fermé)" : ""}`,
                   disabled: place.isClosed,
                 }))}
               style={{ flex: 1 }}

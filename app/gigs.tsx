@@ -53,7 +53,7 @@ export default function Gigs() {
   ]);
 
   const filteredPlaces = places?.filter(
-    (p) => (displayNotSafePlaces || p.isSafe) && !p.isClosed,
+    (p) => displayNotSafePlaces || p.isSafe,
   );
 
   return (
