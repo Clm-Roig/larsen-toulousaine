@@ -1,9 +1,6 @@
 import GenreBadge from "@/components/GenreBadge";
 import Price from "@/components/Price";
-import {
-  getBandNames,
-  getSortedUniqueBandGenres,
-} from "@/domain/Band/Band.service";
+import { getSortedUniqueBandGenres } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import dayjs from "dayjs";
 import { MAIN_CITY } from "@/domain/Place/constants";
@@ -16,6 +13,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import GigMissingData from "@/components/GigMissingData";
+import { getGigTitle } from "@/domain/Gig/Gig.service";
 
 type Props = {
   displayDate: boolean;
@@ -37,7 +35,7 @@ export default function GigCompactInfo({
   const theme = useMantineTheme();
   const { bands, date, place, price } = gig;
   const bandGenres = getSortedUniqueBandGenres(bands);
-  const bandNames = getBandNames(bands);
+  const gigTitle = getGigTitle(gig);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
   return (
     <Stack gap={8}>
@@ -56,7 +54,7 @@ export default function GigCompactInfo({
           transition: `font-size ${theme.other.transitionDuration}`,
         }}
       >
-        {bandNames}
+        {gigTitle}
       </Title>
       {displayMissingDataOnly ? (
         <GigMissingData gig={gig} />

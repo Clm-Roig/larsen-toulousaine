@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Box, Flex, Stack, Text, Title, Anchor, Skeleton } from "@mantine/core";
-import { getBandNames } from "@/domain/Band/Band.service";
 import { getGigImgWidth } from "@/domain/image";
 import {
   getGig,
@@ -22,6 +21,7 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { Gig } from "@prisma/client";
 import ConditionnalButtonLink from "@/components/ConditionnalButtonLink";
 import GigImgOverlay from "@/components/GigImgOverlay";
+import { getGigTitle } from "@/domain/Gig/Gig.service";
 
 type Props = {
   gigSlug: string;
@@ -93,17 +93,17 @@ const GigPage = ({ gigSlug }: Props) => {
     );
   }
 
-  const { bands, imageUrl, isCanceled, isSoldOut } = gig || {};
-  const bandNames = getBandNames(bands || []);
+  const { imageUrl, isCanceled, isSoldOut } = gig || {};
+  const gigTitle = getGigTitle(gig);
 
   return (
     <Box pos="relative">
-      {bandNames?.length > 0 && (
+      {gigTitle && (
         <Title
           order={1}
           size={isXSmallScreen ? "h3" : isSmallScreen ? "h2" : "h1"}
         >
-          {bandNames}
+          {gigTitle}
         </Title>
       )}
       {status === "authenticated" && (

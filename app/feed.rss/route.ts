@@ -40,10 +40,11 @@ export async function GET() {
 
   cleanedGigs.map((gig) => {
     feed.item({
-      title:
-        dayjs.tz(gig.date).format("DD/MM/YYYY") +
-        " : " +
-        getBandNames(gig.bands),
+      title: gig.name
+        ? `${gig.name} ${dayjs.tz(gig.date).format("YYYY")}`
+        : `${dayjs.tz(gig.date).format("DD/MM/YYYY")} : ${getBandNames(
+            gig.bands,
+          )}`,
       date: gig.createdAt,
       description: getGigRSSFeedDescription(gig),
       url: gig.slug,

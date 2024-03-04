@@ -1,44 +1,74 @@
-import { getSortedGenres } from "@/domain/Band/Band.service";
+import { getBandNames, getSortedGenres } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize } from "@/utils/utils";
 import { Band, Gig } from "@prisma/client";
 import dayjs from "@/lib/dayjs";
 
+/**
+ * If the gig as a name, the slug is "YEAR_NAME" (ex: 2024_echos-et-merveilles)
+ * Else, the slug is "DAY-MONTH-YEAR_BANDNAMES" (ex: 05-01-2024_metallica-ghost)
+ */
 export const computeGigSlug = (gig: {
   bands: { name: Band["name"] }[];
   date: Gig["date"];
+  name: Gig["name"];
 }): string => {
-  const { bands, date } = gig;
-  const dateString = dayjs(date).tz("Europe/Paris").format("DD-MM-YYYY");
-  const bandsString = bands
-    .map((band) => band.name.toLowerCase().replaceAll(" ", "-"))
-    .join("_");
+  const normalizeString = (str: string) =>
+    str.toLowerCase().replaceAll(" ", "-");
+  const { bands, date, name } = gig;
+  const dateObj = dayjs(date).tz("Europe/Paris");
+  if (name) {
+    return `${dateObj.format("YYYY")}_${normalizeString(name)}`;
+  }
+  const dateString = dateObj.format("DD-MM-YYYY");
+  const bandsString = bands.map((band) => normalizeString(band.name)).join("_");
   return dateString + "_" + bandsString;
 };
 
 export const getDataFromGigSlug = (
   slug: string,
-): { bandNames: string[]; date: string; dateObject: Date } => {
+): {
+  bandNames: string[];
+  date: string;
+  dateObject: Date;
+  name: string | null;
+} => {
   const splittedSlug = slug.split("_");
-  const bandNames = splittedSlug.slice(1).map((bandName) =>
-    bandName
+  const date = splittedSlug[0];
+
+  const slugPartToString = (slug: string): string =>
+    slug
       .split("-")
       .map((w) => capitalize(w))
-      .join(" "),
-  );
-  const date = splittedSlug[0];
+      .join(" ");
+
+  // 4 characters = gig year = gig has a name (it's a festival)
+  const name = date.length === 4 ? slugPartToString(splittedSlug[1]) : null;
+
+  const bandNames = splittedSlug
+    .slice(1)
+    .map((bandName) => slugPartToString(bandName));
   const parts = date.split("-");
   const year = parseInt(parts[2], 10);
   const month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date object
   const day = parseInt(parts[0], 10);
   const dateObject = new Date(year, month, day);
-  return { bandNames, date, dateObject };
+  return { bandNames, date, dateObject, name };
 };
 
 export const getGigTitleFromGigSlug = (slug: string) => {
-  const { date, bandNames } = getDataFromGigSlug(slug);
-  return date + " - " + bandNames.join(V_SEPARATOR);
+  const { date, bandNames, name } = getDataFromGigSlug(slug);
+  if (name) {
+    return `${name} ${date}`;
+  } else {
+    return `${date} - ${bandNames.join(V_SEPARATOR)}`;
+  }
+};
+
+export const getGigTitle = (gig: GigWithBandsAndPlace): string => {
+  const { bands, name } = gig;
+  return name !== null ? name : getBandNames(bands);
 };
 
 /**
@@ -71,14 +101,16 @@ export const getGigCalendarDescription = (gig: Gig): string => {
 
 export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   let description = "";
-  const { bands, place, price, ticketReservationLink } = gig;
+  const { bands, name, place, price, ticketReservationLink } = gig;
 
   const getNewLine = () => {
     return description === "" ? "" : "<br />";
   };
 
-  // Bands
-  if (bands) {
+  // Name or bands
+  if (name) {
+    description += name;
+  } else if (bands) {
     const formattedBands = bands.map(
       (b) =>
         `${b.name} (${getSortedGenres(b.genres)
@@ -138,5 +170,6 @@ export const hasTicketLinkBoolToFormValue = (
   if (value === null || value === undefined) return "";
   if (value) return "true";
   if (!value) return "false";
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   throw new Error("Unexpected value: " + value);
 };

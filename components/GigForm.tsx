@@ -23,6 +23,7 @@ import {
   VisuallyHidden,
   InputLabel,
   InputDescription,
+  Radio,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
 import {
@@ -33,7 +34,7 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
@@ -47,15 +48,21 @@ import {
   getGigByDateAndPlaceId,
 } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import {
+  GigType,
+  GigWithBandsAndPlace,
+  gigTypeToString,
+} from "@/domain/Gig/Gig.type";
 import { DatePickerInput } from "@mantine/dates";
 import OptimizedImage from "@/components/OptimizedImage";
 import BandFields from "@/components/BandFields";
-import { getBandNames } from "@/domain/Band/Band.service";
 import {
+  getGigTitle,
   hasTicketLinkBoolToFormValue,
   hasTicketLinkFormValueToBool,
 } from "@/domain/Gig/Gig.service";
+
+const { FESTIVAL, GIG } = GigType;
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
@@ -66,6 +73,10 @@ type Props = {
 };
 
 export default function GigForm({ gig, isLoading, onSubmit }: Props) {
+  const [gigType, setGigType] = useState<GigType>(
+    gig?.name && gig?.endDate ? FESTIVAL : GIG,
+  );
+  const gigTypeString = useMemo(() => gigTypeToString(gigType), [gigType]);
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -76,17 +87,21 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   });
 
   const form = useForm<
-    Omit<CreateGigArgs, "date"> & {
+    // endDate is managed using dateRange array
+    Omit<CreateGigArgs, "date" | "endDate"> & {
       date: Date | null;
+      dateRange: [Date | null, Date | null];
     }
   >({
     validateInputOnBlur: true,
     initialValues: {
       bands: [],
       date: null,
+      dateRange: [null, null],
       description: null,
       hasTicketReservationLink: null,
       imageUrl: null,
+      name: null,
       placeId: "",
       ticketReservationLink: null,
       title: null,
@@ -94,13 +109,18 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       price: null,
     },
     validate: {
-      date: (value) => (value ? null : "La date du concert est requise."),
+      date: (value) =>
+        !value && gigType === GIG ? "La date du concert est requise." : null,
       imageUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       placeId: (value) => (value ? null : "Le lieu du concert est requis."),
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
       },
+      name: (value) =>
+        !value && gigType === FESTIVAL
+          ? "Le nom est requis pour un festival."
+          : null,
       ticketReservationLink: (value, values) =>
         !value && values.hasTicketReservationLink === true
           ? "Le lien de réservation est requis."
@@ -114,11 +134,17 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     data: samePlaceSameDayGig,
     isFetching: isLoadingSamePlaceSameDayGig,
   } = useQuery<GigWithBandsAndPlace | null, Error>({
-    queryKey: ["samePlaceSameDayGig", form.values.date, form.values.placeId],
+    queryKey: [
+      "samePlaceSameDayGig",
+      form.values.date,
+      form.values.placeId,
+      form.values.dateRange,
+    ],
     queryFn: async () => {
-      const { date, placeId, id } = form.values;
-      if (date && placeId) {
-        const res = await getGigByDateAndPlaceId(date, placeId);
+      const { date, dateRange, placeId, id } = form.values;
+      const startDate = dateRange[0] || date;
+      if (startDate && placeId) {
+        const res = await getGigByDateAndPlaceId(startDate, placeId);
         if (res?.id === id) {
           return null;
         }
@@ -140,6 +166,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             key: band.id,
           })),
         date: new Date(gig.date),
+        dateRange: gig.endDate
+          ? [new Date(gig.date), new Date(gig.endDate)]
+          : [null, null],
         slug: "", // slug will be recomputed when saving the gig
         hasTicketReservationLink: gig.hasTicketReservationLink,
       });
@@ -156,14 +185,14 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
   const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const { dateRange, ...cleanedFormValues } = form.values;
+    const { bands, date, price } = cleanedFormValues;
     onSubmit({
-      ...form.values,
-      bands: form.values.bands.map((b, i) => ({ ...b, order: i + 1 })),
-      date: form.values.date as Date, // date can't be null if the form is submitted
-      price:
-        form.values.price || form.values.price === 0
-          ? Number(form.values.price)
-          : null,
+      ...cleanedFormValues,
+      bands: bands.map((b, i) => ({ ...b, order: i + 1 })),
+      date: dateRange[0] ? dateRange[0] : (date as Date),
+      endDate: dateRange[1],
+      price: price || price === 0 ? Number(price) : null,
     });
   };
 
@@ -176,18 +205,52 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     form.insertListItem("bands", newBand);
   };
 
+  const handleGigTypeChange = (value: string) => {
+    form.setFieldValue("dateRange", [null, null]);
+    form.setFieldValue("date", null);
+    setGigType(value as GigType);
+  };
+
   return (
     <form onSubmit={handleOnSubmit}>
       <Box pos="relative" p="xs">
         <LoadingOverlay visible={isLoading} />
         <Stack>
           <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
+            <Radio.Group
+              value={gigType}
+              onChange={handleGigTypeChange}
+              name="gigType"
+              label="Type d'évènement"
+              flex={1}
+              withAsterisk
+            >
+              <Group mt="md">
+                <Radio value={GIG} label={gigTypeToString(GIG)} />
+                <Radio value={FESTIVAL} label={gigTypeToString(FESTIVAL)} />
+              </Group>
+            </Radio.Group>
+
+            {gigType === FESTIVAL && (
+              <TextInput
+                flex={2}
+                label="Nom du festival"
+                required
+                {...form.getInputProps("name")}
+              />
+            )}
+          </Flex>
+
+          <Flex gap="sm" direction={{ base: "column", xs: "row" }}>
             <DatePickerInput
               label="Date"
               valueFormat="DD MMMM YYYY"
               required
               style={{ flex: 1 }}
-              {...form.getInputProps("date")}
+              type={gigType === FESTIVAL ? "range" : "default"}
+              {...form.getInputProps(
+                gigType === FESTIVAL ? "dateRange" : "date",
+              )}
             />
 
             <Select
@@ -199,7 +262,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 ?.sort((p1) => (p1.isClosed ? 1 : -1))
                 .map((place) => ({
                   value: place.id,
-                  label: place.name + (place.isClosed ? " (fermé)" : ""),
+                  label: `${place.name} (${place.city}) ${
+                    place.isClosed ? " (fermé)" : ""
+                  }`,
                   disabled: place.isClosed,
                 }))}
               style={{ flex: 1 }}
@@ -207,12 +272,12 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             />
           </Flex>
           {isLoadingSamePlaceSameDayGig &&
-            form.values.date &&
+            (form.values.date || form.values.dateRange[0]) &&
             form.values.placeId && (
               <Center>
                 <Group>
                   <Loader type="dots" />
-                  <Text fs="italic">{`Vérification de la présence d'un concert...`}</Text>
+                  <Text fs="italic">{`Vérification de la présence d'un ${gigTypeString}...`}</Text>
                 </Group>
               </Center>
             )}
@@ -224,7 +289,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 icon={<IconInfoCircle />}
                 p="xs"
               >
-                <b>{getBandNames(samePlaceSameDayGig.bands)}</b>
+                <b>{getGigTitle(samePlaceSameDayGig)}</b>
                 <br />
                 <i>
                   Vous pouvez tout de même continuer à ajouter un nouveau
@@ -337,7 +402,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           />
         )}
 
-        <InputLabel display="block">
+        <InputLabel display="block" mt="sm">
           Le concert a-t-il une billetterie ?
         </InputLabel>
         <InputDescription mb={5}>
@@ -403,12 +468,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           label="Prix"
           description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
           decimalSeparator=","
+          mt="sm"
           {...form.getInputProps("price")}
         />
 
         <Group justify="flex-end" mt="md">
           <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
-            {form.values.id ? "Éditer le concert" : "Ajouter le concert"}
+            {`${form.values.id ? "Éditer" : "Ajouter"} le ${gigTypeString}`}
           </Button>
         </Group>
       </Box>

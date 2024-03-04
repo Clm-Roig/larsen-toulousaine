@@ -1,6 +1,11 @@
-import { getBandNames } from "@/domain/Band/Band.service";
-import { getGigCalendarDescription } from "@/domain/Gig/Gig.service";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import {
+  getGigCalendarDescription,
+  getGigTitle,
+} from "@/domain/Gig/Gig.service";
+import {
+  GigWithBandsAndPlace,
+  gigToGigTypeString,
+} from "@/domain/Gig/Gig.type";
 import { useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import {
   AddToCalendarButton,
@@ -19,10 +24,11 @@ export default function AddGigToCalendarButton({
   const theme = useMantineTheme();
   const computedColorSchem = useComputedColorScheme("light");
   const style = `--btn-underline: ${theme.colors.primary[6]} !important;`;
-  const { bands, date, imageUrl, place } = gig || {};
-  const bandNames = getBandNames(bands || []);
-  const name = `Concert : ${bandNames}`;
-  const iCalName = `Concert ${bandNames}`; // remove the ":" for file name
+  const { date, endDate, imageUrl, place } = gig || {};
+  const gigTitle = getGigTitle(gig);
+  const gigType = gigToGigTypeString(gig);
+  const name = `${gigType} : ${gigTitle}`;
+  const iCalName = `${gigType} ${gigTitle}`; // remove the ":" for file name
   return (
     <AddToCalendarButton
       label="Ajouter à l'agenda"
@@ -51,7 +57,7 @@ export default function AddGigToCalendarButton({
           : undefined
       }
       startDate={dayjs(date).format("YYYY-MM-DD")}
-      endDate={dayjs(date).format("YYYY-MM-DD")}
+      endDate={dayjs(endDate ? endDate : date).format("YYYY-MM-DD")}
       timeZone="Europe/Paris"
       images={imageUrl ? [imageUrl] : []}
       description={getGigCalendarDescription(gig)}

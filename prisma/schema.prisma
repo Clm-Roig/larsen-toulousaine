@@ -26,6 +26,7 @@ model Gig {
   id                       String        @id @default(cuid())
   title                    String?
   date                     DateTime
+  endDate                  DateTime?
   description              String?
   author                   User          @relation(fields: [authorId], references: [id])
   authorId                 String
@@ -41,6 +42,7 @@ model Gig {
   bands                    BandsOnGigs[]
   price                    Float?
   hasTicketReservationLink Boolean?
+  name                     String?
 }
 
 model User {

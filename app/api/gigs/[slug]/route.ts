@@ -88,7 +88,11 @@ export async function PUT(request: NextRequest) {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { placeId, authorId, ...bodyWithoutPlaceIdAndAuthorId } = body;
-    const slug = computeGigSlug({ bands: bands, date: body.date });
+    const slug = computeGigSlug({
+      bands: bands,
+      date: body.date,
+      name: body.name,
+    });
 
     const prevImageUrl = previousGig?.imageUrl;
     let newImageUrl: string | undefined = prevImageUrl ?? undefined;

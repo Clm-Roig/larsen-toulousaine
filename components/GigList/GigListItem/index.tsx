@@ -1,7 +1,6 @@
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import OptimizedImage from "@/components/OptimizedImage";
-import { getBandNames } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import usePreferences from "@/hooks/usePreferences";
 import { hasPassed } from "@/utils/date";
@@ -22,6 +21,7 @@ import Link from "next/link";
 import useScreenSize from "@/hooks/useScreenSize";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import GigCompactInfo from "@/components/GigCompactInfo";
+import { getGigTitle } from "@/domain/Gig/Gig.service";
 
 type Props = {
   displayDate?: boolean;
@@ -58,8 +58,8 @@ export default function GigListItem({
     ? 5
     : 6;
   const { hovered, ref } = useHover<HTMLDivElement>();
-  const { date, bands, isCanceled, isSoldOut, imageUrl, slug } = gig;
-  const bandNames = getBandNames(bands);
+  const { date, endDate, isCanceled, isSoldOut, imageUrl, slug } = gig;
+  const gigTitle = getGigTitle(gig);
   return (
     <Box
       ref={ref}
@@ -87,11 +87,13 @@ export default function GigListItem({
             pos="relative"
           >
             {displayDate && (
-              <Badge color="primary" size="lg" w={100}>
+              <Badge color="primary" size="lg" w={100} h="fit-content">
                 {dayjs(date).format("ddd DD/MM")}
+                <br />
+                {endDate && dayjs(endDate).format("ddd DD/MM")}
               </Badge>
             )}
-            <OptimizedImage src={imageUrl} alt={bandNames} w={100} />
+            <OptimizedImage src={imageUrl} alt={gigTitle} w={100} />
             <GigImgOverlay gig={gig} />
           </Stack>
         }

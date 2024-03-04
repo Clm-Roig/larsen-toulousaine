@@ -36,6 +36,7 @@ export default function GigInfo({ gig }: Props) {
     bands,
     description,
     date,
+    endDate,
     hasTicketReservationLink,
     isCanceled,
     isSoldOut,
@@ -48,6 +49,10 @@ export default function GigInfo({ gig }: Props) {
       ? `${place?.address} - ${place?.city?.toUpperCase()}`
       : undefined;
   const iconProps = { size: isXSmallScreen ? 20 : 28 };
+  const formatDate = (date: Date) =>
+    capitalize(
+      dayjs(date).format(isXSmallScreen ? "DD/MM/YYYY" : "dddd DD MMMM YYYY"),
+    );
 
   return (
     <Flex direction="column" gap="md" w="100%">
@@ -69,11 +74,9 @@ export default function GigInfo({ gig }: Props) {
         <IconCalendar {...iconProps} />
         <Divider orientation="vertical" />
         <Badge size="lg">
-          {capitalize(
-            dayjs(date).format(
-              isXSmallScreen ? "DD/MM/YYYY" : "dddd DD MMMM YYYY",
-            ),
-          )}
+          {endDate
+            ? `${formatDate(date)} - ${formatDate(endDate)}`
+            : formatDate(date)}
         </Badge>
         {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
       </Row>
@@ -82,29 +85,31 @@ export default function GigInfo({ gig }: Props) {
         <IconMusic {...iconProps} />
         <Divider orientation="vertical" />
         <Stack gap={4}>
-          {bands?.map((band) => (
-            <Flex
-              key={band.id}
-              rowGap={0}
-              columnGap="xs"
-              wrap="wrap"
-              align="center"
-            >
-              <Text>{band.name}</Text>
-              {getSortedGenres(band.genres).map((genre) => (
-                <GenreBadge key={genre?.id} genre={genre} />
-              ))}
-              {band.isLocal && (
-                <Badge
-                  variant="outline"
-                  p={4}
-                  leftSection={<IconHome width={"1rem"} />}
-                >
-                  Local
-                </Badge>
-              )}
-            </Flex>
-          ))}
+          {bands
+            ?.sort((b1, b2) => b1.order - b2.order)
+            .map((band) => (
+              <Flex
+                key={band.id}
+                rowGap={0}
+                columnGap="xs"
+                wrap="wrap"
+                align="center"
+              >
+                <Text>{band.name}</Text>
+                {getSortedGenres(band.genres).map((genre) => (
+                  <GenreBadge key={genre?.id} genre={genre} />
+                ))}
+                {band.isLocal && (
+                  <Badge
+                    variant="outline"
+                    p={4}
+                    leftSection={<IconHome width={"1rem"} />}
+                  >
+                    Local
+                  </Badge>
+                )}
+              </Flex>
+            ))}
         </Stack>
       </Row>
 

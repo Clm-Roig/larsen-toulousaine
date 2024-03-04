@@ -181,7 +181,11 @@ export async function POST(request: NextRequest) {
       }),
     );
     const toConnectBands = bands.filter((b) => b.id);
-    const slug = computeGigSlug({ bands: bands, date: body.date });
+    const slug = computeGigSlug({
+      bands: bands,
+      date: body.date,
+      name: body.name,
+    });
 
     let blobImageUrl: string | undefined = undefined;
     if (imageUrl) {

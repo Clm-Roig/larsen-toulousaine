@@ -2,14 +2,14 @@
 
 import React from "react";
 import { Box, Card, Stack, Text, Group, useMantineTheme } from "@mantine/core";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import {
+  GigWithBandsAndPlace,
+  gigToGigTypeString,
+} from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "dayjs";
 import Link from "next/link";
-import {
-  getBandNames,
-  getSortedUniqueBandGenres,
-} from "@/domain/Band/Band.service";
+import { getSortedUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
@@ -24,6 +24,7 @@ import GenreBadge from "@/components/GenreBadge";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import GigMissingData from "@/components/GigMissingData";
+import { getGigTitle } from "@/domain/Gig/Gig.service";
 
 type Props = {
   displayMissingDataOnly?: boolean;
@@ -34,8 +35,9 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const theme = useMantineTheme();
   const { hovered, ref } = useHover<HTMLAnchorElement>();
   const { grayOutPastGigs } = usePreferences();
-  const { bands, date, isCanceled, isSoldOut, place, price } = gig;
-  const bandNames = getBandNames(bands);
+  const { bands, date, endDate, isCanceled, isSoldOut, place, price } = gig;
+  const gigType = gigToGigTypeString(gig);
+  const gigTitle = getGigTitle(gig);
   const bandGenres = getSortedUniqueBandGenres(bands);
   return (
     <Box
@@ -79,7 +81,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
             <OptimizedImage
               src={gig.imageUrl}
               h={getGigImgHeight(CARD_WIDTH)}
-              alt={"Concert " + bandNames}
+              alt={`${gigType} ${gigTitle}`}
               fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
                 getGigImgHeight(CARD_WIDTH),
               )}?text=.`}
@@ -91,7 +93,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
         <Stack justify="space-between" mt="md" gap="xs" dir="col" h="100%">
           <Stack gap="xs">
             <Text fw="bold" lineClamp={2} lh={1.25}>
-              {bandNames}
+              {gigTitle}
             </Text>
             {!displayMissingDataOnly && (
               <Group gap={4}>
@@ -122,7 +124,10 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
       </Card>
 
       <TopMenuBox position="left" px={8} py={4}>
-        <Text c="white">{dayjs(date).format("ddd DD/MM")}</Text>
+        <Text c="white">
+          {dayjs(date).format("ddd DD/MM")}
+          {endDate && " - " + dayjs(endDate).format("ddd DD/MM")}
+        </Text>
       </TopMenuBox>
 
       <TopMenuBox position="right">
