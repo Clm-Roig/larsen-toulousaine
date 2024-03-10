@@ -16,7 +16,8 @@ function ListItem(props: PropsWithChildren) {
 }
 
 export default function GigMissingData({ gig }: Props) {
-  const { bands, hasTicketReservationLink, imageUrl, price } = gig;
+  const { bands, facebookEventUrl, hasTicketReservationLink, imageUrl, price } =
+    gig;
   return (
     <>
       <List
@@ -32,8 +33,9 @@ export default function GigMissingData({ gig }: Props) {
           <ListItem>Présence d&apos;une billetterie à confirmer</ListItem>
         )}
         {!price && price !== 0 && <ListItem>Prix</ListItem>}
-        {bands?.length <= 1 && (
-          <ListItem>Groupe(s) potentiellement manquant(s)</ListItem>
+        {bands?.length <= 1 && <ListItem>Groupe(s)</ListItem>}
+        {!facebookEventUrl && (
+          <ListItem>URL vers l&apos;évènement Facebook</ListItem>
         )}
       </List>
     </>

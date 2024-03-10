@@ -43,6 +43,7 @@ export async function GET() {
         g.price === null ||
         g.imageUrl === null ||
         g.imageUrl === "" ||
+        g.facebookEventUrl === null ||
         g.hasTicketReservationLink === null,
     );
 
