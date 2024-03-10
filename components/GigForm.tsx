@@ -100,14 +100,15 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       date: null,
       dateRange: [null, null],
       description: null,
+      facebookEventUrl: null,
       hasTicketReservationLink: null,
       imageUrl: null,
       name: null,
       placeId: "",
+      price: null,
+      slug: "",
       ticketReservationLink: null,
       title: null,
-      slug: "",
-      price: null,
     },
     validate: {
       date: (value) =>
@@ -385,93 +386,100 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
         <Divider my="md" />
 
-        <TextInput
-          label="URL de l'affiche du concert"
-          description={`URL de l'image de couverture de l'évènement Facebook 
-        (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio ${GIG_IMG_RATIO_STRING}.`}
-          {...form.getInputProps("imageUrl")}
-        />
-
-        {isValidUrl(form.values.imageUrl) && (
-          <OptimizedImage
-            mah={200}
-            maw={getGigImgWidth(200)}
-            src={form.values.imageUrl}
-            alt="Affiche du concert"
-            m={"auto"}
-            mt={"sm"}
-          />
-        )}
-
-        <InputLabel display="block" mt="sm">
-          Le concert a-t-il une billetterie ?
-        </InputLabel>
-        <InputDescription mb={5}>
-          <>Oui = il y a une billetterie et le lien est connu</>
-          <br />
-          Inconnu = on ne sait pas s&apos;il y aura une billetterie ou pas
-          <br /> Non = il n&apos;y a pas de billetterie
-        </InputDescription>
-        <SegmentedControl
-          size="xs"
-          data={[
-            {
-              value: "true",
-              label: (
-                <>
-                  <IconCheck color="green" />
-                  <VisuallyHidden>Oui</VisuallyHidden>
-                </>
-              ),
-            },
-            {
-              value: "",
-              label: (
-                <>
-                  <IconQuestionMark />
-                  <VisuallyHidden>Inconnu</VisuallyHidden>
-                </>
-              ),
-            },
-            {
-              value: "false",
-              label: (
-                <>
-                  <IconX color="red" />
-                  <VisuallyHidden>Non</VisuallyHidden>
-                </>
-              ),
-            },
-          ]}
-          {...form.getInputProps("hasTicketReservationLink")}
-          value={hasTicketLinkBoolToFormValue(
-            form.getInputProps("hasTicketReservationLink").value,
-          )}
-          onChange={(value: string) =>
-            form.setFieldValue(
-              "hasTicketReservationLink",
-              hasTicketLinkFormValueToBool(value),
-            )
-          }
-        />
-
-        {!!form.values.hasTicketReservationLink && (
+        <Stack>
           <TextInput
-            label="Lien de réservation des tickets"
-            {...form.getInputProps("ticketReservationLink")}
+            label="URL de l'évènement Facebook"
+            {...form.getInputProps("facebookEventUrl")}
           />
-        )}
 
-        <NumberInput
-          allowNegative={false}
-          suffix="€"
-          decimalScale={2}
-          label="Prix"
-          description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
-          decimalSeparator=","
-          mt="sm"
-          {...form.getInputProps("price")}
-        />
+          <TextInput
+            label="URL de l'affiche du concert"
+            description={`URL de l'image de couverture de l'évènement Facebook 
+        (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio ${GIG_IMG_RATIO_STRING}.`}
+            {...form.getInputProps("imageUrl")}
+          />
+
+          {isValidUrl(form.values.imageUrl) && (
+            <OptimizedImage
+              mah={200}
+              maw={getGigImgWidth(200)}
+              src={form.values.imageUrl}
+              alt="Affiche du concert"
+              m={"auto"}
+            />
+          )}
+
+          <Box>
+            <InputLabel display="block">
+              Le concert a-t-il une billetterie ?
+            </InputLabel>
+            <InputDescription mb={5}>
+              <>Oui = il y a une billetterie et le lien est connu</>
+              <br />
+              Inconnu = on ne sait pas s&apos;il y aura une billetterie ou pas
+              <br /> Non = il n&apos;y a pas de billetterie
+            </InputDescription>
+            <SegmentedControl
+              size="xs"
+              data={[
+                {
+                  value: "true",
+                  label: (
+                    <>
+                      <IconCheck color="green" />
+                      <VisuallyHidden>Oui</VisuallyHidden>
+                    </>
+                  ),
+                },
+                {
+                  value: "",
+                  label: (
+                    <>
+                      <IconQuestionMark />
+                      <VisuallyHidden>Inconnu</VisuallyHidden>
+                    </>
+                  ),
+                },
+                {
+                  value: "false",
+                  label: (
+                    <>
+                      <IconX color="red" />
+                      <VisuallyHidden>Non</VisuallyHidden>
+                    </>
+                  ),
+                },
+              ]}
+              {...form.getInputProps("hasTicketReservationLink")}
+              value={hasTicketLinkBoolToFormValue(
+                form.getInputProps("hasTicketReservationLink").value,
+              )}
+              onChange={(value: string) =>
+                form.setFieldValue(
+                  "hasTicketReservationLink",
+                  hasTicketLinkFormValueToBool(value),
+                )
+              }
+            />
+          </Box>
+
+          {!!form.values.hasTicketReservationLink && (
+            <TextInput
+              label="Lien de réservation des tickets"
+              {...form.getInputProps("ticketReservationLink")}
+            />
+          )}
+
+          <NumberInput
+            allowNegative={false}
+            suffix="€"
+            decimalScale={2}
+            label="Prix"
+            description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
+            decimalSeparator=","
+            {...form.getInputProps("price")}
+          />
+        </Stack>
 
         <Group justify="flex-end" mt="md">
           <Button loading={isLoading} type="submit" disabled={!form.isValid()}>

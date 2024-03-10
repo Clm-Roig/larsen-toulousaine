@@ -52,7 +52,7 @@ export default function EditGig({ gigSlug }: Props) {
   }
 
   return (
-    <Box w={750}>
+    <Box w={800}>
       <GigForm
         gig={gig}
         isLoading={isLoading || isEditPending}

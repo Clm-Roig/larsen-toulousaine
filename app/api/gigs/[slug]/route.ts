@@ -22,6 +22,7 @@ import {
   gigWithBandsAndGenresInclude,
 } from "@/app/api/utils/gigs";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
+import { removeParametersFromUrl } from "@/utils/utils";
 
 export async function GET(
   request: NextRequest,
@@ -87,8 +88,14 @@ export async function PUT(request: NextRequest) {
     // Delete previous band <-> gig relationship
     await prisma.bandsOnGigs.deleteMany({ where: { gigId: body.id } });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { placeId, authorId, ...bodyWithoutPlaceIdAndAuthorId } = body;
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      placeId,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      authorId,
+      facebookEventUrl,
+      ...bodyWithoutPlaceIdAndAuthorId
+    } = body;
     const slug = computeGigSlug({
       bands: bands,
       date: body.date,
@@ -114,6 +121,9 @@ export async function PUT(request: NextRequest) {
       where: { id: body.id },
       data: Prisma.validator<Prisma.GigUpdateInput>()({
         ...bodyWithoutPlaceIdAndAuthorId,
+        facebookEventUrl: facebookEventUrl
+          ? removeParametersFromUrl(facebookEventUrl)
+          : null,
         ticketReservationLink:
           bodyWithoutPlaceIdAndAuthorId.hasTicketReservationLink
             ? bodyWithoutPlaceIdAndAuthorId.ticketReservationLink

@@ -21,6 +21,7 @@ import { downloadAndStoreImage } from "@/app/api/utils/image";
 import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { gigListOrderBy } from "@/app/api/utils/gigs";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
+import { removeParametersFromUrl } from "@/utils/utils";
 
 const defaultInclude = {
   place: true,
@@ -203,10 +204,13 @@ export async function POST(request: NextRequest) {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { placeId, ...bodyWithoutPlaceId } = body;
+    const { placeId, facebookEventUrl, ...bodyWithoutPlaceId } = body;
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
         ...bodyWithoutPlaceId,
+        facebookEventUrl: facebookEventUrl
+          ? removeParametersFromUrl(facebookEventUrl)
+          : null,
         ticketReservationLink: bodyWithoutPlaceId.hasTicketReservationLink
           ? bodyWithoutPlaceId.ticketReservationLink
           : null,

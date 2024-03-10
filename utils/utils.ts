@@ -65,3 +65,6 @@ export const getMetadata = (
     "fb:app_id": fbAppId,
   },
 });
+
+export const removeParametersFromUrl = (url: string): string =>
+  url.split("?")[0];

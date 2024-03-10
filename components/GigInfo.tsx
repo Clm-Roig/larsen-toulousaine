@@ -1,9 +1,19 @@
 import React, { ReactNode } from "react";
-import { Badge, Flex, Stack, Text, Alert, Divider, Group } from "@mantine/core";
+import {
+  Badge,
+  Flex,
+  Stack,
+  Text,
+  Alert,
+  Divider,
+  Group,
+  ActionIcon,
+} from "@mantine/core";
 import dayjs from "dayjs";
 import { capitalize, isMobile } from "@/utils/utils";
 import ExternalLink from "@/components/ExternalLink";
 import {
+  IconBrandFacebook,
   IconCalendar,
   IconCurrencyEuro,
   IconHome,
@@ -19,6 +29,7 @@ import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import NotSafePlaceIcon from "./NotSafePlaceIcon";
+import Link from "next/link";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -37,6 +48,7 @@ export default function GigInfo({ gig }: Props) {
     description,
     date,
     endDate,
+    facebookEventUrl,
     hasTicketReservationLink,
     isCanceled,
     isSoldOut,
@@ -78,6 +90,16 @@ export default function GigInfo({ gig }: Props) {
             ? `${formatDate(date)} - ${formatDate(endDate)}`
             : formatDate(date)}
         </Badge>
+        {facebookEventUrl && (
+          <ActionIcon
+            component={Link}
+            target="_blank"
+            href={facebookEventUrl}
+            aria-label="Lien vers l'évènement Facebook"
+          >
+            <IconBrandFacebook />
+          </ActionIcon>
+        )}
         {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
       </Row>
 
