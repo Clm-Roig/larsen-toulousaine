@@ -86,7 +86,6 @@ export default function ListControls({
           ]}
           onChange={(data) => (data ? setViewType(data as ViewType) : null)}
           value={viewType}
-          pl={0}
         />
       </Flex>
     </SimpleGrid>
