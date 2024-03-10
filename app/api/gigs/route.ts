@@ -64,6 +64,12 @@ export async function GET(request: NextRequest) {
             },
           },
           {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
+          },
+          {
             place: {
               ...(!user ? { isSafe: true } : {}),
               name: {
