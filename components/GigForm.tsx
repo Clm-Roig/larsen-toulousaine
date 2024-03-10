@@ -369,6 +369,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                             }}
                             isLocalProps={{
                               disabled: !!form.values.bands[index].id,
+                              checked: !!form.getInputProps(
+                                `bands.${index}.isLocal`,
+                              ).value,
                               ...form.getInputProps(`bands.${index}.isLocal`),
                             }}
                             withShortIsLocalDescription
