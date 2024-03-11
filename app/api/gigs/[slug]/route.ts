@@ -23,6 +23,7 @@ import {
 } from "@/app/api/utils/gigs";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import { removeParametersFromUrl } from "@/utils/utils";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   request: NextRequest,
@@ -145,6 +146,9 @@ export async function PUT(request: NextRequest) {
       }),
       include: { bands: true },
     });
+    if (createdBands?.length > 0) {
+      revalidatePath("bands");
+    }
     return NextResponse.json(updatedGig);
   } catch (error) {
     // eslint-disable-next-line no-console

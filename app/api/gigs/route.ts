@@ -22,6 +22,7 @@ import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { gigListOrderBy } from "@/app/api/utils/gigs";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import { removeParametersFromUrl } from "@/utils/utils";
+import { revalidatePath } from "next/cache";
 
 const defaultInclude = {
   place: true,
@@ -237,6 +238,9 @@ export async function POST(request: NextRequest) {
       }),
       include: { bands: true },
     });
+    if (createdBands?.length > 0) {
+      revalidatePath("bands");
+    }
     return NextResponse.json(createdGig);
   } catch (error) {
     // eslint-disable-next-line no-console
