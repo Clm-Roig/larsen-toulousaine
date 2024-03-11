@@ -115,6 +115,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         !value && gigType === GIG ? "La date du concert est requise." : null,
       imageUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
+      facebookEventUrl: (value) =>
+        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       placeId: (value) => (value ? null : "Le lieu du concert est requis."),
       bands: {
         name: (value) => (value ? null : "Le nom est requis."),
