@@ -140,7 +140,6 @@ export async function PUT(request: NextRequest) {
           })),
         },
         imageUrl: newImageUrl,
-        author: { connect: { id: user.id } },
         slug: slug,
         place: { connect: { id: body.placeId } },
       }),
