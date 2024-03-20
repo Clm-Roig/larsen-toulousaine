@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/authOptions";
 import { EditGigArgs } from "@/domain/Gig/Gig.webService";
 import {
   IMG_MAX_HEIGHT,

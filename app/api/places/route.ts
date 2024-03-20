@@ -7,9 +7,9 @@ import {
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
+import { authOptions } from "@/utils/authOptions";
 
 export async function GET() {
   const places = await prisma.place.findMany({

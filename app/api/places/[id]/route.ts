@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/authOptions";
 import { EditPlaceArgs } from "@/domain/Place/Place.webService";
 import {
   missingBodyError,

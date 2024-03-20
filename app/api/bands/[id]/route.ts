@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/authOptions";
 import { EditBandArgs } from "@/domain/Band/Band.webService";
 import { cantDeleteBandBecauseInGigError } from "@/domain/Band/errors";
 import {

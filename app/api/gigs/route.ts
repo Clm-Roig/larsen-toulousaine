@@ -4,7 +4,7 @@ import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/authOptions";
 import {
   missingBodyError,
   mustBeAuthenticatedError,
