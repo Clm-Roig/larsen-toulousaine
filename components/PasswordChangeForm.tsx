@@ -30,8 +30,8 @@ export default function PasswordChangeForm({ isLoading, onSubmit }: Props) {
         !value
           ? "Veuillez confirmer votre nouveau mot de passe."
           : values["newPassword"] !== value
-          ? "Les deux mots de passe doivent correspondre."
-          : null,
+            ? "Les deux mots de passe doivent correspondre."
+            : null,
     },
     validateInputOnBlur: true,
   });

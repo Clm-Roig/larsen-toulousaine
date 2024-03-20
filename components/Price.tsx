@@ -24,10 +24,10 @@ export default function Price({ size = "md", value }: Props) {
               size === "xs"
                 ? "md"
                 : size === "sm"
-                ? "lg"
-                : size === "md"
-                ? "xl"
-                : undefined
+                  ? "lg"
+                  : size === "md"
+                    ? "xl"
+                    : undefined
             }
             color="primary"
             p="xs"

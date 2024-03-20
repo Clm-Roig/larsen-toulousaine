@@ -84,10 +84,10 @@ export default function BandSelect({
   const nothingFoundMessage = isLoading
     ? "Chargement..."
     : isFetched && !!debouncedSearchInput
-    ? searchInputIsASelectedBand
-      ? `Groupe déjà sélectionné pour ce concert.`
-      : `Groupe non-référencé. ${possibilityToAddBandMsg}`
-    : "";
+      ? searchInputIsASelectedBand
+        ? `Groupe déjà sélectionné pour ce concert.`
+        : `Groupe non-référencé. ${possibilityToAddBandMsg}`
+      : "";
 
   return (
     <Select

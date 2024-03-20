@@ -51,12 +51,12 @@ export default function GigListItem({
   const nbGenresDisplayed = isXSmallScreen
     ? 2
     : isSmallScreen
-    ? 3
-    : isMediumScreen
-    ? 4
-    : isLargeScreen
-    ? 5
-    : 6;
+      ? 3
+      : isMediumScreen
+        ? 4
+        : isLargeScreen
+          ? 5
+          : 6;
   const { hovered, ref } = useHover<HTMLDivElement>();
   const { date, endDate, isCanceled, isSoldOut, imageUrl, slug } = gig;
   const gigTitle = getGigTitle(gig);
@@ -77,8 +77,8 @@ export default function GigListItem({
               border: isCanceled
                 ? "2px solid red"
                 : isSoldOut
-                ? "2px solid var(--mantine-color-orange-filled)"
-                : "",
+                  ? "2px solid var(--mantine-color-orange-filled)"
+                  : "",
               ...((isCanceled || isSoldOut) && {
                 borderTopLeftRadius: "6px",
                 borderTopRightRadius: "6px",

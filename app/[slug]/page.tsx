@@ -24,8 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dateString = gigDate
     ? " le " + dayjs(gigDate).format("dddd D MMMM YYYY")
     : "";
-  const description = `${bandNames.join(V_SEPARATOR)}${dateString} - ${gig
-    ?.place.name} (${gig?.place.city})`;
+  const description = `${bandNames.join(V_SEPARATOR)}${dateString} - ${
+    gig?.place.name
+  } (${gig?.place.city})`;
 
   return getMetadata(
     {

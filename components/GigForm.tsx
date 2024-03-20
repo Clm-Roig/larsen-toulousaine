@@ -129,8 +129,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         !value && values.hasTicketReservationLink === true
           ? "Le lien de réservation est requis."
           : !value || isValidUrl(value)
-          ? null
-          : INVALID_URL_ERROR_MSG,
+            ? null
+            : INVALID_URL_ERROR_MSG,
     },
   });
 

@@ -63,8 +63,8 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
           border: isCanceled
             ? "2px solid red"
             : isSoldOut
-            ? "2px solid var(--mantine-color-orange-filled)"
-            : "",
+              ? "2px solid var(--mantine-color-orange-filled)"
+              : "",
           transition: `box-shadow ${theme.other.transitionDuration}`,
         }}
         shadow={hovered ? "md" : ""}
