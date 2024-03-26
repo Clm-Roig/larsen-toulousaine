@@ -124,7 +124,10 @@ const Bands = () => {
   };
 
   return (
-    <Layout title="Tous les groupes" withPaper>
+    <Layout
+      title={`Tous les groupes${bands?.length ? ` (${bands.length})` : ""}`}
+      withPaper
+    >
       <Center>
         <BandTable
           bands={bands}

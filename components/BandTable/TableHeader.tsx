@@ -28,7 +28,7 @@ export default function TableHeader({
         <Table.Th>Genres</Table.Th>
         <Table.Th w={{ base: 80 }}>Local ?</Table.Th>
         <Table.Th w={{ base: 70, md: 120 }}>Nb. concerts</Table.Th>
-        <Table.Th>Action</Table.Th>
+        <Table.Th w={{ base: 100, md: 120 }}>Action</Table.Th>
       </Table.Tr>
       <Table.Tr>
         <Table.Th>
