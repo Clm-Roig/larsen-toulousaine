@@ -89,6 +89,11 @@ export default function BandSelect({
         : `Groupe non-référencé. ${possibilityToAddBandMsg}`
       : "";
 
+  const displayAddBandButton =
+    !!onNoSuggestions &&
+    suggestions !== undefined &&
+    !searchInputIsASelectedBand;
+
   return (
     <Select
       description={"Chercher un groupe existant ou en créer un nouveau"}
@@ -101,9 +106,7 @@ export default function BandSelect({
         })) || []
       }
       rightSection={
-        !!onNoSuggestions &&
-        suggestions?.length === 0 &&
-        !searchInputIsASelectedBand && (
+        displayAddBandButton && (
           <ActionIcon
             onClick={() => {
               // TODO: ugly fix by using debouncedSearchInput
