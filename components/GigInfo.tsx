@@ -95,7 +95,7 @@ export default function GigInfo({ gig }: Props) {
             component={Link}
             target="_blank"
             href={facebookEventUrl}
-            aria-label="Lien vers l'évènement Facebook"
+            aria-label="URL de l'évènement Facebook"
           >
             <IconBrandFacebook />
           </ActionIcon>
