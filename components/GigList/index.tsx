@@ -95,11 +95,13 @@ const GigList = ({
                   <Paper p="xs" maw={820} w="100%">
                     <List>
                       {gigs.map((gig, idx) => {
-                        const isNextGigSameDay = dayjs(
-                          gigs[idx + 1]?.date,
-                        ).isSame(gig.date);
+                        const nextGig = gigs[idx + 1];
+                        const previousGig = gigs[idx - 1];
+                        const isNextGigSameDay = dayjs(nextGig?.date).isSame(
+                          gig.date,
+                        );
                         const isPreviousGigSameDay = dayjs(
-                          gigs[idx - 1]?.date,
+                          previousGig?.date,
                         ).isSame(gig.date);
                         return (
                           <GigListItem
@@ -113,7 +115,7 @@ const GigList = ({
                             }
                             {...(isNextGigSameDay && { pb: 0 })}
                             {...(isPreviousGigSameDay && { pt: "xs" })}
-                            displayDate={!isPreviousGigSameDay}
+                            displayDate={!isPreviousGigSameDay || !!gig.endDate}
                           />
                         );
                       })}
