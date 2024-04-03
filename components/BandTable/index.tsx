@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   ActionIcon,
+  Center,
   Group,
+  Pagination,
   Skeleton,
   Stack,
   Table,
@@ -13,7 +15,6 @@ import {
 import { BandWithGenresAndGigCount } from "@/domain/Band/Band.type";
 import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
-import { normalizeString } from "@/utils/utils";
 import GenreBadge from "@/components/GenreBadge";
 import TableHeader from "./TableHeader";
 import { getSortedGenres } from "@/domain/Band/Band.service";
@@ -24,6 +25,13 @@ type Props = {
   isLoading: boolean;
   onDeleteBand: (band: Band) => void;
   onEditBand: (band: Band) => void;
+  page: number;
+  pageTotal: number;
+  searchedGenres: Genre["id"][];
+  searchedName: string;
+  setPage: (value: number) => void;
+  setSearchedGenres: (value: Genre["id"][]) => void;
+  setSearchedName: (value: string) => void;
 };
 
 export default function BandTable({
@@ -32,22 +40,14 @@ export default function BandTable({
   isLoading,
   onDeleteBand,
   onEditBand,
+  page,
+  pageTotal,
+  searchedGenres,
+  searchedName,
+  setPage,
+  setSearchedGenres,
+  setSearchedName,
 }: Props) {
-  const [selectedGenres, setSelectedGenres] = useState<Genre["id"][]>([]);
-  const [searchedName, setSearchedName] = useState<string>("");
-
-  const filteredBands = bands
-    // filter by genres
-    ?.filter(
-      (band) =>
-        selectedGenres?.length === 0 ||
-        band.genres.some((g) => selectedGenres?.includes(g.id)),
-    )
-    // filter by name
-    .filter((band) =>
-      normalizeString(band.name).includes(normalizeString(searchedName)),
-    );
-
   const getBandThrashIcon = (band: BandWithGenresAndGigCount) =>
     band._count.gigs > 0 ? (
       <Tooltip label="Ce groupe est à l'affiche d'au moins un concert : vous ne pouvez pas le supprimer.">
@@ -62,16 +62,19 @@ export default function BandTable({
     );
 
   return (
-    <>
+    <Stack>
+      <Center>
+        <Pagination value={page} onChange={setPage} total={pageTotal} />
+      </Center>
       {isLoading ? (
         <Stack>
           <Table>
             <TableHeader
               genres={genres}
+              searchedGenres={searchedGenres}
               searchedName={searchedName}
+              setSearchedGenres={setSearchedGenres}
               setSearchedName={setSearchedName}
-              selectedGenres={selectedGenres}
-              setSelectedGenres={setSelectedGenres}
             />
           </Table>
           {Array(20)
@@ -82,11 +85,11 @@ export default function BandTable({
         </Stack>
       ) : (
         <Stack gap="xs">
-          {(filteredBands?.length || filteredBands?.length === 0) &&
-            filteredBands.length !== bands?.length && (
+          {(bands?.length || bands?.length === 0) &&
+            bands.length !== bands?.length && (
               <Text>
-                {filteredBands.length} résultat
-                {filteredBands.length > 1 ? "s" : ""}
+                {bands.length} résultat
+                {bands.length > 1 ? "s" : ""}
               </Text>
             )}
           <Table
@@ -99,14 +102,14 @@ export default function BandTable({
           >
             <TableHeader
               genres={genres}
+              searchedGenres={searchedGenres}
               searchedName={searchedName}
+              setSearchedGenres={setSearchedGenres}
               setSearchedName={setSearchedName}
-              selectedGenres={selectedGenres}
-              setSelectedGenres={setSelectedGenres}
             />
 
             <Table.Tbody>
-              {filteredBands?.map((band) => (
+              {bands?.map((band) => (
                 <Table.Tr key={band.id}>
                   <Table.Td>{band.name}</Table.Td>
                   <Table.Td>
@@ -134,6 +137,9 @@ export default function BandTable({
           </Table>
         </Stack>
       )}
-    </>
+      <Center>
+        <Pagination value={page} onChange={setPage} total={pageTotal} />
+      </Center>
+    </Stack>
   );
 }

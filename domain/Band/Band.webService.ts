@@ -2,25 +2,34 @@ import api, { getErrorMessage } from "@/lib/axios";
 import { BandWithGenres, BandWithGenresAndGigCount } from "./Band.type";
 import { Genre } from "@prisma/client";
 
-export const searchBandsByName = async (
-  query: string | undefined,
-): Promise<BandWithGenres[]> => {
+export const searchBands = async (
+  name: string | undefined,
+  genres?: Array<Genre["id"]>,
+): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
+  const nameParam = name ? `name=${encodeURIComponent(name)}` : "";
+  const genresParam = genres
+    ? `genres=${encodeURIComponent(genres?.join(","))}`
+    : "";
   try {
-    const response = await api.get<{ bands: BandWithGenres[] }>(
-      `/bands/search${query ? `?query=${encodeURIComponent(query)}` : ""}`,
-    );
-    return response.data.bands;
+    const response = await api.get<{
+      bands: BandWithGenresAndGigCount[];
+      count: number;
+    }>(`/bands/search?${nameParam}&${genresParam}`);
+    return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
 };
 
-export const getBands = async (): Promise<BandWithGenresAndGigCount[]> => {
+export const getBands = async (
+  page: number,
+): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
   try {
-    const response = await api.get<{ bands: BandWithGenresAndGigCount[] }>(
-      `/bands`,
-    );
-    return response.data.bands;
+    const response = await api.get<{
+      bands: BandWithGenresAndGigCount[];
+      count: number;
+    }>(`/bands?page=${page}`);
+    return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
