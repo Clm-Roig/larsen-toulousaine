@@ -3,15 +3,15 @@
 import { Genre, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
 import useMonthGigs from "@/hooks/useMonthGigs";
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import { useQuery } from "@tanstack/react-query";
 import usePreferences from "@/hooks/usePreferences";
+import useSearchParams from "@/hooks/useSearchParams";
 
 export default function Gigs() {
-  const searchParams = useSearchParams();
+  const { searchParams } = useSearchParams();
   const { displayNotSafePlaces } = usePreferences();
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],

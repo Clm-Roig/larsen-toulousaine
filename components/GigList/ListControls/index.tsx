@@ -8,10 +8,10 @@ import {
 import dayjs from "dayjs";
 import { Genre, Place } from "@prisma/client";
 import usePreferences from "@/hooks/usePreferences";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ViewType } from "@/domain/ViewType";
 import OptionsPopover from "@/components/GigList/ListControls/OptionsPopover";
 import MonthSelector from "@/components/GigList/ListControls/MonthSelector";
+import useSearchParams from "@/hooks/useSearchParams";
 
 type Props = {
   genres: Genre[];
@@ -27,9 +27,7 @@ export default function ListControls({
   setSelectedMonth,
 }: Props) {
   const { setViewType, viewType } = usePreferences();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { setSearchParams } = useSearchParams();
 
   const incrementMonth = () => {
     const nextMonth = dayjs(selectedMonth).add(1, "month").toDate();
@@ -43,12 +41,11 @@ export default function ListControls({
 
   const updateMonth = (newMonth: Date) => {
     setSelectedMonth?.(newMonth);
-    const urlSearchParams = new URLSearchParams(
-      Array.from(searchParams.entries()),
-    );
-    urlSearchParams.set("année", newMonth.getFullYear() + "");
-    urlSearchParams.set("mois", newMonth.getMonth() + 1 + ""); // getMonth() goes from 0 to 11
-    router.push(`${pathname}?${urlSearchParams.toString()}`);
+    const changes = new Map<string, number>([
+      ["année", newMonth.getFullYear()],
+      ["mois", newMonth.getMonth() + 1], // getMonth() goes from 0 to 11
+    ]);
+    setSearchParams(changes);
   };
 
   return (

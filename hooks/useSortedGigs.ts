@@ -15,8 +15,8 @@ export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
             gig.bands.length === 0 ||
             filteredGenres?.length === 0 ||
             gig.bands.some((band) =>
-              band.genres.some(
-                (genre) => filteredGenres?.map((g) => g.id).includes(genre.id),
+              band.genres.some((genre) =>
+                filteredGenres?.map((g) => g.id).includes(genre.id),
               ),
             ),
         )
