@@ -8,6 +8,7 @@ import {
   deleteBand,
   editBand,
   getBands,
+  searchBands,
 } from "@/domain/Band/Band.webService";
 import {
   keepPreviousData,
@@ -22,7 +23,7 @@ import {
 import BandTable from "@/components/BandTable";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { Genre } from "@prisma/client";
 import BandFields from "@/components/BandFields";
@@ -31,6 +32,9 @@ import useSearchParams from "@/hooks/useSearchParams";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
+  const [searchedGenres, setSearchedGenres] = useState<Genre["id"][]>([]);
+  const [searchedName, setSearchedName] = useState<string>("");
+  const [debouncedSearchedName] = useDebouncedValue(searchedName, 400);
   const { searchParams, setSearchParams } = useSearchParams();
 
   const urlPageStr = searchParams.get("page");
@@ -70,8 +74,11 @@ const Bands = () => {
     isFetching,
     isError,
   } = useQuery<{ bands: BandWithGenresAndGigCount[]; count: number }, Error>({
-    queryKey: ["bands", page],
-    queryFn: async () => await getBands(page),
+    queryKey: ["bands", page, searchedGenres, debouncedSearchedName],
+    queryFn: async () =>
+      searchedGenres?.length > 0 || debouncedSearchedName
+        ? await searchBands(debouncedSearchedName, searchedGenres)
+        : await getBands(page),
     placeholderData: keepPreviousData,
   });
   const { bands, count } = data || {};
@@ -137,6 +144,9 @@ const Bands = () => {
     mutate();
   };
 
+  /**
+   * @param value must be superior or equal to 1
+   */
   const handleOnSetPage = (value: number) => {
     setPage(value - 1);
     setSearchParams(new Map([["page", value + ""]]));
@@ -153,8 +163,12 @@ const Bands = () => {
           onEditBand={handleOnEditBand}
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
-          pageTotal={Math.floor((count || 0) / NB_OF_BANDS_RETURNED)}
+          pageTotal={Math.ceil((count || 0) / NB_OF_BANDS_RETURNED)}
+          searchedName={searchedName}
+          searchedGenres={searchedGenres}
           setPage={handleOnSetPage}
+          setSearchedGenres={setSearchedGenres}
+          setSearchedName={setSearchedName}
         />
         <Drawer
           opened={opened}

@@ -7,10 +7,10 @@ import GenreSelect from "@/components/GenreSelect";
 
 type Props = {
   genres: Genre[];
+  searchedGenres: Genre["id"][];
   searchedName: string;
-  selectedGenres: Genre["id"][];
+  setSearchedGenres: (value: Genre["id"][]) => void;
   setSearchedName: (value: string) => void;
-  setSelectedGenres: (value: Genre["id"][]) => void;
 };
 
 const NoPaddingTableTh = (props: TableThProps) => (
@@ -21,10 +21,10 @@ const NoPaddingTableTh = (props: TableThProps) => (
 
 export default function TableHeader({
   genres,
+  searchedGenres,
   searchedName,
-  selectedGenres,
+  setSearchedGenres,
   setSearchedName,
-  setSelectedGenres,
 }: Props) {
   return (
     <Table.Thead style={{ zIndex: 1 }}>
@@ -50,8 +50,8 @@ export default function TableHeader({
           <GenreSelect
             clearable
             genres={genres || []}
-            value={selectedGenres}
-            onChange={setSelectedGenres}
+            value={searchedGenres}
+            onChange={setSearchedGenres}
             fw="initial"
           />
         </NoPaddingTableTh>

@@ -3,7 +3,7 @@
 import { ActionIcon, Select, SelectProps } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
-import { searchBandsByName } from "../domain/Band/Band.webService";
+import { searchBands } from "../domain/Band/Band.webService";
 import { Band } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -41,7 +41,7 @@ export default function BandSelect({
     queryKey: ["bandSearch", debouncedSearchInput],
     queryFn: async () =>
       debouncedSearchInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
-        ? await searchBandsByName(debouncedSearchInput)
+        ? await searchBands(debouncedSearchInput)
         : null,
   });
 
