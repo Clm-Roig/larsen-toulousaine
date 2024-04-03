@@ -130,14 +130,14 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         <Stack mt="sm">
           <Box component={Link} href="/" hiddenFrom="xs">
             <Image
-              src={"/images/logo.png"}
+              src={"/images/logo with text.png"}
               alt="Logo Larsen Toulousaine"
               mah="100%"
               style={{
                 filter: colorScheme === "dark" ? "invert(100%)" : "",
               }}
               h="auto"
-              w={30}
+              w={75}
               m="auto"
             />
           </Box>
