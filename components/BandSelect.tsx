@@ -2,7 +2,10 @@
 
 import { ActionIcon, Select, SelectProps } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { BandWithGenres } from "../domain/Band/Band.type";
+import {
+  BandWithGenres,
+  BandWithGenresAndGigCount,
+} from "../domain/Band/Band.type";
 import { searchBands } from "../domain/Band/Band.webService";
 import { Band } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
@@ -33,17 +36,18 @@ export default function BandSelect({
   const [debouncedSearchInput] = useDebouncedValue(searchInput, 400);
   const [value, setValue] = useState<string | null>("");
 
-  const {
-    data: foundBands,
-    isLoading,
-    isFetched,
-  } = useQuery<BandWithGenres[] | null, Error>({
+  const { data, isLoading, isFetched } = useQuery<
+    { bands: BandWithGenresAndGigCount[]; count: number } | null,
+    Error
+  >({
     queryKey: ["bandSearch", debouncedSearchInput],
     queryFn: async () =>
       debouncedSearchInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
         ? await searchBands(debouncedSearchInput)
         : null,
   });
+
+  const { bands } = data || {};
 
   // Workaround to prevent select to set the searchValue when an option is selected
   useEffect(() => {
@@ -54,7 +58,7 @@ export default function BandSelect({
   }, [value]);
 
   const suggestions: BandSuggestion[] | undefined =
-    foundBands
+    bands
       ?.filter(
         (band) =>
           !excludedBands ||
