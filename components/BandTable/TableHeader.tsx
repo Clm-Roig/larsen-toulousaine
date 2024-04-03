@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Table, TextInput } from "@mantine/core";
+import { Table, TableThProps, TextInput } from "@mantine/core";
 import { Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
 
@@ -12,6 +12,12 @@ type Props = {
   setSearchedName: (value: string) => void;
   setSelectedGenres: (value: Genre["id"][]) => void;
 };
+
+const NoPaddingTableTh = (props: TableThProps) => (
+  <Table.Th px={0} {...props}>
+    {props.children}
+  </Table.Th>
+);
 
 export default function TableHeader({
   genres,
@@ -24,21 +30,23 @@ export default function TableHeader({
     <Table.Thead style={{ zIndex: 1 }}>
       {/* zIndex to fix a bug where icons are above the third column text */}
       <Table.Tr>
-        <Table.Th>Nom</Table.Th>
-        <Table.Th>Genres</Table.Th>
-        <Table.Th w={{ base: 80 }}>Local ?</Table.Th>
-        <Table.Th w={{ base: 70, md: 120 }}>Nb. concerts</Table.Th>
-        <Table.Th w={{ base: 100, md: 120 }}>Action</Table.Th>
+        <NoPaddingTableTh>Nom</NoPaddingTableTh>
+        <NoPaddingTableTh>Genres</NoPaddingTableTh>
+        <NoPaddingTableTh w={{ base: 80 }}>Local ?</NoPaddingTableTh>
+        <NoPaddingTableTh w={{ base: 70, md: 120 }}>
+          Nb. concerts
+        </NoPaddingTableTh>
+        <NoPaddingTableTh w={{ base: 100, md: 120 }}>Action</NoPaddingTableTh>
       </Table.Tr>
       <Table.Tr>
-        <Table.Th>
+        <NoPaddingTableTh pr={"xs"}>
           <TextInput
             fw="initial"
             value={searchedName}
             onChange={(event) => setSearchedName(event.currentTarget.value)}
           />
-        </Table.Th>
-        <Table.Th>
+        </NoPaddingTableTh>
+        <NoPaddingTableTh>
           <GenreSelect
             clearable
             genres={genres || []}
@@ -46,10 +54,10 @@ export default function TableHeader({
             onChange={setSelectedGenres}
             fw="initial"
           />
-        </Table.Th>
-        <Table.Th></Table.Th>
-        <Table.Th></Table.Th>
-        <Table.Th></Table.Th>
+        </NoPaddingTableTh>
+        <NoPaddingTableTh></NoPaddingTableTh>
+        <NoPaddingTableTh></NoPaddingTableTh>
+        <NoPaddingTableTh></NoPaddingTableTh>
       </Table.Tr>
     </Table.Thead>
   );

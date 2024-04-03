@@ -9,7 +9,12 @@ import {
   editBand,
   getBands,
 } from "@/domain/Band/Band.webService";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   BandWithGenres,
   BandWithGenresAndGigCount,
@@ -21,9 +26,16 @@ import { useDisclosure } from "@mantine/hooks";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { Genre } from "@prisma/client";
 import BandFields from "@/components/BandFields";
+import { NB_OF_BANDS_RETURNED } from "@/domain/Band/constants";
+import useSearchParams from "@/hooks/useSearchParams";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
+  const { searchParams, setSearchParams } = useSearchParams();
+
+  const urlPageStr = searchParams.get("page");
+  const urlPage = urlPageStr ? parseInt(urlPageStr, 10) - 1 : null;
+  const [page, setPage] = useState(urlPage || 0);
   const queryClient = useQueryClient();
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -53,14 +65,16 @@ const Bands = () => {
   }, [editedBand, form]);
 
   const {
-    data: bands,
+    data,
     error: getBandsError,
     isFetching,
     isError,
-  } = useQuery<BandWithGenresAndGigCount[], Error>({
-    queryKey: ["bands"],
-    queryFn: async () => await getBands(),
+  } = useQuery<{ bands: BandWithGenresAndGigCount[]; count: number }, Error>({
+    queryKey: ["bands", page],
+    queryFn: async () => await getBands(page),
+    placeholderData: keepPreviousData,
   });
+  const { bands, count } = data || {};
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -123,11 +137,13 @@ const Bands = () => {
     mutate();
   };
 
+  const handleOnSetPage = (value: number) => {
+    setPage(value - 1);
+    setSearchParams(new Map([["page", value + ""]]));
+  };
+
   return (
-    <Layout
-      title={`Tous les groupes${bands?.length ? ` (${bands.length})` : ""}`}
-      withPaper
-    >
+    <Layout title={`Tous les groupes${count ? ` (${count})` : ""}`} withPaper>
       <Center>
         <BandTable
           bands={bands}
@@ -135,8 +151,11 @@ const Bands = () => {
           isLoading={isFetching || isDeletePending}
           onDeleteBand={handleOnDeleteBand}
           onEditBand={handleOnEditBand}
+          // Mantine table pagination works with page starting at 1.
+          page={page + 1}
+          pageTotal={Math.floor((count || 0) / NB_OF_BANDS_RETURNED)}
+          setPage={handleOnSetPage}
         />
-
         <Drawer
           opened={opened}
           onClose={handleOnClose}

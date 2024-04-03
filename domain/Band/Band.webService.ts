@@ -15,12 +15,15 @@ export const searchBandsByName = async (
   }
 };
 
-export const getBands = async (): Promise<BandWithGenresAndGigCount[]> => {
+export const getBands = async (
+  page: number,
+): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
   try {
-    const response = await api.get<{ bands: BandWithGenresAndGigCount[] }>(
-      `/bands`,
-    );
-    return response.data.bands;
+    const response = await api.get<{
+      bands: BandWithGenresAndGigCount[];
+      count: number;
+    }>(`/bands?page=${page}`);
+    return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

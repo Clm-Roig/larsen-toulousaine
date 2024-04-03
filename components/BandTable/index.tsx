@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import {
   ActionIcon,
+  Center,
   Group,
+  Pagination,
   Skeleton,
   Stack,
   Table,
@@ -24,6 +26,9 @@ type Props = {
   isLoading: boolean;
   onDeleteBand: (band: Band) => void;
   onEditBand: (band: Band) => void;
+  page: number;
+  pageTotal: number;
+  setPage: (value: number) => void;
 };
 
 export default function BandTable({
@@ -32,6 +37,9 @@ export default function BandTable({
   isLoading,
   onDeleteBand,
   onEditBand,
+  page,
+  pageTotal,
+  setPage,
 }: Props) {
   const [selectedGenres, setSelectedGenres] = useState<Genre["id"][]>([]);
   const [searchedName, setSearchedName] = useState<string>("");
@@ -62,7 +70,10 @@ export default function BandTable({
     );
 
   return (
-    <>
+    <Stack>
+      <Center>
+        <Pagination value={page} onChange={setPage} total={pageTotal} />
+      </Center>
       {isLoading ? (
         <Stack>
           <Table>
@@ -134,6 +145,9 @@ export default function BandTable({
           </Table>
         </Stack>
       )}
-    </>
+      <Center>
+        <Pagination value={page} onChange={setPage} total={pageTotal} />
+      </Center>
+    </Stack>
   );
 }
