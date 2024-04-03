@@ -82,12 +82,13 @@ export default function BandTable({
         </Stack>
       ) : (
         <Stack gap="xs">
-          {filteredBands?.length && filteredBands.length !== bands?.length && (
-            <Text>
-              {filteredBands.length} résultat
-              {filteredBands.length > 1 ? "s" : ""}
-            </Text>
-          )}
+          {(filteredBands?.length || filteredBands?.length === 0) &&
+            filteredBands.length !== bands?.length && (
+              <Text>
+                {filteredBands.length} résultat
+                {filteredBands.length > 1 ? "s" : ""}
+              </Text>
+            )}
           <Table
             striped
             stickyHeader
