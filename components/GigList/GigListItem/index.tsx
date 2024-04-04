@@ -27,9 +27,8 @@ type Props = {
   displayDate?: boolean;
   displayMissingDataOnly?: boolean;
   gig: GigWithBandsAndPlace;
-  listItemProps?: ListItemProps;
   withDivider: boolean;
-};
+} & ListItemProps;
 
 const PolymorphicListItem = createPolymorphicComponent<
   "LinkProps",
@@ -60,6 +59,7 @@ export default function GigListItem({
   const { hovered, ref } = useHover<HTMLDivElement>();
   const { date, endDate, isCanceled, isSoldOut, imageUrl, slug } = gig;
   const gigTitle = getGigTitle(gig);
+
   return (
     <Box
       ref={ref}

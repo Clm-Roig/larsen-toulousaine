@@ -35,11 +35,9 @@ export default function Price({ size = "md", value }: Props) {
             <NumberFormatter
               suffix="€"
               decimalScale={2}
-              /* 
-              Pad with 0 only if there is somehting after the coma
-                51€ ==> 51€
-                22,8€ => 22,80€
-              */
+              // Pad with 0 only if there is somehting after the coma
+              //   51€ ==> 51€
+              //   22,8€ => 22,80€
               fixedDecimalScale={value % 1 !== 0}
               value={value}
             />

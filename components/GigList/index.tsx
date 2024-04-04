@@ -1,6 +1,5 @@
 "use client";
 
-import GigCard from "./GigCard";
 import {
   Grid,
   Box,
@@ -12,18 +11,18 @@ import {
   Paper,
 } from "@mantine/core";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import ListControls from "./ListControls";
 import { Genre, Place } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import dayjs from "dayjs";
+import GigCard from "./GigCard";
+import ListControls from "./ListControls";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
 import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
 import GigListItem from "@/components/GigList/GigListItem";
-import dayjs from "dayjs";
 import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 import { ViewLayout } from "@/domain/ViewLayout";
-
 type Props = {
   dateStep: "month" | "week";
   displayMissingDataOnly?: boolean;
