@@ -4,21 +4,16 @@ import { useEffect, useState } from "react";
 import { getGigs } from "@/domain/Gig/Gig.webService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSortedGigs from "@/hooks/useSortedGigs";
+import { startOf } from "@/utils/date";
 
 const gigsStaleTimeInMs = 5 * 60 * 1000;
 
 export default function useGigs() {
   const queryClient = useQueryClient();
 
-  const [selectedMonth, setSelectedMonth] = useState(
-    dayjs(new Date()).startOf("month").toDate(),
-  );
-  const selectedMonthStart = dayjs(new Date(selectedMonth))
-    .startOf("month")
-    .toDate();
-  const selectedMonthEnd = dayjs(new Date(selectedMonth))
-    .endOf("month")
-    .toDate();
+  const [selectedMonth, setSelectedMonth] = useState(startOf("month"));
+  const selectedMonthStart = dayjs(selectedMonth).startOf("month").toDate();
+  const selectedMonthEnd = dayjs(selectedMonth).endOf("month").toDate();
 
   const { data: gigs, isLoading } = useQuery<GigWithBandsAndPlace[], Error>({
     queryKey: [

@@ -4,16 +4,13 @@ import { Suspense } from "react";
 import WeekGigs from "./WeekGigs";
 import { Metadata } from "next";
 import { getGigs } from "@/domain/Gig/Gig.webService";
-import dayjs from "dayjs";
 import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
 import { getMetadata } from "@/utils/utils";
+import { endOf, startOf } from "@/utils/date";
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Concerts metal de la semaine à Toulouse";
-  const gigs = await getGigs(
-    dayjs().startOf("week").toDate(),
-    dayjs().endOf("week").toDate(),
-  );
+  const gigs = await getGigs(startOf("week"), endOf("week"));
   const filteredGigs = gigs.filter((g) => !g.isCanceled);
   const images: string[] = filteredGigs.reduce((images, gig) => {
     if (!gig.imageUrl) return images;

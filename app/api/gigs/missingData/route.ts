@@ -29,7 +29,7 @@ export async function GET() {
     await prisma.gig.findMany({
       where: {
         date: {
-          gte: dayjs(new Date()).toDate(),
+          gte: dayjs().toDate(),
         },
       },
       include: defaultInclude,
