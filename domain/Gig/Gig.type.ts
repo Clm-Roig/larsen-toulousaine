@@ -40,3 +40,8 @@ export const gigToGigTypeString = (
   }
   return result;
 };
+
+export type MarkdownGigs = {
+  discord: string;
+  facebook: string;
+};

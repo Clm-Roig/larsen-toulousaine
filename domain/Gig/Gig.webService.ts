@@ -1,17 +1,45 @@
 import { Band, Genre, Gig } from "@prisma/client";
-import { GigWithBandsAndPlace } from "./Gig.type";
+import { GigWithBandsAndPlace, MarkdownGigs } from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 
 export const getGigs = async (
   from: Date,
   to: Date,
+  askForMarkdown = false,
 ): Promise<GigWithBandsAndPlace[]> => {
   try {
+    const headers = askForMarkdown
+      ? {
+          Accept: "text/markdown",
+        }
+      : {};
     const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
       `/gigs?from=${from.toISOString()}&to=${to.toISOString()}`,
+      {
+        headers: headers,
+      },
     );
     return response.data.gigs;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const getMarkdownGigs = async (
+  from: Date,
+  to: Date,
+): Promise<MarkdownGigs> => {
+  try {
+    const response = await api.get<MarkdownGigs>(
+      `/gigs?from=${from.toISOString()}&to=${to.toISOString()}`,
+      {
+        headers: {
+          Accept: "text/markdown",
+        },
+      },
+    );
+    return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

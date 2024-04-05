@@ -28,7 +28,7 @@ const defaultInclude = {
 async function GET(request: NextRequest) {
   const { user } = (await getServerSession(authOptions)) || {};
   const headersList = headers();
-  const contentTypeHeader = headersList.get("Content-Type");
+  const acceptHeader = headersList.get("Accept");
   const searchParams = request.nextUrl.searchParams;
   const from = searchParams.get("from");
   const to = searchParams.get("to");
@@ -47,7 +47,7 @@ async function GET(request: NextRequest) {
   // Get a gig list from/to a date
   if (from && to) {
     const gigs = await getGigsByDateFromTo(from, to, !user);
-    if (contentTypeHeader === "text/markdown") {
+    if (acceptHeader === "text/markdown") {
       const filteredGigs = gigs.filter((g) => g.place.isSafe && !g.isCanceled);
       const lineBreak = "\\n\\n";
       const discordMarkdownGigs = filteredGigs
