@@ -153,7 +153,7 @@ const Bands = () => {
   };
 
   return (
-    <Layout title={`Tous les groupes${count ? ` (${count})` : ""}`} withPaper>
+    <Layout title={"Tous les groupes"} withPaper>
       <Center>
         <BandTable
           bands={bands}
