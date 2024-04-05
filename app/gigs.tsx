@@ -9,10 +9,12 @@ import { getPlaces } from "@/domain/Place/Place.webService";
 import { useQuery } from "@tanstack/react-query";
 import usePreferences from "@/hooks/usePreferences";
 import useSearchParams from "@/hooks/useSearchParams";
+import useYearGigs from "@/hooks/useYearGigs";
+import { ViewType } from "@/domain/ViewType";
 
 export default function Gigs() {
   const { searchParams, setSearchParams } = useSearchParams();
-  const { displayNotSafePlaces } = usePreferences();
+  const { displayNotSafePlaces, viewType } = usePreferences();
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -35,8 +37,18 @@ export default function Gigs() {
           initialMonthNb: new Date().getMonth() + 1,
         };
 
-  const { isLoading, monthGigs, selectedMonth, setSelectedMonth } =
-    useMonthGigs();
+  const {
+    isLoading: isMonthGigsLoading,
+    monthGigs,
+    selectedMonth,
+    setSelectedMonth,
+  } = useMonthGigs();
+  const {
+    isLoading: isYearGigsLoading,
+    yearGigs,
+    selectedYear,
+    setSelectedYear,
+  } = useYearGigs();
 
   useEffect(() => {
     setSelectedMonth(
@@ -65,16 +77,20 @@ export default function Gigs() {
     setSearchParams(changes);
   };
 
+  const isMonthlyView = viewType === ViewType.MONTHLY;
+
   return (
     <GigList
       dateStep="month"
       genres={genres || []}
-      gigs={monthGigs}
-      isLoading={isLoading}
-      noGigsFoundMessage="Aucun concert trouvé pour ce mois-ci 🙁"
+      gigs={isMonthlyView ? monthGigs : yearGigs}
+      isLoading={isMonthlyView ? isMonthGigsLoading : isYearGigsLoading}
+      noGigsFoundMessage={`Aucun concert trouvé pour ${isMonthlyView ? "ce mois-ci" : "cette année-là"} 🙁`}
       places={filteredPlaces || []}
-      selectedDate={selectedMonth}
-      setSelectedDate={onSelectedMonthChange}
+      selectedDate={isMonthlyView ? selectedMonth : selectedYear}
+      setSelectedDate={(date: Date) =>
+        isMonthlyView ? setSelectedMonth(date) : setSelectedYear(date)
+      }
     />
   );
 }

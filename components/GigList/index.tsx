@@ -18,11 +18,11 @@ import { useSession } from "next-auth/react";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
 import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
-import { ViewType } from "@/domain/ViewType";
 import GigListItem from "@/components/GigList/GigListItem";
 import dayjs from "dayjs";
 import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
+import { ViewLayout } from "@/domain/ViewLayout";
 
 type Props = {
   dateStep: "month" | "week";
@@ -47,7 +47,7 @@ const GigList = ({
   selectedDate,
   setSelectedDate,
 }: Props) => {
-  const { viewType } = usePreferences();
+  const { viewLayout } = usePreferences();
   const { status } = useSession();
   return (
     <>
@@ -62,8 +62,8 @@ const GigList = ({
       </Box>
       {isLoading && (
         <>
-          {viewType === ViewType.GRID && <GridViewSkeleton />}
-          {viewType === ViewType.LIST && <ListViewSkeleton />}
+          {viewLayout === ViewLayout.GRID && <GridViewSkeleton />}
+          {viewLayout === ViewLayout.LIST && <ListViewSkeleton />}
         </>
       )}
       <Transition
@@ -75,7 +75,7 @@ const GigList = ({
         {(styles) => (
           <div style={styles}>
             {gigs && gigs.length > 0 ? (
-              viewType === ViewType.GRID ? (
+              viewLayout === ViewLayout.GRID ? (
                 <Grid>
                   {gigs.map((gig) => (
                     <Grid.Col key={gig.id} span={GRID_SPAN_PROP}>

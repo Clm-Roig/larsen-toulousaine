@@ -1,4 +1,4 @@
 export enum ViewType {
-  GRID = "grid",
-  LIST = "list",
+  MONTHLY = "monthly",
+  YEARLY = "yearly",
 }

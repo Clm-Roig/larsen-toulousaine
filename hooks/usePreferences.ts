@@ -1,3 +1,4 @@
+import { ViewLayout } from "@/domain/ViewLayout";
 import { ViewType } from "@/domain/ViewType";
 import { useLocalStorage } from "@mantine/hooks";
 import { Genre, Place } from "@prisma/client";
@@ -25,9 +26,13 @@ export default function usePreferences() {
     key: "gigList-maxPrice",
     defaultValue: "",
   });
+  const [viewLayout, setViewLayout] = useLocalStorage<ViewLayout>({
+    key: "gigList-viewLayout",
+    defaultValue: ViewLayout.GRID,
+  });
   const [viewType, setViewType] = useLocalStorage<ViewType>({
     key: "gigList-viewType",
-    defaultValue: ViewType.GRID,
+    defaultValue: ViewType.MONTHLY,
   });
 
   const resetPreferences = () => {
@@ -55,7 +60,9 @@ export default function usePreferences() {
     setFilteredGenres,
     setGrayOutPastGigs,
     setMaxPrice,
+    setViewLayout,
     setViewType,
+    viewLayout,
     viewType,
   };
 }
