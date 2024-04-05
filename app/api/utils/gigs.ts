@@ -20,8 +20,10 @@ export const gigWithBandsAndGenresInclude = {
   },
 };
 
-export const flattenGigBands = (
-  gig: Gig & { bands: ({ band: Band } & BandsOnGigs)[] },
+export const flattenGigBands = <
+  T extends Gig & { bands: ({ band: Band } & BandsOnGigs)[] },
+>(
+  gig: T,
 ) => ({
   ...gig,
   bands: gig?.bands.map((b) => ({ ...b.band, order: b.order })),
