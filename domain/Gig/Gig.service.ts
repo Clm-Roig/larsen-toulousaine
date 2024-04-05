@@ -2,7 +2,7 @@ import { getBandNames, getSortedGenres } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize } from "@/utils/utils";
-import { Band, Gig } from "@prisma/client";
+import { Band, Gig, Place } from "@prisma/client";
 import dayjs from "@/lib/dayjs";
 
 /**
@@ -172,4 +172,53 @@ export const hasTicketLinkBoolToFormValue = (
   if (!value) return "false";
   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   throw new Error("Unexpected value: " + value);
+};
+
+// ===== To Markdown utils ===== //
+
+const getGigMarkdownTitle = (gig: GigWithBandsAndPlace): string => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
+  const allBandGenres = gig.bands.flatMap((b: any) => b.genres);
+  return `${getGigTitle(gig)} (${getSortedGenres(allBandGenres)
+    .slice(0, 3)
+    .map((g) => g.name)
+    .join(", ")})`;
+};
+
+const getGigMarkdownDate = (date: Date): string =>
+  `📅 ${capitalize(dayjs(date).format("dddd DD MMMM"))}`;
+
+const getGigMarkdownPlace = (place: Place): string =>
+  `📍 ${place.name}${place.name !== MAIN_CITY ? `, (${place.city})` : ""}`;
+
+const getGigMarkdownPrice = (price: Gig["price"]): string =>
+  `💸 ${price === 0 ? `Prix libre` : `${price}€`}`;
+
+export const toDiscordMarkdown = (
+  gig: GigWithBandsAndPlace,
+  lineBreakSymbol: string,
+) => {
+  const { date, place, price, slug } = gig;
+  const lines: string[] = [];
+  lines.push(`**${getGigMarkdownTitle(gig)}**`);
+  lines.push(getGigMarkdownDate(date));
+  lines.push(getGigMarkdownPlace(place));
+  lines.push(getGigMarkdownPrice(price));
+  // TODO: larsen-toulousaine.fr must be an environment variable
+  lines.push(`[Plus d'infos](https://larsen-toulousaine.fr/${slug})`);
+  return lines.map((line) => `> ${line}`).join(lineBreakSymbol);
+};
+
+export const toFacebookMarkdown = (
+  gig: GigWithBandsAndPlace,
+  lineBreakSymbol: string,
+) => {
+  const { date, facebookEventUrl, place, price } = gig;
+  const lines: string[] = [];
+  lines.push(getGigMarkdownTitle(gig));
+  lines.push(getGigMarkdownDate(date));
+  lines.push(getGigMarkdownPlace(place));
+  lines.push(getGigMarkdownPrice(price));
+  lines.push(`${facebookEventUrl}`);
+  return lines.map((line) => `${line}`).join(lineBreakSymbol);
 };

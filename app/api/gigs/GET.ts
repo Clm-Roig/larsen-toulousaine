@@ -6,6 +6,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { flattenGigBands, gigListOrderBy } from "@/app/api/utils/gigs";
 import { endOf, startOf } from "@/utils/date";
+import { headers } from "next/headers";
+import {
+  toDiscordMarkdown,
+  toFacebookMarkdown,
+} from "@/domain/Gig/Gig.service";
 
 const defaultInclude = {
   place: true,
@@ -22,6 +27,8 @@ const defaultInclude = {
 
 async function GET(request: NextRequest) {
   const { user } = (await getServerSession(authOptions)) || {};
+  const headersList = headers();
+  const contentTypeHeader = headersList.get("Content-Type");
   const searchParams = request.nextUrl.searchParams;
   const from = searchParams.get("from");
   const to = searchParams.get("to");
@@ -40,6 +47,26 @@ async function GET(request: NextRequest) {
   // Get a gig list from/to a date
   if (from && to) {
     const gigs = await getGigsByDateFromTo(from, to, !user);
+    if (contentTypeHeader === "text/markdown") {
+      const filteredGigs = gigs.filter((g) => g.place.isSafe && !g.isCanceled);
+      const lineBreak = "\\n\\n";
+      const discordMarkdownGigs = filteredGigs
+        .map((gig) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return toDiscordMarkdown(gig as any, lineBreak);
+        })
+        .join(lineBreak + lineBreak);
+      const facebookMarkdownGigs = filteredGigs
+        .map((gig) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return toFacebookMarkdown(gig as any, lineBreak);
+        })
+        .join(lineBreak + lineBreak);
+      return NextResponse.json({
+        discord: discordMarkdownGigs,
+        facebook: facebookMarkdownGigs,
+      });
+    }
     return NextResponse.json({
       gigs: gigs,
     });
@@ -127,6 +154,7 @@ const getGigsByDateFromTo = async (
     orderBy: gigListOrderBy,
   });
   const gigs = rawGigs.map((gig) => flattenGigBands(gig));
+
   return gigs;
 };
 
