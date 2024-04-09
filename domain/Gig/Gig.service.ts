@@ -189,7 +189,7 @@ const getGigMarkdownDate = (date: Date): string =>
   `📅 ${capitalize(dayjs(date).format("dddd DD MMMM"))}`;
 
 const getGigMarkdownPlace = (place: Place): string =>
-  `📍 ${place.name}${place.name !== MAIN_CITY ? `, (${place.city})` : ""}`;
+  `📍 ${place.name}${place.city !== MAIN_CITY ? `, (${place.city})` : ""}`;
 
 const getGigMarkdownPrice = (price: Gig["price"]): string =>
   `💸 ${price === 0 ? `Prix libre` : `${price}€`}`;
