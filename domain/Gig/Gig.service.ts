@@ -5,6 +5,11 @@ import { V_SEPARATOR, capitalize } from "@/utils/utils";
 import { Band, Gig, Place } from "@prisma/client";
 import dayjs from "@/lib/dayjs";
 
+const slugReplacements: { replaced: string; replacer: string }[] = [
+  { replaced: " ", replacer: "-" },
+  { replaced: "/", replacer: "|" },
+];
+
 /**
  * If the gig as a name, the slug is "YEAR_NAME" (ex: 2024_echos-et-merveilles)
  * Else, the slug is "DAY-MONTH-YEAR_BANDNAMES" (ex: 05-01-2024_metallica-ghost)
@@ -15,7 +20,10 @@ export const computeGigSlug = (gig: {
   name: Gig["name"];
 }): string => {
   const normalizeString = (str: string) =>
-    str.toLowerCase().replaceAll(" ", "-");
+    slugReplacements.reduce(
+      (res, { replaced, replacer }) => res.replaceAll(replaced, replacer),
+      str.toLowerCase(),
+    );
   const { bands, date, name } = gig;
   const dateObj = dayjs(date).tz("Europe/Paris");
   if (name) {
@@ -39,9 +47,13 @@ export const getDataFromGigSlug = (
 
   const slugPartToString = (slug: string): string =>
     slug
+      // slugReplacements[0] equivalent with capitalize added
       .split("-")
       .map((w) => capitalize(w))
-      .join(" ");
+      .join(" ")
+      // ==========
+      // slugReplacements[1]
+      .replaceAll(slugReplacements[1].replacer, slugReplacements[1].replaced);
 
   // 4 characters = gig year = gig has a name (it's a festival)
   const name = date.length === 4 ? slugPartToString(splittedSlug[1]) : null;
