@@ -81,7 +81,7 @@ export default function WeekGigs() {
               <Box w="fit-content" m="auto">
                 <CopyButton value={discordContent || ""}>
                   {({ copied, copy }) => (
-                    <Button color={copied ? "teal" : "blue"} onClick={copy}>
+                    <Button color={copied ? "teal" : "primary"} onClick={copy}>
                       {copied ? "Copié !" : "Copier le post Discord"}
                     </Button>
                   )}
@@ -100,7 +100,7 @@ export default function WeekGigs() {
               <Box w="fit-content" m="auto" mt="md">
                 <CopyButton value={facebookContent || ""}>
                   {({ copied, copy }) => (
-                    <Button color={copied ? "teal" : "blue"} onClick={copy}>
+                    <Button color={copied ? "teal" : "primary"} onClick={copy}>
                       {copied ? "Copié !" : "Copier le post Facebook"}
                     </Button>
                   )}
