@@ -93,9 +93,8 @@ export default function WeekGigs() {
                   readOnly
                   autosize
                   w={{ base: "100%", sm: "70%", md: "50%" }}
-                >
-                  {discordContent}
-                </Textarea>
+                  defaultValue={discordContent}
+                />
               </pre>
 
               <Box w="fit-content" m="auto" mt="md">
@@ -113,9 +112,8 @@ export default function WeekGigs() {
                   readOnly
                   autosize
                   w={{ base: "100%", sm: "70%", md: "50%" }}
-                >
-                  {facebookContent}
-                </Textarea>
+                  defaultValue={facebookContent}
+                />
               </pre>
             </>
           )}
