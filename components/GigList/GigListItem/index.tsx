@@ -87,13 +87,13 @@ export default function GigListItem({
             pos="relative"
           >
             {displayDate && (
-              <Badge color="primary" size="lg" w={100} h="fit-content">
+              <Badge color="primary" size="lg" w={105} h="fit-content">
                 {dayjs(date).format("ddd DD/MM")}
                 <br />
                 {endDate && dayjs(endDate).format("ddd DD/MM")}
               </Badge>
             )}
-            <OptimizedImage src={imageUrl} alt={gigTitle} w={100} />
+            <OptimizedImage src={imageUrl} alt={gigTitle} w={105} />
             <GigImgOverlay gig={gig} />
           </Stack>
         }
