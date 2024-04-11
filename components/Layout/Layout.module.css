@@ -5,3 +5,7 @@
 [data-mantine-color-scheme="dark"] .appShell {
   background: var(--mantine-color-black);
 }
+
+[data-mantine-color-scheme="dark"] .menuLogo {
+  filter: invert(100%);
+}

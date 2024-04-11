@@ -14,7 +14,6 @@ import {
   Button,
   Stack,
   Image,
-  useComputedColorScheme,
   Affix,
   Transition,
 } from "@mantine/core";
@@ -55,7 +54,6 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const [scroll, scrollTo] = useWindowScroll();
   const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
-  const colorScheme = useComputedColorScheme("light");
   const router = useRouter();
   const { status } = useSession();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
@@ -133,12 +131,10 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
               src={"/images/logo with text.png"}
               alt="Logo Larsen Toulousaine"
               mah="100%"
-              style={{
-                filter: colorScheme === "dark" ? "invert(100%)" : "",
-              }}
               h="auto"
               w={75}
               m="auto"
+              className={classes.menuLogo}
             />
           </Box>
           <Button component={Link} href="/">
