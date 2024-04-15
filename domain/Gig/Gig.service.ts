@@ -198,7 +198,7 @@ const getGigMarkdownTitle = (gig: GigWithBandsAndPlace): string => {
 };
 
 const getGigMarkdownDate = (date: Date): string =>
-  `📅 ${capitalize(dayjs(date).format("dddd DD MMMM"))}`;
+  `📅 ${capitalize(dayjs(date).tz().format("dddd DD MMMM"))}`;
 
 const getGigMarkdownPlace = (place: Place): string =>
   `📍 ${place.name}${place.city !== MAIN_CITY ? `, (${place.city})` : ""}`;
