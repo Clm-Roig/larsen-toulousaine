@@ -24,6 +24,7 @@ import {
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import { removeParametersFromUrl } from "@/utils/utils";
 import { revalidatePath } from "next/cache";
+import dayjs from "@/lib/dayjs";
 
 export async function GET(
   request: NextRequest,
@@ -122,13 +123,16 @@ export async function PUT(request: NextRequest) {
       where: { id: body.id },
       data: Prisma.validator<Prisma.GigUpdateInput>()({
         ...bodyWithoutPlaceIdAndAuthorId,
+        // endDate must be different than date
+        endDate: dayjs(body.endDate).isSame(dayjs(body.date))
+          ? null
+          : body.endDate,
         facebookEventUrl: facebookEventUrl
           ? removeParametersFromUrl(facebookEventUrl)
           : null,
-        ticketReservationLink:
-          bodyWithoutPlaceIdAndAuthorId.hasTicketReservationLink
-            ? bodyWithoutPlaceIdAndAuthorId.ticketReservationLink
-            : null,
+        ticketReservationLink: body.hasTicketReservationLink
+          ? body.ticketReservationLink
+          : null,
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {

@@ -74,9 +74,7 @@ type Props = {
 };
 
 export default function GigForm({ gig, isLoading, onSubmit }: Props) {
-  const [gigType, setGigType] = useState<GigType>(
-    gig?.name && gig?.endDate ? FESTIVAL : GIG,
-  );
+  const [gigType, setGigType] = useState<GigType>(gig?.name ? FESTIVAL : GIG);
   const gigTypeString = useMemo(() => gigTypeToString(gigType), [gigType]);
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
@@ -172,7 +170,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         date: new Date(gig.date),
         dateRange: gig.endDate
           ? [new Date(gig.date), new Date(gig.endDate)]
-          : [null, null],
+          : [new Date(gig.date), new Date(gig.date)],
         slug: "", // slug will be recomputed when saving the gig
         hasTicketReservationLink: gig.hasTicketReservationLink,
       });
@@ -252,6 +250,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
               required
               style={{ flex: 1 }}
               type={gigType === FESTIVAL ? "range" : "default"}
+              allowSingleDateInRange
               {...form.getInputProps(
                 gigType === FESTIVAL ? "dateRange" : "date",
               )}

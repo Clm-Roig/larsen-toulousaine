@@ -21,6 +21,7 @@ import { revalidatePath } from "next/cache";
 import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
+import dayjs from "@/lib/dayjs";
 
 async function POST(request: NextRequest) {
   const body = (await request.json()) as CreateGigArgs;
@@ -76,11 +77,15 @@ async function POST(request: NextRequest) {
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
         ...bodyWithoutPlaceId,
+        // endDate must be different than date
+        endDate: dayjs(body.endDate).isSame(dayjs(body.date))
+          ? null
+          : body.endDate,
         facebookEventUrl: facebookEventUrl
           ? removeParametersFromUrl(facebookEventUrl)
           : null,
-        ticketReservationLink: bodyWithoutPlaceId.hasTicketReservationLink
-          ? bodyWithoutPlaceId.ticketReservationLink
+        ticketReservationLink: body.hasTicketReservationLink
+          ? body.ticketReservationLink
           : null,
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
