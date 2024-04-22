@@ -101,14 +101,24 @@ export const getGigCalendarDescription = (gig: Gig): string => {
   }
 
   // Price
-  const priceString = getPriceString(price);
+  const priceString = formatGigPrice("Prix : ", price);
   if (priceString !== "") {
-    description += `${getNewLine()}Prix : ${priceString}`;
+    description += `${getNewLine()}${priceString}`;
   }
 
   // Bottom signature
   description += `${getNewLine()}[i]Évènement créé par Larsen Toulousaine, votre agenda metal toulousain[/i]`;
   return description;
+};
+
+export const formatGigPrice = (prefix: string, price: Gig["price"]): string => {
+  let res = prefix;
+  if (price === 0) res += "Prix libre ou gratuit";
+  else if (!price) res += "Inconnu";
+  else {
+    res += formatFrenchPrice(price);
+  }
+  return res;
 };
 
 export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
@@ -133,9 +143,9 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   }
 
   // Price
-  const priceString = getPriceString(price);
+  const priceString = formatGigPrice("Prix : ", price);
   if (priceString !== "") {
-    description += `${getNewLine()}Prix : ${priceString}`;
+    description += `${getNewLine()}${priceString}`;
   }
 
   // Ticket reservation link
@@ -151,22 +161,6 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   }
 
   return description;
-};
-
-export const getPriceString = (price?: number | null): string => {
-  let priceString = "";
-  if (price === 0) {
-    priceString = "libre ou gratuit";
-  }
-  if (price) {
-    priceString = new Intl.NumberFormat("fr-FR", {
-      style: "currency",
-      currency: "EUR",
-    })
-      .format(price)
-      .replace(",00", "");
-  }
-  return priceString;
 };
 
 export type HasTicketLinkFormValue = "true" | "false" | "";
@@ -203,9 +197,6 @@ const getGigMarkdownDate = (date: Date): string =>
 const getGigMarkdownPlace = (place: Place): string =>
   `📍 ${place.name}${place.city !== MAIN_CITY ? `, (${place.city})` : ""}`;
 
-const getGigMarkdownPrice = (price: Gig["price"]): string =>
-  `💸 ${price === 0 ? `Prix libre` : `${price}€`}`;
-
 export const toDiscordMarkdown = (
   gig: GigWithBandsAndPlace,
   lineBreakSymbol: string,
@@ -215,7 +206,7 @@ export const toDiscordMarkdown = (
   lines.push(`**${getGigMarkdownTitle(gig)}**`);
   lines.push(getGigMarkdownDate(date));
   lines.push(getGigMarkdownPlace(place));
-  lines.push(getGigMarkdownPrice(price));
+  lines.push(formatGigPrice("💸 ", price));
   // TODO: larsen-toulousaine.fr must be an environment variable
   lines.push(`[Plus d'infos](https://larsen-toulousaine.fr/${slug})`);
   return lines.map((line) => `> ${line}`).join(lineBreakSymbol);
@@ -230,7 +221,7 @@ export const toFacebookMarkdown = (
   lines.push(getGigMarkdownTitle(gig));
   lines.push(getGigMarkdownDate(date));
   lines.push(getGigMarkdownPlace(place));
-  lines.push(getGigMarkdownPrice(price));
+  lines.push(formatGigPrice("💸", price));
   lines.push(`${facebookEventUrl}`);
   return lines.map((line) => `${line}`).join(lineBreakSymbol);
 };

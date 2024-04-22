@@ -4,7 +4,7 @@ import {
   getGigCalendarDescription,
   getGigRSSFeedDescription,
   getGigTitleFromGigSlug,
-  getPriceString,
+  formatGigPrice,
 } from "@/domain/Gig/Gig.service";
 import { expect, describe, it } from "@jest/globals";
 import { gig, gigBands } from "./data";
@@ -74,13 +74,15 @@ describe("Gig service", () => {
       expect(calendarDescription).toContain(gig.ticketReservationLink);
     });
   });
-  describe("getPriceString", () => {
+  describe("formatGigPrice", () => {
     it("get gig price string", () => {
-      const priceString = getPriceString(gig.price);
+      const prefix = "myprefix";
+      const priceString = formatGigPrice(prefix, gig.price);
       expect(priceString).toContain(gig.price + "");
+      expect(priceString).toContain(prefix);
     });
     it("get free gig price string, including the words 'libre' and 'gratuit", () => {
-      const freeGig = getPriceString(0);
+      const freeGig = formatGigPrice("Prix : ", 0);
       expect(freeGig).toContain("libre");
       expect(freeGig).toContain("gratuit");
     });
