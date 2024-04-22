@@ -209,8 +209,7 @@ export const toDiscordMarkdown = (
   lines.push(getGigMarkdownDate(date));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice("💸 ", price));
-  // TODO: larsen-toulousaine.fr must be an environment variable
-  lines.push(`[Plus d'infos](https://larsen-toulousaine.fr/${slug})`);
+  lines.push(`[Plus d'infos](${process.env.NEXT_PUBLIC_URL}/${slug})`);
   return lines.map((line) => `> ${line}`).join(lineBreakSymbol);
 };
 
