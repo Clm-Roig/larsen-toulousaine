@@ -1,7 +1,11 @@
-import { getBandNames, getSortedGenres } from "@/domain/Band/Band.service";
+import {
+  getBandNames,
+  getSortedGenres,
+  getSortedUniqueBandGenres,
+} from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
-import { V_SEPARATOR, capitalize } from "@/utils/utils";
+import { V_SEPARATOR, capitalize, formatFrenchPrice } from "@/utils/utils";
 import { Band, Gig, Place } from "@prisma/client";
 import dayjs from "@/lib/dayjs";
 
@@ -183,9 +187,7 @@ export const hasTicketLinkBoolToFormValue = (
 // ===== To Markdown utils ===== //
 
 const getGigMarkdownTitle = (gig: GigWithBandsAndPlace): string => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
-  const allBandGenres = gig.bands.flatMap((b: any) => b.genres);
-  return `${getGigTitle(gig)} (${getSortedGenres(allBandGenres)
+  return `${getGigTitle(gig)} (${getSortedUniqueBandGenres(gig.bands)
     .slice(0, 3)
     .map((g) => g.name)
     .join(", ")})`;

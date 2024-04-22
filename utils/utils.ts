@@ -68,3 +68,11 @@ export const getMetadata = (
 
 export const removeParametersFromUrl = (url: string): string =>
   url.split("?")[0];
+
+export const formatFrenchPrice = (price: number): string =>
+  new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  })
+    .format(price)
+    .replace(",00", "");
