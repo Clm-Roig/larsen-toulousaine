@@ -11,9 +11,7 @@ import { getMetadata } from "@/utils/utils";
 import { themeColor } from "@/domain/constants";
 
 export const metadata: Metadata = getMetadata({
-  title: "Larsen Toulousaine",
   description: "Votre agenda metal toulousain",
-  manifest: "/manifest.json",
 });
 
 export const viewport: Viewport = {
