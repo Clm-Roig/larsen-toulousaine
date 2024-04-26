@@ -1,0 +1,11 @@
+[data-mantine-color-scheme="dark"] .assoLogo {
+  filter: invert(100%);
+}
+
+.assoLogo:hover {
+  filter: drop-shadow(0px 0px 5px var(--mantine-color-primary-5));
+}
+
+[data-mantine-color-scheme="dark"] .assoLogo:hover {
+  filter: invert(100%) drop-shadow(0px 0px 5px var(--mantine-color-primary-5));
+}
