@@ -1,4 +1,4 @@
-import { NB_OF_BANDS_RETURNED } from "@/domain/Band/constants";
+import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         name: "asc",
       },
-      take: NB_OF_BANDS_RETURNED,
+      take: NB_OF_BANDS_PER_PAGE,
       where: whereClause,
       include: {
         genres: true,

@@ -27,7 +27,7 @@ import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { Genre } from "@prisma/client";
 import BandFields from "@/components/BandFields";
-import { NB_OF_BANDS_RETURNED } from "@/domain/Band/constants";
+import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import useSearchParams from "@/hooks/useSearchParams";
 
 const Bands = () => {
@@ -159,11 +159,12 @@ const Bands = () => {
           bands={bands}
           genres={genres || []}
           isLoading={isFetching || isDeletePending}
+          nbOfResults={count}
           onDeleteBand={handleOnDeleteBand}
           onEditBand={handleOnEditBand}
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
-          pageTotal={Math.ceil((count || 0) / NB_OF_BANDS_RETURNED)}
+          pageTotal={Math.ceil((count || 0) / NB_OF_BANDS_PER_PAGE)}
           searchedName={searchedName}
           searchedGenres={searchedGenres}
           setPage={handleOnSetPage}

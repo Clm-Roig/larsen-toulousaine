@@ -23,6 +23,7 @@ type Props = {
   bands: BandWithGenresAndGigCount[] | undefined;
   genres: Genre[];
   isLoading: boolean;
+  nbOfResults?: number;
   onDeleteBand: (band: Band) => void;
   onEditBand: (band: Band) => void;
   page: number;
@@ -38,6 +39,7 @@ export default function BandTable({
   bands,
   genres,
   isLoading,
+  nbOfResults,
   onDeleteBand,
   onEditBand,
   page,
@@ -85,10 +87,15 @@ export default function BandTable({
         </Stack>
       ) : (
         <Stack gap="xs">
-          {bands?.length && (
+          {nbOfResults !== undefined && (
             <Text>
-              {bands.length} résultat
-              {bands.length > 1 ? "s" : ""}
+              {nbOfResults === 0 && "Aucun groupe trouvé"}
+              {nbOfResults > 0 && (
+                <>
+                  <b>{nbOfResults}</b>{" "}
+                  {`groupe${nbOfResults > 1 ? "s trouvés" : " trouvé"}`}
+                </>
+              )}
             </Text>
           )}
           <Table
@@ -106,7 +113,6 @@ export default function BandTable({
               setSearchedGenres={setSearchedGenres}
               setSearchedName={setSearchedName}
             />
-
             <Table.Tbody>
               {bands?.map((band) => (
                 <Table.Tr key={band.id}>

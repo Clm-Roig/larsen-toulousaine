@@ -1,4 +1,4 @@
-import { NB_OF_BANDS_RETURNED } from "@/domain/Band/constants";
+import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
       orderBy: {
         name: "asc",
       },
-      skip: (page !== null ? parseInt(page, 10) : 0) * NB_OF_BANDS_RETURNED,
-      take: NB_OF_BANDS_RETURNED,
+      skip: (page !== null ? parseInt(page, 10) : 0) * NB_OF_BANDS_PER_PAGE,
+      take: NB_OF_BANDS_PER_PAGE,
       include: {
         genres: true,
         _count: {
