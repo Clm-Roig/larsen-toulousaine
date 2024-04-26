@@ -64,61 +64,59 @@ export default function WeekGigs() {
         places={filteredPlaces || []}
       />
 
-      {markdownGigs && (
-        <>
-          <Divider my="md" />
-          {isMarkdownGigsLoading && (
-            <Center my="sm">
-              <Stack>
-                <Loader m="auto" />
-                <Text>Chargement du markdown...</Text>
-              </Stack>
-            </Center>
-          )}
+      <>
+        <Divider my="md" />
+        {isMarkdownGigsLoading && (
+          <Center my="sm">
+            <Stack>
+              <Loader m="auto" />
+              <Text>Chargement des posts Facebook et Discord...</Text>
+            </Stack>
+          </Center>
+        )}
 
-          {!isMarkdownGigsLoading && (
-            <>
-              <Box w="fit-content" m="auto">
-                <CopyButton value={discordContent || ""}>
-                  {({ copied, copy }) => (
-                    <Button color={copied ? "teal" : "primary"} onClick={copy}>
-                      {copied ? "Copié !" : "Copier le post Discord"}
-                    </Button>
-                  )}
-                </CopyButton>
-              </Box>
-              <pre>
-                <Textarea
-                  m="auto"
-                  readOnly
-                  autosize
-                  w={{ base: "100%", sm: "70%", md: "50%" }}
-                  defaultValue={discordContent}
-                />
-              </pre>
+        {!isMarkdownGigsLoading && !!markdownGigs && (
+          <>
+            <Box w="fit-content" m="auto">
+              <CopyButton value={discordContent || ""}>
+                {({ copied, copy }) => (
+                  <Button color={copied ? "teal" : "primary"} onClick={copy}>
+                    {copied ? "Copié !" : "Copier le post Discord"}
+                  </Button>
+                )}
+              </CopyButton>
+            </Box>
+            <pre>
+              <Textarea
+                m="auto"
+                readOnly
+                autosize
+                w={{ base: "100%", sm: "70%", md: "50%" }}
+                defaultValue={discordContent}
+              />
+            </pre>
 
-              <Box w="fit-content" m="auto" mt="md">
-                <CopyButton value={facebookContent || ""}>
-                  {({ copied, copy }) => (
-                    <Button color={copied ? "teal" : "primary"} onClick={copy}>
-                      {copied ? "Copié !" : "Copier le post Facebook"}
-                    </Button>
-                  )}
-                </CopyButton>
-              </Box>
-              <pre>
-                <Textarea
-                  m="auto"
-                  readOnly
-                  autosize
-                  w={{ base: "100%", sm: "70%", md: "50%" }}
-                  defaultValue={facebookContent}
-                />
-              </pre>
-            </>
-          )}
-        </>
-      )}
+            <Box w="fit-content" m="auto" mt="xl">
+              <CopyButton value={facebookContent || ""}>
+                {({ copied, copy }) => (
+                  <Button color={copied ? "teal" : "primary"} onClick={copy}>
+                    {copied ? "Copié !" : "Copier le post Facebook"}
+                  </Button>
+                )}
+              </CopyButton>
+            </Box>
+            <pre>
+              <Textarea
+                m="auto"
+                readOnly
+                autosize
+                w={{ base: "100%", sm: "70%", md: "50%" }}
+                defaultValue={facebookContent}
+              />
+            </pre>
+          </>
+        )}
+      </>
     </>
   );
 }
