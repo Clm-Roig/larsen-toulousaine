@@ -54,22 +54,21 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
 
         <Group justify="flex-end" style={{ flex: 1 }}>
           <GigSearchInput />
-          <Button
-            size="compact-md"
-            component={Link}
-            href="/cette-semaine"
-            visibleFrom="sm"
-          >
-            Cette semaine
-          </Button>
-          <Button
-            size="compact-md"
-            component={Link}
-            href="/a-propos"
-            visibleFrom="sm"
-          >
-            À propos
-          </Button>
+          {[
+            { href: "/cette-semaine", text: "Cette semaine" },
+            { href: "/assos", text: "Assos" },
+            { href: "/a-propos", text: "À propos" },
+          ].map((item) => (
+            <Button
+              component={Link}
+              href={item.href}
+              key={item.href}
+              size="compact-md"
+              visibleFrom="sm"
+            >
+              {item.text}
+            </Button>
+          ))}
 
           {status === "authenticated" && (
             <>
