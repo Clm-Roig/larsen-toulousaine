@@ -2,12 +2,10 @@
 
 import { Genre, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
-import useGigs from "@/hooks/useGigs";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import { useQuery } from "@tanstack/react-query";
 import usePreferences from "@/hooks/usePreferences";
-import { endOf, startOf } from "@/utils/date";
 import useMarkdownGigs from "@/hooks/useMarkdownGigs";
 import {
   Box,
@@ -20,6 +18,8 @@ import {
   Text,
   Textarea,
 } from "@mantine/core";
+import useWeekGigs from "@/hooks/useWeekGigs";
+import dayjs from "@/lib/dayjs";
 
 export default function WeekGigs() {
   const { displayNotSafePlaces, preferencesSum } = usePreferences();
@@ -35,15 +35,12 @@ export default function WeekGigs() {
     (p) => (displayNotSafePlaces || p.isSafe) && !p.isClosed,
   );
 
-  const { gigs, isLoading } = useGigs({
-    startDate: startOf("week"),
-    endDate: endOf("week"),
-  });
+  const { isLoading, selectedWeek, setSelectedWeek, weekGigs } = useWeekGigs();
 
   const { gigs: markdownGigs, isLoading: isMarkdownGigsLoading } =
     useMarkdownGigs({
-      startDate: startOf("week"),
-      endDate: endOf("week"),
+      startDate: dayjs(selectedWeek).startOf("week").toDate(),
+      endDate: dayjs(selectedWeek).endOf("week").toDate(),
     });
 
   const discordContent = markdownGigs?.discord.replaceAll("\\n\\n", "\n");
@@ -52,8 +49,9 @@ export default function WeekGigs() {
   return (
     <>
       <GigList
+        dateStep="week"
         genres={genres || []}
-        gigs={gigs}
+        gigs={weekGigs}
         isLoading={isLoading}
         noGigsFoundMessage={
           `Aucun concert trouvé pour cette semaine 🙁` +
@@ -62,21 +60,26 @@ export default function WeekGigs() {
             : "")
         }
         places={filteredPlaces || []}
+        selectedDate={selectedWeek}
+        setSelectedDate={setSelectedWeek}
       />
 
       <>
-        <Divider my="md" />
         {isMarkdownGigsLoading && (
-          <Center my="sm">
-            <Stack>
-              <Loader m="auto" />
-              <Text>Chargement des posts Facebook et Discord...</Text>
-            </Stack>
-          </Center>
+          <>
+            <Divider my="md" />
+            <Center my="sm">
+              <Stack>
+                <Loader m="auto" />
+                <Text>Chargement des posts Facebook et Discord...</Text>
+              </Stack>
+            </Center>
+          </>
         )}
 
         {!isMarkdownGigsLoading && !!markdownGigs && (
           <>
+            <Divider my="md" />
             <Box w="fit-content" m="auto">
               <CopyButton value={discordContent || ""}>
                 {({ copied, copy }) => (

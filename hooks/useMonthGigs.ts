@@ -5,10 +5,9 @@ import { getGigs } from "@/domain/Gig/Gig.webService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSortedGigs from "@/hooks/useSortedGigs";
 import { startOf } from "@/utils/date";
+import { GIGS_STALE_TIME_IN_MS } from "@/domain/Gig/constants";
 
-const gigsStaleTimeInMs = 5 * 60 * 1000;
-
-export default function useGigs() {
+export default function useMonthGigs() {
   const queryClient = useQueryClient();
 
   const [selectedMonth, setSelectedMonth] = useState(startOf("month"));
@@ -22,7 +21,7 @@ export default function useGigs() {
       selectedMonthEnd.toISOString(),
     ],
     queryFn: async () => await getGigs(selectedMonthStart, selectedMonthEnd),
-    staleTime: gigsStaleTimeInMs,
+    staleTime: GIGS_STALE_TIME_IN_MS,
   });
 
   // Prefetch next month gigs
@@ -36,7 +35,7 @@ export default function useGigs() {
         nextMonthEnd.toISOString(),
       ],
       queryFn: async () => await getGigs(nextMonthStart, nextMonthEnd),
-      staleTime: gigsStaleTimeInMs,
+      staleTime: GIGS_STALE_TIME_IN_MS,
     });
   }, [queryClient, selectedMonthEnd, selectedMonthStart]);
 
@@ -55,7 +54,7 @@ export default function useGigs() {
         previousMonthEnd.toISOString(),
       ],
       queryFn: async () => await getGigs(previousMonthStart, previousMonthEnd),
-      staleTime: gigsStaleTimeInMs,
+      staleTime: GIGS_STALE_TIME_IN_MS,
     });
   }, [queryClient, selectedMonthEnd, selectedMonthStart]);
 

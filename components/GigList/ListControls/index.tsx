@@ -10,42 +10,37 @@ import { Genre, Place } from "@prisma/client";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import OptionsPopover from "@/components/GigList/ListControls/OptionsPopover";
-import MonthSelector from "@/components/GigList/ListControls/MonthSelector";
-import useSearchParams from "@/hooks/useSearchParams";
+import DateSelector from "@/components/GigList/ListControls/DateSelector";
 
 type Props = {
+  dateStep: "month" | "week";
   genres: Genre[];
   places: Place[];
-  selectedMonth?: Date;
-  setSelectedMonth?: (monthDate: Date) => void;
+  selectedDate?: Date;
+  setSelectedDate?: (newDate: Date) => void;
 };
 
 export default function ListControls({
+  dateStep,
   genres,
   places,
-  selectedMonth,
-  setSelectedMonth,
+  selectedDate,
+  setSelectedDate,
 }: Props) {
   const { setViewType, viewType } = usePreferences();
-  const { setSearchParams } = useSearchParams();
 
-  const incrementMonth = () => {
-    const nextMonth = dayjs(selectedMonth).add(1, "month").toDate();
-    updateMonth(nextMonth);
+  const incrementDate = () => {
+    const nextDate = dayjs(selectedDate).add(1, dateStep).toDate();
+    updateDate(nextDate);
   };
 
-  const decrementMonth = () => {
-    const previousMonth = dayjs(selectedMonth).subtract(1, "month").toDate();
-    updateMonth(previousMonth);
+  const decrementDate = () => {
+    const previousDate = dayjs(selectedDate).subtract(1, dateStep).toDate();
+    updateDate(previousDate);
   };
 
-  const updateMonth = (newMonth: Date) => {
-    setSelectedMonth?.(newMonth);
-    const changes = new Map<string, number>([
-      ["année", newMonth.getFullYear()],
-      ["mois", newMonth.getMonth() + 1], // getMonth() goes from 0 to 11
-    ]);
-    setSearchParams(changes);
+  const updateDate = (newDate: Date) => {
+    setSelectedDate?.(newDate);
   };
 
   return (
@@ -53,13 +48,14 @@ export default function ListControls({
       {/* Hidden block to preserve grid layout */}
       <Box style={{ visibility: "hidden" }}></Box>
 
-      {selectedMonth ? (
+      {selectedDate ? (
         <Flex gap="xs" justify="center" align="center">
-          <MonthSelector
-            decrementMonth={decrementMonth}
-            incrementMonth={incrementMonth}
-            selectedMonth={selectedMonth}
-            onSelectedMonthUpdate={updateMonth}
+          <DateSelector
+            dateStep={dateStep}
+            decrementDate={decrementDate}
+            incrementDate={incrementDate}
+            selectedDate={selectedDate}
+            onSelectedDateUpdate={updateDate}
           />
         </Flex>
       ) : (

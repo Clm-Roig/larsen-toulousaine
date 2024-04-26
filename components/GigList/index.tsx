@@ -25,25 +25,27 @@ import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 
 type Props = {
+  dateStep: "month" | "week";
   displayMissingDataOnly?: boolean;
   genres: Genre[];
   gigs?: GigWithBandsAndPlace[];
   isLoading: boolean;
   noGigsFoundMessage: string;
   places: Place[];
-  selectedMonth?: Date;
-  setSelectedMonth?: (monthDate: Date) => void;
+  selectedDate?: Date;
+  setSelectedDate?: (newDate: Date) => void;
 };
 
 const GigList = ({
+  dateStep,
   displayMissingDataOnly = false,
   genres,
   gigs,
   isLoading,
   noGigsFoundMessage,
   places,
-  selectedMonth,
-  setSelectedMonth,
+  selectedDate,
+  setSelectedDate,
 }: Props) => {
   const { viewType } = usePreferences();
   const { status } = useSession();
@@ -51,10 +53,11 @@ const GigList = ({
     <>
       <Box mb="md">
         <ListControls
+          dateStep={dateStep}
           genres={genres}
           places={places}
-          selectedMonth={selectedMonth}
-          setSelectedMonth={setSelectedMonth}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
         />
       </Box>
       {isLoading && (

@@ -11,7 +11,7 @@ import usePreferences from "@/hooks/usePreferences";
 import useSearchParams from "@/hooks/useSearchParams";
 
 export default function Gigs() {
-  const { searchParams } = useSearchParams();
+  const { searchParams, setSearchParams } = useSearchParams();
   const { displayNotSafePlaces } = usePreferences();
   const { data: genres } = useQuery<Genre[], Error>({
     queryKey: ["genres"],
@@ -56,15 +56,25 @@ export default function Gigs() {
     (p) => displayNotSafePlaces || p.isSafe,
   );
 
+  const onSelectedMonthChange = (newMonth: Date) => {
+    setSelectedMonth(newMonth);
+    const changes = new Map<string, number>([
+      ["année", newMonth.getFullYear()],
+      ["mois", newMonth.getMonth() + 1], // getMonth() goes from 0 to 11
+    ]);
+    setSearchParams(changes);
+  };
+
   return (
     <GigList
+      dateStep="month"
       genres={genres || []}
       gigs={monthGigs}
       isLoading={isLoading}
       noGigsFoundMessage="Aucun concert trouvé pour ce mois-ci 🙁"
       places={filteredPlaces || []}
-      selectedMonth={selectedMonth}
-      setSelectedMonth={(date: Date) => setSelectedMonth(date)}
+      selectedDate={selectedMonth}
+      setSelectedDate={onSelectedMonthChange}
     />
   );
 }

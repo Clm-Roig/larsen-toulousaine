@@ -26,6 +26,7 @@ export default function InfosManquantesPage() {
 
   return (
     <GigList
+      dateStep="month"
       displayMissingDataOnly
       genres={genres || []}
       gigs={gigs}
