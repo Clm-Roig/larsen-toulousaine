@@ -2,6 +2,11 @@ import { Center, Loader } from "@mantine/core";
 import Layout from "@/components/Layout";
 import { Suspense } from "react";
 import AccountPage from "./account-page";
+import { getMetadata } from "@/utils/utils";
+
+export const metadata = getMetadata({
+  title: "Mon compte",
+});
 
 export default function Page() {
   return (

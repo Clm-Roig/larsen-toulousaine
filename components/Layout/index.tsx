@@ -37,7 +37,7 @@ type Props = {
 const NAVBAR_HEIGHT = 64;
 
 const frenchBreadcrumbDictionnary = {
-  Compte: "Compte",
+  "mon-compte": "Mon compte",
   "Ajout-concert": "Ajout d'un concert",
   Admin: "Administration",
   Gigs: "Concerts",

@@ -1,4 +1,4 @@
-import { Metadata, Viewport } from "next";
+import { Viewport } from "next";
 import { ColorSchemeScript } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -7,12 +7,10 @@ import "./custom.css";
 import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { Analytics } from "@vercel/analytics/react";
-import { getMetadata } from "@/utils/utils";
 import { themeColor } from "@/domain/constants";
+import { getMetadata } from "@/utils/utils";
 
-export const metadata: Metadata = getMetadata({
-  description: "Votre agenda metal toulousain",
-});
+export const metadata = getMetadata();
 
 export const viewport: Viewport = {
   width: "device-width",

@@ -3,6 +3,12 @@ import Layout from "@/components/Layout";
 import { Suspense } from "react";
 import InfosManquantesPage from "./infos-manquantes-page";
 
+import { getMetadata } from "@/utils/utils";
+
+export const metadata = getMetadata({
+  title: "Infos manquantes",
+});
+
 export default function Page() {
   return (
     <Layout>

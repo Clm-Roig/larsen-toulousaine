@@ -47,24 +47,39 @@ export function isMobile() {
   });
 }
 
+/**
+ *Get app metadata. If a title is provided, it automatically appends the suffix " ║ Larsen Toulousaine"
+ * @param {Metadata} metadata
+ * @param {OpenGraph} openGraph
+ * @returns {Metadata}
+ */
 export const getMetadata = (
-  metadata: Omit<Metadata, "openGraph">,
+  metadata?: Omit<Metadata, "openGraph">,
   openGraph?: OpenGraph,
-): Metadata => ({
-  applicationName: "Larsen Toulousaine",
-  icons: { icon: "icon.png" },
-  manifest: "/manifest.json",
-  ...metadata,
-  openGraph: {
-    siteName: "Larsen Toulousaine",
-    type: "website",
-    images: `${process.env.NEXT_PUBLIC_URL}/icon.png`,
-    ...openGraph,
-  },
-  other: {
-    "fb:app_id": fbAppId,
-  },
-});
+): Metadata => {
+  const { title: metadataTitle, ...metadataWithoutTitle } = metadata || {};
+  let title = metadataTitle;
+  if (typeof title === "string") {
+    title += " ║ Larsen Toulousaine";
+  }
+  return {
+    applicationName: "Larsen Toulousaine",
+    description: "Votre agenda metal toulousain",
+    icons: { icon: "icon.png" },
+    manifest: "/manifest.json",
+    title: title || "Larsen Toulousaine",
+    ...metadataWithoutTitle,
+    openGraph: {
+      siteName: "Larsen Toulousaine",
+      type: "website",
+      images: `${process.env.NEXT_PUBLIC_URL}/icon.png`,
+      ...openGraph,
+    },
+    other: {
+      "fb:app_id": fbAppId,
+    },
+  };
+};
 
 export const removeParametersFromUrl = (url: string): string =>
   url.split("?")[0];

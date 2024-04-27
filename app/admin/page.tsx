@@ -95,7 +95,7 @@ export default function Admin() {
                 />
               )}
               <DashboardCard
-                href="/admin/compte"
+                href="/admin/mon-compte"
                 icon={<IconUser />}
                 text="Mon compte"
               />
