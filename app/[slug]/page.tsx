@@ -10,6 +10,7 @@ import {
 import dayjs from "dayjs";
 import { V_SEPARATOR, getMetadata } from "@/utils/utils";
 import { getGig } from "@/domain/Gig/Gig.webService";
+import { MAIN_CITY } from "@/domain/Place/constants";
 
 type Props = {
   params: { slug: string };
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : "";
   const description = `${bandNames.join(V_SEPARATOR)}${dateString} - ${
     gig?.place.name
-  } (${gig?.place.city})`;
+  }${gig?.place.city && gig.place.city !== MAIN_CITY ? ` (${gig.place.city})` : ""}`;
 
   return getMetadata(
     {
