@@ -20,11 +20,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = params;
   const decodedSlug = decodeURIComponent(slug);
   const gig = await getGig(decodedSlug);
-  const { dateObject: gigDate, bandNames } = getDataFromGigSlug(decodedSlug);
+  const {
+    date,
+    dateObject: gigDate,
+    bandNames,
+  } = getDataFromGigSlug(decodedSlug);
   const gigTitle = getGigTitleFromGigSlug(decodedSlug);
-  const dateString = gigDate
-    ? " le " + dayjs(gigDate).format("dddd D MMMM YYYY")
-    : "";
+  const dateString =
+    // check if gigDate is a valid date (for a festival, it's not because there is only the year)
+    gigDate && !isNaN(gigDate.getTime())
+      ? " le " + dayjs(gigDate).format("dddd D MMMM YYYY")
+      : date;
+
   const description = `${bandNames.join(V_SEPARATOR)}${dateString} - ${
     gig?.place.name
   }${gig?.place.city && gig.place.city !== MAIN_CITY ? ` (${gig.place.city})` : ""}`;

@@ -120,6 +120,7 @@ export const formatGigPrice = (prefix: string, price: Gig["price"]): string => {
   if (price === 0) res += "Prix libre ou gratuit";
   else if (!price) res += "Inconnu";
   else {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     res += formatFrenchPrice(price);
   }
   return res;
