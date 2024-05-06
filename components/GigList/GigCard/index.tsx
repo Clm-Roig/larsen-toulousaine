@@ -97,7 +97,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
             </Text>
             {!displayMissingDataOnly && (
               <Group gap={4}>
-                {bandGenres.map((genre) => (
+                {bandGenres.slice(0, 8).map((genre) => (
                   <GenreBadge key={genre?.id} genre={genre} filterOnClick />
                 ))}
               </Group>
