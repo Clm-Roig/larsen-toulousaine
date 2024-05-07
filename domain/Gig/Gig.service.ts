@@ -194,8 +194,8 @@ const getGigMarkdownTitle = (gig: GigWithBandsAndPlace): string => {
     .join(", ")})`;
 };
 
-const getGigMarkdownDate = (date: Date): string =>
-  `📅 ${capitalize(dayjs(date).tz().format("dddd DD MMMM"))}`;
+const getGigMarkdownDate = (date: Date, endDate?: Date | null): string =>
+  `📅 ${capitalize(dayjs(date).tz().format("dddd DD MMMM"))}${endDate ? ` au ${dayjs(endDate).tz().format("dddd DD MMMM")}` : ""}`;
 
 const getGigMarkdownPlace = (place: Place): string =>
   `📍 ${place.name}${place.city !== MAIN_CITY ? ` (${place.city})` : ""}`;
@@ -204,10 +204,10 @@ export const toDiscordMarkdown = (
   gig: GigWithBandsAndPlace,
   lineBreakSymbol: string,
 ) => {
-  const { date, place, price, slug } = gig;
+  const { date, endDate, place, price, slug } = gig;
   const lines: string[] = [];
   lines.push(`**${getGigMarkdownTitle(gig)}**`);
-  lines.push(getGigMarkdownDate(date));
+  lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice("💸 ", price));
   lines.push(`[Plus d'infos](${process.env.NEXT_PUBLIC_URL}/${slug})`);
@@ -218,10 +218,10 @@ export const toFacebookMarkdown = (
   gig: GigWithBandsAndPlace,
   lineBreakSymbol: string,
 ) => {
-  const { date, facebookEventUrl, place, price } = gig;
+  const { date, endDate, facebookEventUrl, place, price } = gig;
   const lines: string[] = [];
   lines.push(getGigMarkdownTitle(gig));
-  lines.push(getGigMarkdownDate(date));
+  lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice("💸", price));
   lines.push(`${facebookEventUrl}`);
