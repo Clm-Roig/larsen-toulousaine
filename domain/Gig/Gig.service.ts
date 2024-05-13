@@ -194,11 +194,15 @@ const getGigMarkdownTitle = (gig: GigWithBandsAndPlace): string => {
     .join(", ")})`;
 };
 
+const markdownPricePrefix = `💸 `;
+const markdownDatePrefix = `📅 `;
+const markdownPlacePrefix = `📍 `;
+
 const getGigMarkdownDate = (date: Date, endDate?: Date | null): string =>
-  `📅 ${capitalize(dayjs(date).tz().format("dddd DD MMMM"))}${endDate ? ` au ${dayjs(endDate).tz().format("dddd DD MMMM")}` : ""}`;
+  `${markdownDatePrefix}${capitalize(dayjs(date).tz().format("dddd DD MMMM"))}${endDate ? ` au ${dayjs(endDate).tz().format("dddd DD MMMM")}` : ""}`;
 
 const getGigMarkdownPlace = (place: Place): string =>
-  `📍 ${place.name}${place.city !== MAIN_CITY ? ` (${place.city})` : ""}`;
+  `${markdownPlacePrefix}${place.name}${place.city === MAIN_CITY ? "" : ` (${place.city})`}`;
 
 export const toDiscordMarkdown = (
   gig: GigWithBandsAndPlace,
@@ -209,7 +213,7 @@ export const toDiscordMarkdown = (
   lines.push(`**${getGigMarkdownTitle(gig)}**`);
   lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
-  lines.push(formatGigPrice("💸 ", price));
+  lines.push(formatGigPrice(markdownPricePrefix, price));
   lines.push(`[Plus d'infos](${process.env.NEXT_PUBLIC_URL}/${slug})`);
   return lines.map((line) => `> ${line}`).join(lineBreakSymbol);
 };
@@ -223,7 +227,7 @@ export const toFacebookMarkdown = (
   lines.push(getGigMarkdownTitle(gig));
   lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
-  lines.push(formatGigPrice("💸", price));
+  lines.push(formatGigPrice(markdownPricePrefix, price));
   lines.push(`${facebookEventUrl}`);
   return lines.map((line) => `${line}`).join(lineBreakSymbol);
 };
