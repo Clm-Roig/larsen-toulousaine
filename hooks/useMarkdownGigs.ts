@@ -1,3 +1,4 @@
+import { GIGS_STALE_TIME_IN_MS } from "@/domain/Gig/constants";
 import { MarkdownGigs } from "@/domain/Gig/Gig.type";
 import { getMarkdownGigs } from "@/domain/Gig/Gig.webService";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ export default function useMarkdownGigs({
     queryKey: ["markdownGigs", startDate.toISOString(), endDate.toISOString()],
     queryFn: async () => await getMarkdownGigs(startDate, endDate),
     enabled: !!data?.user,
+    staleTime: GIGS_STALE_TIME_IN_MS,
   });
 
   return {
