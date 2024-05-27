@@ -228,6 +228,8 @@ export const toFacebookMarkdown = (
   lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice(markdownPricePrefix, price));
-  lines.push(`${facebookEventUrl}`);
+  if (facebookEventUrl) {
+    lines.push(`${facebookEventUrl}`);
+  }
   return lines.map((line) => `${line}`).join(lineBreakSymbol);
 };
