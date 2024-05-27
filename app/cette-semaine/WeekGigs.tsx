@@ -95,7 +95,7 @@ export default function WeekGigs() {
                 readOnly
                 autosize
                 w={{ base: "100%", sm: "70%", md: "50%" }}
-                defaultValue={discordContent}
+                value={discordContent}
               />
             </pre>
 
@@ -114,7 +114,7 @@ export default function WeekGigs() {
                 readOnly
                 autosize
                 w={{ base: "100%", sm: "70%", md: "50%" }}
-                defaultValue={facebookContent}
+                value={facebookContent}
               />
             </pre>
           </>
