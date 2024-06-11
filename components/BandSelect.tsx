@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import { normalizeString } from "@/utils/utils";
+import { getSortedGenres } from "@/domain/Band/Band.service";
 
 type Props = {
   excludedBands?: Array<{ id?: Band["id"]; name: string }>;
@@ -57,17 +58,38 @@ export default function BandSelect({
     }
   }, [value]);
 
-  const suggestions: BandSuggestion[] | undefined =
-    bands
-      ?.filter(
-        (band) =>
-          !excludedBands ||
-          excludedBands?.every((excludedBand) => excludedBand.id !== band?.id),
-      )
-      .map((band) => ({
-        label: band.name,
-        value: band,
-      })) || undefined;
+  const suggestions: BandSuggestion[] | undefined = bands?.reduce(
+    (suggestions: BandSuggestion[], band) => {
+      // if excluded, skip
+      if (
+        excludedBands &&
+        excludedBands?.some((excludedBand) => excludedBand.id === band?.id)
+      ) {
+        return suggestions;
+      }
+      // if another band has the same name, add the genres to the label
+      const bandWithSameName = bands.find((b) => b.name === band.name);
+      if (bandWithSameName) {
+        return [
+          ...suggestions,
+          {
+            label: `${band.name} (${getSortedGenres(band.genres)
+              .map((g) => g.name)
+              .join(", ")})`,
+            value: band,
+          },
+        ];
+      }
+      return [
+        ...suggestions,
+        {
+          label: band.name,
+          value: band,
+        },
+      ];
+    },
+    [],
+  );
 
   const handleOnSelectBand = (bandId: string) => {
     const foundBand = suggestions?.find((s) => s.value.id === bandId)?.value;
