@@ -18,7 +18,6 @@ import {
 } from "@/domain/errors";
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 import { revalidatePath } from "next/cache";
-import { getConflictingBandNameError } from "@/domain/Band/errors";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import dayjs from "@/lib/dayjs";
@@ -34,13 +33,11 @@ async function POST(request: NextRequest) {
   }
 
   const { bands, imageUrl } = body;
-  let causingErrorBand;
   try {
     // Create inexisting bands
     const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
-        causingErrorBand = band;
         const createdBand = await prisma.band.create({
           data: {
             genres: { connect: band.genres.map((g) => ({ id: g })) },
@@ -113,18 +110,13 @@ async function POST(request: NextRequest) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
-        const { meta } = error;
-        if ((meta?.target as string[])?.includes("name") && causingErrorBand) {
-          return toResponse(getConflictingBandNameError(causingErrorBand.name));
-        } else {
-          return NextResponse.json(
-            {
-              message: "There is a conflict with another gig.",
-              frMessage: "Il y a un conflit avec un autre concert.",
-            },
-            { status: 409 },
-          );
-        }
+        return NextResponse.json(
+          {
+            message: "There is a conflict with another gig.",
+            frMessage: "Il y a un conflit avec un autre concert.",
+          },
+          { status: 409 },
+        );
       }
     }
     if (error instanceof PrismaClientValidationError) {

@@ -16,7 +16,7 @@ enum Role {
 model Band {
   id        String        @id @default(cuid())
   createdAt DateTime      @default(now()) @map(name: "created_at")
-  name      String        @unique
+  name      String        
   genres    Genre[]
   gigs      BandsOnGigs[]
   isLocal   Boolean       @default(false)
