@@ -204,6 +204,9 @@ const getGigMarkdownDate = (date: Date, endDate?: Date | null): string =>
 const getGigMarkdownPlace = (place: Place): string =>
   `${markdownPlacePrefix}${place.name}${place.city === MAIN_CITY ? "" : ` (${place.city})`}`;
 
+const getGigMarkdownSoldOut = (isSoldOut: boolean): string | null =>
+  isSoldOut ? `⚠ COMPLET ⚠` : null;
+
 export const toDiscordMarkdown = (
   gig: GigWithBandsAndPlace,
   lineBreakSymbol: string,
@@ -211,6 +214,10 @@ export const toDiscordMarkdown = (
   const { date, endDate, place, price, slug } = gig;
   const lines: string[] = [];
   lines.push(`**${getGigMarkdownTitle(gig)}**`);
+  const isSoldOutText = getGigMarkdownSoldOut(gig.isSoldOut);
+  if (isSoldOutText) {
+    lines.push(isSoldOutText);
+  }
   lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice(markdownPricePrefix, price));
@@ -225,6 +232,10 @@ export const toFacebookMarkdown = (
   const { date, endDate, facebookEventUrl, place, price } = gig;
   const lines: string[] = [];
   lines.push(getGigMarkdownTitle(gig));
+  const isSoldOutText = getGigMarkdownSoldOut(gig.isSoldOut);
+  if (isSoldOutText) {
+    lines.push(isSoldOutText);
+  }
   lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice(markdownPricePrefix, price));
