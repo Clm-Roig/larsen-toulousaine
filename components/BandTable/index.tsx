@@ -5,8 +5,8 @@ import {
   ActionIcon,
   Center,
   Group,
+  Loader,
   Pagination,
-  Skeleton,
   Stack,
   Table,
   Text,
@@ -68,26 +68,10 @@ export default function BandTable({
       <Center>
         <Pagination value={page} onChange={setPage} total={pageTotal} />
       </Center>
-      {isLoading ? (
-        <Stack>
-          <Table>
-            <TableHeader
-              genres={genres}
-              searchedGenres={searchedGenres}
-              searchedName={searchedName}
-              setSearchedGenres={setSearchedGenres}
-              setSearchedName={setSearchedName}
-            />
-          </Table>
-          {Array(20)
-            .fill(1)
-            .map((v, idx) => (
-              <Skeleton key={idx} height={30} width={"100%"} maw={800} />
-            ))}
-        </Stack>
-      ) : (
-        <Stack gap="xs">
-          {nbOfResults !== undefined && (
+
+      <Stack gap="xs">
+        {nbOfResults !== undefined && (
+          <Group>
             <Text>
               {nbOfResults === 0 && "Aucun groupe trouvé"}
               {nbOfResults > 0 && (
@@ -97,51 +81,52 @@ export default function BandTable({
                 </>
               )}
             </Text>
-          )}
-          <Table
-            striped
-            stickyHeader
-            highlightOnHover
-            withColumnBorders
-            maw={800}
-            layout="fixed"
-          >
-            <TableHeader
-              genres={genres}
-              searchedGenres={searchedGenres}
-              searchedName={searchedName}
-              setSearchedGenres={setSearchedGenres}
-              setSearchedName={setSearchedName}
-            />
-            <Table.Tbody>
-              {bands?.map((band) => (
-                <Table.Tr key={band.id}>
-                  <Table.Td>{band.name}</Table.Td>
-                  <Table.Td>
-                    <Group gap={2}>
-                      {getSortedGenres(band.genres).map((genre) => (
-                        <GenreBadge key={genre?.id} genre={genre} size="sm" />
-                      ))}
-                    </Group>
-                  </Table.Td>
-                  <Table.Td ta="center">
-                    {band.isLocal && <IconCheck color="green" />}
-                  </Table.Td>
-                  <Table.Td>{band._count.gigs}</Table.Td>
-                  <Table.Td>
-                    <Group>
-                      <ActionIcon onClick={() => onEditBand(band)}>
-                        <IconEdit />
-                      </ActionIcon>
-                      {getBandThrashIcon(band)}
-                    </Group>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Stack>
-      )}
+            {isLoading && <Loader size="xs" />}
+          </Group>
+        )}
+        <Table
+          striped
+          stickyHeader
+          highlightOnHover
+          withColumnBorders
+          maw={800}
+          layout="fixed"
+        >
+          <TableHeader
+            genres={genres}
+            searchedGenres={searchedGenres}
+            searchedName={searchedName}
+            setSearchedGenres={setSearchedGenres}
+            setSearchedName={setSearchedName}
+          />
+          <Table.Tbody style={isLoading ? { filter: "blur(1px)" } : {}}>
+            {bands?.map((band) => (
+              <Table.Tr key={band.id}>
+                <Table.Td>{band.name}</Table.Td>
+                <Table.Td>
+                  <Group gap={2}>
+                    {getSortedGenres(band.genres).map((genre) => (
+                      <GenreBadge key={genre?.id} genre={genre} size="sm" />
+                    ))}
+                  </Group>
+                </Table.Td>
+                <Table.Td ta="center">
+                  {band.isLocal && <IconCheck color="green" />}
+                </Table.Td>
+                <Table.Td>{band._count.gigs}</Table.Td>
+                <Table.Td>
+                  <Group>
+                    <ActionIcon onClick={() => onEditBand(band)}>
+                      <IconEdit />
+                    </ActionIcon>
+                    {getBandThrashIcon(band)}
+                  </Group>
+                </Table.Td>
+              </Table.Tr>
+            ))}
+          </Table.Tbody>
+        </Table>
+      </Stack>
       <Center>
         <Pagination value={page} onChange={setPage} total={pageTotal} />
       </Center>
