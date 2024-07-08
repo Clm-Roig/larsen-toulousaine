@@ -2,7 +2,16 @@
 
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Center,
+  Drawer,
+  Group,
+  Modal,
+  Stack,
+  Text,
+} from "@mantine/core";
 import {
   EditBandArgs,
   deleteBand,
@@ -32,6 +41,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
+  const [deletedBand, setDeletedBand] = useState<BandWithGenres>();
   const [searchedGenres, setSearchedGenres] = useState<Genre["id"][]>([]);
   const [searchedName, setSearchedName] = useState<string>("");
   const [debouncedSearchedName] = useDebouncedValue(searchedName, 400);
@@ -42,7 +52,10 @@ const Bands = () => {
   const [page, setPage] = useState(urlPage || 0);
   const queryClient = useQueryClient();
 
-  const [opened, { open, close }] = useDisclosure(false);
+  const [editOpened, { open: openEdit, close: closeEdit }] =
+    useDisclosure(false);
+  const [deleteOpened, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
 
   const form = useForm<EditBandArgs>({
     initialValues: {
@@ -127,16 +140,24 @@ const Bands = () => {
 
   const handleOnClose = useCallback(() => {
     setEditedBand(undefined);
-    close();
-  }, [close]);
+    closeEdit();
+  }, [closeEdit]);
 
   const handleOnEditBand = (band: BandWithGenres) => {
     setEditedBand(band);
-    open();
+    openEdit();
   };
 
-  const handleOnDeleteBand = (band: BandWithGenres) => {
-    handleOnDelete(band.id);
+  const handleOnOpenDeleteBandModal = (band: BandWithGenres) => {
+    setDeletedBand(band);
+    openDelete();
+  };
+
+  const handleOnDeleteBand = () => {
+    if (deletedBand) {
+      handleOnDelete(deletedBand.id);
+      closeDelete();
+    }
   };
 
   const handleOnSubmit = (event: FormEvent) => {
@@ -160,7 +181,7 @@ const Bands = () => {
           genres={genres || []}
           isLoading={isFetching || isDeletePending}
           nbOfResults={count}
-          onDeleteBand={handleOnDeleteBand}
+          onDeleteBand={handleOnOpenDeleteBandModal}
           onEditBand={handleOnEditBand}
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
@@ -172,7 +193,7 @@ const Bands = () => {
           setSearchedName={setSearchedName}
         />
         <Drawer
-          opened={opened}
+          opened={editOpened}
           onClose={handleOnClose}
           position="right"
           title="Modifier le groupe"
@@ -211,6 +232,30 @@ const Bands = () => {
         </Drawer>
       </Center>
       {isError && <Alert color="red">{getBandsError?.message}</Alert>}
+
+      <Modal
+        opened={deleteOpened}
+        onClose={closeDelete}
+        title="Confirmation de suppression"
+      >
+        {deletedBand ? (
+          <Stack>
+            <Text>
+              Êtes vous sûr·e de vouloir supprimer le groupe{" "}
+              <b>{deletedBand?.name}</b> ? Sa suppression est <b>définitive</b>{" "}
+              !
+            </Text>
+            <Group justify="space-between">
+              <Button onClick={closeDelete}>Annuler</Button>
+              <Button color="red" onClick={handleOnDeleteBand}>
+                Supprimer
+              </Button>
+            </Group>
+          </Stack>
+        ) : (
+          <Text c="red">Erreur : il n&apos;y a pas de groupe à supprimer</Text>
+        )}
+      </Modal>
     </Layout>
   );
 };
