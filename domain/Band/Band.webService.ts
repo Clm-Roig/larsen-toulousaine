@@ -1,5 +1,9 @@
 import api, { getErrorMessage } from "@/lib/axios";
-import { BandWithGenres, BandWithGenresAndGigCount } from "./Band.type";
+import {
+  BandWithGenres,
+  BandWithGenresAndGigCount,
+  BandWithGenresAndGigs,
+} from "./Band.type";
 import { Genre } from "@prisma/client";
 
 export const searchBands = async (
@@ -30,6 +34,19 @@ export const getBands = async (
       count: number;
     }>(`/bands?page=${page}`);
     return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const getBand = async (
+  bandId: string,
+): Promise<BandWithGenresAndGigs | null> => {
+  try {
+    const response = await api.get<BandWithGenresAndGigs | undefined>(
+      `/bands/${encodeURIComponent(bandId)}`,
+    );
+    return response.data ?? null;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

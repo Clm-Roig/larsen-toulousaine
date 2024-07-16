@@ -75,7 +75,7 @@ export default function Admin() {
                 text="Lieux"
               />
               <DashboardCard
-                href="/admin/groupes"
+                href="/groupes"
                 icon={<IconMusic />}
                 text="Groupes"
               />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, ReactNode, useMemo } from "react";
+import React, { FC, ReactNode } from "react";
 import Header from "../Header";
 import {
   Anchor,
@@ -17,16 +17,15 @@ import {
   Affix,
   Transition,
 } from "@mantine/core";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { capitalize } from "@/utils/utils";
-import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
 import { useDisclosure, useHeadroom, useWindowScroll } from "@mantine/hooks";
 import Footer from "@/components/Layout/Footer";
 import classes from "./Layout.module.css";
 import { signOut, useSession } from "next-auth/react";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
 import { IconArrowUp } from "@tabler/icons-react";
+import useBreadcrumbs from "@/hooks/useBreadcrumbs";
 
 type Props = {
   children: ReactNode;
@@ -36,56 +35,13 @@ type Props = {
 
 const NAVBAR_HEIGHT = 64;
 
-const frenchBreadcrumbDictionnary = {
-  "mon-compte": "Mon compte",
-  "Ajout-concert": "Ajout d'un concert",
-  Admin: "Administration",
-  Gigs: "Concerts",
-  Utilisateurs: "Utilisateurs",
-  Edit: "Éditer",
-  "A-propos": "À propos",
-  "Cette-semaine": "Cette semaine",
-  "Ajout-lieu": "Ajout d'un lieu",
-  "Mentions-legales": "Mentions légales",
-  "Infos-manquantes": "Infos manquantes",
-  Assos: "Associations",
-};
-
 const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const [scroll, scrollTo] = useWindowScroll();
   const [opened, { toggle }] = useDisclosure(false);
-  const pathname = usePathname();
+  const { breadcrumbs } = useBreadcrumbs();
   const router = useRouter();
   const { status } = useSession();
   const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
-
-  const breadcrumbs = useMemo(() => {
-    const asPathWithoutQuery = pathname.split("?")[0];
-    const asPathNestedRoutes = asPathWithoutQuery
-      .split("/")
-      .filter((v) => v.length > 0);
-
-    const crumbList = asPathNestedRoutes.map((subpath, idx) => {
-      let text = capitalize(subpath);
-      const href = "/" + asPathNestedRoutes.slice(0, idx + 1).join("/");
-      // Gig slug detection
-      if (subpath.includes("_")) {
-        text = getGigTitleFromGigSlug(decodeURIComponent(subpath));
-      } else {
-        // TODO: quick dirty fix for french translation
-        text = frenchBreadcrumbDictionnary[text] || text;
-      }
-      return {
-        href,
-        text: text,
-      };
-    });
-
-    if (crumbList?.length === 0) {
-      return [];
-    }
-    return [{ href: "/", text: "Accueil" }, ...crumbList];
-  }, [pathname]);
 
   const breadcrumbsItems = breadcrumbs.map((item, index) => (
     <Anchor href={item.href} key={index} component={Link}>

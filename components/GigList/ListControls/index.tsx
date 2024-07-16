@@ -14,8 +14,8 @@ import DateSelector from "@/components/GigList/ListControls/DateSelector";
 
 type Props = {
   dateStep: "month" | "week";
-  genres: Genre[];
-  places: Place[];
+  genres?: Genre[];
+  places?: Place[];
   selectedDate?: Date;
   setSelectedDate?: (newDate: Date) => void;
 };
@@ -43,12 +43,31 @@ export default function ListControls({
     setSelectedDate?.(newDate);
   };
 
+  const displayGenresAndPlacesSelector = !!genres && !!places;
+  const displayDateSelector = !!selectedDate && !!setSelectedDate;
+
+  const ViewTypeControl = (
+    <SegmentedControl
+      data={[
+        { label: "Grille", value: ViewType.GRID },
+        { label: "Liste", value: ViewType.LIST },
+      ]}
+      onChange={(data) => (data ? setViewType(data as ViewType) : null)}
+      value={viewType}
+    />
+  );
+
   return (
     <SimpleGrid cols={{ base: 1, sm: 3 }}>
-      {/* Hidden block to preserve grid layout */}
-      <Box style={{ visibility: "hidden" }}></Box>
-
-      {selectedDate ? (
+      {!displayDateSelector && !displayGenresAndPlacesSelector ? (
+        <Box>{ViewTypeControl}</Box>
+      ) : (
+        <>
+          {/* Hidden block to preserve grid layout */}
+          <Box style={{ visibility: "hidden" }}></Box>
+        </>
+      )}
+      {displayDateSelector ? (
         <Flex gap="xs" justify="center" align="center">
           <DateSelector
             dateStep={dateStep}
@@ -70,16 +89,13 @@ export default function ListControls({
         justify={{ base: "center", sm: "flex-end" }}
         align="center"
       >
-        <OptionsPopover genres={genres} places={places} />
-        <Divider orientation="vertical" size="xs" />
-        <SegmentedControl
-          data={[
-            { label: "Grille", value: ViewType.GRID },
-            { label: "Liste", value: ViewType.LIST },
-          ]}
-          onChange={(data) => (data ? setViewType(data as ViewType) : null)}
-          value={viewType}
-        />
+        {displayGenresAndPlacesSelector && (
+          <>
+            <OptionsPopover genres={genres} places={places} />
+            <Divider orientation="vertical" size="xs" />
+          </>
+        )}
+        {displayGenresAndPlacesSelector && ViewTypeControl}
       </Flex>
     </SimpleGrid>
   );

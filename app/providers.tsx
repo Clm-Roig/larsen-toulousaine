@@ -1,5 +1,6 @@
 "use client";
 
+import { BreadcrumbProvider } from "@/contexts/BreadcrumbContext";
 import { theme } from "@/lib/theme";
 import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
@@ -39,7 +40,9 @@ export const Providers = ({ children }: Props) => {
               timezone: "Europe/Paris",
             }}
           >
-            <AuthChecker>{children}</AuthChecker>
+            <BreadcrumbProvider>
+              <AuthChecker>{children}</AuthChecker>
+            </BreadcrumbProvider>
           </DatesProvider>
         </MantineProvider>
       </SessionProvider>

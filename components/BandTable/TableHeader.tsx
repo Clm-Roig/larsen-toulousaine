@@ -4,6 +4,7 @@ import React from "react";
 import { Table, TableThProps, TextInput } from "@mantine/core";
 import { Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
+import { useSession } from "next-auth/react";
 
 type Props = {
   genres: Genre[];
@@ -26,6 +27,7 @@ export default function TableHeader({
   setSearchedGenres,
   setSearchedName,
 }: Props) {
+  const { status } = useSession();
   return (
     <Table.Thead style={{ zIndex: 1 }}>
       {/* zIndex to fix a bug where icons are above the third column text */}
@@ -36,7 +38,9 @@ export default function TableHeader({
         <NoPaddingTableTh w={{ base: 70, md: 120 }}>
           Nb. concerts
         </NoPaddingTableTh>
-        <NoPaddingTableTh w={{ base: 100, md: 120 }}>Action</NoPaddingTableTh>
+        {status === "authenticated" && (
+          <NoPaddingTableTh w={{ base: 100, md: 120 }}>Action</NoPaddingTableTh>
+        )}
       </Table.Tr>
       <Table.Tr>
         <NoPaddingTableTh pr={"xs"}>
@@ -57,7 +61,7 @@ export default function TableHeader({
         </NoPaddingTableTh>
         <NoPaddingTableTh></NoPaddingTableTh>
         <NoPaddingTableTh></NoPaddingTableTh>
-        <NoPaddingTableTh></NoPaddingTableTh>
+        {status === "authenticated" && <NoPaddingTableTh></NoPaddingTableTh>}
       </Table.Tr>
     </Table.Thead>
   );

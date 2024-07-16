@@ -12,6 +12,8 @@ import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { flattenBandGigs } from "@/app/api/utils/bands";
+import { gigWithBandsAndGenresInclude } from "../../utils/gigs";
 
 export async function PUT(request: NextRequest) {
   const body = (await request.json()) as EditBandArgs;
@@ -100,4 +102,35 @@ export async function DELETE(
       { status: 500 },
     );
   }
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
+  const { id: rawId } = params;
+  const id = decodeURIComponent(rawId);
+  const band = await prisma.band.findFirst({
+    where: {
+      id: id,
+    },
+    include: {
+      genres: true,
+      gigs: {
+        include: {
+          gig: {
+            include: gigWithBandsAndGenresInclude,
+          },
+        },
+      },
+    },
+  });
+  if (!band) {
+    return new Response(null, { status: 404 });
+  }
+
+  // @ts-ignore typing is too complex here...
+  const flattenedBand = flattenBandGigs(band);
+
+  return NextResponse.json(flattenedBand);
 }

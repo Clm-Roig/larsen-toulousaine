@@ -34,10 +34,11 @@ import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { getGenres } from "@/domain/Genre/Genre.webService";
-import { Genre } from "@prisma/client";
+import { Band, Genre } from "@prisma/client";
 import BandFields from "@/components/BandFields";
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import useSearchParams from "@/hooks/useSearchParams";
+import { useRouter } from "next/navigation";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
@@ -46,6 +47,7 @@ const Bands = () => {
   const [searchedName, setSearchedName] = useState<string>("");
   const [debouncedSearchedName] = useDebouncedValue(searchedName, 400);
   const { searchParams, setSearchParams } = useSearchParams();
+  const router = useRouter();
 
   const urlPageStr = searchParams.get("page");
   const urlPage = urlPageStr ? parseInt(urlPageStr, 10) - 1 : null;
@@ -138,6 +140,10 @@ const Bands = () => {
     },
   });
 
+  const handleOnRowClick = (bandId: Band["id"]) => {
+    router.push(`/groupes/${bandId}`);
+  };
+
   const handleOnClose = useCallback(() => {
     setEditedBand(undefined);
     closeEdit();
@@ -183,6 +189,7 @@ const Bands = () => {
           nbOfResults={count}
           onDeleteBand={handleOnOpenDeleteBandModal}
           onEditBand={handleOnEditBand}
+          onRowClick={handleOnRowClick}
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
           pageTotal={Math.ceil((count || 0) / NB_OF_BANDS_PER_PAGE)}

@@ -75,6 +75,7 @@ export default function Gigs() {
       places={filteredPlaces || []}
       selectedDate={selectedMonth}
       setSelectedDate={onSelectedMonthChange}
+      withListControls
     />
   );
 }

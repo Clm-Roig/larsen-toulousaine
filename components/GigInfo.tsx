@@ -117,7 +117,7 @@ export default function GigInfo({ gig }: Props) {
                 wrap="wrap"
                 align="center"
               >
-                <Text>{band.name}</Text>
+                <Link href={`/groupes/${band.id}`}>{band.name}</Link>
                 {getSortedGenres(band.genres).map((genre) => (
                   <GenreBadge key={genre?.id} genre={genre} />
                 ))}

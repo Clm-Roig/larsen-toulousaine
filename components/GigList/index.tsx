@@ -10,6 +10,7 @@ import {
   Stack,
   List,
   Paper,
+  BoxProps,
 } from "@mantine/core";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
@@ -24,42 +25,61 @@ import dayjs from "dayjs";
 import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 
-type Props = {
-  dateStep: "month" | "week";
+type BaseProps = {
   displayMissingDataOnly?: boolean;
-  genres: Genre[];
   gigs?: GigWithBandsAndPlace[];
   isLoading: boolean;
+  listControlsBoxProps?: BoxProps;
   noGigsFoundMessage: string;
-  places: Place[];
-  selectedDate?: Date;
-  setSelectedDate?: (newDate: Date) => void;
 };
 
+type ConditionalProps =
+  | {
+      dateStep: "month" | "week";
+      genres?: Genre[];
+      places?: Place[];
+      selectedDate?: Date;
+      setSelectedDate?: (newDate: Date) => void;
+      withListControls: true;
+    }
+  | {
+      dateStep?: never;
+      genres?: never;
+      places?: never;
+      selectedDate?: never;
+      setSelectedDate?: never;
+      withListControls: false;
+    };
+
+type Props = BaseProps & ConditionalProps;
 const GigList = ({
   dateStep,
   displayMissingDataOnly = false,
   genres,
   gigs,
   isLoading,
+  listControlsBoxProps,
   noGigsFoundMessage,
   places,
   selectedDate,
   setSelectedDate,
+  withListControls = true,
 }: Props) => {
   const { viewType } = usePreferences();
   const { status } = useSession();
   return (
     <>
-      <Box mb="md">
-        <ListControls
-          dateStep={dateStep}
-          genres={genres}
-          places={places}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
-      </Box>
+      {withListControls && dateStep && (
+        <Box mb="md" {...listControlsBoxProps}>
+          <ListControls
+            dateStep={dateStep}
+            genres={genres}
+            places={places}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
+        </Box>
+      )}
       {isLoading && (
         <>
           {viewType === ViewType.GRID && <GridViewSkeleton />}

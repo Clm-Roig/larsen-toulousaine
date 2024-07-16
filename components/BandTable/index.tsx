@@ -17,7 +17,9 @@ import { IconCheck, IconEdit, IconTrash } from "@tabler/icons-react";
 import { Band, Genre } from "@prisma/client";
 import GenreBadge from "@/components/GenreBadge";
 import TableHeader from "./TableHeader";
+import classes from "./BandTable.module.css";
 import { getSortedGenres } from "@/domain/Band/Band.service";
+import { useSession } from "next-auth/react";
 
 type Props = {
   bands: BandWithGenresAndGigCount[] | undefined;
@@ -26,6 +28,7 @@ type Props = {
   nbOfResults?: number;
   onDeleteBand: (band: Band) => void;
   onEditBand: (band: Band) => void;
+  onRowClick: (bandId: Band["id"]) => void;
   page: number;
   pageTotal: number;
   searchedGenres: Genre["id"][];
@@ -42,6 +45,7 @@ export default function BandTable({
   nbOfResults,
   onDeleteBand,
   onEditBand,
+  onRowClick,
   page,
   pageTotal,
   searchedGenres,
@@ -50,15 +54,22 @@ export default function BandTable({
   setSearchedGenres,
   setSearchedName,
 }: Props) {
+  const { status } = useSession();
   const getBandThrashIcon = (band: BandWithGenresAndGigCount) =>
     band._count.gigs > 0 ? (
       <Tooltip label="Ce groupe est à l'affiche d'au moins un concert : vous ne pouvez pas le supprimer.">
-        <ActionIcon color="red" onClick={() => onDeleteBand(band)} disabled>
+        <ActionIcon color="red" disabled>
           <IconTrash />
         </ActionIcon>
       </Tooltip>
     ) : (
-      <ActionIcon color="red" onClick={() => onDeleteBand(band)}>
+      <ActionIcon
+        color="red"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDeleteBand(band);
+        }}
+      >
         <IconTrash />
       </ActionIcon>
     );
@@ -101,7 +112,11 @@ export default function BandTable({
           />
           <Table.Tbody style={isLoading ? { filter: "blur(1px)" } : {}}>
             {bands?.map((band) => (
-              <Table.Tr key={band.id}>
+              <Table.Tr
+                key={band.id}
+                onClick={() => (isLoading ? undefined : onRowClick(band.id))}
+                className={isLoading ? classes.rowLoading : classes.row}
+              >
                 <Table.Td>{band.name}</Table.Td>
                 <Table.Td>
                   <Group gap={2}>
@@ -114,14 +129,21 @@ export default function BandTable({
                   {band.isLocal && <IconCheck color="green" />}
                 </Table.Td>
                 <Table.Td>{band._count.gigs}</Table.Td>
-                <Table.Td>
-                  <Group>
-                    <ActionIcon onClick={() => onEditBand(band)}>
-                      <IconEdit />
-                    </ActionIcon>
-                    {getBandThrashIcon(band)}
-                  </Group>
-                </Table.Td>
+                {status === "authenticated" && (
+                  <Table.Td>
+                    <Group>
+                      <ActionIcon
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEditBand(band);
+                        }}
+                      >
+                        <IconEdit />
+                      </ActionIcon>
+                      {getBandThrashIcon(band)}
+                    </Group>
+                  </Table.Td>
+                )}
               </Table.Tr>
             ))}
           </Table.Tbody>

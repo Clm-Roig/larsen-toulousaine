@@ -62,6 +62,7 @@ export default function WeekGigs() {
         places={filteredPlaces || []}
         selectedDate={selectedWeek}
         setSelectedDate={setSelectedWeek}
+        withListControls
       />
 
       <>
