@@ -16,6 +16,7 @@ import Link from "next/link";
 import { discordInviteLink, facebookLink } from "@/domain/constants";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ExternalLink from "../ExternalLink";
 
 export default function Footer() {
   const { status } = useSession();
@@ -40,22 +41,23 @@ export default function Footer() {
           >
             <Text size="sm">
               Développé par{" "}
-              <Anchor href="https://clm-roig.github.io/" target="_blank">
+              <ExternalLink href="https://clm-roig.github.io/">
                 Clément ROIG
-              </Anchor>{" "}
+              </ExternalLink>{" "}
               © {new Date().getFullYear()}
               {" | "}
-              <Anchor
-                href="https://github.com/Clm-Roig/larsen-toulousaine"
-                target="_blank"
-              >
+              <ExternalLink href="https://github.com/Clm-Roig/larsen-toulousaine">
                 Code source
+              </ExternalLink>
+              {" | "}
+              <Anchor component={Link} href="/mentions-legales">
+                Mentions légales
               </Anchor>
               {" | "}
-              <Anchor href="/mentions-legales">Mentions légales</Anchor>
-              {" | "}
               {status === "unauthenticated" && (
-                <Anchor href="/api/auth/signin">Se connecter</Anchor>
+                <Anchor component={Link} href="/api/auth/signin">
+                  Se connecter
+                </Anchor>
               )}
               {status === "authenticated" && (
                 <Anchor component="button" onClick={handleSignOut}>

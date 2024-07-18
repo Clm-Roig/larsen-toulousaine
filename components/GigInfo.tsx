@@ -8,6 +8,7 @@ import {
   Divider,
   Group,
   ActionIcon,
+  Anchor,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { capitalize, isMobile } from "@/utils/utils";
@@ -117,7 +118,9 @@ export default function GigInfo({ gig }: Props) {
                 wrap="wrap"
                 align="center"
               >
-                <Link href={`/groupes/${band.id}`}>{band.name}</Link>
+                <Anchor component={Link} href={`/groupes/${band.id}`}>
+                  {band.name}
+                </Anchor>
                 {getSortedGenres(band.genres).map((genre) => (
                   <GenreBadge key={genre?.id} genre={genre} />
                 ))}
