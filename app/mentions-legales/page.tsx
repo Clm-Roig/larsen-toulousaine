@@ -29,8 +29,8 @@ export default function Page() {
         <Stack maw={650}>
           <Text ta="justify">
             Ce site est édité par Clément ROIG (entrepreneur individuel),
-            résidant 4 rue Pyrène à Foix (09000). Le directeur de la publication
-            est Clément ROIG.
+            résidant à Foix (09000). Le directeur de la publication est Clément
+            ROIG.
           </Text>
           <Text ta="justify">
             Courrier électronique :{" "}
