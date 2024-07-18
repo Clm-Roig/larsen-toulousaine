@@ -6,6 +6,7 @@ import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
+import NextTopLoader from "nextjs-toploader";
 import { ReactNode, useState } from "react";
 
 type Props = {
@@ -41,6 +42,11 @@ export const Providers = ({ children }: Props) => {
             }}
           >
             <BreadcrumbProvider>
+              <NextTopLoader
+                // @ts-ignore
+                color={theme.colors.primary[0]}
+                showSpinner={false}
+              />
               <AuthChecker>{children}</AuthChecker>
             </BreadcrumbProvider>
           </DatesProvider>
