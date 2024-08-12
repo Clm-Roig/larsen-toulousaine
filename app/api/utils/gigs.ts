@@ -4,6 +4,8 @@ export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
   {
     date: Prisma.SortOrder.asc,
   },
+  // Gigs with name have priority because festivals (= with name) must appear before gigs
+  { name: Prisma.SortOrder.asc },
   { slug: Prisma.SortOrder.asc },
 ];
 
