@@ -1,6 +1,6 @@
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { getMissingDataGigs } from "@/domain/Gig/Gig.webService";
-import useSortedGigs from "@/hooks/useSortedGigs";
+import useFilteredGigs from "@/hooks/useFilteredGigs";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useMissingDataGigs() {
@@ -9,10 +9,10 @@ export default function useMissingDataGigs() {
     queryFn: async () => await getMissingDataGigs(),
   });
 
-  const sortedGigs = useSortedGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs || []);
 
   return {
     isLoading: isLoading,
-    gigs: sortedGigs,
+    gigs: filteredGigs,
   };
 }

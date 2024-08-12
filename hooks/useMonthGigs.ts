@@ -3,7 +3,7 @@ import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { useEffect, useState } from "react";
 import { getGigs } from "@/domain/Gig/Gig.webService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import useSortedGigs from "@/hooks/useSortedGigs";
+import useFilteredGigs from "@/hooks/useFilteredGigs";
 import { startOf } from "@/utils/date";
 import { GIGS_STALE_TIME_IN_MS } from "@/domain/Gig/constants";
 
@@ -58,11 +58,11 @@ export default function useMonthGigs() {
     });
   }, [queryClient, selectedMonthEnd, selectedMonthStart]);
 
-  const sortedGigs = useSortedGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs || []);
 
   return {
     isLoading: isLoading,
-    monthGigs: sortedGigs,
+    monthGigs: filteredGigs,
     selectedMonth: new Date(selectedMonth),
     setSelectedMonth,
   };

@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import usePreferences from "./usePreferences";
 
-export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
+export default function useFilteredGigs(gigs: GigWithBandsAndPlace[]) {
   const { displayNotSafePlaces, filteredGenres, excludedPlaces, maxPrice } =
     usePreferences();
 
-  const sortedGigs = useMemo(
+  const filteredGigs = useMemo(
     () =>
       gigs
         // Genre(s) filtering
@@ -36,5 +36,5 @@ export default function useSortedGigs(gigs: GigWithBandsAndPlace[]) {
     [excludedPlaces, filteredGenres, gigs, maxPrice, displayNotSafePlaces],
   );
 
-  return sortedGigs;
+  return filteredGigs;
 }

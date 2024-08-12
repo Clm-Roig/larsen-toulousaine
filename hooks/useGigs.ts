@@ -1,6 +1,6 @@
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { getGigs } from "@/domain/Gig/Gig.webService";
-import useSortedGigs from "@/hooks/useSortedGigs";
+import useFilteredGigs from "@/hooks/useFilteredGigs";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useGigs({
@@ -15,10 +15,10 @@ export default function useGigs({
     queryFn: async () => await getGigs(startDate, endDate),
   });
 
-  const sortedGigs = useSortedGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs || []);
 
   return {
     isLoading: isLoading,
-    gigs: sortedGigs,
+    gigs: filteredGigs,
   };
 }
