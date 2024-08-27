@@ -2,6 +2,7 @@
 
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
+import dayjs from "dayjs";
 import {
   Button,
   Group,
@@ -189,10 +190,11 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     e.preventDefault();
     const { dateRange, ...cleanedFormValues } = form.values;
     const { bands, date, price } = cleanedFormValues;
+    const isRangeSameDay = dayjs(dateRange[0]).isSame(dayjs(dateRange[1]));
     onSubmit({
       ...cleanedFormValues,
       bands: bands.map((b, i) => ({ ...b, order: i + 1 })),
-      date: dateRange[0] ? dateRange[0] : (date as Date),
+      date: dateRange[0] && !isRangeSameDay ? dateRange[0] : (date as Date),
       endDate: dateRange[1],
       price: price || price === 0 ? Number(price) : null,
     });
