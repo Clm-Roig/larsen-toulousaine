@@ -57,16 +57,27 @@ async function POST(request: NextRequest) {
 
     let blobImageUrl: string | undefined = undefined;
     if (imageUrl) {
-      blobImageUrl = await downloadAndStoreImage({
-        filename: slug,
-        imageFormat: IMG_OUTPUT_FORMAT,
-        imageUrl: imageUrl,
-        resizeOptions: {
-          height: IMG_MAX_HEIGHT,
-          width: IMG_MAX_WIDTH,
-          withoutEnlargement: true,
-        },
-      });
+      try {
+        blobImageUrl = await downloadAndStoreImage({
+          filename: slug,
+          imageFormat: IMG_OUTPUT_FORMAT,
+          imageUrl: imageUrl,
+          resizeOptions: {
+            height: IMG_MAX_HEIGHT,
+            width: IMG_MAX_WIDTH,
+            withoutEnlargement: true,
+          },
+        });
+      } catch (error) {
+        return NextResponse.json(
+          {
+            message:
+              "An unexpected error occured when trying to download the gig poster:\n" +
+              error.message,
+          },
+          { status: 500 },
+        );
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
