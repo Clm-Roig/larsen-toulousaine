@@ -33,6 +33,7 @@ export default function BandInfo({ band }: Props) {
                 variant="outline"
                 p={4}
                 leftSection={<IconHome width={"1rem"} />}
+                style={{ display: "inline-flex" }} // Revert a Mantine fix, see here : https://github.com/mantinedev/mantine/pull/6629
               >
                 Local
               </Badge>
