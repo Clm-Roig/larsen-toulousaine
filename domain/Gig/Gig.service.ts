@@ -12,6 +12,7 @@ import dayjs from "@/lib/dayjs";
 const slugReplacements: { replaced: string; replacer: string }[] = [
   { replaced: " ", replacer: "-" },
   { replaced: "/", replacer: "|" },
+  { replaced: "&", replacer: "and" },
 ];
 
 /**
