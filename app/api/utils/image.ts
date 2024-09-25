@@ -1,7 +1,7 @@
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import cloudinaryV2 from "@/lib/cloudinary";
 import { Gig } from "@prisma/client";
-import { UploadApiOptions, UploadApiResponse } from "cloudinary";
+import { UploadApiOptions } from "cloudinary";
 import imageType from "image-type";
 import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 
@@ -77,19 +77,7 @@ export async function downloadAndStoreImage({
 
   // eslint-disable-next-line no-console
   console.log("Uploading image to Cloudinary...");
-  const uploadToCloudinary = (): Promise<UploadApiResponse> => {
-    return new Promise((resolve, reject) =>
-      cloudinaryV2.uploader.upload(fileUri, options, (error, result) => {
-        if (error) {
-          return reject(error);
-        }
-        if (result) {
-          return resolve(result);
-        }
-      }),
-    );
-  };
-  const result = await uploadToCloudinary();
+  const result = await cloudinaryV2.uploader.upload(fileUri, options);
   const cloudinaryImageUrl = result.secure_url;
   return cloudinaryImageUrl;
 }

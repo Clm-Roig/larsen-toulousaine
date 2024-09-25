@@ -71,9 +71,7 @@ async function POST(request: NextRequest) {
       } catch (error) {
         return NextResponse.json(
           {
-            message:
-              "An unexpected error occured when trying to download the gig poster:\n" +
-              error.message,
+            message: `An unexpected error occured when trying to download the gig poster: ${error.message}`,
           },
           { status: 500 },
         );
