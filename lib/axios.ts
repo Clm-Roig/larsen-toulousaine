@@ -37,7 +37,7 @@ export const getErrorMessage = (error: AxiosError | Error): string => {
             "Vous devez être authentifié pour accéder à cette ressource.";
           window.location.href = "/api/auth/signin";
         } else {
-          message = "Il y a eu un problème avec votre requête.";
+          message = `Il y a eu un problème avec votre requête:\n${error.message}`;
         }
       }
       if (status > 500) {
