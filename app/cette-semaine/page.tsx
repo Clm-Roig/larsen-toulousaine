@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Concerts et festival metal de la semaine à Toulouse";
   const gigs = await getGigs(startOf("week"), endOf("week"));
   const { gigDescriptions, gigImages } = getGigsMetadata(gigs);
-  const description: string = `Agenda des concerts et festival metal de la semaine à Toulouse (black metal, crust, death metal, deathcore, doom metal, gothique, grindcore, hard rock, hardcore, heavy metal, metal industriel, néo metal, power metal, punk, screamo, sludge, stoner, thrash metal...):\n${gigDescriptions.join(
+  const description: string = `Agenda des concerts et festivals metal de la semaine à Toulouse :\n${gigDescriptions.join(
     "\n",
   )}`;
   return getMetadata(
@@ -32,6 +32,9 @@ export default function Page() {
   return (
     <Layout>
       <Box>
+        <Title order={1} className="visually-hidden-seo-friendly">
+          Concerts et festivals metal de la semaine à Toulouse
+        </Title>
         <Suspense
           fallback={
             <Center h={200}>
@@ -39,9 +42,6 @@ export default function Page() {
             </Center>
           }
         >
-          <Title order={1} className="visually-hidden-seo-friendly">
-            Concert metal de la semaine à Toulouse
-          </Title>
           <WeekGigs />
         </Suspense>
       </Box>

@@ -2,24 +2,20 @@ import { Box, Center, Loader, Title } from "@mantine/core";
 import Layout from "../components/Layout";
 import { Suspense } from "react";
 import Gigs from "@/app/gigs";
-import { getGigsMetadata, getMetadata } from "@/utils/metadata";
-import { getGigs } from "@/domain/Gig/Gig.webService";
-import { endOf, startOf } from "@/utils/date";
+import { getMetadata } from "@/utils/metadata";
 import { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const gigs = await getGigs(startOf("week"), endOf("week"));
-  const { gigDescriptions, gigImages } = getGigsMetadata(gigs);
-  const description: string = `Agenda des concerts et festival metal à Toulouse (black metal, crust, death metal, deathcore, doom metal, gothique, grindcore, hard rock, hardcore, heavy metal, metal industriel, néo metal, power metal, punk, screamo, sludge, stoner, thrash metal...):\n${gigDescriptions.join(
-    "\n",
-  )}`;
+export function generateMetadata(): Metadata {
+  const title = "Larsen Toulousaine, l'agenda des évènements metal à Toulouse";
+  const description =
+    "Agenda des événements metal à Toulouse et alentours : concerts au Zénith, Bikini, Rex, et dans les bars intimistes, pour vivre la scène metal de la ville rose !";
   return getMetadata(
     {
+      title,
       description,
-      assets: gigImages,
     },
     {
-      images: gigImages,
+      title,
       description,
     },
   );
@@ -29,6 +25,9 @@ export default function Page() {
   return (
     <Layout>
       <Box>
+        <Title order={1} className="visually-hidden-seo-friendly">
+          Concerts et festivals metal à Toulouse
+        </Title>
         <Suspense
           fallback={
             <Center h={200}>
@@ -36,9 +35,6 @@ export default function Page() {
             </Center>
           }
         >
-          <Title order={1} className="visually-hidden-seo-friendly">
-            Concert metal à Toulouse
-          </Title>
           <Gigs />
         </Suspense>
       </Box>

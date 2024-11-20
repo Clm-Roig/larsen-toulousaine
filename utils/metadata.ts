@@ -21,10 +21,12 @@ export const getMetadata = (
   }
   return {
     applicationName: "Larsen Toulousaine",
-    description: "Votre agenda metal toulousain",
+    description: "Votre agenda des concerts et festivals metal à Toulouse",
     icons: { icon: "icon.png" },
     manifest: "/manifest.json",
-    title: title || "Larsen Toulousaine",
+    title:
+      title ||
+      "Larsen Toulousaine, votre agenda des concerts et festivals metal à Toulouse.",
     ...metadataWithoutTitle,
     openGraph: {
       siteName: "Larsen Toulousaine",
