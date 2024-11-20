@@ -1,4 +1,4 @@
-import { Box, Center, Loader } from "@mantine/core";
+import { Box, Center, Loader, Title } from "@mantine/core";
 import Layout from "@/components/Layout";
 import { Suspense } from "react";
 import WeekGigs from "./WeekGigs";
@@ -9,16 +9,16 @@ import { getMetadata } from "@/utils/utils";
 import { endOf, startOf } from "@/utils/date";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "Concerts metal de la semaine à Toulouse";
+  const title = "Concerts et festival metal de la semaine à Toulouse";
   const gigs = await getGigs(startOf("week"), endOf("week"));
   const filteredGigs = gigs.filter((g) => !g.isCanceled);
   const images: string[] = filteredGigs.reduce((images, gig) => {
     if (!gig.imageUrl) return images;
     return [...images, gig.imageUrl];
   }, []);
-  const description: string = filteredGigs
+  const description: string = `Agenda des concerts et festival metal de la semaine à Toulouse:\n${filteredGigs
     .map((gig) => getGigTitleFromGigSlug(gig.slug) + " - " + gig.place.name)
-    .join("\n");
+    .join("\n")}`;
   return getMetadata(
     {
       title: title,
@@ -44,6 +44,9 @@ export default function Page() {
             </Center>
           }
         >
+          <Title order={1} className="visually-hidden-seo-friendly">
+            Concert metal de la semaine à Toulouse
+          </Title>
           <WeekGigs />
         </Suspense>
       </Box>
