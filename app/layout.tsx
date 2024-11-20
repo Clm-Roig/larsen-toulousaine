@@ -8,7 +8,7 @@ import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { Analytics } from "@vercel/analytics/react";
 import { themeColor } from "@/domain/constants";
-import { getMetadata } from "@/utils/utils";
+import { getMetadata } from "@/utils/metadata";
 
 export const metadata = getMetadata();
 

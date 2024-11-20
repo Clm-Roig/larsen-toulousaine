@@ -1,7 +1,7 @@
 import ExternalLink from "@/components/ExternalLink";
 import Layout from "@/components/Layout";
 import { discordInviteLink } from "@/domain/constants";
-import { getMetadata } from "@/utils/utils";
+import { getMetadata } from "@/utils/metadata";
 import { Center, Stack, Text, Title } from "@mantine/core";
 import { Metadata } from "next";
 

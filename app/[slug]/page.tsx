@@ -8,9 +8,10 @@ import {
   getGigTitleFromGigSlug,
 } from "@/domain/Gig/Gig.service";
 import dayjs from "dayjs";
-import { V_SEPARATOR, getMetadata } from "@/utils/utils";
+import { V_SEPARATOR } from "@/utils/utils";
 import { getGig } from "@/domain/Gig/Gig.webService";
 import { MAIN_CITY } from "@/domain/Place/constants";
+import { getMetadata } from "@/utils/metadata";
 
 type Props = {
   params: { slug: string };

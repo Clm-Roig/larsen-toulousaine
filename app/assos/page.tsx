@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import { getMetadata } from "@/utils/utils";
+import { getMetadata } from "@/utils/metadata";
 import { Box, Flex, Image, ImageProps, Text } from "@mantine/core";
 import { Metadata } from "next";
 import classes from "./Assos.module.css";

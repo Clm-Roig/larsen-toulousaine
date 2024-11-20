@@ -5,7 +5,7 @@ import {
   discordInviteLink,
   facebookLink,
 } from "@/domain/constants";
-import { getMetadata } from "@/utils/utils";
+import { getMetadata } from "@/utils/metadata";
 import {
   Anchor,
   Center,

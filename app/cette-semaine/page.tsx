@@ -4,29 +4,24 @@ import { Suspense } from "react";
 import WeekGigs from "./WeekGigs";
 import { Metadata } from "next";
 import { getGigs } from "@/domain/Gig/Gig.webService";
-import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
-import { getMetadata } from "@/utils/utils";
+import { getGigsMetadata, getMetadata } from "@/utils/metadata";
 import { endOf, startOf } from "@/utils/date";
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Concerts et festival metal de la semaine à Toulouse";
   const gigs = await getGigs(startOf("week"), endOf("week"));
-  const filteredGigs = gigs.filter((g) => !g.isCanceled);
-  const images: string[] = filteredGigs.reduce((images, gig) => {
-    if (!gig.imageUrl) return images;
-    return [...images, gig.imageUrl];
-  }, []);
-  const description: string = `Agenda des concerts et festival metal de la semaine à Toulouse:\n${filteredGigs
-    .map((gig) => getGigTitleFromGigSlug(gig.slug) + " - " + gig.place.name)
-    .join("\n")}`;
+  const { gigDescriptions, gigImages } = getGigsMetadata(gigs);
+  const description: string = `Agenda des concerts et festival metal de la semaine à Toulouse (black metal, crust, death metal, deathcore, doom metal, gothique, grindcore, hard rock, hardcore, heavy metal, metal industriel, néo metal, power metal, punk, screamo, sludge, stoner, thrash metal...):\n${gigDescriptions.join(
+    "\n",
+  )}`;
   return getMetadata(
     {
       title: title,
       description,
-      assets: images,
+      assets: gigImages,
     },
     {
-      images: images,
+      images: gigImages,
       title: title,
       description,
     },
