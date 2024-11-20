@@ -86,7 +86,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           <Box component={Link} href="/" hiddenFrom="xs">
             <Image
               src={"/images/logo with text.png"}
-              alt="Logo Larsen Toulousaine"
+              alt="Logo Larsen Toulousaine avec texte"
               mah="100%"
               h="auto"
               w={75}
