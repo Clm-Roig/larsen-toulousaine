@@ -10,8 +10,12 @@ import { NextRequest, NextResponse } from "next/server";
  *  - genres  {string}  genre ids separated by a comma
  */
 export async function GET(request: NextRequest) {
-  const rawSearchedName = request.nextUrl.searchParams.get("name");
-  const rawGenres = request.nextUrl.searchParams.get("genres");
+  const {
+    nextUrl: { searchParams },
+  } = request;
+  const rawSearchedName = searchParams.get("name");
+  const rawGenres = searchParams.get("genres");
+  const page = searchParams.get("page");
   const searchedName = rawSearchedName
     ? decodeURIComponent(rawSearchedName)
     : undefined;
@@ -39,6 +43,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         name: "asc",
       },
+      skip: (page !== null ? parseInt(page, 10) : 0) * NB_OF_BANDS_PER_PAGE,
       take: NB_OF_BANDS_PER_PAGE,
       where: whereClause,
       include: {

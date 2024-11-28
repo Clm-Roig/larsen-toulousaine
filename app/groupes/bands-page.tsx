@@ -74,6 +74,7 @@ const Bands = () => {
     },
   });
 
+  // set form values when selected band changes
   useEffect(() => {
     if (editedBand && form.values.id !== editedBand.id) {
       form.setValues({
@@ -92,7 +93,7 @@ const Bands = () => {
     queryKey: ["bands", page, searchedGenres, debouncedSearchedName],
     queryFn: async () =>
       searchedGenres?.length > 0 || debouncedSearchedName
-        ? await searchBands(debouncedSearchedName, searchedGenres)
+        ? await searchBands(debouncedSearchedName, searchedGenres, page)
         : await getBands(page),
     placeholderData: keepPreviousData,
   });
@@ -139,6 +140,16 @@ const Bands = () => {
       });
     },
   });
+
+  const handleOnSearchedNameChange = (name: string) => {
+    handleOnSetPage(1);
+    setSearchedName(name);
+  };
+
+  const handleOnSearchedGenresChange = (genres: string[]) => {
+    handleOnSetPage(1);
+    setSearchedGenres(genres);
+  };
 
   const handleOnRowClick = (bandId: Band["id"]) => {
     router.push(`/groupes/${bandId}`);
@@ -196,8 +207,8 @@ const Bands = () => {
           searchedName={searchedName}
           searchedGenres={searchedGenres}
           setPage={handleOnSetPage}
-          setSearchedGenres={setSearchedGenres}
-          setSearchedName={setSearchedName}
+          setSearchedGenres={handleOnSearchedGenresChange}
+          setSearchedName={handleOnSearchedNameChange}
         />
         <Drawer
           opened={editOpened}

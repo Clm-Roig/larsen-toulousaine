@@ -9,16 +9,18 @@ import { Genre } from "@prisma/client";
 export const searchBands = async (
   name: string | undefined,
   genres?: Array<Genre["id"]>,
+  page?: number,
 ): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
   const nameParam = name ? `name=${encodeURIComponent(name)}` : "";
   const genresParam = genres
     ? `genres=${encodeURIComponent(genres?.join(","))}`
     : "";
+  const pageParam = page ? `page=${page}` : "";
   try {
     const response = await api.get<{
       bands: BandWithGenresAndGigCount[];
       count: number;
-    }>(`/bands/search?${nameParam}&${genresParam}`);
+    }>(`/bands/search?${nameParam}&${genresParam}&${pageParam}`);
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
