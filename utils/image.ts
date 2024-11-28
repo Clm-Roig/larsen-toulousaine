@@ -3,7 +3,7 @@
  */
 export function getImageUrl(imageUrl: string | null | undefined) {
   if (!imageUrl) {
-    return `https://placehold.co/${640}x${360}?text=.`;
+    return `/images/fallbackImage.jpg`;
   }
   if (process.env.NODE_ENV === "development") {
     const splittedUrl = imageUrl?.split("/");

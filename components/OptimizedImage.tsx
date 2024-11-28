@@ -5,13 +5,7 @@ import { Image, ImageProps } from "@mantine/core";
 export default function OptimizedImage(
   imageProps: ImageProps & { alt: string },
 ) {
-  const { alt, src } = imageProps;
+  const { src } = imageProps;
 
-  return (
-    <Image
-      {...imageProps}
-      src={typeof src === "string" || !src ? getImageUrl(src) : src}
-      alt={alt}
-    />
-  );
+  return <Image {...imageProps} alt={imageProps.alt} src={getImageUrl(src)} />;
 }
