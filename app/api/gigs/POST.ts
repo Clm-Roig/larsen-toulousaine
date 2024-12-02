@@ -22,6 +22,10 @@ import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import dayjs from "@/lib/dayjs";
 import { validateCountryAndRegionCodes } from "@/app/api/utils/bands";
+import {
+  LOCAL_COUNTRY_CODE,
+  LOCAL_REGION_CODE,
+} from "@/domain/Place/constants";
 
 async function POST(request: NextRequest) {
   const body = (await request.json()) as CreateGigArgs;
@@ -39,7 +43,8 @@ async function POST(request: NextRequest) {
     const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
-        const { countryCode, genres, isLocal, name, regionCode, order } = band;
+        const { city, countryCode, genres, isLocal, name, regionCode, order } =
+          band;
         const validationMsg = validateCountryAndRegionCodes(
           countryCode,
           regionCode,
@@ -49,9 +54,12 @@ async function POST(request: NextRequest) {
         }
         const createdBand = await prisma.band.create({
           data: {
+            city: city,
+            countryCode: isLocal ? LOCAL_COUNTRY_CODE : countryCode,
             genres: { connect: genres.map((g) => ({ id: g })) },
             isLocal: isLocal,
             name: name,
+            regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
           },
         });
         return { ...createdBand, order: order };

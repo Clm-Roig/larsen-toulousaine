@@ -17,6 +17,10 @@ import {
   validateCountryAndRegionCodes,
 } from "@/app/api/utils/bands";
 import { gigWithBandsAndGenresInclude } from "../../utils/gigs";
+import {
+  LOCAL_COUNTRY_CODE,
+  LOCAL_REGION_CODE,
+} from "@/domain/Place/constants";
 
 export async function PUT(request: NextRequest) {
   const body = (await request.json()) as EditBandArgs;
@@ -44,13 +48,13 @@ export async function PUT(request: NextRequest) {
       where: { id: id },
       data: Prisma.validator<Prisma.BandUpdateInput>()({
         city: city,
-        name: name,
+        countryCode: isLocal ? LOCAL_COUNTRY_CODE : countryCode,
         genres: {
           set: genres.map((gId) => ({ id: gId })),
         },
         isLocal: isLocal,
-        countryCode: countryCode,
-        regionCode: regionCode,
+        name: name,
+        regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
       }),
       include: { genres: true },
     });
