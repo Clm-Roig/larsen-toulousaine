@@ -39,6 +39,10 @@ import BandFields from "@/components/BandFields";
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import useSearchParams from "@/hooks/useSearchParams";
 import { useRouter } from "next/navigation";
+import {
+  LOCAL_COUNTRY_CODE,
+  LOCAL_REGION_CODE,
+} from "@/domain/Place/constants";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
@@ -68,21 +72,40 @@ const Bands = () => {
       isLocal: false,
       regionCode: null,
     },
-    onValuesChange: (values) => {
-      // When countryCode is deleted, delete regionCode
-      if (!values.countryCode) {
-        form.setValues({
-          ...values,
-          regionCode: null,
-        });
-      }
-    },
     validate: {
       name: (value) => (value ? null : "Le nom est requis."),
       genres: (value) => {
         return value?.length > 0 ? null : "Au moins un genre est requis.";
       },
     },
+  });
+
+  // When countryCode is deleted, delete regionCode
+  form.watch("countryCode", ({ value }) => {
+    if (!value && form.getValues().regionCode !== null) {
+      form.setValues({
+        ...form.values,
+        countryCode: null,
+        regionCode: null,
+      });
+    }
+  });
+
+  // When isLocal is true, set the region and country automatically
+  form.watch("isLocal", ({ value, previousValue }) => {
+    const { countryCode, regionCode } = form.getValues();
+    if (
+      previousValue === false &&
+      countryCode !== LOCAL_COUNTRY_CODE &&
+      regionCode !== LOCAL_REGION_CODE
+    ) {
+      form.setValues({
+        ...form.values,
+        isLocal: value,
+        countryCode: LOCAL_COUNTRY_CODE,
+        regionCode: LOCAL_REGION_CODE,
+      });
+    }
   });
 
   // set form values when selected band changes
