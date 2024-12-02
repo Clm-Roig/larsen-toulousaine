@@ -19,8 +19,16 @@ type Props = {
 };
 
 export default function BandInfo({ band }: Props) {
-  const { city, countryCode, createdAt, genres, gigs, isLocal, regionCode } =
-    band;
+  const {
+    city,
+    countryCode,
+    createdAt,
+    genres,
+    gigs,
+    isLocal,
+    regionCode,
+    updatedAt,
+  } = band;
   const bandCountry = allCountries.find(
     (c) => c.countryShortCode === countryCode,
   );
@@ -66,10 +74,16 @@ export default function BandInfo({ band }: Props) {
         withListControls
         dateStep="month"
       />
-      <Text fs="italic" ta="end">
+      <Text fs="italic" ta="end" size="xs">
         Créé le{" "}
         <i>
-          <b>{dayjs(createdAt).format("DD/MM/YYYY")}</b>
+          <b>{dayjs(createdAt).format("D MMMM YYYY")}</b>
+        </i>
+      </Text>
+      <Text fs="italic" ta="end" size="xs">
+        Mis à jour le{" "}
+        <i>
+          <b>{dayjs(updatedAt).format("D MMMM YYYY")}</b>
         </i>
       </Text>
     </Flex>
