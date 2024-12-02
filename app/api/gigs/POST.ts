@@ -21,6 +21,7 @@ import { revalidatePath } from "next/cache";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import dayjs from "@/lib/dayjs";
+import { validateCountryAndRegionCodes } from "@/app/api/utils/bands";
 
 async function POST(request: NextRequest) {
   const body = (await request.json()) as CreateGigArgs;
@@ -38,14 +39,22 @@ async function POST(request: NextRequest) {
     const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
+        const { countryCode, genres, isLocal, name, regionCode, order } = band;
+        const validationMsg = validateCountryAndRegionCodes(
+          countryCode,
+          regionCode,
+        );
+        if (validationMsg) {
+          throw new Error(`Bad request for the band ${name}. ${validationMsg}`);
+        }
         const createdBand = await prisma.band.create({
           data: {
-            genres: { connect: band.genres.map((g) => ({ id: g })) },
-            isLocal: band.isLocal,
-            name: band.name,
+            genres: { connect: genres.map((g) => ({ id: g })) },
+            isLocal: isLocal,
+            name: name,
           },
         });
-        return { ...createdBand, order: band.order };
+        return { ...createdBand, order: order };
       }),
     );
     const toConnectBands = bands.filter((b) => b.id);
@@ -131,8 +140,7 @@ async function POST(request: NextRequest) {
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
         {
-          message:
-            "There was an error with your data when trying to create a gig.",
+          message: `There was an error with your data when trying to create a gig: ${error.message}`,
         },
         { status: 400 },
       );

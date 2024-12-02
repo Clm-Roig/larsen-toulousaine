@@ -62,9 +62,20 @@ const Bands = () => {
   const form = useForm<EditBandArgs>({
     initialValues: {
       id: "",
+      countryCode: null,
       name: "",
       genres: [],
       isLocal: false,
+      regionCode: null,
+    },
+    onValuesChange: (values) => {
+      // When countryCode is deleted, delete regionCode
+      if (!values.countryCode) {
+        form.setValues({
+          ...values,
+          regionCode: null,
+        });
+      }
     },
     validate: {
       name: (value) => (value ? null : "Le nom est requis."),
@@ -220,6 +231,10 @@ const Bands = () => {
             <form onSubmit={(event) => handleOnSubmit(event)}>
               <Group w="100%">
                 <BandFields
+                  countryCodeProps={{
+                    w: "100%",
+                    ...form.getInputProps(`countryCode`),
+                  }}
                   genreProps={{
                     genres: genres || [],
                     w: "100%",
@@ -233,6 +248,11 @@ const Bands = () => {
                   nameProps={{
                     w: "100%",
                     ...form.getInputProps(`name`),
+                  }}
+                  regionCodeProps={{
+                    w: "100%",
+                    disabled: !form.getInputProps("countryCode").value,
+                    ...form.getInputProps(`regionCode`),
                   }}
                   withLabels
                 />

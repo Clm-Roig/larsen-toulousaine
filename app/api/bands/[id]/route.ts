@@ -12,7 +12,10 @@ import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
-import { flattenBandGigs } from "@/app/api/utils/bands";
+import {
+  flattenBandGigs,
+  validateCountryAndRegionCodes,
+} from "@/app/api/utils/bands";
 import { gigWithBandsAndGenresInclude } from "../../utils/gigs";
 
 export async function PUT(request: NextRequest) {
@@ -25,7 +28,17 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { id, genres, isLocal, name } = body;
+  const { id, countryCode, regionCode, genres, isLocal, name } = body;
+
+  // Check country & region code
+  const validationMsg = validateCountryAndRegionCodes(countryCode, regionCode);
+  if (validationMsg) {
+    return NextResponse.json(
+      { message: `Bad request. ${validationMsg}` },
+      { status: 400 },
+    );
+  }
+
   try {
     const updatedBand = await prisma.band.update({
       where: { id: id },
@@ -35,6 +48,8 @@ export async function PUT(request: NextRequest) {
           set: genres.map((gId) => ({ id: gId })),
         },
         isLocal: isLocal,
+        countryCode: countryCode,
+        regionCode: regionCode,
       }),
       include: { genres: true },
     });

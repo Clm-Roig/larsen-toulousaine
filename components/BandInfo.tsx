@@ -6,6 +6,7 @@ import { getSortedGenres } from "@/domain/Band/Band.service";
 import { BandWithGenresAndGigs } from "@/domain/Band/Band.type";
 import dayjs from "@/lib/dayjs";
 import GigList from "./GigList";
+import allCountries from "country-region-data/data.json";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -18,7 +19,12 @@ type Props = {
 };
 
 export default function BandInfo({ band }: Props) {
-  const { createdAt, genres, gigs, isLocal } = band;
+  const { countryCode, createdAt, genres, gigs, isLocal, regionCode } = band;
+  const bandCountry = allCountries.find(
+    (c) => c.countryShortCode === countryCode,
+  );
+  const bandRegion =
+    bandCountry && bandCountry.regions.find((r) => r.shortCode === regionCode);
 
   return (
     <Flex direction="column" w="100%">
@@ -40,9 +46,12 @@ export default function BandInfo({ band }: Props) {
             )}
           </Flex>
         </Row>
-        <Text fs="italic">
-          Créé le <i>{dayjs(createdAt).format("DD/MM/YYYY")}</i>
-        </Text>
+        {countryCode && (
+          <Text>
+            {bandCountry?.countryName}
+            {regionCode && `, ${bandRegion?.name}`}
+          </Text>
+        )}
       </Stack>
       <Title order={2} mb="xs">
         Concerts
@@ -55,6 +64,12 @@ export default function BandInfo({ band }: Props) {
         withListControls
         dateStep="month"
       />
+      <Text fs="italic" ta="end">
+        Créé le{" "}
+        <i>
+          <b>{dayjs(createdAt).format("DD/MM/YYYY")}</b>
+        </i>
+      </Text>
     </Flex>
   );
 }

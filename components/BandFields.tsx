@@ -1,28 +1,37 @@
+import CountrySelect from "@/components/CountrySelect";
 import GenreSelect, { GenreSelectProps } from "@/components/GenreSelect";
+import RegionSelect from "@/components/RegionSelect";
 import { MAX_GENRES_PER_BAND } from "@/domain/Band/constants";
 import {
   Checkbox,
   CheckboxProps,
+  SelectProps,
   TextInput,
   TextInputProps,
 } from "@mantine/core";
 
 type Props = {
+  countryCodeProps?: SelectProps;
   genreProps: Omit<GenreSelectProps, "maxValues" | "placeholder">;
   isLocalProps: Omit<CheckboxProps, "required" | "placeholder">;
   nameProps: Omit<TextInputProps, "required" | "placeholder">;
+  regionCodeProps?: SelectProps;
   withLabels?: boolean;
   withShortIsLocalDescription?: boolean;
 };
 
+const countryCodeLabel = `Pays`;
 const genreLabel = `Genres (${MAX_GENRES_PER_BAND} max)`;
 const isLocalLabel = "Est un groupe local";
 const nameLabel = "Nom du groupe";
+const regionCodeLabel = `Région`;
 
 export default function BandFields({
+  countryCodeProps,
   genreProps,
   isLocalProps,
   nameProps,
+  regionCodeProps,
   withLabels = false,
   withShortIsLocalDescription = false,
 }: Props) {
@@ -47,6 +56,23 @@ export default function BandFields({
             : "Un groupe est considéré comme local s'il se situe à moins de 100km de Toulouse. Cela inclut des villes comme Agen, Montauban, Albi, Cahors, Carcassonne, Foix ou Auch par exemple."
         }
       />
+      {countryCodeProps && (
+        <CountrySelect
+          {...countryCodeProps}
+          {...(withLabels
+            ? { label: countryCodeLabel }
+            : { placeholder: countryCodeLabel })}
+        />
+      )}
+      {regionCodeProps && (
+        <RegionSelect
+          countryCode={countryCodeProps?.value}
+          {...regionCodeProps}
+          {...(withLabels
+            ? { label: regionCodeLabel }
+            : { placeholder: regionCodeLabel })}
+        />
+      )}
     </>
   );
 }
