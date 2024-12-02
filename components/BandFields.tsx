@@ -77,10 +77,12 @@ export default function BandFields({
             : { placeholder: regionCodeLabel })}
         />
       )}
-      <TextInput
-        {...cityProps}
-        {...(withLabels ? { label: cityLabel } : { placeholder: cityLabel })}
-      />
+      {cityProps && (
+        <TextInput
+          {...cityProps}
+          {...(withLabels ? { label: cityLabel } : { placeholder: cityLabel })}
+        />
+      )}
     </>
   );
 }
