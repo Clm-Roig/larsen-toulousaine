@@ -19,7 +19,8 @@ type Props = {
 };
 
 export default function BandInfo({ band }: Props) {
-  const { countryCode, createdAt, genres, gigs, isLocal, regionCode } = band;
+  const { city, countryCode, createdAt, genres, gigs, isLocal, regionCode } =
+    band;
   const bandCountry = allCountries.find(
     (c) => c.countryShortCode === countryCode,
   );
@@ -50,6 +51,7 @@ export default function BandInfo({ band }: Props) {
           <Text>
             {bandCountry?.countryName}
             {regionCode && `, ${bandRegion?.name}`}
+            {city && `, ${city}`}
           </Text>
         )}
       </Stack>

@@ -66,6 +66,7 @@ const Bands = () => {
   const form = useForm<EditBandArgs>({
     initialValues: {
       id: "",
+      city: null,
       countryCode: null,
       name: "",
       genres: [],
@@ -254,6 +255,10 @@ const Bands = () => {
             <form onSubmit={(event) => handleOnSubmit(event)}>
               <Group w="100%">
                 <BandFields
+                  cityProps={{
+                    w: "100%",
+                    ...form.getInputProps(`city`),
+                  }}
                   countryCodeProps={{
                     w: "100%",
                     ...form.getInputProps(`countryCode`),

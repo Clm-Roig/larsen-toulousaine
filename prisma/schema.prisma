@@ -23,6 +23,7 @@ model Band {
   isLocal     Boolean       @default(false)
   countryCode String?
   regionCode  String?
+  city        String?
 }
 
 model Gig {

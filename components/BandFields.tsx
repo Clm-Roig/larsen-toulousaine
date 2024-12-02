@@ -5,12 +5,14 @@ import { MAX_GENRES_PER_BAND } from "@/domain/Band/constants";
 import {
   Checkbox,
   CheckboxProps,
+  InputProps,
   SelectProps,
   TextInput,
   TextInputProps,
 } from "@mantine/core";
 
 type Props = {
+  cityProps?: InputProps;
   countryCodeProps?: SelectProps;
   genreProps: Omit<GenreSelectProps, "maxValues" | "placeholder">;
   isLocalProps: Omit<CheckboxProps, "required" | "placeholder">;
@@ -20,6 +22,7 @@ type Props = {
   withShortIsLocalDescription?: boolean;
 };
 
+const cityLabel = "Ville";
 const countryCodeLabel = `Pays`;
 const genreLabel = `Genres (${MAX_GENRES_PER_BAND} max)`;
 const isLocalLabel = "Est un groupe local";
@@ -27,6 +30,7 @@ const nameLabel = "Nom du groupe";
 const regionCodeLabel = `Région`;
 
 export default function BandFields({
+  cityProps,
   countryCodeProps,
   genreProps,
   isLocalProps,
@@ -73,6 +77,10 @@ export default function BandFields({
             : { placeholder: regionCodeLabel })}
         />
       )}
+      <TextInput
+        {...cityProps}
+        {...(withLabels ? { label: cityLabel } : { placeholder: cityLabel })}
+      />
     </>
   );
 }
