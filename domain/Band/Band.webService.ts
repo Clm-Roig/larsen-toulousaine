@@ -54,7 +54,10 @@ export const getBand = async (
   }
 };
 
-export type EditBandArgs = Omit<BandWithGenres, "genres" | "createdAt"> & {
+export type EditBandArgs = Omit<
+  BandWithGenres,
+  "genres" | "createdAt" | "updatedAt"
+> & {
   genres: Array<Genre["id"]>;
 };
 

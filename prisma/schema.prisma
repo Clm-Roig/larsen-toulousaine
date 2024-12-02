@@ -16,6 +16,7 @@ enum Role {
 model Band {
   id          String        @id @default(cuid())
   createdAt   DateTime      @default(now()) @map(name: "created_at")
+  updatedAt   DateTime?     @updatedAt @map(name: "updated_at")
   name        String
   genres      Genre[]
   gigs        BandsOnGigs[]
