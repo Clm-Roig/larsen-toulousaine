@@ -10,3 +10,6 @@ coverage/
 sw.*
 workbox-*
 swe-worker-*
+
+# Custom folders
+db_dumps/
