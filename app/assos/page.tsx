@@ -1,47 +1,13 @@
 import Layout from "@/components/Layout";
 import { getMetadata } from "@/utils/metadata";
-import { Box, Flex, Image, ImageProps, Text } from "@mantine/core";
+import { Flex, Text } from "@mantine/core";
 import { Metadata } from "next";
-import classes from "./Assos.module.css";
-import Link from "next/link";
+import AssoBloc from "./AssoBloc";
 
 export const metadata: Metadata = getMetadata({
   title: "Associations",
-  description: 'Les associations "metal" à Toulouse',
+  description: "Les associations metal, hardcore et punk à Toulouse",
 });
-
-type AssoBlocProps = {
-  logoFileName?: string;
-  name: string;
-  url?: string;
-} & ImageProps;
-
-const AssoBloc = ({
-  logoFileName,
-  name,
-  url,
-  ...imageProps
-}: AssoBlocProps) => (
-  <Box ta="center" w={{ base: "100%", xs: "50%", md: "30%", xl: "20%" }}>
-    <Box
-      component={url ? Link : undefined}
-      href={url ? url : ""}
-      target={url ? "_blank" : undefined}
-    >
-      <Image
-        src={`images/logos_assos/${logoFileName || name}.png`}
-        alt={`Logo ${name}`}
-        mah="100%"
-        h="auto"
-        w={{ base: 100, xs: 150 }}
-        m="auto"
-        className={classes.assoLogo}
-        {...imageProps}
-      />
-    </Box>
-    <Text fs="italic">{name}</Text>
-  </Box>
-);
 
 export default function Page() {
   return (
@@ -72,7 +38,7 @@ export default function Page() {
         <AssoBloc
           name="Mind the Gap Production"
           url="https://www.facebook.com/mindthegapproduction"
-          w={225}
+          w={250}
         />
         <AssoBloc
           name="Noiser"
@@ -98,6 +64,11 @@ export default function Page() {
         <AssoBloc
           name="Toulouse Crust"
           url="https://www.facebook.com/profile.php?id=100068208447126"
+          w={{ base: 225, sm: 270 }}
+        />
+        <AssoBloc
+          name="Kid Productions"
+          url="https://www.facebook.com/profile.php?id=61567277364879"
           w={{ base: 225, sm: 270 }}
         />
       </Flex>
