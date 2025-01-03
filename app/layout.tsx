@@ -46,11 +46,7 @@ export default function RootLayout({
         />
 
         {/* Lighthouse performance optimization */}
-        <link
-          rel="preconnect"
-          href="https://picsum.photos
-"
-        />
+        <link rel="preconnect" href="https://picsum.photos" />
       </head>
       <body>
         <Providers>
