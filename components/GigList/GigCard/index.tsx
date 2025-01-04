@@ -106,8 +106,9 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
 
           {displayMissingDataOnly && <GigMissingData gig={gig} />}
 
-          <Group justify="space-between">
-            <Text>
+          <Group justify="space-between" wrap="nowrap">
+            {/* Flex property is here to make it take the remaining width. */}
+            <Text truncate flex="1 1 0">
               {place.name}
               {place.city !== MAIN_CITY && (
                 <Text span size="xs">
@@ -115,7 +116,8 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
                 </Text>
               )}
             </Text>
-            <Group gap="xs">
+            {/* Flex property is here to make it take the width of its content, without resizing. */}
+            <Group gap="xs" flex="0 0 auto">
               {isSoldOut && <SoldOutIcon />}
               {(price || price === 0) && <Price value={price} size="sm" />}
             </Group>
