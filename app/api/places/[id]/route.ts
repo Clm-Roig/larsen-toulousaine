@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { id, address, city, isClosed, isSafe, name, website } = body;
+  const { id, address, city, isClosed, isSafe, name, size, website } = body;
   try {
     const updatedPlace = await prisma.place.update({
       where: { id: id },
@@ -31,6 +31,7 @@ export async function PUT(request: NextRequest) {
         isClosed: isClosed,
         isSafe: isSafe,
         name: name,
+        size: size,
         website: website,
       }),
     });

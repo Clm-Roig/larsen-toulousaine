@@ -32,6 +32,7 @@ const Lieux = () => {
       isClosed: false,
       isSafe: true,
       name: "",
+      size: null,
       website: "",
     },
     validate: {
@@ -162,6 +163,10 @@ const Lieux = () => {
                   nameProps={{
                     w: "100%",
                     ...form.getInputProps(`name`),
+                  }}
+                  sizeProps={{
+                    w: "100%",
+                    ...form.getInputProps(`size`),
                   }}
                   websiteProps={{
                     w: "100%",

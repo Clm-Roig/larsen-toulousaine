@@ -13,6 +13,13 @@ enum Role {
   ADMIN
 }
 
+enum PlaceSize {
+  VERY_SMALL
+  SMALL
+  MEDIUM
+  BIG
+}
+
 model Band {
   id          String        @id @default(cuid())
   createdAt   DateTime      @default(now()) @map(name: "created_at")
@@ -71,16 +78,17 @@ model Genre {
 }
 
 model Place {
-  id        String  @id @default(cuid())
-  name      String  @unique
+  id        String     @id @default(cuid())
+  name      String     @unique
   address   String
   city      String
   website   String?
   gigs      Gig[]
-  isClosed  Boolean @default(false)
-  isSafe    Boolean @default(true)
+  isClosed  Boolean    @default(false)
+  isSafe    Boolean    @default(true)
   latitude  Float?
   longitude Float?
+  size      PlaceSize?
 }
 
 model BandsOnGigs {

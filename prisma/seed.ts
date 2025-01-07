@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PlaceSize, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -36,28 +36,66 @@ const genres = [
 ];
 
 const places = [
-  { name: "Axis Musique", address: "7 impasse Boudeville", city: "Toulouse" },
+  {
+    name: "Axis Musique",
+    address: "7 impasse Boudeville",
+    city: "Toulouse",
+    size: PlaceSize.SMALL,
+  },
   {
     name: "Bikini",
     address: "Rue Théodore Monod, Parc Technologique du Canal",
     city: "Ramonville-Saint-Agne",
+    size: PlaceSize.BIG,
   },
-  { name: "Connexion Live", address: "8 rue Gabriel Péri", city: "Toulouse" },
-  { name: "Engrenage", address: "14 rue Louis Renault", city: "Balma" },
+  {
+    name: "Connexion Live",
+    address: "8 rue Gabriel Péri",
+    city: "Toulouse",
+    size: PlaceSize.MEDIUM,
+  },
+  {
+    name: "Engrenage",
+    address: "14 rue Louis Renault",
+    city: "Balma",
+    size: PlaceSize.SMALL,
+  },
   {
     name: "Espace Claude Ducert",
     address: "1 avenue Paul Riquet",
     city: "Labège",
+    size: null,
   },
-  { name: "Loupiote", address: "39 rue Reclusane", city: "Toulouse" },
+  {
+    name: "Dalidaark",
+    address: "39 rue Reclusane",
+    city: "Toulouse",
+    size: PlaceSize.VERY_SMALL,
+  },
   {
     name: "Metronum",
     address: "2 rond-point Madame de Mondonville",
     city: "Toulouse",
+    size: PlaceSize.BIG,
   },
-  { name: "Rex", address: "15 avenue Honoré Serres", city: "Toulouse" },
-  { name: "Usine à Musique", address: "Rue Louis Bonin", city: "Toulouse" },
-  { name: "Zénith", address: "11 avenue Raymond Badiou", city: "Toulouse" },
+  {
+    name: "Rex",
+    address: "15 avenue Honoré Serres",
+    city: "Toulouse",
+    size: PlaceSize.MEDIUM,
+  },
+  {
+    name: "Usine à Musique",
+    address: "Rue Louis Bonin",
+    city: "Toulouse",
+    size: PlaceSize.SMALL,
+  },
+  {
+    name: "Zénith",
+    address: "11 avenue Raymond Badiou",
+    city: "Toulouse",
+    size: PlaceSize.BIG,
+  },
 ];
 
 async function main() {

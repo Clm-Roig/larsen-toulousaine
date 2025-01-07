@@ -25,6 +25,7 @@ export default function TableHeader({
         <Table.Th>Adresse</Table.Th>
         <Table.Th>Ville</Table.Th>
         <Table.Th>Site web</Table.Th>
+        <Table.Th>Taille</Table.Th>
         <Table.Th w={{ base: 70 }}>Nb. concerts</Table.Th>
         <Table.Th>Action</Table.Th>
       </Table.Tr>
@@ -44,6 +45,7 @@ export default function TableHeader({
             onChange={(event) => setSearchedCity(event.currentTarget.value)}
           />
         </Table.Th>
+        <Table.Th></Table.Th>
         <Table.Th></Table.Th>
         <Table.Th></Table.Th>
         <Table.Th>

@@ -15,6 +15,7 @@ import { normalizeString } from "@/utils/utils";
 import TableHeader from "./TableHeader";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import NotSafePlaceIcon from "../NotSafePlaceIcon";
+import { getPlaceSizeLabel } from "@/app/api/utils/places";
 
 type Props = {
   places: PlaceWithGigCount[] | undefined;
@@ -97,6 +98,7 @@ export default function PlaceTable({
                 id,
                 isSafe,
                 name,
+                size,
                 website,
                 _count: { gigs: gigsCount },
               } = place;
@@ -117,7 +119,7 @@ export default function PlaceTable({
                   >
                     {website}
                   </Table.Td>
-
+                  <Table.Td>{size && getPlaceSizeLabel(size)}</Table.Td>
                   <Table.Td>{gigsCount}</Table.Td>
                   <Table.Td>
                     <Group>

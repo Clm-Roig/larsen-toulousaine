@@ -47,6 +47,7 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
       isSafe: true,
       latitude: null,
       longitude: null,
+      size: null,
     },
     validateInputOnBlur: true,
     validate: {
@@ -87,6 +88,7 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
         latitudeProps={form.getInputProps("latitude")}
         longitudeProps={form.getInputProps("longitude")}
         nameProps={form.getInputProps("name")}
+        sizeProps={form.getInputProps("size")}
         websiteProps={form.getInputProps("website")}
         withLabels
       />

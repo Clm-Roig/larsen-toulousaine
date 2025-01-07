@@ -1,5 +1,5 @@
 import { BandWithGenres } from "@/domain/Band/Band.type";
-import { Genre, Place, Role, User } from "@prisma/client";
+import { Genre, Place, Role, User, PlaceSize } from "@prisma/client";
 
 export const allGenres: Genre[] = [
   {
@@ -156,6 +156,7 @@ export const allPlaces: Place[] = [
     isSafe: true,
     latitude: 43.5544818944,
     longitude: 1.3948878703,
+    size: PlaceSize.VERY_SMALL,
   },
   {
     id: "cloevz6el0051rmukb32qzz54s",
@@ -167,6 +168,7 @@ export const allPlaces: Place[] = [
     isSafe: true,
     latitude: 43.561234658,
     longitude: 1.4298765432,
+    size: PlaceSize.SMALL,
   },
   {
     id: "cloevz785z051rmukb32qe4r6",
@@ -178,6 +180,7 @@ export const allPlaces: Place[] = [
     isSafe: true,
     latitude: 43.596666644,
     longitude: 1.438984894,
+    size: PlaceSize.BIG,
   },
 ];
 

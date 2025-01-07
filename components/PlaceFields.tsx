@@ -1,3 +1,4 @@
+import { placeSizeOptions } from "@/app/api/utils/places";
 import {
   Switch,
   SwitchProps,
@@ -9,6 +10,8 @@ import {
   useMantineTheme,
   StackProps,
   NumberInput,
+  SelectProps,
+  Select,
 } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
 
@@ -20,6 +23,7 @@ type Props = {
   latitudeProps: Omit<NumberInputProps, "required" | "placeholder">;
   longitudeProps: Omit<NumberInputProps, "required" | "placeholder">;
   nameProps: Omit<TextInputProps, "required" | "placeholder">;
+  sizeProps: Omit<SelectProps, "required">;
   websiteProps: Omit<TextInputProps, "required" | "placeholder">;
   withLabels?: boolean;
 } & StackProps;
@@ -29,6 +33,7 @@ const cityLabel = "Ville";
 const latitudeLabel = "Latitude";
 const longitudeLabel = "Longitude";
 const nameLabel = "Nom du lieu";
+const sizeLabel = "Taille";
 const websiteLabel = "Site web";
 
 export default function PlaceFields({
@@ -39,6 +44,7 @@ export default function PlaceFields({
   latitudeProps,
   longitudeProps,
   nameProps,
+  sizeProps,
   websiteProps,
   withLabels = false,
   ...stackProps
@@ -68,6 +74,11 @@ export default function PlaceFields({
         {...(withLabels
           ? { label: websiteLabel }
           : { placeholder: websiteLabel })}
+      />
+      <Select
+        {...sizeProps}
+        data={placeSizeOptions}
+        {...(withLabels ? { label: sizeLabel } : { placeholder: sizeLabel })}
       />
       <NumberInput
         {...latitudeProps}

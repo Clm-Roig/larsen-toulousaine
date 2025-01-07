@@ -1,11 +1,19 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('MODERATOR', 'ADMIN');
 
+-- CreateEnum
+CREATE TYPE "PlaceSize" AS ENUM ('VERY_SMALL', 'SMALL', 'MEDIUM', 'BIG');
+
 -- CreateTable
 CREATE TABLE "Band" (
     "id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
     "name" TEXT NOT NULL,
+    "isLocal" BOOLEAN NOT NULL DEFAULT false,
+    "countryCode" TEXT,
+    "regionCode" TEXT,
+    "city" TEXT,
 
     CONSTRAINT "Band_pkey" PRIMARY KEY ("id")
 );
@@ -15,6 +23,7 @@ CREATE TABLE "Gig" (
     "id" TEXT NOT NULL,
     "title" TEXT,
     "date" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3),
     "description" TEXT,
     "authorId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -26,6 +35,9 @@ CREATE TABLE "Gig" (
     "isCanceled" BOOLEAN NOT NULL DEFAULT false,
     "isSoldOut" BOOLEAN NOT NULL DEFAULT false,
     "price" DOUBLE PRECISION,
+    "hasTicketReservationLink" BOOLEAN,
+    "name" TEXT,
+    "facebookEventUrl" TEXT,
 
     CONSTRAINT "Gig_pkey" PRIMARY KEY ("id")
 );
@@ -63,6 +75,7 @@ CREATE TABLE "Place" (
     "isSafe" BOOLEAN NOT NULL DEFAULT true,
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
+    "size" "PlaceSize",
 
     CONSTRAINT "Place_pkey" PRIMARY KEY ("id")
 );
@@ -81,9 +94,6 @@ CREATE TABLE "_BandToGenre" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "Band_name_key" ON "Band"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gig_slug_key" ON "Gig"("slug");
