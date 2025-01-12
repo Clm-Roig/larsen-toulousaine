@@ -40,20 +40,15 @@ export default function Page() {
           url="https://www.facebook.com/mindthegapproduction"
           w={250}
         />
-        <AssoBloc
-          name="Noiser"
-          url="https://noiser.fr"
-          w={{ base: 225, sm: 270 }}
-        />
+
         <AssoBloc
           logoFileName="Post-Scriptum"
           name="Post:Scriptum"
           url="https://www.facebook.com/post.scriptum.live.fr"
         />
         <AssoBloc
-          name="Regarts"
-          url="https://regarts.eu/"
-          w={{ base: 225, sm: 270 }}
+          name="Assaut Musical"
+          url="https://www.facebook.com/assautmusical"
         />
         <AssoBloc
           name="Snakebite Events"
@@ -69,6 +64,16 @@ export default function Page() {
         <AssoBloc
           name="Kid Productions"
           url="https://www.facebook.com/profile.php?id=61567277364879"
+          w={{ base: 225, sm: 270 }}
+        />
+        <AssoBloc
+          name="Regarts"
+          url="https://regarts.eu/"
+          w={{ base: 225, sm: 270 }}
+        />
+        <AssoBloc
+          name="Noiser"
+          url="https://noiser.fr"
           w={{ base: 225, sm: 270 }}
         />
       </Flex>
