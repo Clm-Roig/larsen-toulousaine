@@ -25,10 +25,13 @@ import {
   InputLabel,
   InputDescription,
   Radio,
+  FileInput,
+  CloseButton,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
 import {
   IconCheck,
+  IconFile,
   IconGripVertical,
   IconInfoCircle,
   IconQuestionMark,
@@ -39,7 +42,11 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "../domain/Band/Band.type";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "../utils/utils";
-import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "../domain/image";
+import {
+  GIG_IMG_RATIO_STRING,
+  MAX_IMAGE_SIZE,
+  getGigImgWidth,
+} from "../domain/image";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
@@ -75,6 +82,9 @@ type Props = {
 };
 
 export default function GigForm({ gig, isLoading, onSubmit }: Props) {
+  const [imageFilePreview, setImageFilePreview] = useState<
+    string | ArrayBuffer | null | undefined
+  >(undefined);
   const [gigType, setGigType] = useState<GigType>(gig?.name ? FESTIVAL : GIG);
   const gigTypeString = useMemo(() => gigTypeToString(gigType), [gigType]);
   const { data: genres } = useQuery<Genre[], Error>({
@@ -101,6 +111,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       description: null,
       facebookEventUrl: null,
       hasTicketReservationLink: null,
+      imageFile: null,
       imageUrl: null,
       name: null,
       placeId: "",
@@ -112,6 +123,17 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     validate: {
       date: (value) =>
         !value && gigType === GIG ? "La date du concert est requise." : null,
+      imageFile: (value) => {
+        if (!value) return null;
+        const { size, type } = value;
+        if (!type.startsWith("image/")) {
+          ("Le fichier doit être une image.");
+        }
+        if (size > MAX_IMAGE_SIZE) {
+          return `Le fichier est trop volumineux (taille maximale autorisée : ${MAX_IMAGE_SIZE / 1000000}Mo).`;
+        }
+        return null;
+      },
       imageUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       facebookEventUrl: (value) =>
@@ -226,6 +248,22 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     form.setFieldValue("dateRange", [null, null]);
     form.setFieldValue("date", null);
     setGigType(value as GigType);
+  };
+
+  const handleImageFileChange = (value: File | null) => {
+    if (!value) {
+      form.setFieldValue("imageFile", null);
+      setImageFilePreview(null);
+      return;
+    }
+    form.setFieldValue("imageFile", value);
+    form.validateField("imageFile");
+
+    const reader = new FileReader();
+    reader.addEventListener("load", (e) => {
+      setImageFilePreview(e.target?.result);
+    });
+    reader.readAsDataURL(value);
   };
 
   return (
@@ -406,27 +444,53 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         <Divider my="md" />
 
         <Stack>
-          <TextInput
-            label="URL de l'évènement Facebook"
-            {...form.getInputProps("facebookEventUrl")}
-          />
+          <Text>Affiche du concert</Text>
+          <Text c="dimmed" size="sm">
+            {`Privilégier l'image de couverture de l'évènement Facebook 
+        (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio 
+        `}
+            <b>{`${GIG_IMG_RATIO_STRING}`}</b>.
+          </Text>
 
+          <FileInput
+            accept="image/*"
+            label="Image de l'affiche du concert"
+            leftSection={<IconFile />}
+            rightSection={
+              !!form.getValues().imageFile && (
+                <CloseButton onClick={() => handleImageFileChange(null)} />
+              )
+            }
+            placeholder="Uploader un fichier"
+            {...form.getInputProps("imageFile")}
+            onChange={handleImageFileChange}
+            disabled={!!form.getValues().imageUrl}
+          />
+          <Text ta="center">Ou</Text>
           <TextInput
+            defaultValue={null}
             label="URL de l'affiche du concert"
-            description={`URL de l'image de couverture de l'évènement Facebook 
-        (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio ${GIG_IMG_RATIO_STRING}.`}
             {...form.getInputProps("imageUrl")}
+            disabled={!!form.getValues().imageFile?.name}
           />
 
-          {isValidUrl(form.values.imageUrl) && (
+          {(isValidUrl(form.values.imageUrl) ||
+            (!!imageFilePreview && form.isValid("imageFile"))) && (
             <OptimizedImage
               mah={200}
               maw={getGigImgWidth(200)}
-              src={form.values.imageUrl}
+              src={form.values.imageUrl || imageFilePreview}
               alt="Affiche du concert"
               m={"auto"}
             />
           )}
+
+          <Divider my="md" />
+
+          <TextInput
+            label="URL de l'évènement Facebook"
+            {...form.getInputProps("facebookEventUrl")}
+          />
 
           <Box>
             <InputLabel display="block">

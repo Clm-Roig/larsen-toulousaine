@@ -115,6 +115,7 @@ export type CreateGigArgs = Omit<
       order: number;
     }
   >;
+  imageFile?: File | null;
 };
 
 export const createGig = async (
