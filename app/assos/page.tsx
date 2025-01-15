@@ -57,6 +57,11 @@ export default function Page() {
         />
         <AssoBloc name="SPM Prod" url="https://www.facebook.com/spmprod31" />
         <AssoBloc
+          name="Mandale"
+          url="https://mandale.org"
+          // w={{ base: 225, sm: 270 }}
+        />
+        <AssoBloc
           name="Toulouse Crust"
           url="https://www.facebook.com/profile.php?id=100068208447126"
           w={{ base: 225, sm: 270 }}
