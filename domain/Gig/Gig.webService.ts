@@ -115,15 +115,27 @@ export type CreateGigArgs = Omit<
       order: number;
     }
   >;
+  imageFile?: File | null;
 };
 
 export const createGig = async (
   gig: CreateGigArgs,
 ): Promise<GigWithBandsAndPlace> => {
-  try {
-    const response = await api.post<GigWithBandsAndPlace>(`/gigs`, {
-      ...gig,
+  const formData = new FormData();
+  const { imageFile, ...otherValues } = gig;
+  if (imageFile) {
+    formData.append("file", imageFile);
+  }
+  formData.append(
+    "data",
+    JSON.stringify({
+      ...otherValues,
       date: gig.date.toISOString(), // serialize date to not lose timezone info
+    }),
+  );
+  try {
+    const response = await api.post<GigWithBandsAndPlace>(`/gigs`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
   } catch (error) {
@@ -139,16 +151,32 @@ export type EditGigArgs = Gig & {
       order: number;
     }
   >;
+  imageFile?: File | null;
 };
 
 export const editGig = async (
   gig: EditGigArgs,
 ): Promise<GigWithBandsAndPlace> => {
-  try {
-    const response = await api.put<GigWithBandsAndPlace>(`/gigs/${gig.id}`, {
-      ...gig,
+  const formData = new FormData();
+  const { imageFile, ...otherValues } = gig;
+  if (imageFile) {
+    formData.append("file", imageFile);
+  }
+  formData.append(
+    "data",
+    JSON.stringify({
+      ...otherValues,
       date: gig.date.toISOString(), // serialize date to not lose timezone info
-    });
+    }),
+  );
+  try {
+    const response = await api.put<GigWithBandsAndPlace>(
+      `/gigs/${gig.id}`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));

@@ -36,22 +36,26 @@ const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
 //   return url;
 // }
 
+export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
+  const response = await fetch(imageUrl);
+  const arrayBufferImg = await (await response.blob()).arrayBuffer();
+  return arrayBufferImg;
+}
+
 /**
  * Download a remote image and upload it to Cloudinary and override the previous image if any
  */
-export async function downloadAndStoreImage({
+export async function storeImage({
+  arrayBufferImg,
   filename,
   imageFormat,
-  imageUrl,
   resizeOptions,
 }: {
+  arrayBufferImg: ArrayBuffer;
   filename: string;
   imageFormat: keyof FormatEnum | AvailableFormatInfo;
-  imageUrl: string;
   resizeOptions?: ResizeOptions;
 }): Promise<string> {
-  const response = await fetch(imageUrl);
-  const arrayBufferImg = await (await response.blob()).arrayBuffer();
   const bufferImg = Buffer.from(arrayBufferImg);
   const type = await imageType(bufferImg);
   if (!type) {
@@ -66,6 +70,14 @@ export async function downloadAndStoreImage({
   const base64Data = resizedImg.toString("base64");
   const fileUri = `data:image/jpeg;base64,${base64Data}`;
 
+  const cloudinaryImageUrl = await storeImageToCloudinary(filename, fileUri);
+  return cloudinaryImageUrl;
+}
+
+export async function storeImageToCloudinary(
+  filename: string,
+  fileUri: string,
+): Promise<string> {
   const options: UploadApiOptions = {
     unique_filename: false,
     overwrite: true,
