@@ -189,13 +189,26 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
     const { dateRange, ...cleanedFormValues } = form.values;
-    const { bands, date, price } = cleanedFormValues;
+    const { bands, name, price } = cleanedFormValues;
+    const isAFestival = !!name;
+
+    /* Date management, 3 cases :
+        - Festival + on same day => date is starting date and endDate is null
+        - Festival + on same day => date is starting date and endDate is ending date
+        - Gig => date is date and endDate is null
+    */
     const isRangeSameDay = dayjs(dateRange[0]).isSame(dayjs(dateRange[1]));
+    const date =
+      isAFestival && !!dateRange[0]
+        ? dateRange[0]
+        : (cleanedFormValues.date as Date);
+    const endDate = isAFestival && isRangeSameDay ? null : dateRange[1];
+
     onSubmit({
       ...cleanedFormValues,
       bands: bands.map((b, i) => ({ ...b, order: i + 1 })),
-      date: dateRange[0] && !isRangeSameDay ? dateRange[0] : (date as Date),
-      endDate: dateRange[1],
+      date: date,
+      endDate: endDate,
       price: price || price === 0 ? Number(price) : null,
     });
   };
