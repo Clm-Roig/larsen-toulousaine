@@ -3,7 +3,6 @@ import NotSafePlaceIcon from "@/components/NotSafePlaceIcon";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import {
-  ActionIcon,
   Box,
   Button,
   Checkbox,
@@ -22,7 +21,6 @@ import {
   IconDeselect,
   IconHomeCancel,
   IconSelectAll,
-  IconX,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -106,11 +104,7 @@ export default function OptionsPopover({ genres, places }: Props) {
           )}
 
           <NumberInput
-            leftSection={
-              <ActionIcon size="sm" onClick={() => setMaxPrice("")}>
-                <IconX />
-              </ActionIcon>
-            }
+            leftSection={<CloseButton onClick={() => setMaxPrice("")} />}
             allowNegative={false}
             suffix="€"
             label="Prix maximum"

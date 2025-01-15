@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import { ActionIcon, Table, TableThProps, TextInput } from "@mantine/core";
+import { CloseButton, Table, TableThProps, TextInput } from "@mantine/core";
 import { Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
 import { useSession } from "next-auth/react";
-import { IconX } from "@tabler/icons-react";
 
 type Props = {
   genres: Genre[];
@@ -48,14 +47,7 @@ export default function TableHeader({
           <TextInput
             rightSection={
               searchedName && (
-                <ActionIcon
-                  c="inherit"
-                  variant="transparent"
-                  size="xs"
-                  onClick={() => setSearchedName("")}
-                >
-                  <IconX />
-                </ActionIcon>
+                <CloseButton onClick={() => setSearchedName("")} />
               )
             }
             fw="initial"
