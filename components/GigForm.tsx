@@ -130,7 +130,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           ("Le fichier doit être une image.");
         }
         if (size > MAX_IMAGE_SIZE) {
-          return `Le fichier est trop volumineux (taille maximale autorisée : ${MAX_IMAGE_SIZE / 1000000}Mo).`;
+          return `Le fichier est trop volumineux (taille maximale autorisée : ${MAX_IMAGE_SIZE / 1000000} Mo).`;
         }
         return null;
       },

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { removeParametersFromUrl } from "@/utils/utils";
-import { downloadAndStoreImage } from "@/app/api/utils/image";
+import { downloadImage, storeImage } from "@/app/api/utils/image";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import {
   IMG_MAX_HEIGHT,
@@ -19,22 +19,40 @@ import {
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 import { revalidatePath } from "next/cache";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
-import { invalidImageUrlError } from "@/domain/Gig/errors";
+import {
+  invalidImageUrlError,
+  tooBigImageFileError,
+} from "@/domain/Gig/errors";
 import dayjs from "@/lib/dayjs";
 import { validateCountryAndRegionCodes } from "@/app/api/utils/bands";
 import {
   LOCAL_COUNTRY_CODE,
   LOCAL_REGION_CODE,
 } from "@/domain/Place/constants";
+import { MAX_IMAGE_SIZE } from "@/domain/image";
+import { File } from "buffer";
 
 async function POST(request: NextRequest) {
-  const body = (await request.json()) as CreateGigArgs;
-  if (!body) {
-    return toResponse(missingBodyError);
-  }
+  // Check auth
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
+  }
+
+  // Parse formData
+  const formData = await request.formData();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawData: { data: any } = { data: null };
+  formData.forEach((value, key) => (rawData[key] = value));
+  const body: CreateGigArgs = JSON.parse(rawData.data);
+
+  // Check body and file
+  if (!body) {
+    return toResponse(missingBodyError);
+  }
+  const imageFile = formData.get("file") as unknown as File;
+  if (imageFile && imageFile?.size > MAX_IMAGE_SIZE) {
+    return toResponse(tooBigImageFileError);
   }
 
   const { bands, imageUrl } = body;
@@ -73,12 +91,15 @@ async function POST(request: NextRequest) {
     });
 
     let blobImageUrl: string | undefined = undefined;
-    if (imageUrl) {
+    if (imageUrl || imageFile) {
       try {
-        blobImageUrl = await downloadAndStoreImage({
+        const arrayBufferImg = imageUrl
+          ? await downloadImage(imageUrl)
+          : await imageFile.arrayBuffer();
+        blobImageUrl = await storeImage({
+          arrayBufferImg,
           filename: slug,
           imageFormat: IMG_OUTPUT_FORMAT,
-          imageUrl: imageUrl,
           resizeOptions: {
             height: IMG_MAX_HEIGHT,
             width: IMG_MAX_WIDTH,

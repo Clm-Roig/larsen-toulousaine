@@ -16,15 +16,23 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
-import { deleteGigImage, downloadAndStoreImage } from "@/app/api/utils/image";
+import {
+  deleteGigImage,
+  downloadImage,
+  storeImage,
+} from "@/app/api/utils/image";
 import {
   flattenGigBands,
   gigWithBandsAndGenresInclude,
 } from "@/app/api/utils/gigs";
-import { invalidImageUrlError } from "@/domain/Gig/errors";
+import {
+  invalidImageUrlError,
+  tooBigImageFileError,
+} from "@/domain/Gig/errors";
 import { removeParametersFromUrl } from "@/utils/utils";
 import { revalidatePath } from "next/cache";
 import dayjs from "@/lib/dayjs";
+import { MAX_IMAGE_SIZE } from "@/domain/image";
 
 export async function GET(
   request: NextRequest,
@@ -46,13 +54,25 @@ export async function GET(
 }
 
 export async function PUT(request: NextRequest) {
-  const body = (await request.json()) as EditGigArgs;
-  if (!body) {
-    return toResponse(missingBodyError);
-  }
+  // Check auth
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
+  }
+  // Parse formData
+  const formData = await request.formData();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawData: { data: any } = { data: null };
+  formData.forEach((value, key) => (rawData[key] = value));
+  const body: EditGigArgs = JSON.parse(rawData.data);
+
+  // Check body and file
+  if (!body) {
+    return toResponse(missingBodyError);
+  }
+  const imageFile = formData.get("file") as unknown as File;
+  if (imageFile && imageFile?.size > MAX_IMAGE_SIZE) {
+    return toResponse(tooBigImageFileError);
   }
 
   const { bands, id, imageUrl } = body;
@@ -105,19 +125,27 @@ export async function PUT(request: NextRequest) {
     });
 
     const prevImageUrl = previousGig?.imageUrl;
-    let newImageUrl: string | undefined = prevImageUrl ?? undefined;
-    const hasImageChanged = imageUrl && imageUrl !== prevImageUrl;
+    let newImageUrl: string | null =
+      !imageFile && !imageUrl ? null : prevImageUrl ? prevImageUrl : null;
+    const hasImageChanged =
+      !!imageFile || (imageUrl && imageUrl !== prevImageUrl); // if an imageFile is sent, it's to change it
     if (hasImageChanged) {
-      newImageUrl = await downloadAndStoreImage({
+      const arrayBufferImg = imageUrl
+        ? await downloadImage(imageUrl)
+        : await imageFile.arrayBuffer();
+      newImageUrl = await storeImage({
+        arrayBufferImg,
         filename: slug,
         imageFormat: IMG_OUTPUT_FORMAT,
-        imageUrl: imageUrl,
         resizeOptions: {
           fit: "fill",
           height: IMG_MAX_HEIGHT,
           width: IMG_MAX_WIDTH,
         },
       });
+    }
+    if (!newImageUrl && prevImageUrl) {
+      await deleteGigImage(prevImageUrl);
     }
     const updatedGig = await prisma.gig.update({
       where: { id: body.id },
