@@ -18,6 +18,7 @@ import {
   IconCalendar,
   IconCurrencyEuro,
   IconHome,
+  IconInfoCircle,
   IconMapPin,
   IconMusic,
   IconX,
@@ -139,8 +140,6 @@ export default function GigInfo({ gig }: Props) {
         </Stack>
       </Row>
 
-      {description && <Text>{description}</Text>}
-
       {(!!price || price === 0 || ticketReservationLink) && (
         <Row>
           <IconCurrencyEuro {...iconProps} />
@@ -189,6 +188,16 @@ export default function GigInfo({ gig }: Props) {
           )}
         </Stack>
       </Row>
+
+      {!!description && (
+        <Row>
+          <IconInfoCircle {...iconProps} />
+          <Divider orientation="vertical" />
+          <Text flex={1} style={{ whiteSpace: "pre-line" }}>
+            {description}
+          </Text>
+        </Row>
+      )}
     </Flex>
   );
 }

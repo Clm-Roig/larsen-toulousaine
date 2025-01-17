@@ -27,6 +27,7 @@ import {
   Radio,
   FileInput,
   CloseButton,
+  Textarea,
 } from "@mantine/core";
 import { Genre, Place } from "@prisma/client";
 import {
@@ -561,6 +562,14 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
             decimalSeparator=","
             {...form.getInputProps("price")}
+          />
+
+          <Textarea
+            placeholder="Informations spécifiques à l'évènement (nourriture, boissons, expositions, artisans...)"
+            label="Description"
+            autosize
+            minRows={2}
+            {...form.getInputProps("description")}
           />
         </Stack>
 
