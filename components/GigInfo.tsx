@@ -105,40 +105,42 @@ export default function GigInfo({ gig }: Props) {
         {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
       </Row>
 
-      <Row>
-        <IconMusic {...iconProps} />
-        <Divider orientation="vertical" />
-        <Stack gap={4}>
-          {bands
-            ?.sort((b1, b2) => b1.order - b2.order)
-            .map((band) => (
-              <Flex
-                key={band.id}
-                rowGap={0}
-                columnGap="xs"
-                wrap="wrap"
-                align="center"
-              >
-                <Anchor component={Link} href={`/groupes/${band.id}`}>
-                  {band.name}
-                </Anchor>
-                {getSortedGenres(band.genres).map((genre) => (
-                  <GenreBadge key={genre?.id} genre={genre} />
-                ))}
-                {band.isLocal && (
-                  <Badge
-                    variant="outline"
-                    p={4}
-                    leftSection={<IconHome width={"1rem"} />}
-                    style={{ display: "inline-flex" }} // Revert a Mantine fix, see here : https://github.com/mantinedev/mantine/pull/6629
-                  >
-                    Local
-                  </Badge>
-                )}
-              </Flex>
-            ))}
-        </Stack>
-      </Row>
+      {bands && (
+        <Row>
+          <IconMusic {...iconProps} />
+          <Divider orientation="vertical" />
+          <Stack gap={4}>
+            {bands
+              ?.sort((b1, b2) => b1.order - b2.order)
+              .map((band) => (
+                <Flex
+                  key={band.id}
+                  rowGap={0}
+                  columnGap="xs"
+                  wrap="wrap"
+                  align="center"
+                >
+                  <Anchor component={Link} href={`/groupes/${band.id}`}>
+                    {band.name}
+                  </Anchor>
+                  {getSortedGenres(band.genres).map((genre) => (
+                    <GenreBadge key={genre?.id} genre={genre} />
+                  ))}
+                  {band.isLocal && (
+                    <Badge
+                      variant="outline"
+                      p={4}
+                      leftSection={<IconHome width={"1rem"} />}
+                      style={{ display: "inline-flex" }} // Revert a Mantine fix, see here : https://github.com/mantinedev/mantine/pull/6629
+                    >
+                      Local
+                    </Badge>
+                  )}
+                </Flex>
+              ))}
+          </Stack>
+        </Row>
+      )}
 
       {(!!price || price === 0 || ticketReservationLink) && (
         <Row>
