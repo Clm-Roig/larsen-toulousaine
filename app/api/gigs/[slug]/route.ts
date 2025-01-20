@@ -151,16 +151,6 @@ export async function PUT(request: NextRequest) {
       where: { id: body.id },
       data: Prisma.validator<Prisma.GigUpdateInput>()({
         ...bodyWithoutPlaceIdAndAuthorId,
-        // endDate must be different than date
-        endDate: dayjs(body.endDate).isSame(dayjs(body.date))
-          ? null
-          : body.endDate,
-        facebookEventUrl: facebookEventUrl
-          ? removeParametersFromUrl(facebookEventUrl)
-          : null,
-        ticketReservationLink: body.hasTicketReservationLink
-          ? body.ticketReservationLink
-          : null,
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {
@@ -171,9 +161,22 @@ export async function PUT(request: NextRequest) {
             order: band.order,
           })),
         },
+        // endDate must be different than date
+        endDate: dayjs(body.endDate).isSame(dayjs(body.date))
+          ? null
+          : body.endDate,
+        facebookEventUrl: facebookEventUrl
+          ? removeParametersFromUrl(facebookEventUrl)
+          : null,
         imageUrl: newImageUrl,
-        slug: slug,
+        isAcceptingBankCard: body.isAcceptingBankCard
+          ? body.isAcceptingBankCard
+          : null,
         place: { connect: { id: body.placeId } },
+        slug: slug,
+        ticketReservationLink: body.hasTicketReservationLink
+          ? body.ticketReservationLink
+          : null,
       }),
       include: { bands: true },
     });

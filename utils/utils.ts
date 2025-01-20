@@ -53,3 +53,24 @@ export const formatFrenchPrice = (price: number): string =>
   })
     .format(price)
     .replace(",00", "");
+
+export type Boolean3ChoicesFormValue = "true" | "false" | "";
+
+export const boolean3ChoicesFormValueToBool = (
+  value: string,
+): boolean | null => {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  if (value === "") return null;
+  throw new Error("Unexpected value: " + value);
+};
+
+export const boolean3ChoicesToFormValue = (
+  value: boolean | null,
+): Boolean3ChoicesFormValue => {
+  if (value === null || value === undefined) return "";
+  if (value) return "true";
+  if (!value) return "false";
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+  throw new Error("Unexpected value: " + value);
+};

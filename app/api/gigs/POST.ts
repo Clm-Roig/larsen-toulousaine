@@ -121,16 +121,7 @@ async function POST(request: NextRequest) {
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
         ...bodyWithoutPlaceId,
-        // endDate must be different than date
-        endDate: dayjs(body.endDate).isSame(dayjs(body.date))
-          ? null
-          : body.endDate,
-        facebookEventUrl: facebookEventUrl
-          ? removeParametersFromUrl(facebookEventUrl)
-          : null,
-        ticketReservationLink: body.hasTicketReservationLink
-          ? body.ticketReservationLink
-          : null,
+        author: { connect: { id: user.id } },
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {
@@ -141,10 +132,22 @@ async function POST(request: NextRequest) {
             order: band.order,
           })),
         },
+        // endDate must be different than date
+        endDate: dayjs(body.endDate).isSame(dayjs(body.date))
+          ? null
+          : body.endDate,
+        facebookEventUrl: facebookEventUrl
+          ? removeParametersFromUrl(facebookEventUrl)
+          : null,
         imageUrl: blobImageUrl,
-        author: { connect: { id: user.id } },
-        slug: slug,
+        isAcceptingBankCard: body.isAcceptingBankCard
+          ? body.isAcceptingBankCard
+          : null,
         place: { connect: { id: body.placeId } },
+        slug: slug,
+        ticketReservationLink: body.hasTicketReservationLink
+          ? body.ticketReservationLink
+          : null,
       }),
       include: { bands: true },
     });

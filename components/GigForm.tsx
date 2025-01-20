@@ -65,11 +65,11 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import OptimizedImage from "@/components/OptimizedImage";
 import BandFields from "@/components/BandFields";
+import { getGigTitle } from "@/domain/Gig/Gig.service";
 import {
-  getGigTitle,
-  hasTicketLinkBoolToFormValue,
-  hasTicketLinkFormValueToBool,
-} from "@/domain/Gig/Gig.service";
+  boolean3ChoicesToFormValue,
+  boolean3ChoicesFormValueToBool,
+} from "@/utils/utils";
 import { MAIN_CITY } from "@/domain/Place/constants";
 
 const { FESTIVAL, GIG } = GigType;
@@ -112,6 +112,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       description: null,
       facebookEventUrl: null,
       hasTicketReservationLink: null,
+      isAcceptingBankCard: null,
       imageFile: null,
       imageUrl: null,
       name: null,
@@ -196,7 +197,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           ? [new Date(gig.date), new Date(gig.endDate)]
           : [new Date(gig.date), new Date(gig.date)],
         slug: "", // slug will be recomputed when saving the gig
-        hasTicketReservationLink: gig.hasTicketReservationLink,
       });
     }
   }, [form, gig]);
@@ -535,13 +535,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 },
               ]}
               {...form.getInputProps("hasTicketReservationLink")}
-              value={hasTicketLinkBoolToFormValue(
+              value={boolean3ChoicesToFormValue(
                 form.getInputProps("hasTicketReservationLink").value,
               )}
               onChange={(value: string) =>
                 form.setFieldValue(
                   "hasTicketReservationLink",
-                  hasTicketLinkFormValueToBool(value),
+                  boolean3ChoicesFormValueToBool(value),
                 )
               }
             />
@@ -563,6 +563,58 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             decimalSeparator=","
             {...form.getInputProps("price")}
           />
+
+          <Box>
+            <InputLabel display="block">
+              La carte bleue est-elle acceptée ?
+            </InputLabel>
+            <InputDescription mb={5}>
+              Pour payer l&apos;entrée uniquement (pas pour le bar ou le merch
+              des groupes par exemple)
+            </InputDescription>
+            <SegmentedControl
+              size="xs"
+              data={[
+                {
+                  value: "true",
+                  label: (
+                    <>
+                      <IconCheck color="green" />
+                      <VisuallyHidden>Oui</VisuallyHidden>
+                    </>
+                  ),
+                },
+                {
+                  value: "",
+                  label: (
+                    <>
+                      <IconQuestionMark />
+                      <VisuallyHidden>Inconnu</VisuallyHidden>
+                    </>
+                  ),
+                },
+                {
+                  value: "false",
+                  label: (
+                    <>
+                      <IconX color="red" />
+                      <VisuallyHidden>Non</VisuallyHidden>
+                    </>
+                  ),
+                },
+              ]}
+              {...form.getInputProps("isAcceptingBankCard")}
+              value={boolean3ChoicesToFormValue(
+                form.getInputProps("isAcceptingBankCard").value,
+              )}
+              onChange={(value: string) =>
+                form.setFieldValue(
+                  "isAcceptingBankCard",
+                  boolean3ChoicesFormValueToBool(value),
+                )
+              }
+            />
+          </Box>
 
           <Textarea
             placeholder="Informations spécifiques à l'évènement (nourriture, boissons, expositions, artisans...)"

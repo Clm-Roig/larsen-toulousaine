@@ -55,6 +55,7 @@ model Gig {
   hasTicketReservationLink Boolean?
   name                     String?
   facebookEventUrl         String?
+  isAcceptingBankCard      Boolean?
 }
 
 model User {

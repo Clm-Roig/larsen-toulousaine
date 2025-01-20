@@ -38,6 +38,7 @@ CREATE TABLE "Gig" (
     "hasTicketReservationLink" BOOLEAN,
     "name" TEXT,
     "facebookEventUrl" TEXT,
+    "isAcceptingBankCard" BOOLEAN,
 
     CONSTRAINT "Gig_pkey" PRIMARY KEY ("id")
 );

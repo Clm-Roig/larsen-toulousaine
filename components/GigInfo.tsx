@@ -52,6 +52,7 @@ export default function GigInfo({ gig }: Props) {
     endDate,
     facebookEventUrl,
     hasTicketReservationLink,
+    isAcceptingBankCard,
     isCanceled,
     isSoldOut,
     place,
@@ -158,6 +159,16 @@ export default function GigInfo({ gig }: Props) {
             )}
             {hasTicketReservationLink === false && (
               <Text>Pas de billetterie</Text>
+            )}
+            {isAcceptingBankCard === true && (
+              <Text>
+                CB <b>acceptée</b> sur place
+              </Text>
+            )}
+            {isAcceptingBankCard === false && (
+              <Text>
+                CB <b>non-acceptée</b> sur place
+              </Text>
             )}
           </Stack>
         </Row>
