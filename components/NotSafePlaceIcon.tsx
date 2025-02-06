@@ -1,7 +1,7 @@
 import { Tooltip, useMantineTheme } from "@mantine/core";
-import { IconAlertTriangle, TablerIconsProps } from "@tabler/icons-react";
+import { IconAlertTriangle, IconProps } from "@tabler/icons-react";
 
-export default function NotSafePlaceIcon({ ...iconProps }: TablerIconsProps) {
+export default function NotSafePlaceIcon({ ...iconProps }: IconProps) {
   const theme = useMantineTheme();
   return (
     <Tooltip label="Lieu non-safe">
