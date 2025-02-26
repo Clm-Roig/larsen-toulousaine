@@ -33,7 +33,7 @@ type Props = {
 
 const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const theme = useMantineTheme();
-  const { hovered, ref } = useHover<HTMLAnchorElement>();
+  const { hovered, ref } = useHover();
   const { grayOutPastGigs } = usePreferences();
   const { bands, date, endDate, isCanceled, isSoldOut, place, price } = gig;
   const gigType = gigToGigTypeString(gig);

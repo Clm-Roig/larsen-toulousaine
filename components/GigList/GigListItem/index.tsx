@@ -57,7 +57,7 @@ export default function GigListItem({
         : isLargeScreen
           ? 5
           : 6;
-  const { hovered, ref } = useHover<HTMLDivElement>();
+  const { hovered, ref } = useHover();
   const { date, endDate, isCanceled, isSoldOut, imageUrl, slug } = gig;
   const gigTitle = getGigTitle(gig);
   return (

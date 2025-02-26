@@ -16,7 +16,7 @@ export default function GenreBadge({
   filterOnClick = false,
   ...badgeProps
 }: Props) {
-  const { hovered, ref } = useHover<HTMLDivElement>();
+  const { hovered, ref } = useHover();
   const { filteredGenres, setFilteredGenres } = usePreferences();
 
   const handleOnClick = (event: MouseEvent<HTMLDivElement>, genre: Genre) => {
