@@ -1,10 +1,6 @@
 import { authOptions } from "@/utils/authOptions";
 import { EditGigArgs } from "@/domain/Gig/Gig.webService";
-import {
-  IMG_MAX_HEIGHT,
-  IMG_MAX_WIDTH,
-  IMG_OUTPUT_FORMAT,
-} from "@/domain/Gig/constants";
+import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
   missingBodyError,
   mustBeAuthenticatedError,
@@ -137,11 +133,6 @@ export async function PUT(request: NextRequest) {
         arrayBufferImg,
         filename: slug,
         imageFormat: IMG_OUTPUT_FORMAT,
-        resizeOptions: {
-          fit: "fill",
-          height: IMG_MAX_HEIGHT,
-          width: IMG_MAX_WIDTH,
-        },
       });
     }
     if (!newImageUrl && prevImageUrl) {

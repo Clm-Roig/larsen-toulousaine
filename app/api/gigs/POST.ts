@@ -6,11 +6,7 @@ import { authOptions } from "@/utils/authOptions";
 import { removeParametersFromUrl } from "@/utils/utils";
 import { downloadImage, storeImage } from "@/app/api/utils/image";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
-import {
-  IMG_MAX_HEIGHT,
-  IMG_MAX_WIDTH,
-  IMG_OUTPUT_FORMAT,
-} from "@/domain/Gig/constants";
+import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
   missingBodyError,
   mustBeAuthenticatedError,
@@ -100,11 +96,6 @@ async function POST(request: NextRequest) {
           arrayBufferImg,
           filename: slug,
           imageFormat: IMG_OUTPUT_FORMAT,
-          resizeOptions: {
-            height: IMG_MAX_HEIGHT,
-            width: IMG_MAX_WIDTH,
-            withoutEnlargement: true,
-          },
         });
       } catch (error) {
         return NextResponse.json(

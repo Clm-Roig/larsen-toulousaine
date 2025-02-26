@@ -1,3 +1,4 @@
+import { DEFAULT_IMG_RESIZE_OPTIONS } from "@/domain/Gig/constants";
 import { invalidImageUrlError } from "@/domain/Gig/errors";
 import cloudinaryV2 from "@/lib/cloudinary";
 import { Gig } from "@prisma/client";
@@ -49,7 +50,7 @@ export async function storeImage({
   arrayBufferImg,
   filename,
   imageFormat,
-  resizeOptions,
+  resizeOptions = DEFAULT_IMG_RESIZE_OPTIONS,
 }: {
   arrayBufferImg: ArrayBuffer;
   filename: string;
