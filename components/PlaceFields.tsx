@@ -50,6 +50,7 @@ export default function PlaceFields({
   ...stackProps
 }: Props) {
   const theme = useMantineTheme();
+
   return (
     <Stack {...stackProps}>
       <TextInput

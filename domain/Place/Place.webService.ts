@@ -47,6 +47,9 @@ export const createPlace = async (place: CreatePlaceArgs): Promise<Place> => {
   try {
     const response = await api.post<Place>(`/places`, {
       ...place,
+      // sometimes, latitude or longitude can be a string. This is due to the NumberInput component from Mantine
+      latitude: place.latitude && Number(place.latitude),
+      longitude: place.longitude && Number(place.longitude),
     });
     return response.data;
   } catch (error) {
