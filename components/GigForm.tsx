@@ -559,7 +559,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             suffix="€"
             decimalScale={2}
             label="Prix"
-            description={`Prix minimum constaté. Pour un concert gratuit ou à prix libre, renseigner "0€".`}
+            description={`Prix minimum constaté. Pour un concert offert ou à prix libre, renseigner "0€".`}
             decimalSeparator=","
             {...form.getInputProps("price")}
           />

@@ -81,10 +81,10 @@ describe("Gig service", () => {
       expect(priceString).toContain(gig.price + "");
       expect(priceString).toContain(prefix);
     });
-    it("get free gig price string, including the words 'libre' and 'gratuit", () => {
+    it("get free gig price string, including the words 'libre' and 'offert", () => {
       const freeGig = formatGigPrice("Prix : ", 0);
       expect(freeGig).toContain("libre");
-      expect(freeGig).toContain("gratuit");
+      expect(freeGig).toContain("offert");
     });
   });
 });

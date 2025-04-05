@@ -118,7 +118,7 @@ export const getGigCalendarDescription = (gig: Gig): string => {
 
 export const formatGigPrice = (prefix: string, price: Gig["price"]): string => {
   let res = prefix;
-  if (price === 0) res += "Prix libre ou gratuit";
+  if (price === 0) res += "Prix libre ou offert";
   else if (!price) res += "Inconnu";
   else {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
