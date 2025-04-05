@@ -26,17 +26,19 @@ export default function EditGig({ gigSlug }: Props) {
   const { mutate, isPending: isEditPending } = useMutation({
     mutationFn: async (values: EditGigArgs) => await editGig(values),
     onSuccess: (editedGig) => {
+      const gigTypeText = editedGig.name ? "Festival" : "Concert";
       notifications.show({
         color: "green",
-        message: "Concert édité avec succès !",
+        message: `${gigTypeText} édité avec succès !`,
       });
       void queryClient.invalidateQueries({ queryKey: ["gigs"] });
       router.push(`/${editedGig.slug}`);
     },
-    onError: (error) => {
+    onError: (error, variables) => {
+      const gigTypeText = variables.name ? "festival" : "concert";
       notifications.show({
         color: "red",
-        title: "Erreur à l'édition d'un concert",
+        title: `Erreur à l'édition d'un ${gigTypeText}`,
         message: error.message,
       });
     },

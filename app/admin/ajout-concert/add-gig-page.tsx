@@ -13,21 +13,25 @@ export default function AddGig() {
 
   const { isPending, mutate } = useMutation({
     mutationFn: async (values: CreateGigArgs) => {
-      await createGig(values);
+      const result = await createGig(values);
+      return result;
     },
-    onError: (error) =>
+    onError: (error, variables) => {
+      const gigTypeText = variables.name ? "festival" : "concert";
       notifications.show({
         color: "red",
-        title: "Erreur à la création du concert",
+        title: `Erreur à la création du ${gigTypeText}`,
         message: error.message,
-      }),
-    onSuccess: async () => {
+      });
+    },
+    onSuccess: async (createdGig) => {
       await queryClient.invalidateQueries({ queryKey: ["gigs"] });
+      const gigTypeText = createdGig.name ? "Festival" : "Concert";
       notifications.show({
         color: "green",
-        message: "Concert ajouté avec succès !",
+        message: `${gigTypeText} ajouté avec succès !`,
       });
-      router.push(`/admin`);
+      router.push(`/${createdGig.slug}`);
     },
   });
 
