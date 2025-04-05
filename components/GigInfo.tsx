@@ -106,7 +106,7 @@ export default function GigInfo({ gig }: Props) {
         {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
       </Row>
 
-      {bands && (
+      {bands?.length > 0 && (
         <Row>
           <IconMusic {...iconProps} />
           <Divider orientation="vertical" />
