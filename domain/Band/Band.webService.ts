@@ -11,16 +11,19 @@ export const searchBands = async (
   genres?: Array<Genre["id"]>,
   page?: number,
 ): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
-  const nameParam = name ? `name=${encodeURIComponent(name)}` : "";
+  const nameParam = name ? `name=${encodeURIComponent(name)}` : null;
   const genresParam = genres
     ? `genres=${encodeURIComponent(genres?.join(","))}`
-    : "";
-  const pageParam = page ? `page=${page}` : "";
+    : null;
+  const pageParam = page ? `page=${page}` : null;
+  const params = [nameParam, genresParam, pageParam]
+    .filter((p) => !!p)
+    .join("&");
   try {
     const response = await api.get<{
       bands: BandWithGenresAndGigCount[];
       count: number;
-    }>(`/bands/search?${nameParam}&${genresParam}&${pageParam}`);
+    }>(`/bands/search?${params}`);
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
