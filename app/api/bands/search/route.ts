@@ -27,13 +27,17 @@ export async function GET(request: NextRequest) {
       contains: searchedName,
       mode: "insensitive",
     },
-    genres: {
-      some: {
-        id: {
-          in: genreIds,
-        },
-      },
-    },
+    ...(genreIds
+      ? {
+          genres: {
+            some: {
+              id: {
+                in: genreIds,
+              },
+            },
+          },
+        }
+      : {}),
   };
   const [count, bands] = await prisma.$transaction([
     prisma.band.count({
