@@ -6,11 +6,11 @@ Votre agenda metal toulousain !
 
 This is the starter project for the fullstack tutorial with Next.js and Prisma. You can find the final version of this project in the [`final`](https://github.com/prisma/blogr-nextjs-prisma/tree/final) branch of this repo.
 
-# Dev
+## Get started
 
-The database and image storage used are the same in prod and in development: be careful.
+Copy, paste and rename sample.env to **.env** and fill all the variables.
 
-## Commands
+### :warning: DEPRECATED :warning:
 
 Pull env var:
 
@@ -27,8 +27,6 @@ You need to update the database every time your Prisma schema file is changing b
 `npx prisma generate`
 
 `npx prisma db push`
-
-:warning: These commands wil update the production database: be careful!
 
 ### Tools
 
