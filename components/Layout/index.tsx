@@ -26,6 +26,7 @@ import { signOut, useSession } from "next-auth/react";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
 import { IconArrowUp } from "@tabler/icons-react";
 import useBreadcrumbs from "@/hooks/useBreadcrumbs";
+import AddGigButton from "@/components/AddButton/AddGigButton";
 
 type Props = {
   children: ReactNode;
@@ -137,6 +138,11 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
             </Paper>
           ) : (
             <Box mt={0}>{childrenWithTitle}</Box>
+          )}
+          {status === "authenticated" && (
+            <Affix position={{ bottom: 20, left: 20 }}>
+              <AddGigButton size="s" />
+            </Affix>
           )}
           <Affix position={{ bottom: 20, right: 20 }}>
             <Transition transition="slide-up" mounted={scroll.y > 0}>
