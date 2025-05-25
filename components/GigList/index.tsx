@@ -120,6 +120,8 @@ const GigList = ({
                       {gigs.map((gig, idx) => {
                         const nextGig = gigs[idx + 1];
                         const previousGig = gigs[idx - 1];
+                        const hasAnEndDate = !!gig.endDate;
+                        const previousGigHasEndDate = !!previousGig?.endDate;
                         const isNextGigSameDay = dayjs(nextGig?.date).isSame(
                           gig.date,
                         );
@@ -138,7 +140,11 @@ const GigList = ({
                             }
                             {...(isNextGigSameDay && { pb: 0 })}
                             {...(isPreviousGigSameDay && { pt: "xs" })}
-                            displayDate={!isPreviousGigSameDay || !!gig.endDate}
+                            displayDate={
+                              !isPreviousGigSameDay ||
+                              hasAnEndDate || // Festival must display its dates
+                              previousGigHasEndDate // No grouping with the festival before
+                            }
                           />
                         );
                       })}
