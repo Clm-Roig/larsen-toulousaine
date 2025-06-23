@@ -10,12 +10,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { authOptions } from "@/utils/authOptions";
+import { getPrismaOrderByFromRequest } from "@/app/api/utils/orderBy";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const sortBy = searchParams.getAll("sortBy");
+  const order = searchParams.getAll("order") as Prisma.SortOrder[];
+
+  const orderBy = getPrismaOrderByFromRequest({
+    validFields: ["name", "gigs._count"],
+    order: order,
+    sortBy: sortBy,
+    defaultSort: { name: "asc" },
+  });
   const places = await prisma.place.findMany({
-    orderBy: {
-      name: "asc",
-    },
+    orderBy: orderBy,
     include: {
       _count: {
         select: { gigs: true },
