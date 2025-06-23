@@ -29,7 +29,7 @@ import {
   CloseButton,
   Textarea,
 } from "@mantine/core";
-import { Genre, Place } from "@prisma/client";
+import { Genre } from "@prisma/client";
 import {
   IconCheck,
   IconFile,
@@ -71,6 +71,7 @@ import {
   boolean3ChoicesFormValueToBool,
 } from "@/utils/utils";
 import { MAIN_CITY } from "@/domain/Place/constants";
+import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 
 const { FESTIVAL, GIG } = GigType;
 
@@ -92,7 +93,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });
-  const { data: places } = useQuery<Place[], Error>({
+  const { data: places } = useQuery<PlaceWithGigCount[], Error>({
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
@@ -313,10 +314,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             <Select
               label="Lieu"
               placeholder="Sélectionner un lieu"
-              required
-              searchable
+              clearable
               data={places
-                ?.sort((p1) => (p1.isClosed ? 1 : -1))
+                ?.sort((p1, p2) => {
+                  if (p1.isClosed) return 1;
+                  if (p2.isClosed) return -1;
+                  return p2._count.gigs - p1._count.gigs;
+                })
                 .map((place) => ({
                   value: place.id,
                   label: `${place.name} ${
@@ -324,6 +328,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                   } ${place.isClosed ? " (fermé)" : ""}`,
                   disabled: place.isClosed,
                 }))}
+              required
+              searchable
               style={{ flex: 1 }}
               {...form.getInputProps("placeId")}
             />
