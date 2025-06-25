@@ -25,6 +25,7 @@ import GigImgOverlay from "@/components/GigImgOverlay";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import GigMissingData from "@/components/GigMissingData";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
+import IsATributeBadge from "@/components/IsATributeBadge";
 
 type Props = {
   displayMissingDataOnly?: boolean;
@@ -36,6 +37,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const { hovered, ref } = useHover();
   const { grayOutPastGigs } = usePreferences();
   const { bands, date, endDate, isCanceled, isSoldOut, place, price } = gig;
+  const isATribute = bands.some((b) => b.isATribute);
   const gigType = gigToGigTypeString(gig);
   const gigTitle = getGigTitle(gig);
   const bandGenres = getSortedUniqueBandGenres(bands);
@@ -100,6 +102,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
                 {bandGenres.slice(0, 8).map((genre) => (
                   <GenreBadge key={genre?.id} genre={genre} filterOnClick />
                 ))}
+                {isATribute && <IsATributeBadge />}
               </Group>
             )}
           </Stack>

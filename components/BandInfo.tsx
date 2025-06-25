@@ -7,6 +7,7 @@ import { BandWithGenresAndGigs } from "@/domain/Band/Band.type";
 import dayjs from "@/lib/dayjs";
 import GigList from "./GigList";
 import allCountries from "country-region-data/data.json";
+import IsATributeBadge from "@/components/IsATributeBadge";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -25,6 +26,7 @@ export default function BandInfo({ band }: Props) {
     createdAt,
     genres,
     gigs,
+    isATribute,
     isLocal,
     regionCode,
     updatedAt,
@@ -43,6 +45,7 @@ export default function BandInfo({ band }: Props) {
             {getSortedGenres(genres).map((genre) => (
               <GenreBadge key={genre?.id} genre={genre} />
             ))}
+            {isATribute && <IsATributeBadge />}
             {isLocal && (
               <Badge
                 variant="outline"
@@ -80,12 +83,14 @@ export default function BandInfo({ band }: Props) {
           <b>{dayjs(createdAt).format("D MMMM YYYY")}</b>
         </i>
       </Text>
-      <Text fs="italic" ta="end" size="xs">
-        Mis à jour le{" "}
-        <i>
-          <b>{dayjs(updatedAt).format("D MMMM YYYY")}</b>
-        </i>
-      </Text>
+      {updatedAt && (
+        <Text fs="italic" ta="end" size="xs">
+          Mis à jour le{" "}
+          <i>
+            <b>{dayjs(updatedAt).format("D MMMM YYYY")}</b>
+          </i>
+        </Text>
+      )}
     </Flex>
   );
 }

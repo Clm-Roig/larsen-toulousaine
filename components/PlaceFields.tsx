@@ -99,7 +99,7 @@ export default function PlaceFields({
       />
       <Switch
         {...isSafeProps}
-        description={`Quand un lieu est marquée comme "non-safe", les concerts qui s'y  déroulent sont alors masqués. Le fait de changer cette valeur doit avoir été approuvé par plusieurs modérateur·rices ainsi que par Clément.`}
+        description={`Quand un lieu est marqué comme "non-safe", les concerts qui s'y  déroulent sont alors masqués. Le fait de changer cette valeur doit avoir été approuvé par plusieurs modérateur·rices ainsi que par Clément.`}
         label={
           isSafeProps.value ? "Le lieu est safe" : "Le lieu n'est pas safe"
         }
@@ -122,7 +122,7 @@ export default function PlaceFields({
       <Switch
         {...isClosedProps}
         checked={!isClosedProps.checked}
-        description={`Quand un lieu est marquée comme "fermé", il n'est plus possible de le sélectionner pour y ajouter un nouveau concert et il n'est plus affiché dans les options de filtrage de la liste de concerts.`}
+        description={`Quand un lieu est marqué comme "fermé", il n'est plus possible de le sélectionner pour y ajouter un nouveau concert et il n'est plus affiché dans les options de filtrage de la liste de concerts.`}
         label={
           isClosedProps.value ? "Le lieu est fermé" : "Le lieu est en activité"
         }

@@ -241,6 +241,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     const newBand = {
       name: bandName || "",
       genres: [],
+      isSafe: true,
       key: randomId(),
     };
     form.insertListItem("bands", newBand);
@@ -428,6 +429,15 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                               disabled: !!form.values.bands[index].id,
                               ...form.getInputProps(`bands.${index}.genres`),
                             }}
+                            isATributeProps={{
+                              disabled: !!form.values.bands[index].id,
+                              checked: !!form.getInputProps(
+                                `bands.${index}.isATribute`,
+                              ).value,
+                              ...form.getInputProps(
+                                `bands.${index}.isATribute`,
+                              ),
+                            }}
                             isLocalProps={{
                               disabled: !!form.values.bands[index].id,
                               checked: !!form.getInputProps(
@@ -435,7 +445,14 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                               ).value,
                               ...form.getInputProps(`bands.${index}.isLocal`),
                             }}
-                            withShortIsLocalDescription
+                            isSafeProps={{
+                              disabled: !!form.values.bands[index].id,
+                              checked: !!form.getInputProps(
+                                `bands.${index}.isSafe`,
+                              ).value,
+                              ...form.getInputProps(`bands.${index}.isSafe`),
+                            }}
+                            withShortBoolDescriptions
                           />
                         </Group>
                       </Paper>

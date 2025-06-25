@@ -20,6 +20,7 @@ import TableHeader from "./TableHeader";
 import classes from "./BandTable.module.css";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import { useSession } from "next-auth/react";
+import IsATributeBadge from "@/components/IsATributeBadge";
 
 type Props = {
   bands: BandWithGenresAndGigCount[] | undefined;
@@ -123,6 +124,7 @@ export default function BandTable({
                     {getSortedGenres(band.genres).map((genre) => (
                       <GenreBadge key={genre?.id} genre={genre} size="sm" />
                     ))}
+                    {band.isATribute && <IsATributeBadge />}
                   </Group>
                 </Table.Td>
                 <Table.Td ta="center">

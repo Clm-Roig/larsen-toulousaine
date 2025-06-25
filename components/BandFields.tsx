@@ -15,17 +15,21 @@ type Props = {
   cityProps?: InputProps;
   countryCodeProps?: SelectProps;
   genreProps: Omit<GenreSelectProps, "maxValues" | "placeholder">;
+  isATributeProps: Omit<CheckboxProps, "required" | "placeholder">;
   isLocalProps: Omit<CheckboxProps, "required" | "placeholder">;
+  isSafeProps: Omit<CheckboxProps, "required" | "placeholder">;
   nameProps: Omit<TextInputProps, "required" | "placeholder">;
   regionCodeProps?: SelectProps;
   withLabels?: boolean;
-  withShortIsLocalDescription?: boolean;
+  withShortBoolDescriptions?: boolean;
 };
 
 const cityLabel = "Ville";
 const countryCodeLabel = `Pays`;
 const genreLabel = `Genres (${MAX_GENRES_PER_BAND} max)`;
+const isATributeLabel = "Est un groupe tribute";
 const isLocalLabel = "Est un groupe local";
+const isSafeLabel = "Est un groupe safe";
 const nameLabel = "Nom du groupe";
 const regionCodeLabel = `Région`;
 
@@ -33,11 +37,13 @@ export default function BandFields({
   cityProps,
   countryCodeProps,
   genreProps,
+  isATributeProps,
   isLocalProps,
+  isSafeProps,
   nameProps,
   regionCodeProps,
   withLabels = false,
-  withShortIsLocalDescription = false,
+  withShortBoolDescriptions = false,
 }: Props) {
   return (
     <>
@@ -55,11 +61,30 @@ export default function BandFields({
         {...isLocalProps}
         label={isLocalLabel}
         description={
-          withShortIsLocalDescription
+          withShortBoolDescriptions
             ? "< 100km de Toulouse"
             : "Un groupe est considéré comme local s'il se situe à moins de 100km de Toulouse. Cela inclut des villes comme Agen, Montauban, Albi, Cahors, Carcassonne, Foix ou Auch par exemple."
         }
       />
+      <Checkbox
+        {...isATributeProps}
+        label={isATributeLabel}
+        description={
+          withShortBoolDescriptions
+            ? "Fait des reprises uniquement"
+            : "Le groupe fait uniquement des reprises d'autre(s) groupe(s) (généralement très connu(s))."
+        }
+      />
+      <Checkbox
+        {...isSafeProps}
+        label={isSafeLabel}
+        description={
+          withShortBoolDescriptions
+            ? ""
+            : `Quand un groupe est marqué comme "non-safe", les concerts auxquels il participe sont alors masqués. Le fait de changer cette valeur doit avoir été approuvé par plusieurs modérateur·rices ainsi que par Clément.`
+        }
+      />
+
       {countryCodeProps && (
         <CountrySelect
           {...countryCodeProps}

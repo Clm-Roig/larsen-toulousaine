@@ -31,6 +31,8 @@ model Band {
   countryCode String?
   regionCode  String?
   city        String?
+  isATribute  Boolean       @default(false)
+  isSafe      Boolean       @default(true)
 }
 
 model Gig {

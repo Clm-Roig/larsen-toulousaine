@@ -32,7 +32,17 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const { id, city, countryCode, regionCode, genres, isLocal, name } = body;
+  const {
+    id,
+    city,
+    countryCode,
+    regionCode,
+    genres,
+    isATribute,
+    isLocal,
+    isSafe,
+    name,
+  } = body;
 
   // Check country & region code
   const validationMsg = validateCountryAndRegionCodes(countryCode, regionCode);
@@ -52,7 +62,9 @@ export async function PUT(request: NextRequest) {
         genres: {
           set: genres.map((gId) => ({ id: gId })),
         },
+        isATribute: isATribute,
         isLocal: isLocal,
+        isSafe: isSafe,
         name: name,
         regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
       }),

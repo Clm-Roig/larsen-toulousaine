@@ -70,7 +70,9 @@ const Bands = () => {
       countryCode: null,
       name: "",
       genres: [],
+      isATribute: false,
       isLocal: false,
+      isSafe: true,
       regionCode: null,
     },
     validate: {
@@ -268,10 +270,20 @@ const Bands = () => {
                     w: "100%",
                     ...form.getInputProps(`genres`),
                   }}
+                  isATributeProps={{
+                    w: "100%",
+                    checked: !!form.getInputProps("isATribute").value,
+                    ...form.getInputProps(`isATribute`),
+                  }}
                   isLocalProps={{
                     w: "100%",
                     checked: !!form.getInputProps("isLocal").value,
                     ...form.getInputProps(`isLocal`),
+                  }}
+                  isSafeProps={{
+                    w: "100%",
+                    checked: !!form.getInputProps("isSafe").value,
+                    ...form.getInputProps(`isSafe`),
                   }}
                   nameProps={{
                     w: "100%",

@@ -32,6 +32,7 @@ import SoldOutIcon from "@/components/SoldOutIcon";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import NotSafePlaceIcon from "./NotSafePlaceIcon";
 import Link from "next/link";
+import IsATributeBadge from "@/components/IsATributeBadge";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -127,6 +128,7 @@ export default function GigInfo({ gig }: Props) {
                   {getSortedGenres(band.genres).map((genre) => (
                     <GenreBadge key={genre?.id} genre={genre} />
                   ))}
+                  {band.isATribute && <IsATributeBadge />}
                   {band.isLocal && (
                     <Badge
                       variant="outline"
