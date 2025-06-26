@@ -3,17 +3,25 @@ import {
   AppShell,
   Button,
   Group,
-  ActionIcon,
   Image,
   Box,
   Burger,
+  Menu,
+  MenuItem,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
-import { IconLogout } from "@tabler/icons-react";
+import {
+  IconBuilding,
+  IconChevronDown,
+  IconExclamationCircle,
+  IconLogout,
+  IconMusic,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import GigSearchInput from "@/components/GigSearchInput";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
 import { useRouter } from "next/navigation";
+import AddGigButton from "@/components/AddButton/AddGigButton";
 
 type Props = {
   navbarOpened: boolean;
@@ -72,17 +80,52 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
 
           {status === "authenticated" && (
             <>
-              <Button
-                size="compact-md"
-                component={Link}
-                href="/admin"
-                visibleFrom="xs"
-              >
-                Admin
-              </Button>
-              <ActionIcon size="md" onClick={handleSignOut} visibleFrom="sm">
-                <IconLogout />
-              </ActionIcon>
+              <Menu trigger="click-hover">
+                <Menu.Target>
+                  <Button
+                    rightSection={<IconChevronDown size={14} />}
+                    size="compact-md"
+                    component={Link}
+                    href="/admin"
+                    visibleFrom="xs"
+                  >
+                    Admin
+                  </Button>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item>
+                    <AddGigButton size={"compact-sm"} />
+                  </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    href="/admin/infos-manquantes"
+                    leftSection={<IconExclamationCircle />}
+                  >
+                    Infos manquantes
+                  </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    href="/admin/groupes"
+                    leftSection={<IconMusic />}
+                  >
+                    Groupes
+                  </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    href="/admin/lieux"
+                    leftSection={<IconBuilding />}
+                  >
+                    Lieux
+                  </Menu.Item>
+                  <MenuItem
+                    leftSection={<IconLogout />}
+                    onClick={handleSignOut}
+                  >
+                    Se déconnecter
+                  </MenuItem>
+                </Menu.Dropdown>
+              </Menu>
             </>
           )}
           <SchemeSwitcher visibleFrom="sm" />
