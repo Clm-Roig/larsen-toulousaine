@@ -106,7 +106,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                   </Menu.Item>
                   <Menu.Item
                     component={Link}
-                    href="/admin/groupes"
+                    href="/groupes"
                     leftSection={<IconMusic />}
                   >
                     Groupes
