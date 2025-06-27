@@ -1,5 +1,5 @@
 import GenreSelect from "@/components/GenreSelect";
-import NotSafePlaceIcon from "@/components/NotSafePlaceIcon";
+import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import usePreferences from "@/hooks/usePreferences";
 import {
@@ -157,7 +157,9 @@ export default function OptionsPopover({ genres, places }: Props) {
                           />
                         </Tooltip>
                       )}
-                      {!place.isSafe && <NotSafePlaceIcon size={14} />}
+                      {!place.isSafe && (
+                        <UnsafeIcon unsafeType={UnsafeType.PLACE} size={14} />
+                      )}
                     </Group>
                   }
                   size="xs"

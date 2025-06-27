@@ -14,7 +14,7 @@ import { Place } from "@prisma/client";
 import { normalizeString } from "@/utils/utils";
 import TableHeader from "./TableHeader";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
-import NotSafePlaceIcon from "../NotSafePlaceIcon";
+import UnsafeIcon, { UnsafeType } from "../UnsafeIcon";
 import { getPlaceSizeLabel } from "@/app/api/utils/places";
 
 type Props = {
@@ -107,7 +107,9 @@ export default function PlaceTable({
                   <Table.Td>
                     <Group gap={2}>
                       {name}
-                      {!isSafe && <NotSafePlaceIcon size={18} />}
+                      {!isSafe && (
+                        <UnsafeIcon unsafeType={UnsafeType.PLACE} size={18} />
+                      )}
                     </Group>
                   </Table.Td>
                   <Table.Td>{address}</Table.Td>

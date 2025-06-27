@@ -1,8 +1,12 @@
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "@/utils/authOptions";
 
 export async function GET(request: NextRequest) {
+  const { user } = (await getServerSession(authOptions)) || {};
+  const canSeeUnsafeBands = !!user;
   const searchParams = request.nextUrl.searchParams;
   const page = searchParams.get("page");
   // Prisma doesn't handle findMany + count in one transaction
@@ -21,6 +25,7 @@ export async function GET(request: NextRequest) {
           select: { gigs: true },
         },
       },
+      where: { ...(canSeeUnsafeBands ? {} : { isSafe: true }) },
     }),
   ]);
   return NextResponse.json({

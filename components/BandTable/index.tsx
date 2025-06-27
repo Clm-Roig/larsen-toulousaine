@@ -4,6 +4,7 @@ import React from "react";
 import {
   ActionIcon,
   Center,
+  Flex,
   Group,
   Loader,
   Pagination,
@@ -21,6 +22,7 @@ import classes from "./BandTable.module.css";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import { useSession } from "next-auth/react";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 
 type Props = {
   bands: BandWithGenresAndGigCount[] | undefined;
@@ -118,7 +120,14 @@ export default function BandTable({
                 onClick={() => (isLoading ? undefined : onRowClick(band.id))}
                 className={isLoading ? classes.rowLoading : classes.row}
               >
-                <Table.Td>{band.name}</Table.Td>
+                <Table.Td>
+                  <Flex gap={4} align="center">
+                    <>{band.name}</>
+                    {!band.isSafe && (
+                      <UnsafeIcon unsafeType={UnsafeType.BAND} size={16} />
+                    )}
+                  </Flex>
+                </Table.Td>
                 <Table.Td>
                   <Group gap={2}>
                     {getSortedGenres(band.genres).map((genre) => (

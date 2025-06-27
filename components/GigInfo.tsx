@@ -30,7 +30,7 @@ import useScreenSize from "@/hooks/useScreenSize";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import { getSortedGenres } from "@/domain/Band/Band.service";
-import NotSafePlaceIcon from "./NotSafePlaceIcon";
+import UnsafeIcon, { UnsafeType } from "./UnsafeIcon";
 import Link from "next/link";
 import IsATributeBadge from "@/components/IsATributeBadge";
 
@@ -125,6 +125,7 @@ export default function GigInfo({ gig }: Props) {
                   <Anchor component={Link} href={`/groupes/${band.id}`}>
                     {band.name}
                   </Anchor>
+                  {!band.isSafe && <UnsafeIcon unsafeType={UnsafeType.BAND} />}
                   {getSortedGenres(band.genres).map((genre) => (
                     <GenreBadge key={genre?.id} genre={genre} />
                   ))}
@@ -188,7 +189,7 @@ export default function GigInfo({ gig }: Props) {
             ) : (
               <Text fw="bold">{place?.name}</Text>
             )}
-            {!place.isSafe && <NotSafePlaceIcon size={14} />}
+            {!place.isSafe && <UnsafeIcon unsafeType={UnsafeType.PLACE} />}
           </Group>
           {addressAndCity && (
             <ExternalLink

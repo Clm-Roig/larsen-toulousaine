@@ -1,6 +1,8 @@
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import prisma from "@/lib/prisma";
+import { authOptions } from "@/utils/authOptions";
 import { Prisma } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -13,6 +15,8 @@ export async function GET(request: NextRequest) {
   const {
     nextUrl: { searchParams },
   } = request;
+  const { user } = (await getServerSession(authOptions)) || {};
+  const canSeeUnsafeBands = !!user;
   const rawSearchedName = searchParams.get("name");
   const rawGenres = searchParams.get("genres");
   const page = searchParams.get("page");
@@ -27,6 +31,7 @@ export async function GET(request: NextRequest) {
       contains: searchedName,
       mode: "insensitive",
     },
+    ...(canSeeUnsafeBands ? {} : { isSafe: true }),
     ...(genreIds
       ? {
           genres: {
