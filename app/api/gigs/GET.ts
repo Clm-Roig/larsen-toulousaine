@@ -149,6 +149,17 @@ const getGigsByDateFromTo = async (
         lte: to ? new Date(to) : endOf("month"),
       },
       place: { ...(isSafeGigsOnly ? { isSafe: true } : {}) },
+      bands: {
+        ...(isSafeGigsOnly
+          ? {
+              every: {
+                band: {
+                  isSafe: true,
+                },
+              },
+            }
+          : {}),
+      },
     },
     include: defaultInclude,
     orderBy: gigListOrderBy,

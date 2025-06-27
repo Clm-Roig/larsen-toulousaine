@@ -32,17 +32,8 @@ export async function PUT(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  const {
-    id,
-    city,
-    countryCode,
-    regionCode,
-    genres,
-    isATribute,
-    isLocal,
-    isSafe,
-    name,
-  } = body;
+  const { id, countryCode, regionCode, genres, isLocal, ...restOfBandData } =
+    body;
 
   // Check country & region code
   const validationMsg = validateCountryAndRegionCodes(countryCode, regionCode);
@@ -57,16 +48,13 @@ export async function PUT(request: NextRequest) {
     const updatedBand = await prisma.band.update({
       where: { id: id },
       data: Prisma.validator<Prisma.BandUpdateInput>()({
-        city: city,
         countryCode: isLocal ? LOCAL_COUNTRY_CODE : countryCode,
         genres: {
           set: genres.map((gId) => ({ id: gId })),
         },
-        isATribute: isATribute,
         isLocal: isLocal,
-        isSafe: isSafe,
-        name: name,
         regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
+        ...restOfBandData,
       }),
       include: { genres: true },
     });
