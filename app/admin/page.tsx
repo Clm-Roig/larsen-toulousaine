@@ -1,8 +1,7 @@
 "use client";
 
-import { Text, Card, Flex, Stack, Title, Box } from "@mantine/core";
+import { Flex, Stack, Title, Box } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import {
   IconUser,
   IconUsers,
@@ -11,38 +10,11 @@ import {
   IconBuilding,
   IconExclamationCircle,
 } from "@tabler/icons-react";
-import Layout from "../../components/Layout";
-import { useRouter } from "next/navigation";
-import { ReactElement } from "react";
 import { Role } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import Layout from "@/components/Layout";
 import AddGigButton from "@/components/AddButton/AddGigButton";
-
-function DashboardCard({
-  href,
-  icon,
-  text,
-}: {
-  href: string;
-  icon: ReactElement;
-  text: string;
-}) {
-  return (
-    <Card
-      component={Link}
-      href={href}
-      w={{ base: "100%", xs: 200 }}
-      p="md"
-      withBorder
-    >
-      <Stack align="center" gap="xs">
-        {icon}
-        <Text ta="center" style={{ whiteSpace: "pre-line" }}>
-          {text}
-        </Text>
-      </Stack>
-    </Card>
-  );
-}
+import { DashboardCard } from "@/app/admin/DashboardCard";
 
 export default function Admin() {
   const { status, data } = useSession();

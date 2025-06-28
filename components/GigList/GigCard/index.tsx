@@ -8,7 +8,6 @@ import {
 } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { getSortedUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
 import GigMenu from "@/components/GigMenu";
@@ -26,6 +25,7 @@ import SoldOutIcon from "@/components/SoldOutIcon";
 import GigMissingData from "@/components/GigMissingData";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import { CardWithLink } from "@/components/CardWithLink";
 
 type Props = {
   displayMissingDataOnly?: boolean;
@@ -47,10 +47,9 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
         position: "relative",
       }}
     >
-      <Card
+      <CardWithLink
         h={GIG_CARD_HEIGHT}
-        component={Link}
-        href={"/" + gig.slug}
+        href={`/${gig.slug}`}
         opacity={
           isCanceled || (hasPassed(date) && grayOutPastGigs) || isSoldOut
             ? 0.6
@@ -67,12 +66,9 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
             : isSoldOut
               ? "2px solid var(--mantine-color-orange-filled)"
               : "",
-          transition: `box-shadow ${theme.other.transitionDuration}`,
         }}
-        shadow={hovered ? "md" : ""}
-        ref={ref}
       >
-        <Card.Section>
+        <Card.Section ref={ref}>
           <Box
             style={{
               scale: hovered ? 1.075 : 1,
@@ -126,7 +122,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
             </Group>
           </Group>
         </Stack>
-      </Card>
+      </CardWithLink>
 
       <TopMenuBox position="left" px={8} py={4}>
         <Text c="white">
