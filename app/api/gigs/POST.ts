@@ -58,13 +58,15 @@ async function POST(request: NextRequest) {
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
         const {
+          city,
           countryCode,
           genres,
+          isATribute,
           isLocal,
+          isSafe,
           name,
           order,
           regionCode,
-          ...restOfBandData
         } = band;
         const validationMsg = validateCountryAndRegionCodes(
           countryCode,
@@ -75,12 +77,14 @@ async function POST(request: NextRequest) {
         }
         const createdBand = await prisma.band.create({
           data: {
+            city: city,
             countryCode: isLocal ? LOCAL_COUNTRY_CODE : countryCode,
             genres: { connect: genres.map((g) => ({ id: g })) },
+            isATribute: isATribute,
             isLocal: isLocal,
+            isSafe: isSafe,
             name: name,
             regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
-            ...restOfBandData,
           },
         });
         return { ...createdBand, order: order };
