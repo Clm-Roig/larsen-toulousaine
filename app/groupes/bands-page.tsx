@@ -1,12 +1,11 @@
 "use client";
 
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Layout from "@/components/Layout";
 import {
   Alert,
   Button,
   Center,
-  Drawer,
   Group,
   Modal,
   Stack,
@@ -14,35 +13,25 @@ import {
 } from "@mantine/core";
 import {
   EditBandArgs,
-  deleteBand,
-  editBand,
   getBands,
   searchBands,
 } from "@/domain/Band/Band.webService";
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   BandWithGenres,
   BandWithGenresAndGigCount,
 } from "@/domain/Band/Band.type";
 import BandTable from "@/components/BandTable";
-import { notifications } from "@mantine/notifications";
-import { useForm } from "@mantine/form";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { getGenres } from "@/domain/Genre/Genre.webService";
 import { Band, Genre } from "@prisma/client";
-import BandFields from "@/components/BandFields";
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import useSearchParams from "@/hooks/useSearchParams";
 import { useRouter } from "next/navigation";
-import {
-  LOCAL_COUNTRY_CODE,
-  LOCAL_REGION_CODE,
-} from "@/domain/Place/constants";
+
+import { EditBandDrawer } from "@/components/EditBandDrawer";
+import useEditBand from "@/hooks/useEditBand";
+import useDeleteBand from "@/hooks/useDeleteBand";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
@@ -56,70 +45,11 @@ const Bands = () => {
   const urlPageStr = searchParams.get("page");
   const urlPage = urlPageStr ? parseInt(urlPageStr, 10) - 1 : null;
   const [page, setPage] = useState(urlPage || 0);
-  const queryClient = useQueryClient();
 
   const [editOpened, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
   const [deleteOpened, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
-
-  const form = useForm<EditBandArgs>({
-    initialValues: {
-      id: "",
-      city: null,
-      countryCode: null,
-      name: "",
-      genres: [],
-      isATribute: false,
-      isLocal: false,
-      isSafe: true,
-      regionCode: null,
-    },
-    validate: {
-      name: (value) => (value ? null : "Le nom est requis."),
-      genres: (value) => {
-        return value?.length > 0 ? null : "Au moins un genre est requis.";
-      },
-    },
-  });
-
-  // When countryCode is deleted, delete regionCode
-  form.watch("countryCode", ({ value }) => {
-    if (!value && form.getValues().regionCode !== null) {
-      form.setValues({
-        ...form.values,
-        countryCode: null,
-        regionCode: null,
-      });
-    }
-  });
-
-  // When isLocal is true, set the region and country automatically
-  form.watch("isLocal", ({ value, previousValue }) => {
-    const { countryCode, regionCode } = form.getValues();
-    if (
-      previousValue === false &&
-      countryCode !== LOCAL_COUNTRY_CODE &&
-      regionCode !== LOCAL_REGION_CODE
-    ) {
-      form.setValues({
-        ...form.values,
-        isLocal: value,
-        countryCode: LOCAL_COUNTRY_CODE,
-        regionCode: LOCAL_REGION_CODE,
-      });
-    }
-  });
-
-  // set form values when selected band changes
-  useEffect(() => {
-    if (editedBand && form.values.id !== editedBand.id) {
-      form.setValues({
-        ...editedBand,
-        genres: editedBand.genres.map((g) => g.id),
-      });
-    }
-  }, [editedBand, form]);
 
   const {
     data,
@@ -140,43 +70,14 @@ const Bands = () => {
     queryFn: async () => await getGenres(),
   });
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: async () => await editBand(form.values),
-    onError: (error) => {
-      notifications.show({
-        color: "red",
-        title: "Erreur à l'édition du groupe",
-        message: error.message,
-      });
-    },
-    onSuccess: () => {
-      notifications.show({
-        color: "green",
-        message: "Groupe édité avec succès !",
-      });
-      handleOnClose();
-      void queryClient.invalidateQueries({ queryKey: ["bands"] });
-    },
-  });
+  const handleOnClose = useCallback(() => {
+    setEditedBand(undefined);
+    closeEdit();
+  }, [closeEdit]);
+  const { isPending, mutate } = useEditBand(handleOnClose);
 
-  const { isPending: isDeletePending, mutate: handleOnDelete } = useMutation({
-    mutationFn: async (bandId: string) => {
-      await deleteBand(bandId);
-    },
-    onError: (error) =>
-      notifications.show({
-        color: "red",
-        title: "Erreur à la suppression du groupe",
-        message: error.message,
-      }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["bands"] });
-      notifications.show({
-        color: "green",
-        message: "Groupe supprimé avec succès !",
-      });
-    },
-  });
+  const { isPending: isDeletePending, mutate: handleOnDelete } =
+    useDeleteBand();
 
   const handleOnSearchedNameChange = (name: string) => {
     handleOnSetPage(1);
@@ -191,11 +92,6 @@ const Bands = () => {
   const handleOnRowClick = (bandId: Band["id"]) => {
     router.push(`/groupes/${bandId}`);
   };
-
-  const handleOnClose = useCallback(() => {
-    setEditedBand(undefined);
-    closeEdit();
-  }, [closeEdit]);
 
   const handleOnEditBand = (band: BandWithGenres) => {
     setEditedBand(band);
@@ -214,9 +110,8 @@ const Bands = () => {
     }
   };
 
-  const handleOnSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    mutate();
+  const handleOnSubmit = (formValues: EditBandArgs) => {
+    mutate(formValues);
   };
 
   /**
@@ -247,67 +142,13 @@ const Bands = () => {
           setSearchedGenres={handleOnSearchedGenresChange}
           setSearchedName={handleOnSearchedNameChange}
         />
-        <Drawer
+        <EditBandDrawer
+          editedBand={editedBand}
+          handleOnClose={handleOnClose}
+          handleOnSubmit={handleOnSubmit}
+          isPending={isPending}
           opened={editOpened}
-          onClose={handleOnClose}
-          position="right"
-          title="Modifier le groupe"
-        >
-          {!!form.values.id && (
-            <form onSubmit={(event) => handleOnSubmit(event)}>
-              <Group w="100%">
-                <BandFields
-                  cityProps={{
-                    w: "100%",
-                    ...form.getInputProps(`city`),
-                  }}
-                  countryCodeProps={{
-                    w: "100%",
-                    ...form.getInputProps(`countryCode`),
-                  }}
-                  genreProps={{
-                    genres: genres || [],
-                    w: "100%",
-                    ...form.getInputProps(`genres`),
-                  }}
-                  isATributeProps={{
-                    w: "100%",
-                    checked: !!form.getInputProps("isATribute").value,
-                    ...form.getInputProps(`isATribute`),
-                  }}
-                  isLocalProps={{
-                    w: "100%",
-                    checked: !!form.getInputProps("isLocal").value,
-                    ...form.getInputProps(`isLocal`),
-                  }}
-                  isSafeProps={{
-                    w: "100%",
-                    checked: !!form.getInputProps("isSafe").value,
-                    ...form.getInputProps(`isSafe`),
-                  }}
-                  nameProps={{
-                    w: "100%",
-                    ...form.getInputProps(`name`),
-                  }}
-                  regionCodeProps={{
-                    w: "100%",
-                    disabled: !form.getInputProps("countryCode").value,
-                    ...form.getInputProps(`regionCode`),
-                  }}
-                  withLabels
-                />
-                <Group justify="space-between" w="100%">
-                  <Button variant="outline" onClick={handleOnClose}>
-                    Annuler
-                  </Button>
-                  <Button type="submit" loading={isPending}>
-                    Modifier
-                  </Button>
-                </Group>
-              </Group>
-            </form>
-          )}
-        </Drawer>
+        />
       </Center>
       {isError && <Alert color="red">{getBandsError?.message}</Alert>}
 

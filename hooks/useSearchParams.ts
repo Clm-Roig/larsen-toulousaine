@@ -12,7 +12,11 @@ export default function useSearchParams() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const setSearchParams = (newValues: Map<string, string | number>) => {
+  const setSearchParams = (newValues: Map<string, string | number> | null) => {
+    if (newValues === null) {
+      router.push(pathname);
+      return;
+    }
     const urlSearchParams = new URLSearchParams(
       Array.from(searchParams.entries()),
     );
