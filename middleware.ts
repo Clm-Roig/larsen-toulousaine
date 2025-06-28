@@ -2,7 +2,7 @@ import { Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAndDecodeJwt } from "@/lib/jwt";
 
-const isAdminRoute = (pathname: string, req: NextRequest) => {
+const isAdminRouteFn = (pathname: string, req: NextRequest): boolean => {
   const conditions = [
     pathname.startsWith("/api/users") &&
       ["POST", "DELETE"].includes(req.method),
@@ -10,7 +10,7 @@ const isAdminRoute = (pathname: string, req: NextRequest) => {
   return conditions.includes(true);
 };
 
-const isModeratorRoute = (pathname: string, req: NextRequest) => {
+const isModeratorRouteFn = (pathname: string, req: NextRequest): boolean => {
   const conditions = [
     pathname.startsWith("/api/users") && ["PUT", "PATCH"].includes(req.method),
     pathname.startsWith("/api/gigs") &&
@@ -33,14 +33,29 @@ export async function middleware(req: NextRequest) {
   try {
     const decodedJwt = await verifyAndDecodeJwt(authHeader.slice(7));
     const role = decodedJwt?.payload?.role || ("" as Role);
-    if (
-      isModeratorRoute(pathname, req) &&
-      !(role === Role.ADMIN || role === Role.MODERATOR)
-    ) {
+    const isModeratorRoute = isModeratorRouteFn(pathname, req);
+    const isAdminRoute = isAdminRouteFn(pathname, req);
+    const needToBeAuthenticated = isModeratorRoute || isAdminRoute;
+
+    if (needToBeAuthenticated && !role) {
       return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
     }
-    if (isAdminRoute(pathname, req) && role !== Role.ADMIN) {
-      return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
+
+    if (isModeratorRoute && !(role === Role.ADMIN || role === Role.MODERATOR)) {
+      return Response.json(
+        {
+          message: `Vous n'avez pas le rôle suffisant (modérateur·ice ou admin) pour effectuer cette action.`,
+        },
+        { status: 403 },
+      );
+    }
+    if (isAdminRoute && role !== Role.ADMIN) {
+      return Response.json(
+        {
+          message: `Vous n'avez pas le rôle suffisant (admin) pour effectuer cette action.`,
+        },
+        { status: 403 },
+      );
     }
     return NextResponse.next();
   } catch (error) {
