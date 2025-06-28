@@ -35,7 +35,7 @@ export async function middleware(req: NextRequest) {
     const role = decodedJwt?.payload?.role || ("" as Role);
     if (
       isModeratorRoute(pathname, req) &&
-      ![Role.ADMIN, Role.MODERATOR].includes(role)
+      !(role === Role.ADMIN || role === Role.MODERATOR)
     ) {
       return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
     }

@@ -9,8 +9,9 @@ datasource db {
 }
 
 enum Role {
-  MODERATOR
   ADMIN
+  MODERATOR
+  PREVIOUSLY_MODERATOR
 }
 
 enum PlaceSize {
