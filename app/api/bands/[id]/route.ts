@@ -40,6 +40,7 @@ export async function PUT(request: NextRequest) {
     isATribute,
     isLocal,
     isSafe,
+    name,
     regionCode,
   } = body;
 
@@ -64,6 +65,7 @@ export async function PUT(request: NextRequest) {
         isATribute: isATribute,
         isLocal: isLocal,
         isSafe: isSafe,
+        name: name,
         regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
       }),
       include: { genres: true },
