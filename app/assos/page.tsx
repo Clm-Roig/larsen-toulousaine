@@ -10,6 +10,93 @@ export const metadata: Metadata = getMetadata({
 });
 
 export default function Page() {
+  const blocs = [
+    <AssoBloc
+      key="Noiser"
+      name="Noiser"
+      url="https://noiser.fr"
+      w={{ base: 225, sm: 270 }}
+    />,
+    <AssoBloc
+      key="Actu Metal Toulouse"
+      name="Actu Metal Toulouse"
+      url="https://www.actumetaltoulouse.fr/"
+    />,
+    <AssoBloc
+      key="Growing Older"
+      name="Growing Older"
+      url="https://www.facebook.com/growingoldershows/"
+    />,
+    <AssoBloc
+      key="Metal Troopers Event"
+      name="Metal Troopers Event"
+      url="https://www.facebook.com/metaltroopers"
+      w={225}
+    />,
+    <AssoBloc
+      key="Mind the Gap Production"
+      name="Mind the Gap Production"
+      url="https://www.facebook.com/mindthegapproduction"
+      w={250}
+    />,
+    <AssoBloc
+      key="Post:Scriptum"
+      logoFileName="Post:Scriptum"
+      name="Post:Scriptum"
+      url="https://www.facebook.com/post.scriptum.live.fr"
+    />,
+    <AssoBloc
+      key="Assaut Musical"
+      name="Assaut Musical"
+      url="https://www.facebook.com/assautmusical"
+    />,
+    <AssoBloc
+      key="Snakebite Events"
+      name="Snakebite Events"
+      url="https://www.facebook.com/snakebiteprod"
+      w={225}
+    />,
+    <AssoBloc
+      key="SPM Prod"
+      name="SPM Prod"
+      url="https://www.facebook.com/spmprod31"
+    />,
+    <AssoBloc
+      key="Les Jeux de Bélénos"
+      name="Les Jeux de Bélénos"
+      url="https://www.facebook.com/LesJeuxdeBelenos"
+      w={180}
+    />,
+    <AssoBloc
+      key="Mandale"
+      name="Mandale"
+      url="https://mandale.org"
+      // w={{ base: 225, sm: 270 }}
+    />,
+    <AssoBloc
+      key="Toulouse Crust"
+      name="Toulouse Crust"
+      url="https://www.facebook.com/profile.php?id=100068208447126"
+      w={{ base: 225, sm: 270 }}
+    />,
+    <AssoBloc
+      key="Kid Productions"
+      name="Kid Productions"
+      url="https://www.facebook.com/profile.php?id=61567277364879"
+      w={{ base: 225, sm: 270 }}
+    />,
+    <AssoBloc
+      key="Regarts"
+      name="Regarts"
+      url="https://regarts.eu/"
+      w={{ base: 225, sm: 270 }}
+    />,
+    <AssoBloc
+      key="Silly Prod"
+      name="Silly Prod"
+      url="https://www.facebook.com/sillyprod "
+    />,
+  ];
   return (
     <Layout title="Associations" withPaper>
       <Text size="xl" ta="center">
@@ -17,71 +104,8 @@ export default function Page() {
         à elles !
       </Text>
       <Flex direction="row" justify="center" wrap="wrap" rowGap="lg" mt="lg">
-        <AssoBloc
-          name="Noiser"
-          url="https://noiser.fr"
-          w={{ base: 225, sm: 270 }}
-        />
-        <AssoBloc
-          name="Actu Metal Toulouse"
-          url="https://www.actumetaltoulouse.fr/"
-        />
-        <AssoBloc
-          name="Growing Older"
-          url="https://www.facebook.com/growingoldershows/"
-        />
-        <AssoBloc
-          name="Metal Troopers Event"
-          url="https://www.facebook.com/metaltroopers"
-          w={225}
-        />
-        <AssoBloc
-          name="Mind the Gap Production"
-          url="https://www.facebook.com/mindthegapproduction"
-          w={250}
-        />
-
-        <AssoBloc
-          logoFileName="Post-Scriptum"
-          name="Post:Scriptum"
-          url="https://www.facebook.com/post.scriptum.live.fr"
-        />
-        <AssoBloc
-          name="Assaut Musical"
-          url="https://www.facebook.com/assautmusical"
-        />
-        <AssoBloc
-          name="Snakebite Events"
-          url="https://www.facebook.com/snakebiteprod"
-          w={225}
-        />
-        <AssoBloc name="SPM Prod" url="https://www.facebook.com/spmprod31" />
-        <AssoBloc
-          name="Les Jeux de Bélénos"
-          url="https://www.facebook.com/LesJeuxdeBelenos"
-          w={180}
-        />
-        <AssoBloc
-          name="Mandale"
-          url="https://mandale.org"
-          // w={{ base: 225, sm: 270 }}
-        />
-        <AssoBloc
-          name="Toulouse Crust"
-          url="https://www.facebook.com/profile.php?id=100068208447126"
-          w={{ base: 225, sm: 270 }}
-        />
-        <AssoBloc
-          name="Kid Productions"
-          url="https://www.facebook.com/profile.php?id=61567277364879"
-          w={{ base: 225, sm: 270 }}
-        />
-        <AssoBloc
-          name="Regarts"
-          url="https://regarts.eu/"
-          w={{ base: 225, sm: 270 }}
-        />
-        <AssoBloc name="Silly Prod" url="https://www.facebook.com/sillyprod " />
+        {/* Shuffle assos to display them in random order */}
+        {blocs.sort(() => Math.random() - 0.5).map((b) => b)}
       </Flex>
     </Layout>
   );
