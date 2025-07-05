@@ -18,17 +18,17 @@ export default function Page() {
       </Text>
       <Flex direction="row" justify="center" wrap="wrap" rowGap="lg" mt="lg">
         <AssoBloc
+          name="Noiser"
+          url="https://noiser.fr"
+          w={{ base: 225, sm: 270 }}
+        />
+        <AssoBloc
           name="Actu Metal Toulouse"
           url="https://www.actumetaltoulouse.fr/"
         />
         <AssoBloc
           name="Growing Older"
           url="https://www.facebook.com/growingoldershows/"
-        />
-        <AssoBloc
-          name="Les Jeux de Bélénos"
-          url="https://www.facebook.com/LesJeuxdeBelenos"
-          w={180}
         />
         <AssoBloc
           name="Metal Troopers Event"
@@ -57,6 +57,11 @@ export default function Page() {
         />
         <AssoBloc name="SPM Prod" url="https://www.facebook.com/spmprod31" />
         <AssoBloc
+          name="Les Jeux de Bélénos"
+          url="https://www.facebook.com/LesJeuxdeBelenos"
+          w={180}
+        />
+        <AssoBloc
           name="Mandale"
           url="https://mandale.org"
           // w={{ base: 225, sm: 270 }}
@@ -76,11 +81,7 @@ export default function Page() {
           url="https://regarts.eu/"
           w={{ base: 225, sm: 270 }}
         />
-        <AssoBloc
-          name="Noiser"
-          url="https://noiser.fr"
-          w={{ base: 225, sm: 270 }}
-        />
+        <AssoBloc name="Silly Prod" url="https://www.facebook.com/sillyprod " />
       </Flex>
     </Layout>
   );
