@@ -38,7 +38,6 @@ export const Providers = ({ children }: Props) => {
           <DatesProvider
             settings={{
               locale: "fr",
-              timezone: "Europe/Paris",
             }}
           >
             <BreadcrumbProvider>

@@ -30,7 +30,9 @@ export default function DateSelector({
       {dateStep === "month" && (
         <MonthPickerInput
           value={selectedDate}
-          onChange={onSelectedDateUpdate}
+          onChange={(date) =>
+            date ? onSelectedDateUpdate(new Date(date)) : null
+          }
           styles={{
             input: {
               textTransform: "capitalize",

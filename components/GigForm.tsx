@@ -183,6 +183,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   });
 
   useEffect(() => {
+    // Initial loading of an existing gig
     if (!form.values.id && gig?.id) {
       form.setValues({
         ...gig,
@@ -199,6 +200,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           : [new Date(gig.date), new Date(gig.date)],
         slug: "", // slug will be recomputed when saving the gig
       });
+      if (gig.name) {
+        setGigType(FESTIVAL);
+      }
     }
   }, [form, gig]);
 
@@ -310,6 +314,23 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
               {...form.getInputProps(
                 gigType === FESTIVAL ? "dateRange" : "date",
               )}
+              onChange={(value) => {
+                if (gigType === FESTIVAL && Array.isArray(value)) {
+                  const date1 = value[0] ? new Date(value[0]) : null;
+                  const date2 = value[1] ? new Date(value[1]) : null;
+                  // Forced to type the function because getInputProps returns any
+                  const onChange = form.getInputProps("dateRange").onChange as (
+                    dates: Array<Date | null>,
+                  ) => void;
+                  onChange([date1, date2]);
+                } else {
+                  // Forced to type the function because getInputProps returns any
+                  const onChange = form.getInputProps("date").onChange as (
+                    date: Date | null,
+                  ) => void;
+                  onChange(value ? new Date(value as string) : null);
+                }
+              }}
             />
 
             <Select

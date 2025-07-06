@@ -7,7 +7,6 @@ import {
   Box,
   Burger,
   Menu,
-  MenuItem,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import {
@@ -118,12 +117,12 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                   >
                     Lieux
                   </Menu.Item>
-                  <MenuItem
+                  <Menu.Item
                     leftSection={<IconLogout />}
                     onClick={handleSignOut}
                   >
                     Se déconnecter
-                  </MenuItem>
+                  </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
             </>
