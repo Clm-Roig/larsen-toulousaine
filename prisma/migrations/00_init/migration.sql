@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('MODERATOR', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'MODERATOR', 'PREVIOUSLY_MODERATOR');
 
 -- CreateEnum
 CREATE TYPE "PlaceSize" AS ENUM ('VERY_SMALL', 'SMALL', 'MEDIUM', 'BIG');
@@ -14,6 +14,8 @@ CREATE TABLE "Band" (
     "countryCode" TEXT,
     "regionCode" TEXT,
     "city" TEXT,
+    "isATribute" BOOLEAN NOT NULL DEFAULT false,
+    "isSafe" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Band_pkey" PRIMARY KEY ("id")
 );
