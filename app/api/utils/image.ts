@@ -57,12 +57,11 @@ export async function storeImage({
   imageFormat: keyof FormatEnum | AvailableFormatInfo;
   resizeOptions?: ResizeOptions;
 }): Promise<string> {
-  const bufferImg = Buffer.from(arrayBufferImg);
-  const type = await imageType(bufferImg);
+  const type = await imageType(arrayBufferImg);
   if (!type) {
     throw invalidImageUrlError;
   }
-  const resizedImg = await sharp(bufferImg)
+  const resizedImg = await sharp(arrayBufferImg)
     .resize(resizeOptions)
     .toFormat(imageFormat)
     .toBuffer();
