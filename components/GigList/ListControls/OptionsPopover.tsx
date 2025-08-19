@@ -20,6 +20,7 @@ import { Genre, Place } from "@prisma/client";
 import {
   IconDeselect,
   IconHomeCancel,
+  IconRefresh,
   IconSelectAll,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
@@ -78,11 +79,24 @@ export default function OptionsPopover({ genres, places }: Props) {
         </Button>
       </Popover.Target>
 
-      <Popover.Dropdown maw={350}>
-        <Box pos="absolute" top={0} right={0} m={4}>
-          <CloseButton onClick={() => setAreFiltersOpened(false)} />
-        </Box>
+      <Popover.Dropdown maw={350} mah="50%" style={{ overflowY: "scroll" }}>
         <Stack gap="sm">
+          <Box pos="absolute" top={0} right={0} m={4}>
+            <CloseButton onClick={() => setAreFiltersOpened(false)} />
+          </Box>
+
+          <Button
+            leftSection={<IconRefresh size={20} />}
+            onClick={resetPreferences}
+            w="fit-content"
+            style={{
+              visibility: preferencesSum === 0 ? "hidden" : "visible",
+            }}
+            size="xs"
+          >
+            Réinitialiser
+          </Button>
+
           <Checkbox
             checked={grayOutPastGigs}
             label="Griser les concerts passés"
@@ -182,8 +196,6 @@ export default function OptionsPopover({ genres, places }: Props) {
                 />
               ))}
           </Stack>
-
-          <Button onClick={resetPreferences}>Réinitialiser tout</Button>
         </Stack>
       </Popover.Dropdown>
     </Popover>

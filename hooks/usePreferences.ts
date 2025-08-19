@@ -38,7 +38,10 @@ export default function usePreferences() {
   };
 
   const preferencesSum = useMemo(
-    () => filteredGenres?.length + (maxPrice ? 1 : 0) + excludedPlaces?.length,
+    () =>
+      filteredGenres?.length +
+      (!!maxPrice || maxPrice === 0 ? 1 : 0) +
+      excludedPlaces?.length,
     [excludedPlaces?.length, filteredGenres?.length, maxPrice],
   );
 
