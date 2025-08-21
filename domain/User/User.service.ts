@@ -4,10 +4,10 @@ export const getRoleLabel = (role: Role): string => {
   let roleLabel: string;
   switch (role) {
     case Role.ADMIN:
-      roleLabel = "Administrateur";
+      roleLabel = "Administrateur·ice";
       break;
     case Role.MODERATOR:
-      roleLabel = "Modérateur";
+      roleLabel = "Modérateur·ice";
       break;
     case Role.PREVIOUSLY_MODERATOR:
       roleLabel = "Ancien·ne Modérateur·ice";
