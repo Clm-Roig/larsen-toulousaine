@@ -11,7 +11,7 @@ import {
   AddToCalendarButton,
   AddToCalendarButtonType,
 } from "add-to-calendar-button-react";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 
 type Props = {
   gig: GigWithBandsAndPlace;

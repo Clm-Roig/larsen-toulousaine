@@ -10,7 +10,7 @@ import {
   ActionIcon,
   Anchor,
 } from "@mantine/core";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { capitalize, isMobile } from "@/utils/utils";
 import ExternalLink from "@/components/ExternalLink";
 import {

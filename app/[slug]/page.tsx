@@ -7,7 +7,7 @@ import {
   getDataFromGigSlug,
   getGigTitleFromGigSlug,
 } from "@/domain/Gig/Gig.service";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { V_SEPARATOR } from "@/utils/utils";
 import { getGig } from "@/domain/Gig/Gig.webService";
 import { MAIN_CITY } from "@/domain/Place/constants";

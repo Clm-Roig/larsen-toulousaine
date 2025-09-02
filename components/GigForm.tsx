@@ -2,7 +2,7 @@
 
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import {
   Button,
   Group,

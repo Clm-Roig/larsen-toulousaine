@@ -2,7 +2,7 @@ import GenreBadge from "@/components/GenreBadge";
 import Price from "@/components/Price";
 import { getSortedUniqueBandGenres } from "@/domain/Band/Band.service";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import {
   Badge,

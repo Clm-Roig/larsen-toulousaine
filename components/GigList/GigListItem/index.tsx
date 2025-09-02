@@ -15,7 +15,7 @@ import {
   useComputedColorScheme,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import useScreenSize from "@/hooks/useScreenSize";

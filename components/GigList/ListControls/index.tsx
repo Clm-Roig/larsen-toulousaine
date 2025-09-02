@@ -5,7 +5,7 @@ import {
   Divider,
   SimpleGrid,
 } from "@mantine/core";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { Genre, Place } from "@prisma/client";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";

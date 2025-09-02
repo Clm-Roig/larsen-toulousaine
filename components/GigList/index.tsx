@@ -21,7 +21,7 @@ import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import GigListItem from "@/components/GigList/GigListItem";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 

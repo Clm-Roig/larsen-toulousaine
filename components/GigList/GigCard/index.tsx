@@ -7,7 +7,7 @@ import {
   gigToGigTypeString,
 } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { getSortedUniqueBandGenres } from "@/domain/Band/Band.service";
 import { getGigImgHeight } from "@/domain/image";
 import GigMenu from "@/components/GigMenu";
