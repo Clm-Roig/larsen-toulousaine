@@ -322,13 +322,16 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                   const onChange = form.getInputProps("dateRange").onChange as (
                     dates: Array<Date | null>,
                   ) => void;
-                  onChange([date1, date2]);
+                  // use dayjs to include timezone because Mantine Date has no timezone
+                  onChange([dayjs(date1).toDate(), dayjs(date2).toDate()]);
                 } else {
+                  const valueAsString = value as string;
                   // Forced to type the function because getInputProps returns any
                   const onChange = form.getInputProps("date").onChange as (
                     date: Date | null,
                   ) => void;
-                  onChange(value ? new Date(value as string) : null);
+                  // use dayjs to include timezone because Mantine Date has no timezone
+                  onChange(value ? dayjs(valueAsString).toDate() : null);
                 }
               }}
             />
