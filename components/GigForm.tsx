@@ -194,17 +194,18 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             genres: band.genres.map((g) => g.id),
             key: band.id,
           })),
-        date: new Date(gig.date),
-        dateRange: gig.endDate
-          ? [new Date(gig.date), new Date(gig.endDate)]
-          : [new Date(gig.date), new Date(gig.date)],
+        date: gigType === FESTIVAL ? null : new Date(gig.date),
+        dateRange:
+          gigType === FESTIVAL
+            ? [new Date(gig.date), gig.endDate ? new Date(gig.endDate) : null]
+            : [null, null],
         slug: "", // slug will be recomputed when saving the gig
       });
       if (gig.name) {
         setGigType(FESTIVAL);
       }
     }
-  }, [form, gig]);
+  }, [form, gig, gigType]);
 
   const handleOnSelectBand = (band: BandWithGenres) => {
     form.insertListItem(`bands`, {
@@ -221,8 +222,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     const isAFestival = !!name;
 
     /* Date management, 3 cases :
-        - Festival + on same day => date is starting date and endDate is null
-        - Festival + on same day => date is starting date and endDate is ending date
+        - Festival + end on same day => date is starting date and endDate is null
+        - Festival + end on another day => date is starting date and endDate is ending date
         - Gig => date is date and endDate is null
     */
     const isRangeSameDay = dayjs(dateRange[0]).isSame(dayjs(dateRange[1]));
@@ -252,8 +253,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   };
 
   const handleGigTypeChange = (value: string) => {
-    form.setFieldValue("dateRange", [null, null]);
     form.setFieldValue("date", null);
+    form.setFieldValue("dateRange", [null, null]);
+    form.setFieldValue("name", null);
     setGigType(value as GigType);
   };
 
@@ -323,7 +325,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                     dates: Array<Date | null>,
                   ) => void;
                   // use dayjs to include timezone because Mantine Date has no timezone
-                  onChange([dayjs(date1).toDate(), dayjs(date2).toDate()]);
+                  onChange([
+                    date1 ? dayjs(date1).toDate() : null,
+                    date2 ? dayjs(date2).toDate() : null,
+                  ]);
                 } else {
                   const valueAsString = value as string;
                   // Forced to type the function because getInputProps returns any
