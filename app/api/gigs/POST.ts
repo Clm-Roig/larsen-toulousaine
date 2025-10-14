@@ -99,23 +99,14 @@ async function POST(request: NextRequest) {
 
     let blobImageUrl: string | undefined = undefined;
     if (imageUrl || imageFile) {
-      try {
-        const arrayBufferImg = imageUrl
-          ? await downloadImage(imageUrl)
-          : await imageFile.arrayBuffer();
-        blobImageUrl = await storeImage({
-          arrayBufferImg,
-          filename: slug,
-          imageFormat: IMG_OUTPUT_FORMAT,
-        });
-      } catch (error) {
-        return NextResponse.json(
-          {
-            message: `An unexpected error occured when trying to download the gig poster: ${error.message}`,
-          },
-          { status: 500 },
-        );
-      }
+      const arrayBufferImg = imageUrl
+        ? await downloadImage(imageUrl)
+        : await imageFile.arrayBuffer();
+      blobImageUrl = await storeImage({
+        arrayBufferImg,
+        filename: slug,
+        imageFormat: IMG_OUTPUT_FORMAT,
+      });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
