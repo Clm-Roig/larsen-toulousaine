@@ -17,6 +17,7 @@ import {
   IconBrandFacebook,
   IconCalendar,
   IconCurrencyEuro,
+  IconEdit,
   IconHome,
   IconInfoCircle,
   IconMapPin,
@@ -33,6 +34,8 @@ import { getSortedGenres } from "@/domain/Band/Band.service";
 import UnsafeIcon, { UnsafeType } from "./UnsafeIcon";
 import Link from "next/link";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -45,6 +48,7 @@ type Props = {
 };
 
 export default function GigInfo({ gig }: Props) {
+  const canEditBand = useHasPermission(Permission.EDIT_BAND);
   const { isXSmallScreen } = useScreenSize();
   const {
     bands,
@@ -139,6 +143,14 @@ export default function GigInfo({ gig }: Props) {
                     >
                       Local
                     </Badge>
+                  )}
+                  {canEditBand && (
+                    <Anchor
+                      component={Link}
+                      href={`/groupes/${band.id}?edit=true`}
+                    >
+                      <IconEdit size="1rem" style={{ verticalAlign: "top" }} />
+                    </Anchor>
                   )}
                 </Flex>
               ))}
