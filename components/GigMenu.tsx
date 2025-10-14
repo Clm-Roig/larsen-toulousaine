@@ -23,18 +23,19 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import Link from "next/link";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
 type Props = { afterDeleteCallback?: () => void; gig: GigWithBandsAndPlace };
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
+  const canEditGig = useHasPermission(Permission.EDIT_GIG);
   const { isCanceled, isSoldOut, slug, ticketReservationLink } = gig;
-  const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -135,7 +136,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
             Réserver un ticket
           </MantineMenu.Item>
         )}
-        {status === "authenticated" && (
+        {canEditGig && (
           <>
             {!isCanceled && <MantineMenu.Divider />}
             <MantineMenu.Item

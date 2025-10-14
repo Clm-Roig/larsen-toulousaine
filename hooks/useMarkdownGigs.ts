@@ -1,8 +1,9 @@
 import { GIGS_STALE_TIME_IN_MS } from "@/domain/Gig/constants";
 import { MarkdownGigs } from "@/domain/Gig/Gig.type";
 import { getMarkdownGigs } from "@/domain/Gig/Gig.webService";
+import { Permission } from "@/domain/permissions";
+import useHasPermission from "@/hooks/useHasPermission";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
 export default function useMarkdownGigs({
   endDate,
@@ -11,12 +12,14 @@ export default function useMarkdownGigs({
   endDate: Date;
   startDate: Date;
 }) {
-  const { data } = useSession();
+  const canSeeWeeklyGigsMarkdown = useHasPermission(
+    Permission.SEE_WEEKLY_GIGS_MARKDOWN,
+  );
 
   const { data: gigs, isLoading } = useQuery<MarkdownGigs, Error>({
     queryKey: ["markdownGigs", startDate.toISOString(), endDate.toISOString()],
     queryFn: async () => await getMarkdownGigs(startDate, endDate),
-    enabled: !!data?.user,
+    enabled: canSeeWeeklyGigsMarkdown,
     staleTime: GIGS_STALE_TIME_IN_MS,
   });
 

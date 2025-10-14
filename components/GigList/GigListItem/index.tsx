@@ -16,12 +16,13 @@ import {
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import dayjs from "@/lib/dayjs";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import useScreenSize from "@/hooks/useScreenSize";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import GigCompactInfo from "@/components/GigCompactInfo";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 type Props = {
   displayDate?: boolean;
@@ -43,7 +44,7 @@ export default function GigListItem({
   displayDate = true,
   ...listItemProps
 }: Props) {
-  const { status } = useSession();
+  const canEditGig = useHasPermission(Permission.EDIT_GIG);
   const { grayOutPastGigs } = usePreferences();
   const colorScheme = useComputedColorScheme("light");
   const { isLargeScreen, isMediumScreen, isSmallScreen, isXSmallScreen } =
@@ -122,7 +123,7 @@ export default function GigListItem({
           nbGenresDisplayed={nbGenresDisplayed}
         />
       </PolymorphicListItem>
-      {status === "authenticated" && (
+      {canEditGig && (
         <TopMenuBox position="right">
           <GigMenu gig={gig} />
         </TopMenuBox>

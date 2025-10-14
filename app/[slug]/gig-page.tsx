@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { useSession } from "next-auth/react";
 import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
@@ -22,6 +21,8 @@ import { Gig } from "@prisma/client";
 import ConditionnalButtonLink from "@/components/ConditionnalButtonLink";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 type Props = {
   gigSlug: string;
@@ -30,7 +31,7 @@ type Props = {
 const IMAGE_MAX_HEIGHT = 250;
 
 const GigPage = ({ gigSlug }: Props) => {
-  const { status } = useSession();
+  const canEditGig = useHasPermission(Permission.EDIT_GIG);
   const router = useRouter();
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
 
@@ -106,7 +107,7 @@ const GigPage = ({ gigSlug }: Props) => {
           {gigTitle}
         </Title>
       )}
-      {status === "authenticated" && (
+      {canEditGig && (
         <Box pos="absolute" top={0} right={0} bg="primary">
           {gig && (
             <GigMenu afterDeleteCallback={afterDeleteCallback} gig={gig} />

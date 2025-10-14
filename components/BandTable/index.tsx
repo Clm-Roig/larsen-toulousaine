@@ -20,9 +20,10 @@ import GenreBadge from "@/components/GenreBadge";
 import TableHeader from "./TableHeader";
 import classes from "./BandTable.module.css";
 import { getSortedGenres } from "@/domain/Band/Band.service";
-import { useSession } from "next-auth/react";
 import IsATributeBadge from "@/components/IsATributeBadge";
 import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 type Props = {
   bands: BandWithGenresAndGigCount[] | undefined;
@@ -57,7 +58,7 @@ export default function BandTable({
   setSearchedGenres,
   setSearchedName,
 }: Props) {
-  const { status } = useSession();
+  const canEditBand = useHasPermission(Permission.EDIT_BAND);
   const getBandThrashIcon = (band: BandWithGenresAndGigCount) =>
     band._count.gigs > 0 ? (
       <Tooltip label="Ce groupe est à l'affiche d'au moins un concert : vous ne pouvez pas le supprimer.">
@@ -140,7 +141,7 @@ export default function BandTable({
                   {band.isLocal && <IconCheck color="green" />}
                 </Table.Td>
                 <Table.Td>{band._count.gigs}</Table.Td>
-                {status === "authenticated" && (
+                {canEditBand && (
                   <Table.Td>
                     <Group>
                       <ActionIcon

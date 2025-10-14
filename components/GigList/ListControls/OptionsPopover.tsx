@@ -1,6 +1,8 @@
 import GenreSelect from "@/components/GenreSelect";
 import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
+import { Permission } from "@/domain/permissions";
 import { MAIN_CITY } from "@/domain/Place/constants";
+import useHasPermission from "@/hooks/useHasPermission";
 import usePreferences from "@/hooks/usePreferences";
 import {
   Box,
@@ -23,7 +25,6 @@ import {
   IconRefresh,
   IconSelectAll,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 type Props = {
@@ -32,7 +33,7 @@ type Props = {
 };
 
 export default function OptionsPopover({ genres, places }: Props) {
-  const { status } = useSession();
+  const canSeeUnsafePlace = useHasPermission(Permission.SEE_UNSAFE_PLACES);
   const theme = useMantineTheme();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
   const {
@@ -106,7 +107,7 @@ export default function OptionsPopover({ genres, places }: Props) {
             }}
           />
 
-          {status === "authenticated" && (
+          {canSeeUnsafePlace && (
             <Checkbox
               checked={displayNotSafePlaces}
               label="Afficher les concerts dans des lieux non-safes"

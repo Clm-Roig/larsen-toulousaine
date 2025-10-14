@@ -15,7 +15,6 @@ import {
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
 import { Genre, Place } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
 import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
@@ -24,6 +23,8 @@ import GigListItem from "@/components/GigList/GigListItem";
 import dayjs from "@/lib/dayjs";
 import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 type BaseProps = {
   displayMissingDataOnly?: boolean;
@@ -65,8 +66,11 @@ const GigList = ({
   setSelectedDate,
   withListControls = true,
 }: Props) => {
+  const canCreateGig = useHasPermission(Permission.CREATE_GIG);
+  const canSeeWeeklyGigsMarkdown = useHasPermission(
+    Permission.SEE_WEEKLY_GIGS_MARKDOWN,
+  );
   const { viewType } = usePreferences();
-  const { status } = useSession();
   return (
     <>
       {withListControls && dateStep && (
@@ -105,7 +109,7 @@ const GigList = ({
                       />
                     </Grid.Col>
                   ))}
-                  {status === "authenticated" && (
+                  {canCreateGig && (
                     <Grid.Col span={GRID_SPAN_PROP}>
                       <Center h="100%">
                         <AddGigButton />
@@ -134,7 +138,7 @@ const GigList = ({
                             gig={gig}
                             key={gig.id}
                             withDivider={
-                              (status !== "unauthenticated" ||
+                              (canSeeWeeklyGigsMarkdown ||
                                 idx !== gigs.length - 1) &&
                               !isNextGigSameDay
                             }
@@ -149,7 +153,7 @@ const GigList = ({
                         );
                       })}
                     </List>
-                    {status === "authenticated" && (
+                    {canCreateGig && (
                       <Center mt="sm">
                         <AddGigButton />
                       </Center>
@@ -167,7 +171,7 @@ const GigList = ({
                   >
                     {noGigsFoundMessage}
                   </Text>
-                  {status === "authenticated" && <AddGigButton />}
+                  {canCreateGig && <AddGigButton />}
                 </Stack>
               </Center>
             )}

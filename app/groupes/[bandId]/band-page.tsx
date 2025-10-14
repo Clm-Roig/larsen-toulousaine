@@ -17,7 +17,6 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { EditBandArgs, getBand } from "@/domain/Band/Band.webService";
 import useScreenSize from "@/hooks/useScreenSize";
 import BandInfo from "@/components/BandInfo";
@@ -31,6 +30,8 @@ import { EditBandDrawer } from "@/components/EditBandDrawer";
 import useEditBand from "@/hooks/useEditBand";
 import useDeleteBand from "@/hooks/useDeleteBand";
 import { useRouter } from "next/navigation";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
@@ -39,8 +40,8 @@ type Props = {
 };
 
 const BandPage = ({ bandId }: Props) => {
+  const canEditBand = useHasPermission(Permission.EDIT_BAND);
   const router = useRouter();
-  const { status } = useSession();
   const { searchParams, setSearchParams } = useSearchParams();
   const isEditing = searchParams.get("edit") === "true";
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
@@ -120,7 +121,7 @@ const BandPage = ({ bandId }: Props) => {
 
   return (
     <Box pos="relative">
-      {status === "authenticated" && (
+      {canEditBand && (
         <TopMenuBox position="right">
           <Menu position="bottom-end" shadow="sm" withinPortal>
             <LoadingOverlay

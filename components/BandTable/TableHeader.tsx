@@ -4,7 +4,8 @@ import React from "react";
 import { CloseButton, Table, TableThProps, TextInput } from "@mantine/core";
 import { Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
-import { useSession } from "next-auth/react";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 type Props = {
   genres: Genre[];
@@ -27,7 +28,7 @@ export default function TableHeader({
   setSearchedGenres,
   setSearchedName,
 }: Props) {
-  const { status } = useSession();
+  const canEditBand = useHasPermission(Permission.EDIT_BAND);
   return (
     <Table.Thead style={{ zIndex: 1 }}>
       {/* zIndex to fix a bug where icons are above the third column text */}
@@ -38,7 +39,7 @@ export default function TableHeader({
         <NoPaddingTableTh w={{ base: 70, md: 120 }}>
           Nb. concerts
         </NoPaddingTableTh>
-        {status === "authenticated" && (
+        {canEditBand && (
           <NoPaddingTableTh w={{ base: 100, md: 120 }}>Action</NoPaddingTableTh>
         )}
       </Table.Tr>

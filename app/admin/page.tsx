@@ -10,14 +10,16 @@ import {
   IconBuilding,
   IconExclamationCircle,
 } from "@tabler/icons-react";
-import { Role } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import AddGigButton from "@/components/AddButton/AddGigButton";
 import { DashboardCard } from "@/app/admin/DashboardCard";
+import useHasPermission from "@/hooks/useHasPermission";
+import { Permission } from "@/domain/permissions";
 
 export default function Admin() {
-  const { status, data } = useSession();
+  const canSeeUsers = useHasPermission(Permission.SEE_USERS);
+  const { status } = useSession();
   const router = useRouter();
   if (status === "unauthenticated") {
     router.push("/api/auth/signin");
@@ -59,7 +61,7 @@ export default function Admin() {
             </Flex>
             <Title order={2}>Divers</Title>
             <Flex gap="sm" wrap="wrap">
-              {data?.user.role === Role.ADMIN && (
+              {canSeeUsers && (
                 <DashboardCard
                   href="/admin/utilisateurs"
                   icon={<IconUsers />}
