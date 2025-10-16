@@ -7,6 +7,7 @@ import {
   Box,
   Burger,
   Menu,
+  Flex,
 } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import {
@@ -59,7 +60,12 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           </Box>
         </Group>
 
-        <Group justify="flex-end" style={{ flex: 1 }}>
+        <Flex
+          align="center"
+          gap="md"
+          justify={{ base: "flex-start", sm: "flex-end" }}
+          style={{ flex: 1 }}
+        >
           <GigSearchInput />
           {[
             { href: "/cette-semaine", text: "Cette semaine" },
@@ -128,7 +134,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
             </>
           )}
           <SchemeSwitcher visibleFrom="sm" />
-        </Group>
+        </Flex>
       </Group>
     </AppShell.Header>
   );
