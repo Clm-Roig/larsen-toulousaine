@@ -64,6 +64,7 @@ export default function GigInfo({ gig }: Props) {
     price,
     ticketReservationLink,
   } = gig;
+  const { latitude, longitude } = place;
   const addressAndCity =
     place.address && place?.city
       ? `${place?.address} - ${place?.city?.toUpperCase()}`
@@ -204,15 +205,20 @@ export default function GigInfo({ gig }: Props) {
             {!place.isSafe && <UnsafeIcon unsafeType={UnsafeType.PLACE} />}
           </Group>
           {addressAndCity && (
-            <ExternalLink
-              href={
-                isMobile()
-                  ? `geo:${place.latitude},${place.longitude}?q=${place.name} ${addressAndCity}`
-                  : `https://citymapper.com/directions?endcoord=${place.latitude},${place.longitude}&endname=${place.name}&endaddress=${place.address}`
-              }
-            >
-              {addressAndCity}
-            </ExternalLink>
+            <>
+              <Text>{addressAndCity}</Text>
+              {longitude && latitude && (
+                <ExternalLink
+                  href={
+                    isMobile()
+                      ? `geo:${place.latitude},${place.longitude}?q=${place.name} ${addressAndCity}`
+                      : `https://citymapper.com/directions?endcoord=${place.latitude},${place.longitude}&endname=${place.name}&endaddress=${place.address}`
+                  }
+                >
+                  S&apos;y rendre
+                </ExternalLink>
+              )}
+            </>
           )}
         </Stack>
       </Row>
