@@ -39,7 +39,7 @@
     "add-to-calendar-button-react": "^2.9.1",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.8.0",
     "country-region-data": "^3.1.0",
     "dayjs": "^1.11.13",
     "image-type": "^6.0.0",
