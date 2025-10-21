@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "@mantine/form";
+import { formRootRule, isNotEmpty, useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
 import dayjs from "@/lib/dayjs";
 import {
@@ -141,9 +141,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       facebookEventUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
-      placeId: (value) => (value ? null : "Le lieu du concert est requis."),
+      placeId: isNotEmpty("Le lieu du concert est requis."),
       bands: {
-        name: (value) => (value ? null : "Le nom est requis."),
+        [formRootRule]: (value) =>
+          gigType === GIG && value?.length === 0
+            ? "Un groupe est requis."
+            : null,
+        name: isNotEmpty("Le nom est requis"),
       },
       name: (value) =>
         !value && gigType === FESTIVAL
@@ -396,8 +400,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
         <Divider my="md" />
 
-        <Text>Groupes</Text>
-
+        <InputLabel required={gigType === GIG}>Groupes</InputLabel>
         <BandSelect
           excludedBands={form.values.bands}
           onBandSelect={handleOnSelectBand}
@@ -523,6 +526,20 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           <TextInput
             defaultValue={null}
             label="URL de l'affiche du concert"
+            rightSection={
+              <ActionIcon
+                // Mimic Select clearable icon
+                variant="transparent"
+                color="gray"
+                aria-label="Clear input"
+                size="xs"
+                onClick={() => {
+                  form.setFieldValue("imageUrl", "");
+                }}
+              >
+                <IconX />
+              </ActionIcon>
+            }
             {...form.getInputProps("imageUrl")}
             disabled={!!form.getValues().imageFile?.name}
           />
@@ -622,7 +639,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             </InputLabel>
             <InputDescription mb={5}>
               Pour payer l&apos;entrée uniquement (pas pour le bar ou le merch
-              des groupes par exemple)
+              des groupes par exemple).
             </InputDescription>
             <SegmentedControl
               size="xs"

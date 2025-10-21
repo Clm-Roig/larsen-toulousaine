@@ -126,7 +126,7 @@ export default function BandSelect({
 
   return (
     <Select
-      description={"Chercher un groupe existant ou en créer un nouveau"}
+      description={"Chercher un groupe existant ou en créer un nouveau."}
       searchable
       withCheckIcon={false}
       data={
