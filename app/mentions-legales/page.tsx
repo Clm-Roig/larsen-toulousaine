@@ -89,13 +89,13 @@ export default function Page() {
 
           <Title order={2}>Hébergeur du site</Title>
           <Text ta="justify">
-            Vercel Inc. - 340 S Lemon - Ave #4133 Walnut, CA 91789
+            Netlify Inc. - 2325 3rd Street, Suite 296, San Francisco, California
+            94107, États-Unis
           </Text>
-          <Text ta="justify">Téléphone : (559) 288-7060</Text>
           <Text ta="justify">
             Site Internet :{" "}
-            <ExternalLink href="https://vercel.com">
-              https://vercel.com
+            <ExternalLink href="https://netlify.com">
+              https://netlify.com
             </ExternalLink>
           </Text>
 
