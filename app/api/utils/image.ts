@@ -8,35 +8,6 @@ import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 
 const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
 
-// Vercel blob storage is not used anymore because of it's bandwidth limit
-
-// import { put as blobPut } from "@vercel/blob";
-
-// export async function downloadAndStoreImageToVercel({
-//   filename,
-//   imageFormat,
-//   imageUrl,
-//   resizeOptions,
-// }: {
-//   filename: string;
-//   imageFormat: keyof FormatEnum | AvailableFormatInfo;
-//   imageUrl: string;
-//   resizeOptions?: ResizeOptions;
-// }): Promise<string> {
-//   // Download image and store it in blob storage
-//   const response = await fetch(imageUrl);
-//   const arrayBufferImg = await (await response.blob()).arrayBuffer();
-//   const bufferImg = Buffer.from(arrayBufferImg);
-//   const resizedImg = await sharp(bufferImg)
-//     .resize(resizeOptions)
-//     .toFormat(imageFormat)
-//     .toBuffer();
-//   const { url } = await blobPut(filename + ".jpg", new Blob([resizedImg]), {
-//     access: "public",
-//   });
-//   return url;
-// }
-
 export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
   const response = await fetch(imageUrl);
   const arrayBufferImg = await (await response.blob()).arrayBuffer();

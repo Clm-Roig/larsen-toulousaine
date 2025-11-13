@@ -12,10 +12,6 @@ Copy, paste and rename sample.env to **.env** and fill all the variables.
 
 ### :warning: DEPRECATED :warning:
 
-Pull env var:
-
-`npx vercel pull env`
-
 Run server:
 
 `npm run dev`
@@ -30,4 +26,4 @@ You need to update the database every time your Prisma schema file is changing b
 
 ### Tools
 
-This projet uses Next.js, Vercel for deployment & analytics, Cloudinary for images storage.
+This projet uses Next.js, Netlify for deployment and Cloudinary for images storage.

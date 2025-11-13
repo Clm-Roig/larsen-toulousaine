@@ -6,7 +6,6 @@ import "@mantine/dates/styles.css";
 import "./custom.css";
 import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
-import { Analytics } from "@vercel/analytics/react";
 import { themeColor } from "@/domain/constants";
 import { getMetadata } from "@/utils/metadata";
 
@@ -53,7 +52,6 @@ export default function RootLayout({
           <Notifications position="top-center" />
           {children}
         </Providers>
-        <Analytics />
       </body>
     </html>
   );
