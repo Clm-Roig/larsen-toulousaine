@@ -1,6 +1,7 @@
 "use client";
 
 import { BreadcrumbProvider } from "@/contexts/BreadcrumbContext";
+import api from "@/lib/axios";
 import { theme } from "@/lib/theme";
 import { MantineProvider } from "@mantine/core";
 import { DatesProvider } from "@mantine/dates";
@@ -28,6 +29,22 @@ const AuthChecker = ({ children }: Props) => {
   ) {
     void signOut();
   }
+
+  // Set Bearer token for all http requests
+  if (session?.data?.user) {
+    const {
+      data: { user },
+    } = session;
+    const previousToken = api.defaults.headers.common["Authorization"]
+      ?.toString()
+      .substring(7); // Remove "Bearer " using substring()
+    const newToken = user?.accessToken;
+    if (previousToken !== newToken) {
+      api.defaults.headers.common["Authorization"] =
+        `Bearer ${user?.accessToken}`;
+    }
+  }
+
   return children;
 };
 
