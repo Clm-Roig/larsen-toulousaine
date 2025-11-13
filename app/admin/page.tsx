@@ -65,7 +65,7 @@ export default function Admin() {
                 <DashboardCard
                   href="/admin/utilisateurs"
                   icon={<IconUsers />}
-                  text="Utilisateurs"
+                  text="Utilisateur·ices"
                 />
               )}
               <DashboardCard
