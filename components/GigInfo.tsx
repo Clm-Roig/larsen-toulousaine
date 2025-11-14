@@ -43,6 +43,8 @@ const Row = ({ children }: { children: ReactNode }) => (
   </Flex>
 );
 
+const IconBlock = ({ children }) => <Flex>{children}</Flex>;
+
 type Props = {
   gig: GigWithBandsAndPlace;
 };
@@ -69,7 +71,9 @@ export default function GigInfo({ gig }: Props) {
     place.address && place?.city
       ? `${place?.address} - ${place?.city?.toUpperCase()}`
       : undefined;
-  const iconProps = { size: isXSmallScreen ? 20 : 28 };
+  const iconProps = {
+    size: isXSmallScreen ? 20 : 28,
+  };
   const formatDate = (date: Date) =>
     capitalize(
       dayjs(date).format(isXSmallScreen ? "DD/MM/YYYY" : "dddd DD MMMM YYYY"),
@@ -92,7 +96,9 @@ export default function GigInfo({ gig }: Props) {
       )}
 
       <Row>
-        <IconCalendar {...iconProps} />
+        <IconBlock>
+          <IconCalendar {...iconProps} />
+        </IconBlock>
         <Divider orientation="vertical" />
         <Badge size="lg">
           {endDate
@@ -114,7 +120,9 @@ export default function GigInfo({ gig }: Props) {
 
       {bands?.length > 0 && (
         <Row>
-          <IconMusic {...iconProps} />
+          <IconBlock>
+            <IconMusic {...iconProps} />
+          </IconBlock>
           <Divider orientation="vertical" />
           <Stack gap={4}>
             {bands
@@ -131,9 +139,11 @@ export default function GigInfo({ gig }: Props) {
                     {band.name}
                   </Anchor>
                   {!band.isSafe && <UnsafeIcon unsafeType={UnsafeType.BAND} />}
-                  {getSortedGenres(band.genres).map((genre) => (
-                    <GenreBadge key={genre?.id} genre={genre} />
-                  ))}
+                  <Flex columnGap={4}>
+                    {getSortedGenres(band.genres).map((genre) => (
+                      <GenreBadge key={genre?.id} genre={genre} />
+                    ))}
+                  </Flex>
                   {band.isATribute && <IsATributeBadge />}
                   {band.isLocal && (
                     <Badge
@@ -161,7 +171,9 @@ export default function GigInfo({ gig }: Props) {
 
       {(!!price || price === 0 || ticketReservationLink) && (
         <Row>
-          <IconCurrencyEuro {...iconProps} />
+          <IconBlock>
+            <IconCurrencyEuro {...iconProps} />
+          </IconBlock>
           <Divider orientation="vertical" />
           <Stack gap={4}>
             <Group>
@@ -191,7 +203,9 @@ export default function GigInfo({ gig }: Props) {
       )}
 
       <Row>
-        <IconMapPin {...iconProps} />
+        <IconBlock>
+          <IconMapPin {...iconProps} />
+        </IconBlock>
         <Divider orientation="vertical" />
         <Stack gap={0}>
           <Group gap="xs" style={{ alignItems: "center" }}>
@@ -225,7 +239,9 @@ export default function GigInfo({ gig }: Props) {
 
       {!!description && (
         <Row>
-          <IconInfoCircle {...iconProps} />
+          <IconBlock>
+            <IconInfoCircle {...iconProps} />
+          </IconBlock>
           <Divider orientation="vertical" />
           <Text flex={1} style={{ whiteSpace: "pre-line" }}>
             {description}
