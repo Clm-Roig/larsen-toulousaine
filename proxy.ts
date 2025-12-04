@@ -25,8 +25,7 @@ const isModeratorRouteFn = (pathname: string, req: NextRequest): boolean => {
   return conditions.includes(true);
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const authHeader = req.headers.get("authorization") || "";
   const { pathname } = req.nextUrl;
 

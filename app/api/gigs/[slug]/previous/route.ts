@@ -8,9 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug: rawSlug } = params;
+  const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
   try {
     const gig = await prisma.gig.findFirst({

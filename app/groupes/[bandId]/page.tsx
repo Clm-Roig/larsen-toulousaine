@@ -4,11 +4,11 @@ import { Suspense } from "react";
 import BandPage from "./band-page";
 
 type Props = {
-  params: { bandId: string };
+  params: Promise<{ bandId: string }>;
 };
 
-export default function Page({ params }: Props) {
-  const { bandId } = params;
+export default async function Page({ params }: Props) {
+  const { bandId } = await params;
 
   return (
     <Layout withPaper>

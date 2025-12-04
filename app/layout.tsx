@@ -1,5 +1,5 @@
 import { Viewport } from "next";
-import { ColorSchemeScript } from "@mantine/core";
+import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
@@ -19,18 +19,16 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" {...mantineHtmlProps}>
       <head>
-        <meta name="mobile-wep-app-capable" content="yes" />
+        <ColorSchemeScript defaultColorScheme="auto" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <ColorSchemeScript />
         <link
           rel="icon"
           href="/icon?<generated>"
@@ -43,7 +41,6 @@ export default function RootLayout({
           title="RSS 2.0"
           href="/feed.rss"
         />
-
         {/* Lighthouse performance optimization */}
         <link rel="preconnect" href="https://picsum.photos" />
       </head>

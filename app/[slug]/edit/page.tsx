@@ -8,8 +8,12 @@ export const metadata = getMetadata({
   title: "Édition d'un concert",
 });
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const { slug: gigSlug } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug: gigSlug } = await params;
   return (
     <Layout title="Éditer un concert" withPaper>
       <Center>

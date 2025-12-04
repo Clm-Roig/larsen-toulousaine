@@ -32,9 +32,9 @@ import { MAX_IMAGE_SIZE } from "@/domain/image";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug: rawSlug } = params;
+  const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
   const gig = await prisma.gig.findFirst({
     where: {
@@ -214,9 +214,9 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug: rawSlug } = params;
+  const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {

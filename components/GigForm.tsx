@@ -524,7 +524,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           />
           <Text ta="center">Ou</Text>
           <TextInput
-            defaultValue={null}
             label="URL de l'affiche du concert"
             rightSection={
               <ActionIcon

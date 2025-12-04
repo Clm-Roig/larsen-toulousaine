@@ -93,9 +93,9 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id: rawId } = params;
+  const { id: rawId } = await params;
   const id = decodeURIComponent(rawId);
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {
@@ -138,9 +138,9 @@ export async function DELETE(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id: rawId } = params;
+  const { id: rawId } = await params;
   const id = decodeURIComponent(rawId);
   const band = await prisma.band.findFirst({
     where: {

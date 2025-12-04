@@ -27,7 +27,7 @@ const defaultInclude = {
 
 async function GET(request: NextRequest) {
   const { user } = (await getServerSession(authOptions)) || {};
-  const headersList = headers();
+  const headersList = await headers();
   const acceptHeader = headersList.get("Accept");
   const searchParams = request.nextUrl.searchParams;
   const from = searchParams.get("from");
