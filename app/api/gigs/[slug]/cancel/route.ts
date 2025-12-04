@@ -7,9 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug: rawSlug } = params;
+  const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) {

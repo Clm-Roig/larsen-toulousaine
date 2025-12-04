@@ -14,11 +14,11 @@ import { MAIN_CITY } from "@/domain/Place/constants";
 import { getMetadata } from "@/utils/metadata";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
   const gig = await getGig(decodedSlug);
   const {
@@ -51,8 +51,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 }
 
-export default function Page({ params }: Props) {
-  const { slug: gigSlug } = params;
+export default async function Page({ params }: Props) {
+  const { slug: gigSlug } = await params;
   return (
     <Layout withPaper>
       <Suspense

@@ -1,6 +1,3 @@
-// @ts-check
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
@@ -8,13 +5,13 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client", "bcryptjs"],
-  },
+  serverExternalPackages: ["@prisma/client", "bcryptjs"],
   reactStrictMode: true,
   images: {
-    minimumCacheTTL: 300, // in seconds
+    minimumCacheTTL: 60 * 30, // 30min in seconds
   },
+
+  turbopack: {},
 };
 
 module.exports = withPWA(nextConfig);
