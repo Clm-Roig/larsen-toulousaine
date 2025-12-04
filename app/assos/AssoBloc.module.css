@@ -2,6 +2,10 @@
   filter: invert(100%);
 }
 
+.assoLink {
+  text-decoration: none;
+}
+
 .assoLogo:hover {
   filter: drop-shadow(0px 0px 5px var(--mantine-color-primary-5));
 }

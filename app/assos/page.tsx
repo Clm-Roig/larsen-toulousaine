@@ -41,7 +41,7 @@ export default function Page() {
     />,
     <AssoBloc
       key="Post:Scriptum"
-      logoFileName="Post:Scriptum"
+      logoFileName="Post-Scriptum"
       name="Post:Scriptum"
       url="https://www.facebook.com/post.scriptum.live.fr"
     />,
@@ -84,6 +84,7 @@ export default function Page() {
       name="Kid Productions"
       url="https://www.facebook.com/profile.php?id=61567277364879"
       w={{ base: 225, sm: 270 }}
+      hasLogo={false}
     />,
     <AssoBloc
       key="Regarts"
