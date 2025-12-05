@@ -1,5 +1,10 @@
 import { Band, Genre, Gig } from "@prisma/client";
-import { GigWithBandsAndPlace, MarkdownGigs } from "./Gig.type";
+import {
+  GigMinimal,
+  GigPreview,
+  GigWithBandsAndPlace,
+  MarkdownGigs,
+} from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 
@@ -7,7 +12,7 @@ export const getGigs = async (
   from: Date,
   to: Date,
   askForMarkdown = false,
-): Promise<GigWithBandsAndPlace[]> => {
+): Promise<GigPreview[]> => {
   try {
     const headers = askForMarkdown
       ? {
@@ -48,7 +53,7 @@ export const getMarkdownGigs = async (
 export const getGigByDateAndPlaceId = async (
   date: Date,
   placeId: string,
-): Promise<GigWithBandsAndPlace | null> => {
+): Promise<GigMinimal | null> => {
   try {
     const response = await api.get<GigWithBandsAndPlace | undefined>(
       `/gigs?date=${date.toISOString()}&placeId=${placeId}`,

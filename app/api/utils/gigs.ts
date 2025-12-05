@@ -1,3 +1,9 @@
+import {
+  BandMinimal,
+  BandPreview,
+  BandPreviewWithOrder,
+} from "@/domain/Band/Band.type";
+import { GigMinimal, GigPreview } from "@/domain/Gig/Gig.type";
 import { Band, BandsOnGigs, Gig, Prisma } from "@prisma/client";
 
 export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
@@ -23,10 +29,14 @@ export const gigWithBandsAndGenresInclude = {
 };
 
 export const flattenGigBands = <
-  T extends Gig & { bands: ({ band: Band } & BandsOnGigs)[] },
+  T extends
+    | (Omit<GigPreview, "bands"> & {
+        bands: { band: BandPreview; order: BandsOnGigs["order"] }[];
+      })
+    | (Omit<GigMinimal, "bands"> & { bands: { band: BandMinimal }[] }),
 >(
   gig: T,
 ) => ({
   ...gig,
-  bands: gig?.bands.map((b) => ({ ...b.band, order: b.order })),
+  bands: gig?.bands.map((b) => ({ ...b.band, order: b?.order })),
 });

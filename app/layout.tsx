@@ -1,4 +1,4 @@
-import { Viewport } from "next";
+import { Metadata, Viewport } from "next";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -9,7 +9,7 @@ import { Notifications } from "@mantine/notifications";
 import { themeColor } from "@/domain/constants";
 import { getMetadata } from "@/utils/metadata";
 
-export const metadata = getMetadata();
+export const metadata: Metadata = getMetadata();
 
 export const viewport: Viewport = {
   width: "device-width",

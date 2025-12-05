@@ -1,7 +1,7 @@
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import OptimizedImage from "@/components/OptimizedImage";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import usePreferences from "@/hooks/usePreferences";
 import { hasPassed } from "@/utils/date";
 import {
@@ -27,7 +27,7 @@ import { Permission } from "@/domain/permissions";
 type Props = {
   displayDate?: boolean;
   displayMissingDataOnly?: boolean;
-  gig: GigWithBandsAndPlace;
+  gig: GigPreview;
   listItemProps?: ListItemProps;
   withDivider: boolean;
 };

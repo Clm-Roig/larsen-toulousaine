@@ -1,10 +1,12 @@
 import { useMemo } from "react";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import usePreferences from "./usePreferences";
 
-export default function useFilteredGigs(gigs: GigWithBandsAndPlace[]) {
+export default function useFilteredGigs(gigs: GigPreview[]) {
   const { displayNotSafePlaces, filteredGenres, excludedPlaces, maxPrice } =
     usePreferences();
+
+  console.log(gigs);
 
   const filteredGigs = useMemo(
     () =>
@@ -23,7 +25,7 @@ export default function useFilteredGigs(gigs: GigWithBandsAndPlace[]) {
         // Place(s) filtering
         .filter(
           (gig) =>
-            !excludedPlaces?.includes(gig.placeId) &&
+            !excludedPlaces?.includes(gig.place.id) &&
             (displayNotSafePlaces || gig.place.isSafe),
         )
         // Price filtering

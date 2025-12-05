@@ -1,5 +1,9 @@
-import { Band, Genre } from "@prisma/client";
-import { BandWithGenres, BandWithOrder } from "./Band.type";
+import { Genre } from "@prisma/client";
+import {
+  BandPreviewWithOrder,
+  BandWithGenres,
+  BandWithOrder,
+} from "./Band.type";
 import { V_SEPARATOR } from "@/utils/utils";
 
 export function getBandNames(
@@ -12,13 +16,15 @@ export function getBandNames(
       }
       return b1.name.localeCompare(b2.name);
     })
-    .map((b: Band) => b.name)
+    .map((b) => b.name)
     .join(V_SEPARATOR);
 }
 
 type CountedGenre = { count: number } & Genre;
 
-export function getSortedUniqueBandGenres(bands: BandWithGenres[]): Genre[] {
+export function getSortedUniqueBandGenres(
+  bands: BandPreviewWithOrder[],
+): Genre[] {
   const countedGenres = bands.reduce((countedGenres: CountedGenre[], band) => {
     const updatedGenres = band.genres.map((genre) => {
       const foundCountGenre = countedGenres.find(

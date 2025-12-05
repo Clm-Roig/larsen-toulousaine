@@ -24,14 +24,14 @@ import {
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import Link from "next/link";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
-type Props = { afterDeleteCallback?: () => void; gig: GigWithBandsAndPlace };
+type Props = { afterDeleteCallback?: () => void; gig: GigPreview };
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
   const canEditGig = useHasPermission(Permission.EDIT_GIG);

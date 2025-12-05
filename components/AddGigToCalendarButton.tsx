@@ -2,10 +2,7 @@ import {
   getGigCalendarDescription,
   getGigTitle,
 } from "@/domain/Gig/Gig.service";
-import {
-  GigWithBandsAndPlace,
-  gigToGigTypeString,
-} from "@/domain/Gig/Gig.type";
+import { GigPreview, gigToGigTypeString } from "@/domain/Gig/Gig.type";
 import { useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import {
   AddToCalendarButton,
@@ -14,7 +11,7 @@ import {
 import dayjs from "@/lib/dayjs";
 
 type Props = {
-  gig: GigWithBandsAndPlace;
+  gig: GigPreview;
 } & AddToCalendarButtonType;
 
 export default function AddGigToCalendarButton({

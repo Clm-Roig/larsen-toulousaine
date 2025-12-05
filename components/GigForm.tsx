@@ -55,9 +55,11 @@ import {
   CreateGigArgs,
   EditGigArgs,
   getGigByDateAndPlaceId,
+  CreateGigArgs,
 } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import {
+  GigMinimal,
   GigType,
   GigWithBandsAndPlace,
   gigTypeToString,
@@ -165,7 +167,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   const {
     data: samePlaceSameDayGig,
     isFetching: isLoadingSamePlaceSameDayGig,
-  } = useQuery<GigWithBandsAndPlace | null, Error>({
+  } = useQuery<GigMinimal | null, Error>({
     queryKey: [
       "samePlaceSameDayGig",
       form.values.date,

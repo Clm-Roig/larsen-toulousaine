@@ -3,7 +3,6 @@
 import { Box, Image, ImageProps, Text } from "@mantine/core";
 import classes from "./AssoBloc.module.css";
 import Link from "next/link";
-import { resolve } from "path";
 
 type AssoBlocProps = {
   logoFileName?: string;

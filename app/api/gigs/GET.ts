@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Gig, Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import dayjs from "@/lib/dayjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,21 +11,55 @@ import {
   toDiscordMarkdown,
   toFacebookMarkdown,
 } from "@/domain/Gig/Gig.service";
+import { GigMinimal, GigPreview, MarkdownGigs } from "@/domain/Gig/Gig.type";
 
-const defaultInclude = {
-  place: true,
+// See GigPreview (& BandPreview & PlacePreview)
+const defaultSelect = {
+  id: true,
+  date: true,
+  endDate: true,
+  imageUrl: true,
+  isCanceled: true,
+  isSoldOut: true,
+  name: true,
+  price: true,
+  slug: true,
+  ticketReservationLink: true,
+  title: true,
+  place: {
+    select: {
+      id: true,
+      address: true,
+      city: true,
+      isSafe: true,
+      name: true,
+    },
+  },
   bands: {
-    include: {
+    select: {
+      order: true,
       band: {
-        include: {
+        select: {
+          id: true,
           genres: true,
+          name: true,
+          isATribute: true,
+          isSafe: true,
         },
       },
     },
   },
-};
+} satisfies Prisma.GigSelect;
 
-async function GET(request: NextRequest) {
+async function GET(request: NextRequest): Promise<
+  NextResponse<
+    | { gigs: GigPreview[] } // by date (from => to)
+    | MarkdownGigs // with acceptHeader = text/markdown
+    | (GigMinimal | null) // by date and place
+    | { message: string } // Error case
+    | {} // 404 case
+  >
+> {
   const { user } = (await getServerSession(authOptions)) || {};
   const headersList = await headers();
   const acceptHeader = headersList.get("Accept");
@@ -88,7 +122,10 @@ async function GET(request: NextRequest) {
   );
 }
 
-const getGigsByName = async (query: string, isSafeGigsOnly: boolean) => {
+const getGigsByName = async (
+  query: string,
+  isSafeGigsOnly: boolean,
+): Promise<GigPreview[]> => {
   const rawGigs = await prisma.gig.findMany({
     where: {
       OR: [
@@ -121,7 +158,7 @@ const getGigsByName = async (query: string, isSafeGigsOnly: boolean) => {
         },
       ],
     },
-    include: defaultInclude,
+    select: defaultSelect,
     orderBy: [
       { date: Prisma.SortOrder.desc },
       ...gigListOrderBy.filter((obj) => !obj.date),
@@ -130,7 +167,6 @@ const getGigsByName = async (query: string, isSafeGigsOnly: boolean) => {
   });
   const gigs = rawGigs.map((gig) => ({
     ...gig,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
     bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
   }));
 
@@ -141,7 +177,7 @@ const getGigsByDateFromTo = async (
   from: string | null,
   to: string | null,
   isSafeGigsOnly: boolean,
-) => {
+): Promise<GigPreview[]> => {
   const rawGigs = await prisma.gig.findMany({
     where: {
       date: {
@@ -161,7 +197,7 @@ const getGigsByDateFromTo = async (
           : {}),
       },
     },
-    include: defaultInclude,
+    select: defaultSelect,
     orderBy: gigListOrderBy,
   });
   const gigs = rawGigs.map((gig) => flattenGigBands(gig));
@@ -172,7 +208,7 @@ const getGigsByDateFromTo = async (
 const getGigByPlaceAndDate = async (
   placeId: string | null,
   date?: string | null,
-) => {
+): Promise<GigMinimal | null> => {
   const whereClause = {
     ...(date
       ? {
@@ -186,12 +222,29 @@ const getGigByPlaceAndDate = async (
   };
   const rawGig = await prisma.gig.findFirst({
     where: whereClause,
-    include: defaultInclude,
+    select: {
+      id: true,
+      name: true,
+      title: true,
+      date: true,
+      endDate: true,
+      bands: {
+        select: {
+          band: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
     orderBy: gigListOrderBy,
   });
   if (!rawGig) {
     return null;
   }
+
   return flattenGigBands(rawGig);
 };
 

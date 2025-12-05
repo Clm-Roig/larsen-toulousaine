@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Table, TextInput } from "@mantine/core";
 import AddPlaceButton from "../AddButton/AddPlaceButton";
 

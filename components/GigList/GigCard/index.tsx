@@ -3,8 +3,9 @@
 import React from "react";
 import { Box, Card, Stack, Text, Group, useMantineTheme } from "@mantine/core";
 import {
-  GigWithBandsAndPlace,
+  GigPreview,
   gigToGigTypeString,
+  GigWithBandsAndPlace,
 } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "@/lib/dayjs";
@@ -29,7 +30,7 @@ import { CardWithLink } from "@/components/CardWithLink";
 
 type Props = {
   displayMissingDataOnly?: boolean;
-  gig: GigWithBandsAndPlace;
+  gig: GigPreview;
 };
 
 const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
@@ -103,7 +104,9 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
             )}
           </Stack>
 
-          {displayMissingDataOnly && <GigMissingData gig={gig} />}
+          {displayMissingDataOnly && (
+            <GigMissingData gig={gig as GigWithBandsAndPlace} />
+          )}
 
           <Group justify="space-between" wrap="nowrap">
             {/* Flex property is here to make it take the remaining width. */}

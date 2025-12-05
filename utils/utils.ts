@@ -1,10 +1,11 @@
-export function sleep(ms) {
+export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function isValidUrl(string) {
+export function isValidUrl(text: string | null) {
+  if (text === null) return false;
   try {
-    new URL(string);
+    new URL(text);
     return true;
   } catch (err) {
     return false;
