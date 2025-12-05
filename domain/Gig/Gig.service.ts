@@ -3,7 +3,11 @@ import {
   getSortedGenres,
   getSortedUniqueBandGenres,
 } from "@/domain/Band/Band.service";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import {
+  GigMinimal,
+  GigPreview,
+  GigWithBandsAndPlace,
+} from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize, formatFrenchPrice } from "@/utils/utils";
 import { Band, Gig, Place } from "@prisma/client";
@@ -83,7 +87,7 @@ export const getGigTitleFromGigSlug = (slug: string) => {
   }
 };
 
-export const getGigTitle = (gig: GigWithBandsAndPlace): string => {
+export const getGigTitle = (gig: GigMinimal): string => {
   const { bands, name } = gig;
   return name !== null ? name : getBandNames(bands);
 };
@@ -92,7 +96,7 @@ export const getGigTitle = (gig: GigWithBandsAndPlace): string => {
  * Description with partial HTML support for https://add-to-calendar-button.com/
  * Apple doesn't support most of html markdown (<i>, <p>, <ul>). That's it's using <br />, which is supported, to break lines.
  */
-export const getGigCalendarDescription = (gig: Gig): string => {
+export const getGigCalendarDescription = (gig: GigPreview): string => {
   let description = "";
   const { price, ticketReservationLink } = gig;
 

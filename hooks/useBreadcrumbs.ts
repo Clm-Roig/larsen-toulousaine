@@ -45,6 +45,7 @@ export default function useBreadcrumbs(): {
         text = getGigTitleFromGigSlug(decodeURIComponent(subpath));
       } else {
         // TODO: quick dirty fix for french translation
+        // @ts-ignore
         text = frenchBreadcrumbDictionnary[text] || text;
       }
       return {

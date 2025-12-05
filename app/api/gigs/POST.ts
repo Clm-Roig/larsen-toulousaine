@@ -8,6 +8,7 @@ import { downloadImage, storeImage } from "@/app/api/utils/image";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
+  CustomError,
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
@@ -149,7 +150,6 @@ async function POST(request: NextRequest) {
     }
     return NextResponse.json(createdGig);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
@@ -170,8 +170,8 @@ async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (error.name === invalidImageUrlError.name) {
-      return toResponse(error);
+    if (error.name && error.name === invalidImageUrlError.name) {
+      return toResponse(error as CustomError);
     }
     return NextResponse.json(
       { message: "An unexpected error occured." },

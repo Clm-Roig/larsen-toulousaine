@@ -1,4 +1,9 @@
-import { BandWithGenres } from "@/domain/Band/Band.type";
+import {
+  BandMinimal,
+  BandPreviewWithOrder,
+  BandWithGenres,
+} from "@/domain/Band/Band.type";
+import { PlacePreview } from "@/domain/Place/Place.type";
 import { capitalize as capitalizeStr } from "@/utils/utils";
 import { Gig, Prisma } from "@prisma/client";
 
@@ -15,6 +20,31 @@ export enum GigType {
   FESTIVAL = "FESTIVAL",
 }
 
+export type GigPreview = {
+  id: Gig["id"];
+  date: Gig["date"];
+  endDate: Gig["endDate"];
+  imageUrl: Gig["imageUrl"];
+  isCanceled: Gig["isCanceled"];
+  isSoldOut: Gig["isSoldOut"];
+  name: Gig["name"];
+  price: Gig["price"];
+  slug: Gig["slug"];
+  ticketReservationLink: Gig["ticketReservationLink"];
+  title: Gig["title"];
+  place: PlacePreview;
+  bands: BandPreviewWithOrder[];
+};
+
+export type GigMinimal = {
+  id: Gig["id"];
+  title: Gig["title"];
+  name: Gig["name"];
+  date: Gig["date"];
+  endDate: Gig["endDate"];
+  bands: BandMinimal[];
+};
+
 export const gigTypeToString = (gigType: GigType): string => {
   let result = "";
   switch (gigType) {
@@ -28,7 +58,7 @@ export const gigTypeToString = (gigType: GigType): string => {
 };
 
 export const gigToGigTypeString = (
-  gig: Gig,
+  gig: GigPreview,
   options: { capitalize: boolean } = { capitalize: true },
 ): string => {
   const result = gig.name

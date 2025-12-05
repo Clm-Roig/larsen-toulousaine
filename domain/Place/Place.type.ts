@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Place, Prisma } from "@prisma/client";
 
 const placeWithGigCount = Prisma.validator<Prisma.PlaceDefaultArgs>()({
   include: {
@@ -10,3 +10,11 @@ const placeWithGigCount = Prisma.validator<Prisma.PlaceDefaultArgs>()({
 export type PlaceWithGigCount = Prisma.PlaceGetPayload<
   typeof placeWithGigCount
 >;
+
+export type PlacePreview = {
+  id: Place["id"];
+  address: Place["address"];
+  name: Place["name"];
+  city: Place["city"];
+  isSafe: Place["isSafe"];
+};

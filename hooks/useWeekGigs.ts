@@ -1,5 +1,5 @@
 import dayjs from "@/lib/dayjs";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import { useEffect, useState } from "react";
 import { getGigs } from "@/domain/Gig/Gig.webService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ export default function useWeekGigs() {
   const selectedWeekStart = dayjs(selectedWeek).startOf("week").toDate();
   const selectedWeekEnd = dayjs(selectedWeek).endOf("week").toDate();
 
-  const { data: gigs, isLoading } = useQuery<GigWithBandsAndPlace[], Error>({
+  const { data: gigs, isLoading } = useQuery<GigPreview[], Error>({
     queryKey: [
       "gigs",
       selectedWeekStart.toISOString(),

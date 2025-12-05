@@ -1,5 +1,5 @@
 import dayjs from "@/lib/dayjs";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import { useEffect, useState } from "react";
 import { getGigs } from "@/domain/Gig/Gig.webService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,12 +13,11 @@ export default function useMonthGigs() {
   const [selectedMonth, setSelectedMonth] = useState(startOf("month"));
   const selectedMonthStart = dayjs(selectedMonth).startOf("month").toDate();
   const selectedMonthEnd = dayjs(selectedMonth).endOf("month").toDate();
-
   const {
     data: gigs,
     isLoading,
     isFetched,
-  } = useQuery<GigWithBandsAndPlace[], Error>({
+  } = useQuery<GigPreview[], Error>({
     queryKey: [
       "gigs",
       selectedMonthStart.toISOString(),

@@ -6,6 +6,7 @@ import { Genre } from "@prisma/client";
 import GenreSelect from "@/components/GenreSelect";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import { useSession } from "next-auth/react";
 
 type Props = {
   genres: Genre[];
@@ -28,6 +29,7 @@ export default function TableHeader({
   setSearchedGenres,
   setSearchedName,
 }: Props) {
+  const { status } = useSession();
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
   return (
     <Table.Thead style={{ zIndex: 1 }}>

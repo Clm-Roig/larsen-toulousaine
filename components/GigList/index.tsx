@@ -12,7 +12,7 @@ import {
   Paper,
   BoxProps,
 } from "@mantine/core";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
 import { Genre, Place } from "@prisma/client";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
@@ -28,7 +28,7 @@ import { Permission } from "@/domain/permissions";
 
 type BaseProps = {
   displayMissingDataOnly?: boolean;
-  gigs?: GigWithBandsAndPlace[];
+  gigs?: GigPreview[];
   isLoading: boolean;
   listControlsBoxProps?: BoxProps;
   noGigsFoundMessage: string;
