@@ -12,6 +12,10 @@ const nextConfig = {
   },
 
   turbopack: {},
+
+  netlify: {
+    edgeMiddleware: false, // prevent Netlify from deploying prisma in Edge Middleware
+  },
 };
 
 module.exports = withPWA(nextConfig);
