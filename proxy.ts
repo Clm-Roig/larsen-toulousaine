@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/Role"; // ugly hack, see lib/Role.ts
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAndDecodeJwt } from "@/lib/jwt";
 
