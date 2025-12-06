@@ -1,10 +1,6 @@
-import {
-  BandMinimal,
-  BandPreview,
-  BandPreviewWithOrder,
-} from "@/domain/Band/Band.type";
+import { BandMinimal, BandPreview } from "@/domain/Band/Band.type";
 import { GigMinimal, GigPreview } from "@/domain/Gig/Gig.type";
-import { Band, BandsOnGigs, Gig, Prisma } from "@prisma/client";
+import { BandsOnGigs, Prisma } from "@prisma/client";
 
 export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
   {

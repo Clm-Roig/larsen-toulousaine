@@ -58,7 +58,6 @@ export async function storeImageToCloudinary(
     folder: GIG_POSTERS_FOLDER_NAME,
   };
 
-  // eslint-disable-next-line no-console
   console.log("Uploading image to Cloudinary...");
   const result = await cloudinaryV2.uploader.upload(fileUri, options);
   const cloudinaryImageUrl = result.secure_url;
@@ -68,12 +67,12 @@ export async function storeImageToCloudinary(
 export async function deleteGigImage(imageUrl: Gig["imageUrl"]) {
   if (imageUrl) {
     const publicId = getGigImagePublicId(imageUrl);
-    // eslint-disable-next-line no-console
+
     console.log("Trying to delete image with public id '" + publicId + "'.");
     const result = await cloudinaryV2.uploader.destroy(
       getGigImagePublicId(imageUrl),
     );
-    // eslint-disable-next-line no-console
+
     console.log(result);
   }
 }

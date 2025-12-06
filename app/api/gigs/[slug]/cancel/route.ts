@@ -26,7 +26,6 @@ export async function POST(
     });
     return new Response(null, { status: 204 });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(

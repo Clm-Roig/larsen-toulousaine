@@ -27,7 +27,6 @@ export async function GET(
     }
     return NextResponse.json(gig.slug);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(

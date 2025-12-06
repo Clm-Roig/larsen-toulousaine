@@ -1,4 +1,4 @@
-import { Gig, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import dayjs from "@/lib/dayjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -44,6 +44,7 @@ const defaultSelect = {
           genres: true,
           name: true,
           isATribute: true,
+          isLocal: true,
           isSafe: true,
         },
       },
@@ -51,12 +52,13 @@ const defaultSelect = {
   },
 } satisfies Prisma.GigSelect;
 
-async function GET(request: NextRequest): Promise<
+async function GET({ request }: { request: NextRequest }): Promise<
   NextResponse<
     | { gigs: GigPreview[] } // by date (from => to)
     | MarkdownGigs // with acceptHeader = text/markdown
     | (GigMinimal | null) // by date and place
     | { message: string } // Error case
+    // eslint-disable-next-line
     | {} // 404 case
   >
 > {

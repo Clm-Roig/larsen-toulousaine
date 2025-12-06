@@ -59,7 +59,6 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json(createdGig);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(

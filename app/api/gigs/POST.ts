@@ -21,11 +21,7 @@ import {
   tooBigImageFileError,
 } from "@/domain/Gig/errors";
 import dayjs from "@/lib/dayjs";
-import { validateCountryAndRegionCodes } from "@/app/api/utils/bands";
-import {
-  LOCAL_COUNTRY_CODE,
-  LOCAL_REGION_CODE,
-} from "@/domain/Place/constants";
+
 import { MAX_IMAGE_SIZE } from "@/domain/image";
 import { File } from "buffer";
 
@@ -58,34 +54,15 @@ async function POST(request: NextRequest) {
     const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
-        const {
-          city,
-          countryCode,
-          genres,
-          isATribute,
-          isLocal,
-          isSafe,
-          name,
-          order,
-          regionCode,
-        } = band;
-        const validationMsg = validateCountryAndRegionCodes(
-          countryCode,
-          regionCode,
-        );
-        if (validationMsg) {
-          throw new Error(`Bad request for the band ${name}. ${validationMsg}`);
-        }
+        const { genres, isATribute, isLocal, isSafe, name, order } = band;
+
         const createdBand = await prisma.band.create({
           data: {
-            city: city,
-            countryCode: isLocal ? LOCAL_COUNTRY_CODE : countryCode,
             genres: { connect: genres.map((g) => ({ id: g })) },
             isATribute: isATribute,
             isLocal: isLocal,
             isSafe: isSafe,
             name: name,
-            regionCode: isLocal ? LOCAL_REGION_CODE : regionCode,
           },
         });
         return { ...createdBand, order: order };

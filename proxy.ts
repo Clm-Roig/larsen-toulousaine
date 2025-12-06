@@ -58,7 +58,6 @@ export async function proxy(req: NextRequest) {
     }
     return NextResponse.next();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
   }
 }

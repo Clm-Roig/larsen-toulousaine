@@ -6,8 +6,6 @@ export default function useFilteredGigs(gigs: GigPreview[]) {
   const { displayNotSafePlaces, filteredGenres, excludedPlaces, maxPrice } =
     usePreferences();
 
-  console.log(gigs);
-
   const filteredGigs = useMemo(
     () =>
       gigs

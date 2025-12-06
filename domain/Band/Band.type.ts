@@ -1,10 +1,6 @@
 import { Band, Genre, Prisma, BandsOnGigs } from "@prisma/client";
 import { GigWithBandsAndPlace } from "../Gig/Gig.type";
 
-const bandWithGenres = Prisma.validator<Prisma.BandDefaultArgs>()({
-  include: { genres: true },
-});
-
 export type BandWithOrder = Band & { order: number };
 
 export type BandMinimal = {
@@ -15,8 +11,9 @@ export type BandMinimal = {
 export type BandPreview = {
   id: Band["id"];
   genres: Genre[];
-  isSafe: Band["isSafe"];
   isATribute: Band["isATribute"];
+  isLocal: Band["isLocal"];
+  isSafe: Band["isSafe"];
   name: Band["name"];
 };
 
@@ -24,17 +21,19 @@ export type BandPreviewWithOrder = BandPreview & {
   order: BandsOnGigs["order"];
 };
 
-const bandWithGigCount = Prisma.validator<Prisma.BandDefaultArgs>()({
+export type BandWithGenres = Prisma.BandGetPayload<{
+  include: { genres: true };
+}>;
+
+export type BandWithGenresAndGigCount = Prisma.BandGetPayload<{
   include: {
+    genres: true;
     _count: {
-      select: { gigs: true },
-    },
-  },
-});
-export type BandWithGenres = Prisma.BandGetPayload<typeof bandWithGenres>;
-export type BandWithGenresAndGigCount = Prisma.BandGetPayload<
-  typeof bandWithGenres & typeof bandWithGigCount
->;
-export type BandWithGenresAndGigs = Prisma.BandGetPayload<
-  typeof bandWithGenres
-> & { gigs: GigWithBandsAndPlace[] };
+      select: { gigs: true };
+    };
+  };
+}>;
+
+export type BandWithGenresAndGigs = BandWithGenres & {
+  gigs: GigWithBandsAndPlace[];
+};

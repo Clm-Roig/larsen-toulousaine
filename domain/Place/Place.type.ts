@@ -1,15 +1,12 @@
 import { Place, Prisma } from "@prisma/client";
 
-const placeWithGigCount = Prisma.validator<Prisma.PlaceDefaultArgs>()({
+export type PlaceWithGigCount = Prisma.PlaceGetPayload<{
   include: {
     _count: {
-      select: { gigs: true },
-    },
-  },
-});
-export type PlaceWithGigCount = Prisma.PlaceGetPayload<
-  typeof placeWithGigCount
->;
+      select: { gigs: true };
+    };
+  };
+}>;
 
 export type PlacePreview = {
   id: Place["id"];

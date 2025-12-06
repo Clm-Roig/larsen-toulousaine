@@ -1,7 +1,7 @@
 "use client";
 
 import GigForm from "@/components/GigForm";
-import { CreateGigArgs, createGig } from "@/domain/Gig/Gig.webService";
+import { FormCreateGigArgs, createGig } from "@/domain/Gig/Gig.webService";
 import { Box } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ export default function AddGig() {
   const queryClient = useQueryClient();
 
   const { isPending, mutate } = useMutation({
-    mutationFn: async (values: CreateGigArgs) => {
+    mutationFn: async (values: FormCreateGigArgs) => {
       const result = await createGig(values);
       return result;
     },
