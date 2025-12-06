@@ -10,8 +10,6 @@ This is the starter project for the fullstack tutorial with Next.js and Prisma. 
 
 Copy, paste and rename sample.env to **.env** and fill all the variables.
 
-### :warning: DEPRECATED :warning:
-
 Run server:
 
 `npm run dev`
