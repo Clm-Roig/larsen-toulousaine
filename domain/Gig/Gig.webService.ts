@@ -6,7 +6,7 @@ import {
   MarkdownGigs,
 } from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
-import { BandWithGenres } from "@/domain/Band/Band.type";
+import { BandPreview, BandWithGenres } from "@/domain/Band/Band.type";
 
 export const getGigs = async (
   from: Date,
@@ -106,20 +106,34 @@ export const getPreviousGigSlug = async (
   }
 };
 
+export type FromFormSimpleBand = Omit<
+  BandPreview,
+  "id" | "order" | "genres"
+> & {
+  id?: Band["id"] | undefined;
+  genres: Array<Genre["id"]>;
+  order?: number;
+  key: string; // needed by the add gig form
+};
+
+export type FormCreateGigArgs = Omit<
+  Gig,
+  "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled" | "isSoldOut"
+> & {
+  id?: string;
+  createdAt?: Date;
+  bands: Array<FromFormSimpleBand>;
+  imageFile?: File | null;
+};
+
 export type CreateGigArgs = Omit<
   Gig,
   "id" | "createdAt" | "authorId" | "updatedAt" | "isCanceled" | "isSoldOut"
 > & {
   id?: string;
   createdAt?: Date;
-  bands: Array<
-    Omit<Band, "id" | "genres"> & {
-      id?: BandWithGenres["id"] | undefined;
-      key: string; // needed by the add gig form
-      genres: Array<Genre["id"]>;
-      order: number;
-    }
-  >;
+  // order has been populated when sending to the API
+  bands: Array<Omit<FromFormSimpleBand, "order" | "key"> & { order: number }>;
   imageFile?: File | null;
 };
 

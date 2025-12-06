@@ -7,7 +7,7 @@ export function isValidUrl(text: string | null) {
   try {
     new URL(text);
     return true;
-  } catch (err) {
+  } catch {
     return false;
   }
 }
@@ -72,6 +72,5 @@ export const boolean3ChoicesToFormValue = (
   if (value === null || value === undefined) return "";
   if (value) return "true";
   if (!value) return "false";
-  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   throw new Error("Unexpected value: " + value);
 };

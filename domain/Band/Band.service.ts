@@ -1,9 +1,5 @@
 import { Genre } from "@prisma/client";
-import {
-  BandPreviewWithOrder,
-  BandWithGenres,
-  BandWithOrder,
-} from "./Band.type";
+import { BandPreviewWithOrder, BandWithOrder } from "./Band.type";
 import { V_SEPARATOR } from "@/utils/utils";
 
 export function getBandNames(

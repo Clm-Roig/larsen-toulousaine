@@ -73,7 +73,6 @@ export async function PUT(request: NextRequest) {
     revalidatePath("/api/bands");
     return NextResponse.json(updatedBand);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
@@ -110,7 +109,6 @@ export async function DELETE(
 
     return new Response(null, { status: 204 });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
 
     // Trying to delete a band related to a gig

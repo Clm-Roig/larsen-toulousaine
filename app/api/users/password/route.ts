@@ -23,7 +23,7 @@ export async function PUT(request: NextRequest) {
   let body;
   try {
     body = await request.json();
-  } catch (e) {
+  } catch {
     return toResponse(missingBodyError);
   }
 
@@ -68,7 +68,6 @@ export async function PUT(request: NextRequest) {
     });
     return NextResponse.json({}, { status: 201 });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(

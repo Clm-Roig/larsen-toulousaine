@@ -1,11 +1,9 @@
 import { Prisma } from "@prisma/client";
 
-const userWithGigCount = Prisma.validator<Prisma.UserDefaultArgs>()({
+export type UserWithGigCount = Prisma.UserGetPayload<{
   include: {
     _count: {
-      select: { gigs: true },
-    },
-  },
-});
-
-export type UserWithGigCount = Prisma.UserGetPayload<typeof userWithGigCount>;
+      select: { gigs: true };
+    };
+  };
+}>;

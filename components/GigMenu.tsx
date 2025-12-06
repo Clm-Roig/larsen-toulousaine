@@ -61,7 +61,11 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
 
   const { isPending: isCancelPending, mutate: handleOnCancel } = useMutation({
     mutationFn: async () => {
-      isCanceled ? await uncancelGig(slug) : await cancelGig(slug);
+      if (isCanceled) {
+        await uncancelGig(slug);
+      } else {
+        await cancelGig(slug);
+      }
     },
     onError: (error) => {
       const action = isCanceled ? "l'annulation" : "la désannulation";
@@ -84,9 +88,11 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
   const { isPending: isOnSoldOutPending, mutate: handleOnSoldOut } =
     useMutation({
       mutationFn: async () => {
-        isSoldOut
-          ? await markGigAsNotSoldOut(slug)
-          : await markGigAsSoldOut(slug);
+        if (isSoldOut) {
+          await markGigAsNotSoldOut(slug);
+        } else {
+          await markGigAsSoldOut(slug);
+        }
       },
       onError: (error) => {
         const newState = isSoldOut ? "non-complet" : "complet";

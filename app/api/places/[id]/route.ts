@@ -38,7 +38,6 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedPlace);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
@@ -75,7 +74,6 @@ export async function DELETE(
 
     return new Response(null, { status: 204 });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
 
     if (error instanceof PrismaClientValidationError) {

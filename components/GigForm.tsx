@@ -52,7 +52,7 @@ import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import {
-  CreateGigArgs,
+  FormCreateGigArgs,
   EditGigArgs,
   getGigByDateAndPlaceId,
   CreateGigArgs,
@@ -102,7 +102,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
   const form = useForm<
     // endDate is managed using dateRange array
-    Omit<CreateGigArgs, "date" | "endDate"> & {
+    Omit<FormCreateGigArgs, "date" | "endDate"> & {
       date: Date | null;
       dateRange: [Date | null, Date | null];
     }
@@ -132,7 +132,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         if (!value) return null;
         const { size, type } = value;
         if (!type.startsWith("image/")) {
-          ("Le fichier doit être une image.");
+          return "Le fichier doit être une image.";
         }
         if (size > MAX_IMAGE_SIZE) {
           return `Le fichier est trop volumineux (taille maximale autorisée : ${MAX_IMAGE_SIZE / 1000000} Mo).`;
@@ -217,7 +217,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     form.insertListItem(`bands`, {
       ...band,
       genres: band?.genres.map((g) => g.id),
-      key: band?.id,
+      key: band?.id ?? randomId(),
     });
   };
 
@@ -252,6 +252,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     const newBand = {
       name: bandName || "",
       genres: [],
+      isATribute: false,
+      isLocal: false,
       isSafe: true,
       key: randomId(),
     };

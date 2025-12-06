@@ -34,7 +34,6 @@ export async function verifyAndDecodeJwt(token: string) {
       return decodedToken;
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error("Error while verifying and decoding JWT token:\n", error);
     return null;
   }
