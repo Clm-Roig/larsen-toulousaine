@@ -18,6 +18,7 @@ const defaultSelect = {
   id: true,
   date: true,
   endDate: true,
+  facebookEventUrl: true,
   imageUrl: true,
   isCanceled: true,
   isSoldOut: true,
@@ -199,7 +200,7 @@ const getGigsByDateFromTo = async (
           : {}),
       },
     },
-    select: defaultSelect,
+    select: { ...defaultSelect },
     orderBy: gigListOrderBy,
   });
   const gigs = rawGigs.map((gig) => flattenGigBands(gig));
