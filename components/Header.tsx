@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AppShell,
   Button,
@@ -17,16 +16,17 @@ import {
   IconLogout,
   IconMusic,
 } from "@tabler/icons-react";
+import NextImage from "next/image";
 import Link from "next/link";
 import GigSearchInput from "@/components/GigSearchInput";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
 import { useRouter } from "next/navigation";
 import AddGigButton from "@/components/AddButton/AddGigButton";
 
-type Props = {
+interface Props {
   navbarOpened: boolean;
   toggleNavbar: () => void;
-};
+}
 
 const Header = ({ navbarOpened, toggleNavbar }: Props) => {
   const router = useRouter();
@@ -50,12 +50,18 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           />
           <Box component={Link} href="/" visibleFrom="xs">
             <Image
-              src={"/images/logo.png"}
+              component={NextImage}
+              src="/images/logo.png"
               alt="Logo Larsen Toulousaine"
-              mah="100%"
-              style={{ filter: "brightness(10%)" }}
-              h="auto"
-              w={{ base: 30, sm: 50 }}
+              // width and height are used as a ratio by NextImage
+              width={1}
+              height={1}
+              sizes="(min-width: 48em) 50px, 30px"
+              style={{
+                width: "100%",
+                height: "auto",
+                maxWidth: "50px",
+              }}
             />
           </Box>
         </Group>
@@ -100,7 +106,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
 
                 <Menu.Dropdown>
                   <Menu.Item>
-                    <AddGigButton size={"compact-sm"} />
+                    <AddGigButton size="compact-sm" />
                   </Menu.Item>
                   <Menu.Item
                     component={Link}
