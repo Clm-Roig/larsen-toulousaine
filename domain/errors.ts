@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 
-export type CustomError = {
-  name: string;
-  message: string;
-  frMessage: string;
-  status: number;
-};
+export interface CustomError {
+  name: string
+  message: string
+  frMessage: string
+  status: number
+}
 
 export enum COMMON_ERROR_NAMES {
   MISSING_BODY = "MISSING_BODY",
