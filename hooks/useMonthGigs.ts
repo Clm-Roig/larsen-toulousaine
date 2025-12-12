@@ -66,7 +66,7 @@ export default function useMonthGigs() {
     }
   }, [isFetched, queryClient, selectedMonthEnd, selectedMonthStart]);
 
-  const filteredGigs = useFilteredGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs ?? []);
 
   return {
     isLoading: isLoading,

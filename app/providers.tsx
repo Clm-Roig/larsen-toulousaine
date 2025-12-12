@@ -8,7 +8,7 @@ import { DatesProvider } from "@mantine/dates";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface Props {
   children?: ReactNode;
@@ -18,29 +18,46 @@ const AuthChecker = ({ children }: Props) => {
   const session = useSession();
   if (
     typeof window !== "undefined" &&
-    window?.location.pathname.startsWith("/admin") &&
+    window.location.pathname.startsWith("/admin") &&
     ((session.status === "authenticated" &&
-      (!session.data?.expires ||
-        new Date(session.data?.expires).getTime() < new Date().getTime())) ||
+      (!session.data.expires ||
+        new Date(session.data.expires).getTime() < new Date().getTime())) ||
       session.status === "unauthenticated")
   ) {
     void signOut();
   }
 
-  // Set Bearer token for all http requests
-  if (session?.data?.user) {
-    const {
-      data: { user },
-    } = session;
-    const previousToken = api.defaults.headers.common.Authorization
-      ?.toString()
-      .substring(7); // Remove "Bearer " using substring()
-    const newToken = user?.accessToken;
-    if (previousToken !== newToken) {
-      api.defaults.headers.common.Authorization =
-        `Bearer ${user?.accessToken}`;
+  // Sign out if session expired
+  useEffect(() => {
+    const data = session.data;
+    const status = session.status;
+    const isSessionExpired =
+      status === "authenticated" &&
+      (!data?.expires ||
+        new Date(data.expires).getTime() < new Date().getTime());
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname.startsWith("/admin") &&
+      (isSessionExpired || status === "unauthenticated")
+    ) {
+      void signOut();
     }
-  }
+  }, [session.data, session.status]);
+
+  // Set Bearer token for all HTTP requests
+  useEffect(() => {
+    const user = session.data?.user;
+    if (user) {
+      const previousToken =
+        typeof api.defaults.headers.common.Authorization === "string"
+          ? api.defaults.headers.common.Authorization.substring(7)
+          : undefined;
+      const newToken = user.accessToken;
+      if (previousToken !== newToken) {
+        api.defaults.headers.common.Authorization = `Bearer ${newToken}`;
+      }
+    }
+  }, [session.data?.user]);
 
   return children;
 };
@@ -59,7 +76,7 @@ export const Providers = ({ children }: Props) => {
           >
             <BreadcrumbProvider>
               <NextTopLoader
-                // @ts-ignore
+                // @ts-ignore -- TODO
                 color={theme.colors.primary[0]}
                 showSpinner={false}
               />

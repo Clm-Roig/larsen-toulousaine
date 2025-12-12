@@ -37,11 +37,14 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = (await request.json()) as CreatePlaceArgs;
-  if (!body) {
+  let body: CreatePlaceArgs;
+  try {
+    body = (await request.json()) as CreatePlaceArgs;
+  } catch {
     return toResponse(missingBodyError);
   }
-  const { user } = (await getServerSession(authOptions)) || {};
+
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }

@@ -44,7 +44,7 @@ const Bands = () => {
 
   const urlPageStr = searchParams.get("page");
   const urlPage = urlPageStr ? parseInt(urlPageStr, 10) - 1 : null;
-  const [page, setPage] = useState(urlPage || 0);
+  const [page, setPage] = useState(urlPage ?? 0);
 
   const [editOpened, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
@@ -59,12 +59,12 @@ const Bands = () => {
   } = useQuery<{ bands: BandWithGenresAndGigCount[]; count: number }>({
     queryKey: ["bands", page, searchedGenres, debouncedSearchedName],
     queryFn: async () =>
-      searchedGenres?.length > 0 || debouncedSearchedName
+      searchedGenres.length > 0 || debouncedSearchedName
         ? await searchBands(debouncedSearchedName, searchedGenres, page)
         : await getBands(page),
     placeholderData: keepPreviousData,
   });
-  const { bands, count } = data || {};
+  const { bands, count } = data ?? {};
   const { data: genres } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
@@ -119,7 +119,7 @@ const Bands = () => {
    */
   const handleOnSetPage = (value: number) => {
     setPage(value - 1);
-    setSearchParams(new Map([["page", value + ""]]));
+    setSearchParams(new Map([["page", String(value)]]));
   };
 
   return (
@@ -127,7 +127,7 @@ const Bands = () => {
       <Center>
         <BandTable
           bands={bands}
-          genres={genres || []}
+          genres={genres ?? []}
           isLoading={isFetching || isDeletePending}
           nbOfResults={count}
           onDeleteBand={handleOnOpenDeleteBandModal}
@@ -135,7 +135,7 @@ const Bands = () => {
           onRowClick={handleOnRowClick}
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
-          pageTotal={Math.ceil((count || 0) / NB_OF_BANDS_PER_PAGE)}
+          pageTotal={Math.ceil((count ?? 0) / NB_OF_BANDS_PER_PAGE)}
           searchedName={searchedName}
           searchedGenres={searchedGenres}
           setPage={handleOnSetPage}
@@ -150,7 +150,7 @@ const Bands = () => {
           opened={editOpened}
         />
       </Center>
-      {isError && <Alert color="red">{getBandsError?.message}</Alert>}
+      {isError && <Alert color="red">{getBandsError.message}</Alert>}
 
       <Modal
         opened={deleteOpened}
@@ -161,8 +161,7 @@ const Bands = () => {
           <Stack>
             <Text>
               Êtes vous sûr·e de vouloir supprimer le groupe{" "}
-              <b>{deletedBand?.name}</b> ? Sa suppression est <b>définitive</b>{" "}
-              !
+              <b>{deletedBand.name}</b> ? Sa suppression est <b>définitive</b> !
             </Text>
             <Group justify="space-between">
               <Button onClick={closeDelete}>Annuler</Button>

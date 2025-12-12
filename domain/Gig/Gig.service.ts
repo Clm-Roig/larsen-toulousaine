@@ -89,7 +89,7 @@ export const getGigTitleFromGigSlug = (slug: string) => {
 
 export const getGigTitle = (gig: GigMinimal): string => {
   const { bands, name } = gig;
-  return name !== null ? name : getBandNames(bands);
+  return name ?? getBandNames(bands);
 };
 
 /**
@@ -141,7 +141,7 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   // Name or bands
   if (name) {
     description += name;
-  } else if (bands) {
+  } else {
     const formattedBands = bands.map(
       (b) =>
         `${b.name} (${getSortedGenres(b.genres)
@@ -163,7 +163,7 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
   }
 
   // Place
-  if (place?.name) {
+  if (place.name) {
     description += `${getNewLine()}Lieu : ${place.name}${
       place.city !== MAIN_CITY ? ` (${place.city})` : ""
     }`;

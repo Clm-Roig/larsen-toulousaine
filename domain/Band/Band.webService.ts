@@ -13,7 +13,7 @@ export const searchBands = async (
 ): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
   const nameParam = name ? `name=${encodeURIComponent(name)}` : null;
   const genresParam = genres
-    ? `genres=${encodeURIComponent(genres?.join(","))}`
+    ? `genres=${encodeURIComponent(genres.join(","))}`
     : null;
   const pageParam = page ? `page=${page}` : null;
   const params = [nameParam, genresParam, pageParam]
@@ -75,7 +75,7 @@ export const editBand = async (band: EditBandArgs): Promise<BandWithGenres> => {
 
 export const deleteBand = async (bandId: string): Promise<void> => {
   try {
-    await api.delete<void>(`/bands/${bandId}`);
+    await api.delete(`/bands/${bandId}`);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

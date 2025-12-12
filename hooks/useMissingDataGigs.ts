@@ -9,7 +9,7 @@ export default function useMissingDataGigs() {
     queryFn: async () => await getMissingDataGigs(),
   });
 
-  const filteredGigs = useFilteredGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs ?? []);
 
   return {
     isLoading: isLoading,

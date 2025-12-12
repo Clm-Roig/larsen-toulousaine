@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function GigImgOverlay({ gig }: Props) {
-  const { isCanceled, isSoldOut } = gig || {};
+  const { isCanceled, isSoldOut } = gig ?? {};
   if (!isCanceled && !isSoldOut) return "";
   return isCanceled ? <CanceledGigOverlay /> : <SoldOutGigOverlay />;
 }

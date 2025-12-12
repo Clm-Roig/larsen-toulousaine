@@ -16,8 +16,9 @@ export default function AccountPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const { isPending, isSuccess, mutate, error } = useMutation({
-    mutationFn: async (values: UpdatePasswordValues) =>
-      { await updatePassword(values); },
+    mutationFn: async (values: UpdatePasswordValues) => {
+      await updatePassword(values);
+    },
     onSuccess: () => {
       notifications.show({
         color: "green",
@@ -50,7 +51,7 @@ export default function AccountPage() {
             <Text span fw="bold">
               Role :
             </Text>{" "}
-            {session?.user.role && getRoleLabel(session?.user.role)}
+            {session?.user.role && getRoleLabel(session.user.role)}
           </Text>
         </Box>
 

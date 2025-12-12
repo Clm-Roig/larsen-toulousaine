@@ -20,15 +20,7 @@ export default function Price({ size = "md", value }: Props) {
         <Group gap={4}>
           {size === "md" && <Text size={size}>À partir de</Text>}
           <Badge
-            size={
-              size === "xs"
-                ? "md"
-                : size === "sm"
-                  ? "lg"
-                  : size === "md"
-                    ? "xl"
-                    : undefined
-            }
+            size={size === "xs" ? "md" : size === "sm" ? "lg" : "xl"}
             color="primary"
             p="xs"
           >

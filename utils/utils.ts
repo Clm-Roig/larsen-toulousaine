@@ -13,7 +13,7 @@ export function isValidUrl(text: string | null) {
 }
 
 export function capitalize(string: string) {
-  return string?.charAt(0).toUpperCase() + string?.slice(1);
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export const V_SEPARATOR = "｜";
@@ -67,10 +67,9 @@ export const boolean3ChoicesFormValueToBool = (
 };
 
 export const boolean3ChoicesToFormValue = (
-  value: boolean | null,
+  value: boolean | null | undefined,
 ): Boolean3ChoicesFormValue => {
-  if (value === null || value === undefined) return "";
+  if (value !== false && (value === null || value === undefined)) return "";
   if (value) return "true";
-  if (!value) return "false";
-  throw new Error("Unexpected value: " + value);
+  return "false";
 };

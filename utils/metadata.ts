@@ -14,7 +14,7 @@ export const getMetadata = (
   metadata?: Omit<Metadata, "openGraph">,
   openGraph?: OpenGraph,
 ): Metadata => {
-  const { title: metadataTitle, ...metadataWithoutTitle } = metadata || {};
+  const { title: metadataTitle, ...metadataWithoutTitle } = metadata ?? {};
   let title = metadataTitle;
   if (typeof title === "string") {
     title += " ║ Larsen Toulousaine";
@@ -25,13 +25,13 @@ export const getMetadata = (
     icons: { icon: "icon.png" },
     manifest: "/manifest.json",
     title:
-      title ||
+      title ??
       "Larsen Toulousaine, votre agenda des concerts et festivals metal à Toulouse.",
     ...metadataWithoutTitle,
     openGraph: {
       siteName: "Larsen Toulousaine",
       type: "website",
-      images: `${process.env.NEXT_PUBLIC_URL}/icon.png`,
+      images: `${process.env.NEXT_PUBLIC_URL ?? ""}/icon.png`,
       ...openGraph,
     },
     other: {

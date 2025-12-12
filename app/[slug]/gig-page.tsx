@@ -93,7 +93,7 @@ const GigPage = ({ gigSlug }: Props) => {
     );
   }
 
-  const { imageUrl, isCanceled, isSoldOut } = gig || {};
+  const { imageUrl, isCanceled, isSoldOut } = gig;
   const gigTitle = getGigTitle(gig);
 
   return (
@@ -108,9 +108,7 @@ const GigPage = ({ gigSlug }: Props) => {
       )}
       {canEditGig && (
         <Box pos="absolute" top={0} right={0} bg="primary">
-          {gig && (
-            <GigMenu afterDeleteCallback={afterDeleteCallback} gig={gig} />
-          )}
+          <GigMenu afterDeleteCallback={afterDeleteCallback} gig={gig} />
         </Box>
       )}
 
@@ -127,7 +125,7 @@ const GigPage = ({ gigSlug }: Props) => {
           <GigImgOverlay gig={gig} />
         </Box>
 
-        {gig && <GigInfo gig={gig} />}
+        <GigInfo gig={gig} />
       </Flex>
 
       <Flex mt="md" justify="space-between">

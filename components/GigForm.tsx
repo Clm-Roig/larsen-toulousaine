@@ -135,7 +135,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           return "Le fichier doit être une image.";
         }
         if (size > MAX_IMAGE_SIZE) {
-          return `Le fichier est trop volumineux (taille maximale autorisée : ${MAX_IMAGE_SIZE / 1000000} Mo).`;
+          return `Le fichier est trop volumineux (taille maximale autorisée : ${(MAX_IMAGE_SIZE / 1000000).toString()} Mo).`;
         }
         return null;
       },
@@ -146,7 +146,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       placeId: isNotEmpty("Le lieu du concert est requis."),
       bands: {
         [formRootRule]: (value) =>
-          gigType === GIG && value?.length === 0
+          gigType === GIG && value.length === 0
             ? "Un groupe est requis."
             : null,
         name: isNotEmpty("Le nom est requis"),
@@ -176,7 +176,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     ],
     queryFn: async () => {
       const { date, dateRange, placeId, id } = form.values;
-      const startDate = dateRange[0] || date;
+      const startDate = dateRange[0] ?? date;
       if (startDate && placeId) {
         const res = await getGigByDateAndPlaceId(startDate, placeId);
         if (res?.id === id) {
@@ -208,6 +208,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         slug: "", // slug will be recomputed when saving the gig
       });
       if (gig.name) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGigType(FESTIVAL);
       }
     }
@@ -216,8 +217,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   const handleOnSelectBand = (band: BandWithGenres) => {
     form.insertListItem(`bands`, {
       ...band,
-      genres: band?.genres.map((g) => g.id),
-      key: band?.id ?? randomId(),
+      genres: band.genres.map((g) => g.id),
+      key: band.id ? band.id : randomId(),
     });
   };
 
@@ -234,9 +235,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     */
     const isRangeSameDay = dayjs(dateRange[0]).isSame(dayjs(dateRange[1]));
     const date =
-      isAFestival && !!dateRange[0]
-        ? dateRange[0]
-        : (cleanedFormValues.date!);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      isAFestival && !!dateRange[0] ? dateRange[0] : cleanedFormValues.date!;
     const endDate = isAFestival && isRangeSameDay ? null : dateRange[1];
 
     onSubmit({
@@ -244,13 +244,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       bands: bands.map((b, i) => ({ ...b, order: i + 1 })),
       date: date,
       endDate: endDate,
-      price: price || price === 0 ? Number(price) : null,
+      price: price || price === 0 ? price : null,
     });
   };
 
   const insertNewBand = (bandName?: string) => {
     const newBand = {
-      name: bandName || "",
+      name: bandName ?? "",
       genres: [],
       isATribute: false,
       isLocal: false,
@@ -373,7 +373,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             />
           </Flex>
           {isLoadingSamePlaceSameDayGig &&
-            (form.values.date || form.values.dateRange[0]) &&
+            (form.values.date ?? form.values.dateRange[0]) &&
             form.values.placeId && (
               <Center>
                 <Group>
@@ -412,21 +412,21 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         />
 
         <DragDropContext
-          onDragEnd={({ destination, source }) =>
-            { form.reorderListItem("bands", {
+          onDragEnd={({ destination, source }) => {
+            form.reorderListItem("bands", {
               from: source.index,
-              to: destination?.index || 0,
-            }); }
-          }
+              to: destination?.index ?? 0,
+            });
+          }}
         >
           <Droppable droppableId="dnd-list" direction="vertical">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {form.values.bands.map((band, index) => (
                   <Draggable
-                    key={band.id || band.key}
+                    key={band.id ?? band.key}
                     index={index}
-                    draggableId={band.id || band.key}
+                    draggableId={band.id ?? band.key}
                   >
                     {(provided) => (
                       <Paper
@@ -446,9 +446,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                           <Box>
                             <ActionIcon
                               color="red"
-                              onClick={() =>
-                                { form.removeListItem("bands", index); }
-                              }
+                              onClick={() => {
+                                form.removeListItem("bands", index);
+                              }}
                               size="lg"
                             >
                               <IconTrash size="1rem" />
@@ -460,7 +460,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                               ...form.getInputProps(`bands.${index}.name`),
                             }}
                             genreProps={{
-                              genres: genres || [],
+                              genres: genres ?? [],
                               style: { flex: 1 },
                               disabled: !!form.values.bands[index].id,
                               ...form.getInputProps(`bands.${index}.genres`),
@@ -518,7 +518,11 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             leftSection={<IconFile />}
             rightSection={
               !!form.getValues().imageFile && (
-                <CloseButton onClick={() => { handleImageFileChange(null); }} />
+                <CloseButton
+                  onClick={() => {
+                    handleImageFileChange(null);
+                  }}
+                />
               )
             }
             placeholder="Uploader un fichier"
@@ -552,7 +556,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             <OptimizedImage
               mah={200}
               maw={getGigImgWidth(200)}
-              src={form.values.imageUrl || imageFilePreview}
+              src={form.values.imageUrl ?? imageFilePreview}
               alt="Affiche du concert"
               m={"auto"}
             />
@@ -608,14 +612,14 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
               ]}
               {...form.getInputProps("hasTicketReservationLink")}
               value={boolean3ChoicesToFormValue(
-                form.getInputProps("hasTicketReservationLink").value,
+                form.getInputProps("hasTicketReservationLink").value as boolean,
               )}
-              onChange={(value: string) =>
-                { form.setFieldValue(
+              onChange={(value: string) => {
+                form.setFieldValue(
                   "hasTicketReservationLink",
                   boolean3ChoicesFormValueToBool(value),
-                ); }
-              }
+                );
+              }}
             />
           </Box>
 
@@ -677,14 +681,14 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
               ]}
               {...form.getInputProps("isAcceptingBankCard")}
               value={boolean3ChoicesToFormValue(
-                form.getInputProps("isAcceptingBankCard").value,
+                form.getInputProps("isAcceptingBankCard").value as boolean,
               )}
-              onChange={(value: string) =>
-                { form.setFieldValue(
+              onChange={(value: string) => {
+                form.setFieldValue(
                   "isAcceptingBankCard",
                   boolean3ChoicesFormValueToBool(value),
-                ); }
-              }
+                );
+              }}
             />
           </Box>
 

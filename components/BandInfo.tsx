@@ -34,8 +34,9 @@ export default function BandInfo({ band }: Props) {
   const bandCountry = allCountries.find(
     (c) => c.countryShortCode === countryCode,
   );
-  const bandRegion =
-    bandCountry?.regions.find((r) => r.shortCode === regionCode);
+  const bandRegion = bandCountry?.regions.find(
+    (r) => r.shortCode === regionCode,
+  );
 
   return (
     <Flex direction="column" w="100%">
@@ -43,7 +44,7 @@ export default function BandInfo({ band }: Props) {
         <Row>
           <Flex rowGap={0} columnGap="xs" wrap="wrap" align="center">
             {getSortedGenres(genres).map((genre) => (
-              <GenreBadge key={genre?.id} genre={genre} />
+              <GenreBadge key={genre.id} genre={genre} />
             ))}
             {isATribute && <IsATributeBadge />}
             {isLocal && (

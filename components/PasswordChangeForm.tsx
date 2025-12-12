@@ -21,7 +21,7 @@ export default function PasswordChangeForm({ isLoading, onSubmit }: Props) {
     },
     validate: {
       newPassword: (value) =>
-        value?.length >= MIN_PASSWORD_LENGTH
+        value.length >= MIN_PASSWORD_LENGTH
           ? null
           : `Le nouveau mot de passe doit faire aux moins ${MIN_PASSWORD_LENGTH} caractères.`,
       previousPassword: (value) =>

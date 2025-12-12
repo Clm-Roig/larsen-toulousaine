@@ -68,11 +68,11 @@ export default function Gigs() {
   return (
     <GigList
       dateStep="month"
-      genres={genres || []}
+      genres={genres ?? []}
       gigs={monthGigs}
       isLoading={isLoading}
       noGigsFoundMessage="Aucun concert trouvé pour ce mois-ci 🙁"
-      places={filteredPlaces || []}
+      places={filteredPlaces ?? []}
       selectedDate={selectedMonth}
       setSelectedDate={onSelectedMonthChange}
       withListControls

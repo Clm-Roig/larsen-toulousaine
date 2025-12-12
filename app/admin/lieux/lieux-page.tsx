@@ -187,7 +187,7 @@ const Lieux = () => {
           )}
         </Drawer>
       </Center>
-      {isError && <Alert color="red">{getPlacesError?.message}</Alert>}
+      {isError && <Alert color="red">{getPlacesError.message}</Alert>}
     </Layout>
   );
 };
