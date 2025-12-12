@@ -3,13 +3,13 @@ import { ActionIcon } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
-type Props = {
+interface Props {
   dateStep: "week" | "month";
   decrementDate: () => void;
   incrementDate: () => void;
   selectedDate: Date;
   onSelectedDateUpdate: (date: Date) => void;
-};
+}
 
 export default function DateSelector({
   dateStep,

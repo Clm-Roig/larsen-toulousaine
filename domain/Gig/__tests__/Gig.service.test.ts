@@ -18,7 +18,7 @@ describe("Gig service", () => {
       expect(slug).toContain(gig.date.getMonth() + 1 + "");
       expect(slug).toContain(gig.date.getFullYear() + "");
       gigBands.forEach((band) =>
-        expect(slug).toContain(band.name.toLowerCase().replaceAll(" ", "-")),
+        { expect(slug).toContain(band.name.toLowerCase().replaceAll(" ", "-")); },
       );
     });
   });
@@ -37,7 +37,7 @@ describe("Gig service", () => {
       expect(date.getMonth()).toEqual(gig.date.getMonth()); // displayed month is +1 than date month
       expect(date.getFullYear()).toEqual(gig.date.getFullYear());
       bandNames.forEach((bandName) =>
-        expect(gigBands.some((b) => b.name === bandName)).toBe(true),
+        { expect(gigBands.some((b) => b.name === bandName)).toBe(true); },
       );
     });
   });
@@ -49,7 +49,7 @@ describe("Gig service", () => {
       expect(gigTitle).toContain(gig.date.getMonth() + 1 + "");
       expect(gigTitle).toContain(gig.date.getFullYear() + "");
       gigBands.forEach((band) =>
-        expect(gigTitle.toLowerCase()).toContain(band.name.toLowerCase()),
+        { expect(gigTitle.toLowerCase()).toContain(band.name.toLowerCase()); },
       );
     });
   });
@@ -61,9 +61,9 @@ describe("Gig service", () => {
       expect(rssFeedDescription).toContain(gig.price + "");
       expect(rssFeedDescription).toContain(gig.ticketReservationLink);
       gigBands.forEach((band) =>
-        expect(rssFeedDescription.toLowerCase()).toContain(
+        { expect(rssFeedDescription.toLowerCase()).toContain(
           band.name.toLowerCase(),
-        ),
+        ); },
       );
     });
   });

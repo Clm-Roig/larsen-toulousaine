@@ -15,9 +15,9 @@ const Row = ({ children }: { children: ReactNode }) => (
   </Flex>
 );
 
-type Props = {
+interface Props {
   band: BandWithGenresAndGigs;
-};
+}
 
 export default function BandInfo({ band }: Props) {
   const {
@@ -35,7 +35,7 @@ export default function BandInfo({ band }: Props) {
     (c) => c.countryShortCode === countryCode,
   );
   const bandRegion =
-    bandCountry && bandCountry.regions.find((r) => r.shortCode === regionCode);
+    bandCountry?.regions.find((r) => r.shortCode === regionCode);
 
   return (
     <Flex direction="column" w="100%">

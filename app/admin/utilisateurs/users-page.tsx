@@ -14,7 +14,7 @@ const Users = () => {
     error,
     isLoading,
     isError,
-  } = useQuery<UserWithGigCount[], Error>({
+  } = useQuery<UserWithGigCount[]>({
     queryKey: ["users"],
     queryFn: async () => await getUsers(),
   });

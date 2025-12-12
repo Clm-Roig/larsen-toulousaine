@@ -14,7 +14,7 @@ const Genres = () => {
     error,
     isLoading,
     isError,
-  } = useQuery<Genre[], Error>({
+  } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });

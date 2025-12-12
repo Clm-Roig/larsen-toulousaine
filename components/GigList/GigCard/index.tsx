@@ -28,10 +28,10 @@ import { getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
 import { CardWithLink } from "@/components/CardWithLink";
 
-type Props = {
+interface Props {
   displayMissingDataOnly?: boolean;
   gig: GigPreview;
-};
+}
 
 const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const theme = useMantineTheme();

@@ -35,9 +35,9 @@ import { Permission } from "@/domain/permissions";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
-type Props = {
+interface Props {
   bandId: string;
-};
+}
 
 const BandPage = ({ bandId }: Props) => {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
@@ -53,7 +53,7 @@ const BandPage = ({ bandId }: Props) => {
     isSuccess,
     isError,
     refetch,
-  } = useQuery<BandWithGenresAndGigs | null, Error>({
+  } = useQuery<BandWithGenresAndGigs | null>({
     queryKey: ["band", bandId],
     queryFn: async () => await getBand(bandId),
   });
@@ -143,7 +143,7 @@ const BandPage = ({ bandId }: Props) => {
             <Menu.Dropdown>
               <Menu.Item
                 leftSection={<IconEdit style={iconStyle} />}
-                onClick={() => setSearchParams(new Map([["edit", "true"]]))}
+                onClick={() => { setSearchParams(new Map([["edit", "true"]])); }}
               >
                 Éditer
               </Menu.Item>
@@ -151,7 +151,7 @@ const BandPage = ({ bandId }: Props) => {
               <Menu.Item
                 disabled={!isDeletable}
                 leftSection={<IconTrash style={iconStyle} />}
-                onClick={() => deleteBand(bandId)}
+                onClick={() => { deleteBand(bandId); }}
               >
                 {isDeletable ? (
                   "Supprimer"

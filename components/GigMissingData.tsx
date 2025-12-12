@@ -3,9 +3,9 @@ import { List, ThemeIcon } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { PropsWithChildren } from "react";
 
-type Props = {
+interface Props {
   gig: GigWithBandsAndPlace;
-};
+}
 
 function ListItem(props: PropsWithChildren) {
   return (

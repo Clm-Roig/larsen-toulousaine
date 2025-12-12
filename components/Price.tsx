@@ -8,10 +8,10 @@ import {
 } from "@mantine/core";
 import { IconCurrencyEuroOff } from "@tabler/icons-react";
 
-type Props = {
+interface Props {
   size?: "xs" | "sm" | "md";
   value: number;
-};
+}
 
 export default function Price({ size = "md", value }: Props) {
   return (

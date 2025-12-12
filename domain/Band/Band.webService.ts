@@ -8,7 +8,7 @@ import { Genre } from "@prisma/client";
 
 export const searchBands = async (
   name: string | undefined,
-  genres?: Array<Genre["id"]>,
+  genres?: Genre["id"][],
   page?: number,
 ): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
   const nameParam = name ? `name=${encodeURIComponent(name)}` : null;
@@ -61,7 +61,7 @@ export type EditBandArgs = Omit<
   BandWithGenres,
   "genres" | "createdAt" | "updatedAt"
 > & {
-  genres: Array<Genre["id"]>;
+  genres: Genre["id"][];
 };
 
 export const editBand = async (band: EditBandArgs): Promise<BandWithGenres> => {

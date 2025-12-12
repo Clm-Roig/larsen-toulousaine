@@ -24,13 +24,13 @@ import { getGigTitle } from "@/domain/Gig/Gig.service";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
-type Props = {
+interface Props {
   displayDate?: boolean;
   displayMissingDataOnly?: boolean;
   gig: GigPreview;
   listItemProps?: ListItemProps;
   withDivider: boolean;
-};
+}
 
 const PolymorphicListItem = createPolymorphicComponent<
   "LinkProps",
