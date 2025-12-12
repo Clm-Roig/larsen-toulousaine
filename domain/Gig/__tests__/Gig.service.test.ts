@@ -14,12 +14,12 @@ describe("Gig service", () => {
     it("contains band names & gig date", () => {
       const slug = computeGigSlug(gig);
       expect(slug).not.toContain(" ");
-      expect(slug).toContain(gig.date.getDate() + "");
-      expect(slug).toContain(gig.date.getMonth() + 1 + "");
-      expect(slug).toContain(gig.date.getFullYear() + "");
-      gigBands.forEach((band) =>
-        { expect(slug).toContain(band.name.toLowerCase().replaceAll(" ", "-")); },
-      );
+      expect(slug).toContain(gig.date.getDate().toString());
+      expect(slug).toContain((gig.date.getMonth() + 1).toString());
+      expect(slug).toContain(gig.date.getFullYear().toString());
+      gigBands.forEach((band) => {
+        expect(slug).toContain(band.name.toLowerCase().replaceAll(" ", "-"));
+      });
     });
   });
   describe("getDataFromGigSlug", () => {
@@ -36,21 +36,21 @@ describe("Gig service", () => {
       expect(date.getDate()).toEqual(gig.date.getDate());
       expect(date.getMonth()).toEqual(gig.date.getMonth()); // displayed month is +1 than date month
       expect(date.getFullYear()).toEqual(gig.date.getFullYear());
-      bandNames.forEach((bandName) =>
-        { expect(gigBands.some((b) => b.name === bandName)).toBe(true); },
-      );
+      bandNames.forEach((bandName) => {
+        expect(gigBands.some((b) => b.name === bandName)).toBe(true);
+      });
     });
   });
   describe("getGigTitleFromGigSlug", () => {
     it("get gig title from a gig slug, including gig date and band names", () => {
       const slug = computeGigSlug(gig);
       const gigTitle = getGigTitleFromGigSlug(slug);
-      expect(gigTitle).toContain(gig.date.getDate() + "");
-      expect(gigTitle).toContain(gig.date.getMonth() + 1 + "");
-      expect(gigTitle).toContain(gig.date.getFullYear() + "");
-      gigBands.forEach((band) =>
-        { expect(gigTitle.toLowerCase()).toContain(band.name.toLowerCase()); },
-      );
+      expect(gigTitle).toContain(gig.date.getDate().toString());
+      expect(gigTitle).toContain((gig.date.getMonth() + 1).toString());
+      expect(gigTitle).toContain(gig.date.getFullYear().toString());
+      gigBands.forEach((band) => {
+        expect(gigTitle.toLowerCase()).toContain(band.name.toLowerCase());
+      });
     });
   });
   describe("getGigRSSFeedDescription", () => {
@@ -58,19 +58,19 @@ describe("Gig service", () => {
       const rssFeedDescription = getGigRSSFeedDescription(gig);
       expect(rssFeedDescription).toContain(gig.place.name);
       expect(rssFeedDescription).toContain(gig.place.city);
-      expect(rssFeedDescription).toContain(gig.price + "");
+      expect(rssFeedDescription).toContain(gig.price?.toString());
       expect(rssFeedDescription).toContain(gig.ticketReservationLink);
-      gigBands.forEach((band) =>
-        { expect(rssFeedDescription.toLowerCase()).toContain(
+      gigBands.forEach((band) => {
+        expect(rssFeedDescription.toLowerCase()).toContain(
           band.name.toLowerCase(),
-        ); },
-      );
+        );
+      });
     });
   });
   describe("getGigCalendarDescription", () => {
     it("get a gig calendar description, including various info", () => {
       const calendarDescription = getGigCalendarDescription(gig);
-      expect(calendarDescription).toContain(gig.price + "");
+      expect(calendarDescription).toContain(gig.price?.toString());
       expect(calendarDescription).toContain(gig.ticketReservationLink);
     });
   });
@@ -78,7 +78,7 @@ describe("Gig service", () => {
     it("get gig price string", () => {
       const prefix = "myprefix";
       const priceString = formatGigPrice(prefix, gig.price);
-      expect(priceString).toContain(gig.price + "");
+      expect(priceString).toContain(gig.price?.toString());
       expect(priceString).toContain(prefix);
     });
     it("get free gig price string, including the words 'libre' and 'offert", () => {

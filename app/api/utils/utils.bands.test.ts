@@ -4,8 +4,7 @@ import { expect, describe, it } from "@jest/globals";
 describe("API Bands utils", () => {
   describe("validateCountryAndRegionCodes", () => {
     it("returns no message on empty data", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const testBothValues = (v: any) => {
+      const testBothValues = (v: string | null | undefined) => {
         expect(validateCountryAndRegionCodes(v)).toBeUndefined();
         expect(validateCountryAndRegionCodes(v, v)).toBeUndefined();
       };

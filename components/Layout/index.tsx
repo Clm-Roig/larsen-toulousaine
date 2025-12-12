@@ -126,7 +126,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
         }}
       >
         <Container fluid px={0}>
-          {breadcrumbsItems?.length > 0 && (
+          {breadcrumbsItems.length > 0 && (
             <Box style={{ overflowX: "clip" }}>
               <Breadcrumbs mb={4}>{breadcrumbsItems}</Breadcrumbs>
             </Box>
@@ -146,7 +146,9 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
                     <IconArrowUp style={{ width: rem(16), height: rem(16) }} />
                   }
                   style={transitionStyles}
-                  onClick={() => { scrollTo({ y: 0 }); }}
+                  onClick={() => {
+                    scrollTo({ y: 0 });
+                  }}
                   color="dark"
                 >
                   Haut de page

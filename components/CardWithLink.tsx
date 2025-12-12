@@ -17,6 +17,7 @@ export function CardWithLink({ children, href, ...cardProps }: Props) {
         style={{
           boxShadow: hovered ? `${theme.colors.primary[6]} 0px 1px 8px` : "",
           transition: `box-shadow ${theme.other.transitionDuration}`,
+          // eslint-disable-next-line @typescript-eslint/no-misused-spread
           ...cardProps.style,
         }}
       >

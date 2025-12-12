@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
@@ -22,6 +21,5 @@ const config = {
   setupFiles: ["<rootDir>/tests/data.ts"],
   testPathIgnorePatterns: ["__tests__/data.ts"],
 };
-
 
 module.exports = createJestConfig(config);

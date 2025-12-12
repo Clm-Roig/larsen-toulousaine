@@ -57,7 +57,7 @@ const BandPage = ({ bandId }: Props) => {
     queryKey: ["band", bandId],
     queryFn: async () => await getBand(bandId),
   });
-  const isDeletable = band?.gigs?.length === 0;
+  const isDeletable = band?.gigs.length === 0;
 
   const handleOnClose = () => {
     setSearchParams(null);
@@ -79,7 +79,7 @@ const BandPage = ({ bandId }: Props) => {
     if (
       isSuccess &&
       band?.name &&
-      breadcrumbs[breadcrumbs.length - 1].text !== band?.name // to avoid infinite loop
+      breadcrumbs[breadcrumbs.length - 1].text !== band.name // to avoid infinite loop
     ) {
       setBreadcrumbs([
         ...breadcrumbs.slice(0, -1),
@@ -143,7 +143,9 @@ const BandPage = ({ bandId }: Props) => {
             <Menu.Dropdown>
               <Menu.Item
                 leftSection={<IconEdit style={iconStyle} />}
-                onClick={() => { setSearchParams(new Map([["edit", "true"]])); }}
+                onClick={() => {
+                  setSearchParams(new Map([["edit", "true"]]));
+                }}
               >
                 Éditer
               </Menu.Item>
@@ -151,7 +153,9 @@ const BandPage = ({ bandId }: Props) => {
               <Menu.Item
                 disabled={!isDeletable}
                 leftSection={<IconTrash style={iconStyle} />}
-                onClick={() => { deleteBand(bandId); }}
+                onClick={() => {
+                  deleteBand(bandId);
+                }}
               >
                 {isDeletable ? (
                   "Supprimer"
@@ -173,7 +177,7 @@ const BandPage = ({ bandId }: Props) => {
       </Title>
 
       <Flex mt="md" direction={{ base: "column", md: "row" }} gap={"md"}>
-        {band && <BandInfo band={band} />}
+        <BandInfo band={band} />
       </Flex>
 
       <EditBandDrawer

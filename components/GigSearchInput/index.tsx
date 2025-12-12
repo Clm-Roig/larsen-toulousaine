@@ -19,23 +19,23 @@ const NB_CHAR_TO_LAUNCH_GIG_SEARCH = 2;
 export default function GigSearchInput() {
   const router = useRouter();
   const combobox = useCombobox({
-    onDropdownClose: () => { combobox.resetSelectedOption(); },
+    onDropdownClose: () => {
+      combobox.resetSelectedOption();
+    },
   });
   const [inputValue, setInputValue] = useDebouncedState("", 200);
 
-  const { data: gigs, isLoading } = useQuery<
-    GigWithBandsAndPlace[] | null
-  >({
+  const { data: gigs, isLoading } = useQuery<GigWithBandsAndPlace[] | null>({
     queryKey: ["searchedGigs", inputValue],
     queryFn: async () => {
-      if (!inputValue || inputValue?.length < NB_CHAR_TO_LAUNCH_GIG_SEARCH) {
+      if (!inputValue || inputValue.length < NB_CHAR_TO_LAUNCH_GIG_SEARCH) {
         return null;
       }
       return await searchGigs(inputValue);
     },
   });
 
-  const options = (gigs || []).map((gig) => <Option key={gig.id} gig={gig} />);
+  const options = (gigs ?? []).map((gig) => <Option key={gig.id} gig={gig} />);
 
   return (
     <>
@@ -55,11 +55,15 @@ export default function GigSearchInput() {
               combobox.resetSelectedOption();
               combobox.openDropdown();
             }}
-            onClick={() => { combobox.openDropdown(); }}
+            onClick={() => {
+              combobox.openDropdown();
+            }}
             onFocus={() => {
               combobox.openDropdown();
             }}
-            onBlur={() => { combobox.closeDropdown(); }}
+            onBlur={() => {
+              combobox.closeDropdown();
+            }}
             rightSection={isLoading && <Loader size={14} />}
             leftSection={<IconSearch />}
             maw={500}
@@ -70,14 +74,14 @@ export default function GigSearchInput() {
         <Combobox.Dropdown
           hidden={
             !inputValue ||
-            inputValue?.length < NB_CHAR_TO_LAUNCH_GIG_SEARCH ||
+            inputValue.length < NB_CHAR_TO_LAUNCH_GIG_SEARCH ||
             isLoading
           }
         >
           <Combobox.Options>
             <ScrollArea.Autosize mah={"80vh"} type="scroll">
               {options}
-              {options?.length === 0 && (
+              {options.length === 0 && (
                 <Combobox.Empty>Aucun concert trouvé</Combobox.Empty>
               )}
             </ScrollArea.Autosize>

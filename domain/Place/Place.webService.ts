@@ -37,7 +37,7 @@ export const editPlace = async (place: EditPlaceArgs): Promise<Place> => {
 
 export const deletePlace = async (placeId: string): Promise<void> => {
   try {
-    await api.delete<void>(`/places/${placeId}`);
+    await api.delete(`/places/${placeId}`);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
@@ -48,7 +48,9 @@ export const createPlace = async (place: CreatePlaceArgs): Promise<Place> => {
     const response = await api.post<Place>(`/places`, {
       ...place,
       // sometimes, latitude or longitude can be a string. This is due to the NumberInput component from Mantine
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
       latitude: place.latitude && Number(place.latitude),
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
       longitude: place.longitude && Number(place.longitude),
     });
     return response.data;

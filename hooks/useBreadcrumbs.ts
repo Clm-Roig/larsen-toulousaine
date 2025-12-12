@@ -44,9 +44,8 @@ export default function useBreadcrumbs(): {
       if (subpath.includes("_")) {
         text = getGigTitleFromGigSlug(decodeURIComponent(subpath));
       } else {
-        // TODO: quick dirty fix for french translation
-        // @ts-ignore
-        text = frenchBreadcrumbDictionnary[text] || text;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO: quick dirty fix for french translations
+        text = frenchBreadcrumbDictionnary[text] ?? text;
       }
       return {
         href,
@@ -54,7 +53,7 @@ export default function useBreadcrumbs(): {
       };
     });
 
-    if (crumbList?.length === 0) {
+    if (crumbList.length === 0) {
       setBreadcrumbs(tmpBreadcrumbs);
       return;
     }

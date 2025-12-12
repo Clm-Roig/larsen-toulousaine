@@ -118,7 +118,11 @@ export default function BandTable({
             {bands?.map((band) => (
               <Table.Tr
                 key={band.id}
-                onClick={() => { isLoading ? undefined : onRowClick(band.id); }}
+                onClick={() => {
+                  if (!isLoading) {
+                    onRowClick(band.id);
+                  }
+                }}
                 className={isLoading ? classes.rowLoading : classes.row}
               >
                 <Table.Td>
@@ -132,7 +136,7 @@ export default function BandTable({
                 <Table.Td>
                   <Group gap={2}>
                     {getSortedGenres(band.genres).map((genre) => (
-                      <GenreBadge key={genre?.id} genre={genre} size="sm" />
+                      <GenreBadge key={genre.id} genre={genre} size="sm" />
                     ))}
                     {band.isATribute && <IsATributeBadge />}
                   </Group>

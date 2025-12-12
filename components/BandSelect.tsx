@@ -37,21 +37,23 @@ export default function BandSelect({
   const [debouncedSearchInput] = useDebouncedValue(searchInput, 400);
   const [value, setValue] = useState<string | null>("");
 
-  const { data, isLoading, isFetched } = useQuery<
-    { bands: BandWithGenresAndGigCount[]; count: number } | null
-  >({
+  const { data, isLoading, isFetched } = useQuery<{
+    bands: BandWithGenresAndGigCount[];
+    count: number;
+  } | null>({
     queryKey: ["bandSearch", debouncedSearchInput],
     queryFn: async () =>
-      debouncedSearchInput?.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
+      debouncedSearchInput.length >= NB_CHAR_TO_LAUNCH_BAND_SEARCH
         ? await searchBands(debouncedSearchInput)
         : null,
   });
 
-  const { bands } = data || {};
+  const { bands } = data ?? {};
 
   // Workaround to prevent select to set the searchValue when an option is selected
   useEffect(() => {
     if (value) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue("");
       setSearchInput("");
     }
@@ -60,9 +62,7 @@ export default function BandSelect({
   const suggestions: BandSuggestion[] | undefined = bands?.reduce(
     (suggestions: BandSuggestion[], band) => {
       // if excluded, skip
-      if (
-        excludedBands?.some((excludedBand) => excludedBand.id === band?.id)
-      ) {
+      if (excludedBands?.some((excludedBand) => excludedBand.id === band.id)) {
         return suggestions;
       }
       // if another band has the same name, add the genres to the label
@@ -131,7 +131,7 @@ export default function BandSelect({
         suggestions?.map((s) => ({
           label: s.label,
           value: s.value.id,
-        })) || []
+        })) ?? []
       }
       rightSection={
         displayAddBandButton && (

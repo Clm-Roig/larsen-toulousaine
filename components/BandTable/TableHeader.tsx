@@ -50,18 +50,24 @@ export default function TableHeader({
           <TextInput
             rightSection={
               searchedName && (
-                <CloseButton onClick={() => { setSearchedName(""); }} />
+                <CloseButton
+                  onClick={() => {
+                    setSearchedName("");
+                  }}
+                />
               )
             }
             fw="initial"
             value={searchedName}
-            onChange={(event) => { setSearchedName(event.currentTarget.value); }}
+            onChange={(event) => {
+              setSearchedName(event.currentTarget.value);
+            }}
           />
         </NoPaddingTableTh>
         <NoPaddingTableTh>
           <GenreSelect
             clearable
-            genres={genres || []}
+            genres={genres}
             value={searchedGenres}
             onChange={setSearchedGenres}
             fw="initial"

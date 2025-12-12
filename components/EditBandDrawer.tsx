@@ -46,7 +46,7 @@ export function EditBandDrawer({
     validate: {
       name: (value) => (value ? null : "Le nom est requis."),
       genres: (value) => {
-        return value?.length > 0 ? null : "Au moins un genre est requis.";
+        return value.length > 0 ? null : "Au moins un genre est requis.";
       },
     },
   });
@@ -114,7 +114,7 @@ export function EditBandDrawer({
                 ...form.getInputProps(`countryCode`),
               }}
               genreProps={{
-                genres: genres || [],
+                genres: genres ?? [],
                 w: "100%",
                 ...form.getInputProps(`genres`),
               }}

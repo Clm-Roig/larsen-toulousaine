@@ -7,6 +7,7 @@ import {
 } from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
 import { BandPreview, BandWithGenres } from "@/domain/Band/Band.type";
+import { isAxiosError } from "axios";
 
 export const getGigs = async (
   from: Date,
@@ -60,7 +61,7 @@ export const getGigByDateAndPlaceId = async (
     );
     return response.data ?? null;
   } catch (error) {
-    if (error.response.status === 404) return null;
+    if (isAxiosError(error) && error.response?.status === 404) return null;
     throw new Error(getErrorMessage(error));
   }
 };
@@ -87,7 +88,7 @@ export const getNextGigSlug = async (
     );
     return response.data ?? null;
   } catch (error) {
-    if (error.response.status === 404) return null;
+    if (isAxiosError(error) && error.response?.status === 404) return null;
     throw new Error(getErrorMessage(error));
   }
 };
@@ -101,7 +102,7 @@ export const getPreviousGigSlug = async (
     );
     return response.data ?? null;
   } catch (error) {
-    if (error.response.status === 404) return null;
+    if (isAxiosError(error) && error.response?.status === 404) return null;
     throw new Error(getErrorMessage(error));
   }
 };
@@ -164,10 +165,10 @@ export const createGig = async (
 
 export type EditGigArgs = Gig & {
   bands: (Omit<Band, "id" | "genres"> & {
-      id: BandWithGenres["id"];
-      genres: Genre["id"][];
-      order: number;
-    })[];
+    id: BandWithGenres["id"];
+    genres: Genre["id"][];
+    order: number;
+  })[];
   imageFile?: File | null;
 };
 

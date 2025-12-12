@@ -39,16 +39,16 @@ export default function usePreferences() {
 
   const preferencesSum = useMemo(
     () =>
-      filteredGenres?.length +
+      filteredGenres.length +
       (!!maxPrice || maxPrice === 0 ? 1 : 0) +
-      excludedPlaces?.length,
-    [excludedPlaces?.length, filteredGenres?.length, maxPrice],
+      excludedPlaces.length,
+    [excludedPlaces.length, filteredGenres.length, maxPrice],
   );
 
   return {
     displayNotSafePlaces,
-    excludedPlaces: excludedPlaces || [],
-    filteredGenres: filteredGenres || [],
+    excludedPlaces: excludedPlaces,
+    filteredGenres: filteredGenres,
     grayOutPastGigs,
     maxPrice,
     preferencesSum,

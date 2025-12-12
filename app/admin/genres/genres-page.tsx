@@ -27,7 +27,7 @@ const Genres = () => {
           <GenreGrid genres={genres} />
         </Center>
       )}
-      {isError && <Alert color="red">{error?.message}</Alert>}
+      {isError && <Alert color="red">{error.message}</Alert>}
     </Layout>
   );
 };

@@ -62,7 +62,7 @@ export const gigToGigTypeString = (
   const result = gig.name
     ? gigTypeToString(GigType.FESTIVAL)
     : gigTypeToString(GigType.GIG);
-  const { capitalize } = options || {};
+  const { capitalize } = options;
   if (capitalize) {
     return capitalizeStr(result);
   }

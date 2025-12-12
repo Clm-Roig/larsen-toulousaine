@@ -77,12 +77,12 @@ export default function GigCompactInfo({
         </Group>
       )}
       <Group>
-        {(price || price === 0) && <Price value={price} size="xs" />}
+        {(!!price || price === 0) && <Price value={price} size="xs" />}
         <Text>
           {place.name}
           {place.city !== MAIN_CITY && (
             <Text span size="xs">
-              {` (${place.city?.toUpperCase()})`}
+              {` (${place.city.toUpperCase()})`}
             </Text>
           )}
         </Text>
