@@ -79,11 +79,11 @@ const { FESTIVAL, GIG } = GigType;
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
-type Props = {
+interface Props {
   gig?: GigWithBandsAndPlace;
   isLoading: boolean;
   onSubmit: (values: CreateGigArgs | EditGigArgs) => void;
-};
+}
 
 export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   const [imageFilePreview, setImageFilePreview] = useState<
@@ -91,11 +91,11 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   >(undefined);
   const [gigType, setGigType] = useState<GigType>(gig?.name ? FESTIVAL : GIG);
   const gigTypeString = useMemo(() => gigTypeToString(gigType), [gigType]);
-  const { data: genres } = useQuery<Genre[], Error>({
+  const { data: genres } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });
-  const { data: places } = useQuery<PlaceWithGigCount[], Error>({
+  const { data: places } = useQuery<PlaceWithGigCount[]>({
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
@@ -167,7 +167,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   const {
     data: samePlaceSameDayGig,
     isFetching: isLoadingSamePlaceSameDayGig,
-  } = useQuery<GigMinimal | null, Error>({
+  } = useQuery<GigMinimal | null>({
     queryKey: [
       "samePlaceSameDayGig",
       form.values.date,
@@ -236,7 +236,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     const date =
       isAFestival && !!dateRange[0]
         ? dateRange[0]
-        : (cleanedFormValues.date as Date);
+        : (cleanedFormValues.date!);
     const endDate = isAFestival && isRangeSameDay ? null : dateRange[1];
 
     onSubmit({
@@ -330,7 +330,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                   const date2 = value[1] ? new Date(value[1]) : null;
                   // Forced to type the function because getInputProps returns any
                   const onChange = form.getInputProps("dateRange").onChange as (
-                    dates: Array<Date | null>,
+                    dates: (Date | null)[],
                   ) => void;
                   // use dayjs to include timezone because Mantine Date has no timezone
                   onChange([
@@ -413,10 +413,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
         <DragDropContext
           onDragEnd={({ destination, source }) =>
-            form.reorderListItem("bands", {
+            { form.reorderListItem("bands", {
               from: source.index,
               to: destination?.index || 0,
-            })
+            }); }
           }
         >
           <Droppable droppableId="dnd-list" direction="vertical">
@@ -447,7 +447,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                             <ActionIcon
                               color="red"
                               onClick={() =>
-                                form.removeListItem("bands", index)
+                                { form.removeListItem("bands", index); }
                               }
                               size="lg"
                             >
@@ -509,7 +509,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             {`Privilégier l'image de couverture de l'évènement Facebook 
         (Clic droit sur l'image > Copier le lien de l'image) ou lien vers une image au ratio 
         `}
-            <b>{`${GIG_IMG_RATIO_STRING}`}</b>.
+            <b>{GIG_IMG_RATIO_STRING}</b>.
           </Text>
 
           <FileInput
@@ -518,7 +518,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             leftSection={<IconFile />}
             rightSection={
               !!form.getValues().imageFile && (
-                <CloseButton onClick={() => handleImageFileChange(null)} />
+                <CloseButton onClick={() => { handleImageFileChange(null); }} />
               )
             }
             placeholder="Uploader un fichier"
@@ -611,10 +611,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 form.getInputProps("hasTicketReservationLink").value,
               )}
               onChange={(value: string) =>
-                form.setFieldValue(
+                { form.setFieldValue(
                   "hasTicketReservationLink",
                   boolean3ChoicesFormValueToBool(value),
-                )
+                ); }
               }
             />
           </Box>
@@ -680,10 +680,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 form.getInputProps("isAcceptingBankCard").value,
               )}
               onChange={(value: string) =>
-                form.setFieldValue(
+                { form.setFieldValue(
                   "isAcceptingBankCard",
                   boolean3ChoicesFormValueToBool(value),
-                )
+                ); }
               }
             />
           </Box>

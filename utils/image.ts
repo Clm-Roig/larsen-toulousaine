@@ -11,7 +11,7 @@ export function getImageUrl(imageUrl: string | null | undefined) {
       /[`~!@#$%^&*()_|+\-=?;:'",.<>{}[\]\\/]/gi, // remove all special
       "",
     );
-    return `https://picsum.photos/seed/${seedUrl}/${640}/${360}`;
+    return `https://picsum.photos/seed/${seedUrl}/640/360`;
   }
   return imageUrl;
 }

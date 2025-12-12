@@ -10,11 +10,11 @@ export const getUsers = async (): Promise<UserWithGigCount[]> => {
   }
 };
 
-export type UpdatePasswordValues = {
+export interface UpdatePasswordValues {
   newPassword: string;
   newPasswordConfirmation: string;
   previousPassword: string;
-};
+}
 
 export const updatePassword = async (
   values: UpdatePasswordValues,

@@ -1,10 +1,10 @@
 import { Breadcrumb } from "@/domain/Breadcrumb";
 import React, { createContext, useState } from "react";
 
-type BreadcrumbContextType = {
+interface BreadcrumbContextType {
   breadcrumbs: Breadcrumb[];
   setBreadcrumbs: (newBreadcrumbs: Breadcrumb[]) => void;
-};
+}
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(
   undefined,

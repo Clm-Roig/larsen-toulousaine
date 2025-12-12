@@ -15,15 +15,15 @@ import { normalizeString } from "@/utils/utils";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 
 type Props = {
-  excludedBands?: Array<{ id?: Band["id"]; name: string }>;
+  excludedBands?: { id?: Band["id"]; name: string }[];
   onBandSelect: (selectedBand: BandWithGenres) => void;
   onNoSuggestions?: (currentValue: string) => void;
 } & SelectProps;
 
-type BandSuggestion = {
+interface BandSuggestion {
   label: string;
   value: BandWithGenres;
-};
+}
 
 const NB_CHAR_TO_LAUNCH_BAND_SEARCH = 2;
 
@@ -38,8 +38,7 @@ export default function BandSelect({
   const [value, setValue] = useState<string | null>("");
 
   const { data, isLoading, isFetched } = useQuery<
-    { bands: BandWithGenresAndGigCount[]; count: number } | null,
-    Error
+    { bands: BandWithGenresAndGigCount[]; count: number } | null
   >({
     queryKey: ["bandSearch", debouncedSearchInput],
     queryFn: async () =>
@@ -62,7 +61,6 @@ export default function BandSelect({
     (suggestions: BandSuggestion[], band) => {
       // if excluded, skip
       if (
-        excludedBands &&
         excludedBands?.some((excludedBand) => excludedBand.id === band?.id)
       ) {
         return suggestions;

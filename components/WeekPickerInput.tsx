@@ -37,13 +37,13 @@ function WeekPickerInput({
 
         const isInRange = isHovered || isSelected;
         return {
-          onMouseEnter: () => setHovered(dateObj),
-          onMouseLeave: () => setHovered(null),
+          onMouseEnter: () => { setHovered(dateObj); },
+          onMouseLeave: () => { setHovered(null); },
           inRange: isInRange,
           firstInRange: isInRange && dateObj.getDay() === 1, // Monday
           lastInRange: isInRange && dateObj.getDay() === 0, // Sunday
           selected: isSelected,
-          onClick: () => setSelectedDate(dateObj),
+          onClick: () => { setSelectedDate(dateObj); },
         };
       }}
       valueFormatter={({ date }) => {

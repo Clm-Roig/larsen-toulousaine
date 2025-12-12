@@ -31,7 +31,7 @@ import { Permission } from "@/domain/permissions";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
-type Props = { afterDeleteCallback?: () => void; gig: GigPreview };
+interface Props { afterDeleteCallback?: () => void; gig: GigPreview }
 
 export default function GigMenu({ afterDeleteCallback, gig }: Props) {
   const canEditGig = useHasPermission(Permission.EDIT_GIG);
@@ -147,7 +147,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
             {!isCanceled && <MantineMenu.Divider />}
             <MantineMenu.Item
               leftSection={<IconEdit style={iconStyle} />}
-              onClick={() => router.push(`/${slug}/edit`)}
+              onClick={() => { router.push(`/${slug}/edit`); }}
             >
               Éditer
             </MantineMenu.Item>
@@ -159,7 +159,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
                   <IconX style={iconStyle} />
                 )
               }
-              onClick={() => handleOnCancel()}
+              onClick={() => { handleOnCancel(); }}
             >
               {isCanceled ? "Désannuler" : "Annuler"}
             </MantineMenu.Item>
@@ -171,13 +171,13 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
                   <IconTicketOff style={iconStyle} />
                 )
               }
-              onClick={() => handleOnSoldOut()}
+              onClick={() => { handleOnSoldOut(); }}
             >
               {isSoldOut ? "Non-complet" : "Complet"}
             </MantineMenu.Item>
             <MantineMenu.Item
               leftSection={<IconTrash style={iconStyle} />}
-              onClick={() => handleOnDelete()}
+              onClick={() => { handleOnDelete(); }}
             >
               Supprimer
             </MantineMenu.Item>

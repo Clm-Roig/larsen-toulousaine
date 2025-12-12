@@ -25,7 +25,7 @@ import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
-type Props = {
+interface Props {
   bands: BandWithGenresAndGigCount[] | undefined;
   genres: Genre[];
   isLoading: boolean;
@@ -40,7 +40,7 @@ type Props = {
   setPage: (value: number) => void;
   setSearchedGenres: (value: Genre["id"][]) => void;
   setSearchedName: (value: string) => void;
-};
+}
 
 export default function BandTable({
   bands,
@@ -118,7 +118,7 @@ export default function BandTable({
             {bands?.map((band) => (
               <Table.Tr
                 key={band.id}
-                onClick={() => (isLoading ? undefined : onRowClick(band.id))}
+                onClick={() => { isLoading ? undefined : onRowClick(band.id); }}
                 className={isLoading ? classes.rowLoading : classes.row}
               >
                 <Table.Td>

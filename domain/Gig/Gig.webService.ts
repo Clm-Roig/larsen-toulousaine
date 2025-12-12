@@ -111,7 +111,7 @@ export type FromFormSimpleBand = Omit<
   "id" | "order" | "genres"
 > & {
   id?: Band["id"] | undefined;
-  genres: Array<Genre["id"]>;
+  genres: Genre["id"][];
   order?: number;
   key: string; // needed by the add gig form
 };
@@ -122,7 +122,7 @@ export type FormCreateGigArgs = Omit<
 > & {
   id?: string;
   createdAt?: Date;
-  bands: Array<FromFormSimpleBand>;
+  bands: FromFormSimpleBand[];
   imageFile?: File | null;
 };
 
@@ -133,7 +133,7 @@ export type CreateGigArgs = Omit<
   id?: string;
   createdAt?: Date;
   // order has been populated when sending to the API
-  bands: Array<Omit<FromFormSimpleBand, "order" | "key"> & { order: number }>;
+  bands: (Omit<FromFormSimpleBand, "order" | "key"> & { order: number })[];
   imageFile?: File | null;
 };
 
@@ -163,13 +163,11 @@ export const createGig = async (
 };
 
 export type EditGigArgs = Gig & {
-  bands: Array<
-    Omit<Band, "id" | "genres"> & {
+  bands: (Omit<Band, "id" | "genres"> & {
       id: BandWithGenres["id"];
-      genres: Array<Genre["id"]>;
+      genres: Genre["id"][];
       order: number;
-    }
-  >;
+    })[];
   imageFile?: File | null;
 };
 

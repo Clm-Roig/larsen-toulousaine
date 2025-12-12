@@ -56,7 +56,7 @@ const Bands = () => {
     error: getBandsError,
     isFetching,
     isError,
-  } = useQuery<{ bands: BandWithGenresAndGigCount[]; count: number }, Error>({
+  } = useQuery<{ bands: BandWithGenresAndGigCount[]; count: number }>({
     queryKey: ["bands", page, searchedGenres, debouncedSearchedName],
     queryFn: async () =>
       searchedGenres?.length > 0 || debouncedSearchedName
@@ -65,7 +65,7 @@ const Bands = () => {
     placeholderData: keepPreviousData,
   });
   const { bands, count } = data || {};
-  const { data: genres } = useQuery<Genre[], Error>({
+  const { data: genres } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });

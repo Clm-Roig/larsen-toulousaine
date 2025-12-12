@@ -55,7 +55,7 @@ const Lieux = () => {
     error: getPlacesError,
     isFetching,
     isError,
-  } = useQuery<PlaceWithGigCount[], Error>({
+  } = useQuery<PlaceWithGigCount[]>({
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });

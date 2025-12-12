@@ -17,12 +17,12 @@ import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import UnsafeIcon, { UnsafeType } from "../UnsafeIcon";
 import { getPlaceSizeLabel } from "@/app/api/utils/places";
 
-type Props = {
+interface Props {
   places: PlaceWithGigCount[] | undefined;
   isLoading: boolean;
   onDeletePlace: (place: Place) => void;
   onEditPlace: (place: Place) => void;
-};
+}
 
 export default function PlaceTable({
   places,
@@ -46,12 +46,12 @@ export default function PlaceTable({
   const getPlaceThrashIcon = (place: PlaceWithGigCount) =>
     place._count.gigs > 0 ? (
       <Tooltip label="Au moins un concert est rattaché à ce lieu: vous ne pouvez pas le supprimer.">
-        <ActionIcon color="red" onClick={() => onDeletePlace(place)} disabled>
+        <ActionIcon color="red" onClick={() => { onDeletePlace(place); }} disabled>
           <IconTrash />
         </ActionIcon>
       </Tooltip>
     ) : (
-      <ActionIcon color="red" onClick={() => onDeletePlace(place)}>
+      <ActionIcon color="red" onClick={() => { onDeletePlace(place); }}>
         <IconTrash />
       </ActionIcon>
     );
@@ -125,7 +125,7 @@ export default function PlaceTable({
                   <Table.Td>{gigsCount}</Table.Td>
                   <Table.Td>
                     <Group>
-                      <ActionIcon onClick={() => onEditPlace(place)}>
+                      <ActionIcon onClick={() => { onEditPlace(place); }}>
                         <IconEdit />
                       </ActionIcon>
                       {getPlaceThrashIcon(place)}

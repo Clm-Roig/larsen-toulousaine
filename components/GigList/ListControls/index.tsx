@@ -12,13 +12,13 @@ import { ViewType } from "@/domain/ViewType";
 import OptionsPopover from "@/components/GigList/ListControls/OptionsPopover";
 import DateSelector from "@/components/GigList/ListControls/DateSelector";
 
-type Props = {
+interface Props {
   dateStep: "month" | "week";
   genres?: Genre[];
   places?: Place[];
   selectedDate?: Date;
   setSelectedDate?: (newDate: Date) => void;
-};
+}
 
 export default function ListControls({
   dateStep,

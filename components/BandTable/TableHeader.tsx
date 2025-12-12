@@ -8,13 +8,13 @@ import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 import { useSession } from "next-auth/react";
 
-type Props = {
+interface Props {
   genres: Genre[];
   searchedGenres: Genre["id"][];
   searchedName: string;
   setSearchedGenres: (value: Genre["id"][]) => void;
   setSearchedName: (value: string) => void;
-};
+}
 
 const NoPaddingTableTh = (props: TableThProps) => (
   <Table.Th px={0} {...props}>
@@ -50,12 +50,12 @@ export default function TableHeader({
           <TextInput
             rightSection={
               searchedName && (
-                <CloseButton onClick={() => setSearchedName("")} />
+                <CloseButton onClick={() => { setSearchedName(""); }} />
               )
             }
             fw="initial"
             value={searchedName}
-            onChange={(event) => setSearchedName(event.currentTarget.value)}
+            onChange={(event) => { setSearchedName(event.currentTarget.value); }}
           />
         </NoPaddingTableTh>
         <NoPaddingTableTh>

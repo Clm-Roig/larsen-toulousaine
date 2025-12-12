@@ -10,9 +10,9 @@ import { SessionProvider, signOut, useSession } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 import { ReactNode, useState } from "react";
 
-type Props = {
+interface Props {
   children?: ReactNode;
-};
+}
 
 const AuthChecker = ({ children }: Props) => {
   const session = useSession();
@@ -32,12 +32,12 @@ const AuthChecker = ({ children }: Props) => {
     const {
       data: { user },
     } = session;
-    const previousToken = api.defaults.headers.common["Authorization"]
+    const previousToken = api.defaults.headers.common.Authorization
       ?.toString()
       .substring(7); // Remove "Bearer " using substring()
     const newToken = user?.accessToken;
     if (previousToken !== newToken) {
-      api.defaults.headers.common["Authorization"] =
+      api.defaults.headers.common.Authorization =
         `Bearer ${user?.accessToken}`;
     }
   }

@@ -45,9 +45,9 @@ const Row = ({ children }: { children: ReactNode }) => (
 
 const IconBlock = ({ children }) => <Flex>{children}</Flex>;
 
-type Props = {
+interface Props {
   gig: GigWithBandsAndPlace;
-};
+}
 
 export default function GigInfo({ gig }: Props) {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);

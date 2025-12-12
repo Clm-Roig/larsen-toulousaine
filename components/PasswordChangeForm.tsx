@@ -6,11 +6,11 @@ import { FormEvent } from "react";
 import { MIN_PASSWORD_LENGTH } from "@/domain/User/constants";
 import { UpdatePasswordValues } from "@/domain/User/User.webService";
 
-type Props = {
+interface Props {
   isLoading: boolean;
   isSuccess: boolean;
   onSubmit: (values: UpdatePasswordValues) => void;
-};
+}
 
 export default function PasswordChangeForm({ isLoading, onSubmit }: Props) {
   const form = useForm<UpdatePasswordValues>({
@@ -29,7 +29,7 @@ export default function PasswordChangeForm({ isLoading, onSubmit }: Props) {
       newPasswordConfirmation: (value, values) =>
         !value
           ? "Veuillez confirmer votre nouveau mot de passe."
-          : values["newPassword"] !== value
+          : values.newPassword !== value
             ? "Les deux mots de passe doivent correspondre."
             : null,
     },
