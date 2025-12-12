@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
 export interface CustomError {
-  name: string
-  message: string
-  frMessage: string
-  status: number
+  name: string;
+  message: string;
+  frMessage: string;
+  status: number;
 }
 
 export enum COMMON_ERROR_NAMES {

@@ -85,7 +85,7 @@ async function GET(request: NextRequest): Promise<
   if (from && to) {
     const gigs = await getGigsByDateFromTo(from, to, !user);
     if (acceptHeader === "text/markdown") {
-      const filteredGigs = gigs.filter(g => g.place.isSafe && !g.isCanceled);
+      const filteredGigs = gigs.filter((g) => g.place.isSafe && !g.isCanceled);
       const lineBreak = "\\n\\n";
       const discordMarkdownGigs = filteredGigs
         .map((gig) => {
@@ -164,13 +164,13 @@ const getGigsByName = async (
     select: defaultSelect,
     orderBy: [
       { date: Prisma.SortOrder.desc },
-      ...gigListOrderBy.filter(obj => !obj.date),
+      ...gigListOrderBy.filter((obj) => !obj.date),
     ],
     take: 10,
   });
-  const gigs = rawGigs.map(gig => ({
+  const gigs = rawGigs.map((gig) => ({
     ...gig,
-    bands: gig.bands.map(b => ({ ...b.band, order: b.order })),
+    bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
   }));
 
   return gigs;
@@ -191,19 +191,19 @@ const getGigsByDateFromTo = async (
       bands: {
         ...(isSafeGigsOnly
           ? {
-            every: {
-              band: {
-                isSafe: true,
+              every: {
+                band: {
+                  isSafe: true,
+                },
               },
-            },
-          }
+            }
           : {}),
       },
     },
     select: { ...defaultSelect },
     orderBy: gigListOrderBy,
   });
-  const gigs = rawGigs.map(gig => flattenGigBands(gig));
+  const gigs = rawGigs.map((gig) => flattenGigBands(gig));
 
   return gigs;
 };
@@ -215,11 +215,11 @@ const getGigByPlaceAndDate = async (
   const whereClause = {
     ...(date
       ? {
-        date: {
-          gte: dayjs(date).startOf("day").toDate(),
-          lte: dayjs(date).endOf("day").toDate(),
-        },
-      }
+          date: {
+            gte: dayjs(date).startOf("day").toDate(),
+            lte: dayjs(date).endOf("day").toDate(),
+          },
+        }
       : {}),
     ...(placeId ? { placeId: placeId } : {}),
   };
