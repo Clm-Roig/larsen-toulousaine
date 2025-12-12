@@ -19,13 +19,12 @@ const NB_CHAR_TO_LAUNCH_GIG_SEARCH = 2;
 export default function GigSearchInput() {
   const router = useRouter();
   const combobox = useCombobox({
-    onDropdownClose: () => combobox.resetSelectedOption(),
+    onDropdownClose: () => { combobox.resetSelectedOption(); },
   });
   const [inputValue, setInputValue] = useDebouncedState("", 200);
 
   const { data: gigs, isLoading } = useQuery<
-    GigWithBandsAndPlace[] | null,
-    Error
+    GigWithBandsAndPlace[] | null
   >({
     queryKey: ["searchedGigs", inputValue],
     queryFn: async () => {
@@ -56,11 +55,11 @@ export default function GigSearchInput() {
               combobox.resetSelectedOption();
               combobox.openDropdown();
             }}
-            onClick={() => combobox.openDropdown()}
+            onClick={() => { combobox.openDropdown(); }}
             onFocus={() => {
               combobox.openDropdown();
             }}
-            onBlur={() => combobox.closeDropdown()}
+            onBlur={() => { combobox.closeDropdown(); }}
             rightSection={isLoading && <Loader size={14} />}
             leftSection={<IconSearch />}
             maw={500}

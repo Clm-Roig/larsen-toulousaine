@@ -21,7 +21,7 @@ export function getPrismaOrderByFromRequest({
   validFields,
   defaultSort,
 }: SortOptions) {
-  const orderBy: Array<Record<string, unknown>> = [];
+  const orderBy: Record<string, unknown>[] = [];
 
   const sortFields = Array.isArray(sortBy) ? sortBy : sortBy ? [sortBy] : [];
   const sortOrders = Array.isArray(order) ? order : order ? [order] : [];

@@ -18,7 +18,7 @@ export enum GigType {
   FESTIVAL = "FESTIVAL",
 }
 
-export type GigPreview = {
+export interface GigPreview {
   id: Gig["id"];
   date: Gig["date"];
   endDate: Gig["endDate"];
@@ -32,16 +32,16 @@ export type GigPreview = {
   title: Gig["title"];
   place: PlacePreview;
   bands: BandPreviewWithOrder[];
-};
+}
 
-export type GigMinimal = {
+export interface GigMinimal {
   id: Gig["id"];
   title: Gig["title"];
   name: Gig["name"];
   date: Gig["date"];
   endDate: Gig["endDate"];
   bands: BandMinimal[];
-};
+}
 
 export const gigTypeToString = (gigType: GigType): string => {
   let result = "";
@@ -69,7 +69,7 @@ export const gigToGigTypeString = (
   return result;
 };
 
-export type MarkdownGigs = {
+export interface MarkdownGigs {
   discord: string;
   facebook: string;
-};
+}

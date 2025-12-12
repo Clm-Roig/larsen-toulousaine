@@ -24,9 +24,9 @@ import { getGigTitle } from "@/domain/Gig/Gig.service";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
-type Props = {
+interface Props {
   gigSlug: string;
-};
+}
 
 const IMAGE_MAX_HEIGHT = 250;
 
@@ -39,21 +39,20 @@ const GigPage = ({ gigSlug }: Props) => {
     data: gig,
     isLoading,
     isError,
-  } = useQuery<GigWithBandsAndPlace | null, Error>({
+  } = useQuery<GigWithBandsAndPlace | null>({
     queryKey: ["gig", gigSlug],
     queryFn: async () => await getGig(gigSlug),
   });
 
   const { data: nextGigSlug, isLoading: isLoadingNextGigSlug } = useQuery<
-    Gig["slug"] | null,
-    Error
+    Gig["slug"] | null
   >({
     queryKey: ["nextGigSlug", gigSlug],
     queryFn: async () => await getNextGigSlug(gigSlug),
   });
 
   const { data: previousGigSlug, isLoading: isLoadingPreviousGigSlug } =
-    useQuery<Gig["slug"] | null, Error>({
+    useQuery<Gig["slug"] | null>({
       queryKey: ["previousGigSlug", gigSlug],
       queryFn: async () => await getPreviousGigSlug(gigSlug),
     });

@@ -26,7 +26,7 @@ export function EditBandDrawer({
   isPending,
   ...drawerProps
 }: Props) {
-  const { data: genres } = useQuery<Genre[], Error>({
+  const { data: genres } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });
@@ -66,7 +66,7 @@ export function EditBandDrawer({
   form.watch("isLocal", ({ value, previousValue }) => {
     const { countryCode, regionCode } = form.getValues();
     if (
-      previousValue === false &&
+      !previousValue &&
       countryCode !== LOCAL_COUNTRY_CODE &&
       regionCode !== LOCAL_REGION_CODE
     ) {

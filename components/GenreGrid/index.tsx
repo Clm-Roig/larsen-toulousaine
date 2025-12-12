@@ -6,16 +6,14 @@ import { Genre } from "@prisma/client";
 import { getTextColorBasedOnBgColor } from "@/utils/color";
 import { getGenreColor } from "@/domain/Genre/Genre.service";
 
-type Props = {
+interface Props {
   genres: Genre[];
-};
+}
 
 export default function GenreGrid({ genres }: Props) {
-  const withColorGenres = genres.filter((g) => g.color !== null) as Array<
-    Genre & {
+  const withColorGenres = genres.filter((g) => g.color !== null) as (Genre & {
       color: string;
-    }
-  >;
+    })[];
   const withoutColorGenres = genres.filter((g) => !g.color);
 
   return (

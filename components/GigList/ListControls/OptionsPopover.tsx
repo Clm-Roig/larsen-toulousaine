@@ -27,10 +27,10 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 
-type Props = {
+interface Props {
   genres: Genre[];
   places: Place[];
-};
+}
 
 export default function OptionsPopover({ genres, places }: Props) {
   const canSeeUnsafePlace = useHasPermission(Permission.SEE_UNSAFE_PLACES);
@@ -75,7 +75,7 @@ export default function OptionsPopover({ genres, places }: Props) {
       onChange={setAreFiltersOpened}
     >
       <Popover.Target>
-        <Button onClick={() => setAreFiltersOpened(!areFiltersOpened)}>
+        <Button onClick={() => { setAreFiltersOpened(!areFiltersOpened); }}>
           Options{preferencesSum > 0 ? ` (${preferencesSum})` : ""}
         </Button>
       </Popover.Target>
@@ -83,7 +83,7 @@ export default function OptionsPopover({ genres, places }: Props) {
       <Popover.Dropdown maw={350} mah="50%" style={{ overflowY: "scroll" }}>
         <Stack gap="sm">
           <Box pos="absolute" top={0} right={0} m={4}>
-            <CloseButton onClick={() => setAreFiltersOpened(false)} />
+            <CloseButton onClick={() => { setAreFiltersOpened(false); }} />
           </Box>
 
           <Button
@@ -119,7 +119,7 @@ export default function OptionsPopover({ genres, places }: Props) {
           )}
 
           <NumberInput
-            leftSection={<CloseButton onClick={() => setMaxPrice("")} />}
+            leftSection={<CloseButton onClick={() => { setMaxPrice(""); }} />}
             allowNegative={false}
             suffix="€"
             label="Prix maximum"

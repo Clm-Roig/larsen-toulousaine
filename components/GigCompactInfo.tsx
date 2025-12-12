@@ -16,14 +16,14 @@ import GigMissingData from "@/components/GigMissingData";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
 
-type Props = {
+interface Props {
   displayDate: boolean;
   displayMissingDataOnly: boolean;
   filterOnGenreClick: boolean;
   gig: GigPreview | GigWithBandsAndPlace;
   hovered?: boolean;
   nbGenresDisplayed: number;
-};
+}
 
 export default function GigCompactInfo({
   displayDate,

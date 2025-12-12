@@ -17,7 +17,7 @@ export default function useMonthGigs() {
     data: gigs,
     isLoading,
     isFetched,
-  } = useQuery<GigPreview[], Error>({
+  } = useQuery<GigPreview[]>({
     queryKey: [
       "gigs",
       selectedMonthStart.toISOString(),

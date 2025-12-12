@@ -26,13 +26,13 @@ import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
-type BaseProps = {
+interface BaseProps {
   displayMissingDataOnly?: boolean;
   gigs?: GigPreview[];
   isLoading: boolean;
   listControlsBoxProps?: BoxProps;
   noGigsFoundMessage: string;
-};
+}
 
 type ConditionalProps =
   | {

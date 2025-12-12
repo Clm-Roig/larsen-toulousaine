@@ -3,19 +3,19 @@ import { GigWithBandsAndPlace } from "../Gig/Gig.type";
 
 export type BandWithOrder = Band & { order: number };
 
-export type BandMinimal = {
+export interface BandMinimal {
   id: Band["id"];
   name: Band["name"];
-};
+}
 
-export type BandPreview = {
+export interface BandPreview {
   id: Band["id"];
   genres: Genre[];
   isATribute: Band["isATribute"];
   isLocal: Band["isLocal"];
   isSafe: Band["isSafe"];
   name: Band["name"];
-};
+}
 
 export type BandPreviewWithOrder = BandPreview & {
   order: BandsOnGigs["order"];

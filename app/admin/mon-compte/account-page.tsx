@@ -17,7 +17,7 @@ export default function AccountPage() {
   const { data: session } = useSession();
   const { isPending, isSuccess, mutate, error } = useMutation({
     mutationFn: async (values: UpdatePasswordValues) =>
-      await updatePassword(values),
+      { await updatePassword(values); },
     onSuccess: () => {
       notifications.show({
         color: "green",

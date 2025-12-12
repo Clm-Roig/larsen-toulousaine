@@ -13,9 +13,9 @@ import { getGig } from "@/domain/Gig/Gig.webService";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { getMetadata } from "@/utils/metadata";
 
-type Props = {
+interface Props {
   params: Promise<{ slug: string }>;
-};
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
