@@ -33,7 +33,7 @@ export default function GigMissingData({ gig }: Props) {
           <ListItem>Présence d&apos;une billetterie à confirmer</ListItem>
         )}
         {!price && price !== 0 && <ListItem>Prix</ListItem>}
-        {bands?.length <= 1 && <ListItem>Groupe(s)</ListItem>}
+        {bands.length <= 1 && <ListItem>Groupe(s)</ListItem>}
         {!facebookEventUrl && (
           <ListItem>URL de l&apos;évènement Facebook</ListItem>
         )}

@@ -10,20 +10,20 @@ export default function useFilteredGigs(gigs: GigPreview[]) {
     () =>
       gigs
         // Genre(s) filtering
-        ?.filter(
+        .filter(
           (gig) =>
             gig.bands.length === 0 ||
-            filteredGenres?.length === 0 ||
+            filteredGenres.length === 0 ||
             gig.bands.some((band) =>
               band.genres.some((genre) =>
-                filteredGenres?.map((g) => g.id).includes(genre.id),
+                filteredGenres.map((g) => g.id).includes(genre.id),
               ),
             ),
         )
         // Place(s) filtering
         .filter(
           (gig) =>
-            !excludedPlaces?.includes(gig.place.id) &&
+            !excludedPlaces.includes(gig.place.id) &&
             (displayNotSafePlaces || gig.place.isSafe),
         )
         // Price filtering

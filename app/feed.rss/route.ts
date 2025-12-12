@@ -10,7 +10,7 @@ export async function GET() {
     title: "Larsen Toulousaine",
     description: "Liste des concerts référencés par Larsen Toulousaine",
     feed_url: `${process.env.NEXT_PUBLIC_URL}/feed.xml`,
-    site_url: process.env.NEXT_PUBLIC_URL + "",
+    site_url: String(process.env.NEXT_PUBLIC_URL),
     language: "fr",
     image_url: `${process.env.NEXT_PUBLIC_URL}/images/icon.png`,
     categories: ["musique"],

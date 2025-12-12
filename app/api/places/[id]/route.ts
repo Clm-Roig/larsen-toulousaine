@@ -12,11 +12,13 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(request: NextRequest) {
-  const body = (await request.json()) as EditPlaceArgs;
-  if (!body) {
+  let body: EditPlaceArgs;
+  try {
+    body = (await request.json()) as EditPlaceArgs;
+  } catch {
     return toResponse(missingBodyError);
   }
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
@@ -61,7 +63,7 @@ export async function DELETE(
 ) {
   const { id: rawId } = await params;
   const id = decodeURIComponent(rawId);
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }

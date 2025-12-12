@@ -51,7 +51,7 @@ export default function OptionsPopover({ genres, places }: Props) {
     setMaxPrice,
   } = usePreferences();
 
-  const areAllPlacesIncluded = excludedPlaces?.length === 0;
+  const areAllPlacesIncluded = excludedPlaces.length === 0;
 
   const handleGenreSelect = (genreIds: string[]) => {
     setFilteredGenres(genres.filter((g) => genreIds.includes(g.id)));
@@ -75,7 +75,11 @@ export default function OptionsPopover({ genres, places }: Props) {
       onChange={setAreFiltersOpened}
     >
       <Popover.Target>
-        <Button onClick={() => { setAreFiltersOpened(!areFiltersOpened); }}>
+        <Button
+          onClick={() => {
+            setAreFiltersOpened(!areFiltersOpened);
+          }}
+        >
           Options{preferencesSum > 0 ? ` (${preferencesSum})` : ""}
         </Button>
       </Popover.Target>
@@ -83,7 +87,11 @@ export default function OptionsPopover({ genres, places }: Props) {
       <Popover.Dropdown maw={350} mah="50%" style={{ overflowY: "scroll" }}>
         <Stack gap="sm">
           <Box pos="absolute" top={0} right={0} m={4}>
-            <CloseButton onClick={() => { setAreFiltersOpened(false); }} />
+            <CloseButton
+              onClick={() => {
+                setAreFiltersOpened(false);
+              }}
+            />
           </Box>
 
           <Button
@@ -119,7 +127,13 @@ export default function OptionsPopover({ genres, places }: Props) {
           )}
 
           <NumberInput
-            leftSection={<CloseButton onClick={() => { setMaxPrice(""); }} />}
+            leftSection={
+              <CloseButton
+                onClick={() => {
+                  setMaxPrice("");
+                }}
+              />
+            }
             allowNegative={false}
             suffix="€"
             label="Prix maximum"

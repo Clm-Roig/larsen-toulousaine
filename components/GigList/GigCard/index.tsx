@@ -97,7 +97,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
             {!displayMissingDataOnly && (
               <Group gap={4}>
                 {bandGenres.slice(0, 8).map((genre) => (
-                  <GenreBadge key={genre?.id} genre={genre} filterOnClick />
+                  <GenreBadge key={genre.id} genre={genre} filterOnClick />
                 ))}
                 {isATribute && <IsATributeBadge />}
               </Group>
@@ -114,14 +114,14 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
               {place.name}
               {place.city !== MAIN_CITY && (
                 <Text span size="xs">
-                  {` (${place.city?.toUpperCase()})`}
+                  {` (${place.city.toUpperCase()})`}
                 </Text>
               )}
             </Text>
             {/* Flex property is here to make it take the width of its content, without resizing. */}
             <Group gap="xs" flex="0 0 auto">
               {isSoldOut && <SoldOutIcon />}
-              {(price || price === 0) && <Price value={price} size="sm" />}
+              {(!!price || price === 0) && <Price value={price} size="sm" />}
             </Group>
           </Group>
         </Stack>

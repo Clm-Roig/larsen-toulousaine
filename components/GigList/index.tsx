@@ -125,12 +125,12 @@ const GigList = ({
                         const nextGig = gigs[idx + 1];
                         const previousGig = gigs[idx - 1];
                         const hasAnEndDate = !!gig.endDate;
-                        const previousGigHasEndDate = !!previousGig?.endDate;
-                        const isNextGigSameDay = dayjs(nextGig?.date).isSame(
+                        const previousGigHasEndDate = !!previousGig.endDate;
+                        const isNextGigSameDay = dayjs(nextGig.date).isSame(
                           gig.date,
                         );
                         const isPreviousGigSameDay = dayjs(
-                          previousGig?.date,
+                          previousGig.date,
                         ).isSame(gig.date);
                         return (
                           <GigListItem

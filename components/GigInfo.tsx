@@ -68,8 +68,8 @@ export default function GigInfo({ gig }: Props) {
   } = gig;
   const { latitude, longitude } = place;
   const addressAndCity =
-    place.address && place?.city
-      ? `${place?.address} - ${place?.city?.toUpperCase()}`
+    place.address && place.city
+      ? `${place.address} - ${place.city.toUpperCase()}`
       : undefined;
   const iconProps = {
     size: isXSmallScreen ? 20 : 28,
@@ -115,10 +115,10 @@ export default function GigInfo({ gig }: Props) {
             <IconBrandFacebook />
           </ActionIcon>
         )}
-        {!isCanceled && gig && <AddGigToCalendarButton gig={gig} />}
+        {!isCanceled && <AddGigToCalendarButton gig={gig} />}
       </Row>
 
-      {bands?.length > 0 && (
+      {bands.length > 0 && (
         <Row>
           <IconBlock>
             <IconMusic {...iconProps} />
@@ -126,7 +126,7 @@ export default function GigInfo({ gig }: Props) {
           <Divider orientation="vertical" />
           <Stack gap={4}>
             {bands
-              ?.sort((b1, b2) => b1.order - b2.order)
+              .sort((b1, b2) => b1.order - b2.order)
               .map((band) => (
                 <Flex
                   key={band.id}
@@ -141,7 +141,7 @@ export default function GigInfo({ gig }: Props) {
                   {!band.isSafe && <UnsafeIcon unsafeType={UnsafeType.BAND} />}
                   <Flex columnGap={4}>
                     {getSortedGenres(band.genres).map((genre) => (
-                      <GenreBadge key={genre?.id} genre={genre} />
+                      <GenreBadge key={genre.id} genre={genre} />
                     ))}
                   </Flex>
                   {band.isATribute && <IsATributeBadge />}
@@ -177,7 +177,7 @@ export default function GigInfo({ gig }: Props) {
           <Divider orientation="vertical" />
           <Stack gap={4}>
             <Group>
-              {(price || price === 0) && <Price value={price} />}
+              {(!!price || price === 0) && <Price value={price} />}
               {isSoldOut && <SoldOutIcon />}
             </Group>
             {ticketReservationLink && (
@@ -209,12 +209,12 @@ export default function GigInfo({ gig }: Props) {
         <Divider orientation="vertical" />
         <Stack gap={0}>
           <Group gap="xs" style={{ alignItems: "center" }}>
-            {place?.website ? (
-              <ExternalLink href={place?.website} fw="bold">
+            {place.website ? (
+              <ExternalLink href={place.website} fw="bold">
                 {place.name}
               </ExternalLink>
             ) : (
-              <Text fw="bold">{place?.name}</Text>
+              <Text fw="bold">{place.name}</Text>
             )}
             {!place.isSafe && <UnsafeIcon unsafeType={UnsafeType.PLACE} />}
           </Group>

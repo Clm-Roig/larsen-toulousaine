@@ -28,7 +28,7 @@ export default function InfosManquantesPage() {
     <GigList
       dateStep="month"
       displayMissingDataOnly
-      genres={genres || []}
+      genres={genres ?? []}
       gigs={gigs}
       isLoading={isLoading}
       noGigsFoundMessage={
@@ -37,7 +37,7 @@ export default function InfosManquantesPage() {
           ? "\nVos options masquent peut-être certains concerts..."
           : "")
       }
-      places={filteredPlaces || []}
+      places={filteredPlaces ?? []}
       withListControls
     />
   );

@@ -52,7 +52,11 @@ export default function ListControls({
         { label: "Grille", value: ViewType.GRID },
         { label: "Liste", value: ViewType.LIST },
       ]}
-      onChange={(data) => (data ? setViewType(data as ViewType) : null)}
+      onChange={(data) => {
+        if (data) {
+          setViewType(data as ViewType);
+        }
+      }}
       value={viewType}
     />
   );

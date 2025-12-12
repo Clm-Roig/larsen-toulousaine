@@ -56,7 +56,7 @@ export default function useWeekGigs() {
     });
   }, [queryClient, selectedWeekEnd, selectedWeekStart]);
 
-  const filteredGigs = useFilteredGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs ?? []);
 
   return {
     isLoading: isLoading,

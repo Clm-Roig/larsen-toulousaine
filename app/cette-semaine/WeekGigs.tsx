@@ -50,7 +50,7 @@ export default function WeekGigs() {
     <>
       <GigList
         dateStep="week"
-        genres={genres || []}
+        genres={genres ?? []}
         gigs={weekGigs}
         isLoading={isLoading}
         noGigsFoundMessage={
@@ -59,7 +59,7 @@ export default function WeekGigs() {
             ? "\nVos options masquent peut-être certains concerts..."
             : "")
         }
-        places={filteredPlaces || []}
+        places={filteredPlaces ?? []}
         selectedDate={selectedWeek}
         setSelectedDate={setSelectedWeek}
         withListControls
@@ -83,7 +83,7 @@ export default function WeekGigs() {
             <>
               <Divider my="md" />
               <Box w="fit-content" m="auto">
-                <CopyButton value={discordContent || ""}>
+                <CopyButton value={discordContent ?? ""}>
                   {({ copied, copy }) => (
                     <Button color={copied ? "teal" : "primary"} onClick={copy}>
                       {copied ? "Copié !" : "Copier le post Discord"}
@@ -102,7 +102,7 @@ export default function WeekGigs() {
               </pre>
 
               <Box w="fit-content" m="auto" mt="xl">
-                <CopyButton value={facebookContent || ""}>
+                <CopyButton value={facebookContent ?? ""}>
                   {({ copied, copy }) => (
                     <Button color={copied ? "teal" : "primary"} onClick={copy}>
                       {copied ? "Copié !" : "Copier le post Facebook"}

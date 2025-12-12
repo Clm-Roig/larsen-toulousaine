@@ -21,7 +21,7 @@ export default function AddGigToCalendarButton({
   const theme = useMantineTheme();
   const computedColorSchem = useComputedColorScheme("light");
   const style = `--btn-underline: ${theme.colors.primary[6]} !important;`;
-  const { date, endDate, imageUrl, place } = gig || {};
+  const { date, endDate, imageUrl, place } = gig;
   const gigTitle = getGigTitle(gig);
   const gigType = gigToGigTypeString(gig);
   const name = `${gigType} : ${gigTitle}`;
@@ -49,12 +49,12 @@ export default function AddGigToCalendarButton({
         "Yahoo",
       ]}
       location={
-        place?.address
-          ? `${place?.name}, ${place?.address}, ${place.city}`
+        place.address
+          ? `${place.name}, ${place.address}, ${place.city}`
           : undefined
       }
       startDate={dayjs(date).format("YYYY-MM-DD")}
-      endDate={dayjs(endDate ? endDate : date).format("YYYY-MM-DD")}
+      endDate={dayjs(endDate ?? date).format("YYYY-MM-DD")}
       timeZone="Europe/Paris"
       images={imageUrl ? [imageUrl] : []}
       description={getGigCalendarDescription(gig)}
