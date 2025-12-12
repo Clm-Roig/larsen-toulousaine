@@ -37,7 +37,9 @@ export default function GenreBadge({
         ...(hovered && filterOnClick ? { filter: "brightness(0.8)" } : {}),
       }}
       radius="lg"
-      onClick={(e) => { handleOnClick(e, genre); }}
+      onClick={(e) => {
+        handleOnClick(e, genre);
+      }}
       {...badgeProps}
     >
       {genre.name}

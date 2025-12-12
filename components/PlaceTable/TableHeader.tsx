@@ -33,7 +33,9 @@ export default function TableHeader({
           <TextInput
             fw="initial"
             value={searchedName}
-            onChange={(event) => { setSearchedName(event.currentTarget.value); }}
+            onChange={(event) => {
+              setSearchedName(event.currentTarget.value);
+            }}
           />
         </Table.Th>
         <Table.Th></Table.Th>
@@ -41,7 +43,9 @@ export default function TableHeader({
           <TextInput
             fw="initial"
             value={searchedCity}
-            onChange={(event) => { setSearchedCity(event.currentTarget.value); }}
+            onChange={(event) => {
+              setSearchedCity(event.currentTarget.value);
+            }}
           />
         </Table.Th>
         <Table.Th></Table.Th>

@@ -14,9 +14,9 @@ export default function SchemeSwitcher(actionIconProps: ActionIconProps) {
   });
   return (
     <ActionIcon
-      onClick={() =>
-        { setColorScheme(computedColorScheme === "light" ? "dark" : "light"); }
-      }
+      onClick={() => {
+        setColorScheme(computedColorScheme === "light" ? "dark" : "light");
+      }}
       aria-label="Toggle color scheme"
       size="compact-md"
       {...actionIconProps}
