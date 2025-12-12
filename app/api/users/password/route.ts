@@ -19,16 +19,21 @@ import {
   toResponse,
 } from "@/domain/errors";
 
+interface NewPasswordPayload {
+  newPassword: string;
+  previousPassword: string;
+}
+
 export async function PUT(request: NextRequest) {
-  let body;
+  let body: NewPasswordPayload;
   try {
-    body = await request.json();
+    body = (await request.json()) as NewPasswordPayload;
   } catch {
     return toResponse(missingBodyError);
   }
 
   // Validate data
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }

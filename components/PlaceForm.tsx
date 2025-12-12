@@ -16,14 +16,14 @@ import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import { isValidUrl, normalizeString } from "@/utils/utils";
 import PlaceFields from "./PlaceFields";
 
-type Props = {
+interface Props {
   place?: PlaceWithGigCount;
   isLoading: boolean;
   onSubmit: (values: CreatePlaceArgs | EditPlaceArgs) => void;
-};
+}
 
 export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
-  const { data: places } = useQuery<Place[], Error>({
+  const { data: places } = useQuery<Place[]>({
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });

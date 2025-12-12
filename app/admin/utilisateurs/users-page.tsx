@@ -14,7 +14,7 @@ const Users = () => {
     error,
     isLoading,
     isError,
-  } = useQuery<UserWithGigCount[], Error>({
+  } = useQuery<UserWithGigCount[]>({
     queryKey: ["users"],
     queryFn: async () => await getUsers(),
   });
@@ -27,7 +27,7 @@ const Users = () => {
           <UserList users={users} />
         </Center>
       )}
-      {isError && <Alert color="red">{error?.message}</Alert>}
+      {isError && <Alert color="red">{error.message}</Alert>}
     </Layout>
   );
 };

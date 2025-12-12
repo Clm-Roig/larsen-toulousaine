@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/utils/authOptions";
 
 export async function GET(request: NextRequest) {
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   const canSeeUnsafeBands = !!user;
   const searchParams = request.nextUrl.searchParams;
   const page = searchParams.get("page");

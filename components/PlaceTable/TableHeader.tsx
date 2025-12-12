@@ -3,12 +3,12 @@
 import { Table, TextInput } from "@mantine/core";
 import AddPlaceButton from "../AddButton/AddPlaceButton";
 
-type Props = {
+interface Props {
   searchedName: string;
   setSearchedName: (value: string) => void;
   searchedCity: string;
   setSearchedCity: (value: string) => void;
-};
+}
 
 export default function TableHeader({
   searchedName,
@@ -33,7 +33,9 @@ export default function TableHeader({
           <TextInput
             fw="initial"
             value={searchedName}
-            onChange={(event) => setSearchedName(event.currentTarget.value)}
+            onChange={(event) => {
+              setSearchedName(event.currentTarget.value);
+            }}
           />
         </Table.Th>
         <Table.Th></Table.Th>
@@ -41,7 +43,9 @@ export default function TableHeader({
           <TextInput
             fw="initial"
             value={searchedCity}
-            onChange={(event) => setSearchedCity(event.currentTarget.value)}
+            onChange={(event) => {
+              setSearchedCity(event.currentTarget.value);
+            }}
           />
         </Table.Th>
         <Table.Th></Table.Th>

@@ -5,16 +5,16 @@ export const getUsers = async (): Promise<UserWithGigCount[]> => {
   try {
     const response = await api.get<{ users: UserWithGigCount[] }>(`/users`);
     return response.data.users;
-  } catch (error) {
+  } catch (error: unknown) {
     throw new Error(getErrorMessage(error));
   }
 };
 
-export type UpdatePasswordValues = {
+export interface UpdatePasswordValues {
   newPassword: string;
   newPasswordConfirmation: string;
   previousPassword: string;
-};
+}
 
 export const updatePassword = async (
   values: UpdatePasswordValues,

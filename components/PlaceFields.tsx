@@ -104,7 +104,7 @@ export default function PlaceFields({
           isSafeProps.value ? "Le lieu est safe" : "Le lieu n'est pas safe"
         }
         // @ts-ignore onChange is wrongly typed here by Mantine I think (but not sure)
-        onChange={(e) => isSafeProps.onChange?.(e.currentTarget?.checked)}
+        onChange={(e) => isSafeProps.onChange?.(e.currentTarget.checked)}
         thumbIcon={
           isSafeProps.checked ? (
             <IconCheck
@@ -127,7 +127,7 @@ export default function PlaceFields({
           isClosedProps.value ? "Le lieu est fermé" : "Le lieu est en activité"
         }
         // @ts-ignore onChange is wrongly typed here by Mantine I think (but not sure)
-        onChange={(e) => isClosedProps.onChange?.(!e.currentTarget?.checked)}
+        onChange={(e) => isClosedProps.onChange?.(!e.currentTarget.checked)}
         thumbIcon={
           isClosedProps.checked ? (
             <IconX

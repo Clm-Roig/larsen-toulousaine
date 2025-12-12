@@ -8,10 +8,10 @@ export type PlaceWithGigCount = Prisma.PlaceGetPayload<{
   };
 }>;
 
-export type PlacePreview = {
+export interface PlacePreview {
   id: Place["id"];
   address: Place["address"];
   name: Place["name"];
   city: Place["city"];
   isSafe: Place["isSafe"];
-};
+}

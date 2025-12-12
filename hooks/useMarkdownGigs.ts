@@ -16,7 +16,7 @@ export default function useMarkdownGigs({
     Permission.SEE_WEEKLY_GIGS_MARKDOWN,
   );
 
-  const { data: gigs, isLoading } = useQuery<MarkdownGigs, Error>({
+  const { data: gigs, isLoading } = useQuery<MarkdownGigs>({
     queryKey: ["markdownGigs", startDate.toISOString(), endDate.toISOString()],
     queryFn: async () => await getMarkdownGigs(startDate, endDate),
     enabled: canSeeWeeklyGigsMarkdown,

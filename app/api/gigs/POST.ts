@@ -27,7 +27,7 @@ import { File } from "buffer";
 
 async function POST(request: NextRequest) {
   // Check auth
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
@@ -37,14 +37,14 @@ async function POST(request: NextRequest) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rawData: { data: any } = { data: null };
   formData.forEach((value, key) => (rawData[key] = value));
-  const body: CreateGigArgs = JSON.parse(rawData.data);
-
-  // Check body and file
-  if (!body) {
+  let body: CreateGigArgs;
+  try {
+    body = JSON.parse(rawData.data as string) as CreateGigArgs;
+  } catch {
     return toResponse(missingBodyError);
   }
   const imageFile = formData.get("file") as unknown as File;
-  if (imageFile && imageFile?.size > MAX_IMAGE_SIZE) {
+  if (imageFile.size > MAX_IMAGE_SIZE) {
     return toResponse(tooBigImageFileError);
   }
 
@@ -76,7 +76,7 @@ async function POST(request: NextRequest) {
     });
 
     let blobImageUrl: string | undefined = undefined;
-    if (imageUrl || imageFile) {
+    if (imageUrl) {
       const arrayBufferImg = imageUrl
         ? await downloadImage(imageUrl)
         : await imageFile.arrayBuffer();
@@ -111,9 +111,7 @@ async function POST(request: NextRequest) {
           ? removeParametersFromUrl(facebookEventUrl)
           : null,
         imageUrl: blobImageUrl,
-        isAcceptingBankCard: body.isAcceptingBankCard
-          ? body.isAcceptingBankCard
-          : null,
+        isAcceptingBankCard: body.isAcceptingBankCard ?? null,
         place: { connect: { id: body.placeId } },
         slug: slug,
         ticketReservationLink: body.hasTicketReservationLink
@@ -122,7 +120,7 @@ async function POST(request: NextRequest) {
       }),
       include: { bands: true },
     });
-    if (createdBands?.length > 0) {
+    if (createdBands.length > 0) {
       revalidatePath("bands");
     }
     return NextResponse.json(createdGig);
@@ -147,8 +145,10 @@ async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (error.name && error.name === invalidImageUrlError.name) {
-      return toResponse(error as CustomError);
+    if (error instanceof Error) {
+      if (error.name && error.name === invalidImageUrlError.name) {
+        return toResponse(error as CustomError);
+      }
     }
     return NextResponse.json(
       { message: "An unexpected error occured." },

@@ -13,9 +13,9 @@ import { getGig } from "@/domain/Gig/Gig.webService";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { getMetadata } from "@/utils/metadata";
 
-type Props = {
+interface Props {
   params: Promise<{ slug: string }>;
-};
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const gigTitle = getGigTitleFromGigSlug(decodedSlug);
   const dateString =
     // check if gigDate is a valid date (for a festival, it's not because there is only the year)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     gigDate && !isNaN(gigDate.getTime())
       ? " le " + dayjs(gigDate).format("dddd D MMMM YYYY")
       : date;

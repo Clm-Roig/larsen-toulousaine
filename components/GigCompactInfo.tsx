@@ -16,14 +16,14 @@ import GigMissingData from "@/components/GigMissingData";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
 
-type Props = {
+interface Props {
   displayDate: boolean;
   displayMissingDataOnly: boolean;
   filterOnGenreClick: boolean;
   gig: GigPreview | GigWithBandsAndPlace;
   hovered?: boolean;
   nbGenresDisplayed: number;
-};
+}
 
 export default function GigCompactInfo({
   displayDate,
@@ -77,12 +77,12 @@ export default function GigCompactInfo({
         </Group>
       )}
       <Group>
-        {(price || price === 0) && <Price value={price} size="xs" />}
+        {(!!price || price === 0) && <Price value={price} size="xs" />}
         <Text>
           {place.name}
           {place.city !== MAIN_CITY && (
             <Text span size="xs">
-              {` (${place.city?.toUpperCase()})`}
+              {` (${place.city.toUpperCase()})`}
             </Text>
           )}
         </Text>

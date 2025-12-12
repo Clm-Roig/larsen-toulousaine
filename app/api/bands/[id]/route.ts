@@ -23,11 +23,14 @@ import {
 } from "@/domain/Place/constants";
 
 export async function PUT(request: NextRequest) {
-  const body = (await request.json()) as EditBandArgs;
-  if (!body) {
+  let body: EditBandArgs;
+  try {
+    body = (await request.json()) as EditBandArgs;
+  } catch {
     return toResponse(missingBodyError);
   }
-  const { user } = (await getServerSession(authOptions)) || {};
+
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
@@ -96,7 +99,7 @@ export async function DELETE(
 ) {
   const { id: rawId } = await params;
   const id = decodeURIComponent(rawId);
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
@@ -113,8 +116,14 @@ export async function DELETE(
 
     // Trying to delete a band related to a gig
     if (
-      error?.code === "P2003" &&
-      error?.meta?.field_name === "BandsOnGigs_bandId_fkey (index)"
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      "meta" in error &&
+      (error as { code: string; meta?: { field_name?: string } }).code ===
+        "P2003" &&
+      (error as { code: string; meta?: { field_name?: string } }).meta
+        ?.field_name === "BandsOnGigs_bandId_fkey (index)"
     ) {
       return toResponse(cantDeleteBandBecauseInGigError());
     }

@@ -10,11 +10,11 @@ import useMissingDataGigs from "@/hooks/useMissingDataGigs";
 
 export default function InfosManquantesPage() {
   const { displayNotSafePlaces, preferencesSum } = usePreferences();
-  const { data: genres } = useQuery<Genre[], Error>({
+  const { data: genres } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: async () => await getGenres(),
   });
-  const { data: places } = useQuery<Place[], Error>({
+  const { data: places } = useQuery<Place[]>({
     queryKey: ["places"],
     queryFn: async () => await getPlaces(),
   });
@@ -28,7 +28,7 @@ export default function InfosManquantesPage() {
     <GigList
       dateStep="month"
       displayMissingDataOnly
-      genres={genres || []}
+      genres={genres ?? []}
       gigs={gigs}
       isLoading={isLoading}
       noGigsFoundMessage={
@@ -37,7 +37,7 @@ export default function InfosManquantesPage() {
           ? "\nVos options masquent peut-être certains concerts..."
           : "")
       }
-      places={filteredPlaces || []}
+      places={filteredPlaces ?? []}
       withListControls
     />
   );

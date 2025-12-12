@@ -17,7 +17,7 @@ export default function useMonthGigs() {
     data: gigs,
     isLoading,
     isFetched,
-  } = useQuery<GigPreview[], Error>({
+  } = useQuery<GigPreview[]>({
     queryKey: [
       "gigs",
       selectedMonthStart.toISOString(),
@@ -66,7 +66,7 @@ export default function useMonthGigs() {
     }
   }, [isFetched, queryClient, selectedMonthEnd, selectedMonthStart]);
 
-  const filteredGigs = useFilteredGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs ?? []);
 
   return {
     isLoading: isLoading,

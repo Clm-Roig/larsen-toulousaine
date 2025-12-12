@@ -20,7 +20,7 @@ const defaultInclude = {
 };
 
 export async function GET() {
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
@@ -39,7 +39,7 @@ export async function GET() {
     // Filtering here because Prisma can't filter gigs with only 1 or 0 bands.
     .filter(
       (g) =>
-        g.bands?.length <= 1 ||
+        g.bands.length <= 1 ||
         g.price === null ||
         g.imageUrl === null ||
         g.imageUrl === "" ||

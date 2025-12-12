@@ -14,7 +14,7 @@ export default function useWeekGigs() {
   const selectedWeekStart = dayjs(selectedWeek).startOf("week").toDate();
   const selectedWeekEnd = dayjs(selectedWeek).endOf("week").toDate();
 
-  const { data: gigs, isLoading } = useQuery<GigPreview[], Error>({
+  const { data: gigs, isLoading } = useQuery<GigPreview[]>({
     queryKey: [
       "gigs",
       selectedWeekStart.toISOString(),
@@ -56,7 +56,7 @@ export default function useWeekGigs() {
     });
   }, [queryClient, selectedWeekEnd, selectedWeekStart]);
 
-  const filteredGigs = useFilteredGigs(gigs || []);
+  const filteredGigs = useFilteredGigs(gigs ?? []);
 
   return {
     isLoading: isLoading,

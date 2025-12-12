@@ -22,7 +22,7 @@ export default function useSearchParams() {
     );
     for (const change of newValues.entries()) {
       const [key, value] = change;
-      urlSearchParams.set(key, value + "");
+      urlSearchParams.set(key, String(value));
     }
 
     router.push(`${pathname}?${urlSearchParams.toString()}`);

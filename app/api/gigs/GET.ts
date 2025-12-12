@@ -63,7 +63,7 @@ async function GET(request: NextRequest): Promise<
     | {} // 404 case
   >
 > {
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   const headersList = await headers();
   const acceptHeader = headersList.get("Accept");
   const searchParams = request.nextUrl.searchParams;
@@ -89,13 +89,13 @@ async function GET(request: NextRequest): Promise<
       const lineBreak = "\\n\\n";
       const discordMarkdownGigs = filteredGigs
         .map((gig) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
           return toDiscordMarkdown(gig as any, lineBreak);
         })
         .join(lineBreak + lineBreak);
       const facebookMarkdownGigs = filteredGigs
         .map((gig) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
           return toFacebookMarkdown(gig as any, lineBreak);
         })
         .join(lineBreak + lineBreak);

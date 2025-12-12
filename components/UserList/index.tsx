@@ -5,9 +5,9 @@ import { Table } from "@mantine/core";
 import { getRoleLabel } from "@/domain/User/User.service";
 import { UserWithGigCount } from "@/domain/User/User.type";
 
-type Props = {
+interface Props {
   users: UserWithGigCount[];
-};
+}
 
 export default function UserList({ users }: Props) {
   return (

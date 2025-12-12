@@ -11,7 +11,7 @@ export async function POST(
 ) {
   const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }

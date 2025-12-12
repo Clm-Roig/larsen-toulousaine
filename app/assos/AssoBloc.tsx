@@ -18,7 +18,7 @@ export default function AssoBloc({
   hasLogo = true,
   ...imageProps
 }: AssoBlocProps) {
-  const logoFilePath = `images/logos_assos/${logoFileName || name}.png`;
+  const logoFilePath = `images/logos_assos/${logoFileName ?? name}.png`;
 
   const content = hasLogo ? (
     <Image

@@ -3,9 +3,9 @@ import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { hasPassed } from "@/utils/date";
 import { Box, Combobox } from "@mantine/core";
 
-type Props = {
+interface Props {
   gig: GigWithBandsAndPlace;
-};
+}
 
 export default function Option({ gig }: Props) {
   const { date } = gig;

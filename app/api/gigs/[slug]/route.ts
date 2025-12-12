@@ -2,7 +2,7 @@ import { authOptions } from "@/utils/authOptions";
 import { EditGigArgs } from "@/domain/Gig/Gig.webService";
 import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
-  missingBodyError,
+  CustomError,
   mustBeAuthenticatedError,
   toResponse,
 } from "@/domain/errors";
@@ -51,23 +51,35 @@ export async function GET(
 
 export async function PUT(request: NextRequest) {
   // Check auth
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }
   // Parse formData
+  const rawData: Record<string, string> = {};
   const formData = await request.formData();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawData: { data: any } = { data: null };
-  formData.forEach((value, key) => (rawData[key] = value));
-  const body: EditGigArgs = JSON.parse(rawData.data);
-
-  // Check body and file
-  if (!body) {
-    return toResponse(missingBodyError);
+  formData.forEach((value, key) => {
+    if (typeof value === "string") {
+      rawData[key] = value;
+    }
+    // si tu veux gérer les fichiers, ajoute une autre logique ici
+  });
+  let body: EditGigArgs;
+  try {
+    body = JSON.parse(rawData.data) as EditGigArgs;
+  } catch {
+    return toResponse({
+      name: "FORM_DATA_PARSING_ERROR",
+      frMessage: "Il y a eu une erreur lors du traitement du formulaire.",
+      message: "Error while parsing form data",
+      status: 500,
+    });
   }
-  const imageFile = formData.get("file") as unknown as File;
-  if (imageFile && imageFile?.size > MAX_IMAGE_SIZE) {
+  // Check file
+  const fileEntry = formData.get("file");
+  const imageFile: File | null =
+    fileEntry instanceof File && fileEntry.size > 0 ? fileEntry : null;
+  if (imageFile && imageFile.size > MAX_IMAGE_SIZE) {
     return toResponse(tooBigImageFileError);
   }
 
@@ -137,18 +149,22 @@ export async function PUT(request: NextRequest) {
 
     const prevImageUrl = previousGig?.imageUrl;
     let newImageUrl: string | null =
-      !imageFile && !imageUrl ? null : prevImageUrl ? prevImageUrl : null;
+      !imageFile && !imageUrl ? null : (prevImageUrl ?? null);
     const hasImageChanged =
       !!imageFile || (imageUrl && imageUrl !== prevImageUrl); // if an imageFile is sent, it's to change it
     if (hasImageChanged) {
       const arrayBufferImg = imageUrl
         ? await downloadImage(imageUrl)
-        : await imageFile.arrayBuffer();
-      newImageUrl = await storeImage({
-        arrayBufferImg,
-        filename: slug,
-        imageFormat: IMG_OUTPUT_FORMAT,
-      });
+        : imageFile
+          ? await imageFile.arrayBuffer()
+          : null;
+      if (arrayBufferImg) {
+        newImageUrl = await storeImage({
+          arrayBufferImg,
+          filename: slug,
+          imageFormat: IMG_OUTPUT_FORMAT,
+        });
+      }
     }
     if (!newImageUrl && prevImageUrl) {
       await deleteGigImage(prevImageUrl);
@@ -175,9 +191,7 @@ export async function PUT(request: NextRequest) {
           ? removeParametersFromUrl(facebookEventUrl)
           : null,
         imageUrl: newImageUrl,
-        isAcceptingBankCard: body.isAcceptingBankCard
-          ? body.isAcceptingBankCard
-          : null,
+        isAcceptingBankCard: body.isAcceptingBankCard ?? null,
         place: { connect: { id: body.placeId } },
         slug: slug,
         ticketReservationLink: body.hasTicketReservationLink
@@ -186,7 +200,7 @@ export async function PUT(request: NextRequest) {
       }),
       include: { bands: true },
     });
-    if (createdBands?.length > 0) {
+    if (createdBands.length > 0) {
       revalidatePath("bands");
     }
     return NextResponse.json(updatedGig);
@@ -201,8 +215,16 @@ export async function PUT(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (error.name === invalidImageUrlError.name) {
-      return toResponse(error);
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "name" in error &&
+      "message" in error
+    ) {
+      const customError = error as CustomError;
+      if (customError.name === invalidImageUrlError.name) {
+        return toResponse(customError);
+      }
     }
     return NextResponse.json(
       { message: "An unexpected error occured." },
@@ -217,7 +239,7 @@ export async function DELETE(
 ) {
   const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
   }

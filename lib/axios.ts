@@ -1,4 +1,5 @@
-import axios, { AxiosError, isAxiosError } from "axios";
+import { CustomError } from "@/domain/errors";
+import axios, { isAxiosError } from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api",
@@ -7,11 +8,12 @@ const api = axios.create({
   },
 });
 
-export const getErrorMessage = (error: AxiosError | Error): string => {
+export const getErrorMessage = (error: unknown): string => {
   let message = "Une erreur inattendue s'est produite.";
   if (isAxiosError(error)) {
-    if (error?.response?.data?.frMessage) {
-      return error.response.data.frMessage as string;
+    const data = error.response?.data as CustomError | undefined;
+    if (data?.frMessage) {
+      return data.frMessage;
     }
     if (error.response !== undefined) {
       // The request was made and the server responded with a status code
@@ -25,7 +27,11 @@ export const getErrorMessage = (error: AxiosError | Error): string => {
             "Vous devez être authentifié pour accéder à cette ressource.";
           window.location.href = "/api/auth/signin";
         } else if (status === 403) {
-          message = error.response.data.message;
+          if (data?.message) {
+            return data.message;
+          } else {
+            message = "Erreur 403 Forbidden";
+          }
         } else {
           message = `Il y a eu un problème avec votre requête:\n${error.message}`;
         }

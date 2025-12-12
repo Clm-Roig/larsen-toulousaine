@@ -26,12 +26,12 @@ const isModeratorRouteFn = (pathname: string, req: NextRequest): boolean => {
 };
 
 export async function proxy(req: NextRequest) {
-  const authHeader = req.headers.get("authorization") || "";
+  const authHeader = req.headers.get("authorization") ?? "";
   const { pathname } = req.nextUrl;
 
   try {
     const decodedJwt = await verifyAndDecodeJwt(authHeader.slice(7));
-    const role = decodedJwt?.payload?.role || ("" as Role);
+    const role = decodedJwt?.payload.role ?? null;
     const isModeratorRoute = isModeratorRouteFn(pathname, req);
     const isAdminRoute = isAdminRouteFn(pathname, req);
     const needToBeAuthenticated = isModeratorRoute || isAdminRoute;

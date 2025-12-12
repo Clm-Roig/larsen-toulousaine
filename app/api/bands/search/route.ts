@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const {
     nextUrl: { searchParams },
   } = request;
-  const { user } = (await getServerSession(authOptions)) || {};
+  const { user } = (await getServerSession(authOptions)) ?? {};
   const canSeeUnsafeBands = !!user;
   const rawSearchedName = searchParams.get("name");
   const rawGenres = searchParams.get("genres");

@@ -3,14 +3,12 @@ import { Band, BandsOnGigs } from "@prisma/client";
 import { flattenGigBands } from "./gigs";
 import allCountries from "country-region-data/data.json";
 
-export const flattenBandGigs = <
-  T extends Band & { gigs: ({ gig: GigWithBandsAndPlace } & BandsOnGigs)[] },
->(
-  band: T,
+export const flattenBandGigs = (
+  band: Band & { gigs: ({ gig: GigWithBandsAndPlace } & BandsOnGigs)[] },
 ): Band & { gigs: GigWithBandsAndPlace[] } => ({
   ...band,
   // @ts-ignore I give up on this very complex typing (but it works! :))
-  gigs: band?.gigs.map((g) => flattenGigBands(g.gig)),
+  gigs: band.gigs.map((g) => flattenGigBands(g.gig)),
 });
 
 export const validateCountryAndRegionCodes = (

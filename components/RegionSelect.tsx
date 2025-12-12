@@ -42,7 +42,7 @@ export default function RegionSelect({
       searchable
       clearable
       // @ts-ignore (see comment about regions which doesn't have a shortCode: the issue is already handled)
-      data={countryRegions || []}
+      data={countryRegions ?? []}
       filter={optionsFilter}
       {...selectProps}
     />

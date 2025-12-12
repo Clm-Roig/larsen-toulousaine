@@ -11,7 +11,7 @@ import {
   TextInputProps,
 } from "@mantine/core";
 
-type Props = {
+interface Props {
   cityProps?: InputProps;
   countryCodeProps?: SelectProps;
   genreProps: Omit<GenreSelectProps, "maxValues" | "placeholder">;
@@ -22,7 +22,7 @@ type Props = {
   regionCodeProps?: SelectProps;
   withLabels?: boolean;
   withShortBoolDescriptions?: boolean;
-};
+}
 
 const cityLabel = "Ville";
 const countryCodeLabel = `Pays`;

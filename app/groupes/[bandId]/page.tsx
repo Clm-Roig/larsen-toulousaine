@@ -3,9 +3,9 @@ import Layout from "@/components/Layout";
 import { Suspense } from "react";
 import BandPage from "./band-page";
 
-type Props = {
+interface Props {
   params: Promise<{ bandId: string }>;
-};
+}
 
 export default async function Page({ params }: Props) {
   const { bandId } = await params;

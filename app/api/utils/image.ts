@@ -30,6 +30,7 @@ export async function storeImage({
 }): Promise<string> {
   const type = await imageType(arrayBufferImg);
   if (!type) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw invalidImageUrlError;
   }
   const resizedImg = await sharp(arrayBufferImg)
@@ -69,7 +70,7 @@ export async function deleteGigImage(imageUrl: Gig["imageUrl"]) {
     const publicId = getGigImagePublicId(imageUrl);
 
     console.log("Trying to delete image with public id '" + publicId + "'.");
-    const result = await cloudinaryV2.uploader.destroy(
+    const result: unknown = await cloudinaryV2.uploader.destroy(
       getGigImagePublicId(imageUrl),
     );
 
