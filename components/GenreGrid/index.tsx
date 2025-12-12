@@ -12,8 +12,8 @@ interface Props {
 
 export default function GenreGrid({ genres }: Props) {
   const withColorGenres = genres.filter((g) => g.color !== null) as (Genre & {
-      color: string;
-    })[];
+    color: string;
+  })[];
   const withoutColorGenres = genres.filter((g) => !g.color);
 
   return (

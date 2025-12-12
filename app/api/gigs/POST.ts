@@ -51,14 +51,14 @@ async function POST(request: NextRequest) {
   const { bands, imageUrl } = body;
   try {
     // Create inexisting bands
-    const toCreateBands = bands.filter(b => !b.id);
+    const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
         const { genres, isATribute, isLocal, isSafe, name, order } = band;
 
         const createdBand = await prisma.band.create({
           data: {
-            genres: { connect: genres.map(g => ({ id: g })) },
+            genres: { connect: genres.map((g) => ({ id: g })) },
             isATribute: isATribute,
             isLocal: isLocal,
             isSafe: isSafe,
@@ -68,7 +68,7 @@ async function POST(request: NextRequest) {
         return { ...createdBand, order: order };
       }),
     );
-    const toConnectBands = bands.filter(b => b.id);
+    const toConnectBands = bands.filter((b) => b.id);
     const slug = computeGigSlug({
       bands: bands,
       date: body.date,
@@ -94,7 +94,7 @@ async function POST(request: NextRequest) {
         ...bodyWithoutPlaceId,
         author: { connect: { id: user.id } },
         bands: {
-          create: [...toConnectBands, ...createdBands].map(band => ({
+          create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {
               connect: {
                 id: band.id,

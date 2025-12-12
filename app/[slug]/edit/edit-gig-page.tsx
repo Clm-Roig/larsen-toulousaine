@@ -10,18 +10,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-interface Props { gigSlug: Gig["slug"] }
+interface Props {
+  gigSlug: Gig["slug"];
+}
 
 export default function EditGig({ gigSlug }: Props) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { data: gig, isLoading } = useQuery<GigWithBandsAndPlace | null>(
-    {
-      queryKey: ["gig", gigSlug],
-      queryFn: async () => await getGig(gigSlug),
-    },
-  );
+  const { data: gig, isLoading } = useQuery<GigWithBandsAndPlace | null>({
+    queryKey: ["gig", gigSlug],
+    queryFn: async () => await getGig(gigSlug),
+  });
 
   const { mutate, isPending: isEditPending } = useMutation({
     mutationFn: async (values: EditGigArgs) => await editGig(values),
