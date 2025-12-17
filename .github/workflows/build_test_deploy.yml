@@ -55,5 +55,8 @@ jobs:
       - name: Seed database
         run: npx prisma db seed
 
-      - name: Run Tests Locally
+      - name: Run tests
         run: npm run test
+
+      - name: Run linter
+        run: npm run lint
