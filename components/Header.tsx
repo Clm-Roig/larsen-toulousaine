@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AppShell,
   Button,
@@ -66,12 +68,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
           </Box>
         </Group>
 
-        <Flex
-          align="center"
-          gap="md"
-          justify={{ base: "flex-start", sm: "flex-end" }}
-          style={{ flex: 1 }}
-        >
+        <Flex align="center" gap="md" justify="flex-end" style={{ flex: 1 }}>
           <GigSearchInput />
           {[
             { href: "/cette-semaine", text: "Cette semaine" },
