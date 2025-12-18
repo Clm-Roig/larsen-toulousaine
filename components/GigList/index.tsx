@@ -122,16 +122,17 @@ const GigList = ({
                   <Paper p="xs" maw={820} w="100%">
                     <List>
                       {gigs.map((gig, idx) => {
-                        const nextGig = gigs[idx + 1];
-                        const previousGig = gigs[idx - 1];
+                        const nextGig: GigPreview | undefined =
+                          idx === gigs.length - 1 ? undefined : gigs[idx + 1];
+                        const previousGig: GigPreview | undefined =
+                          idx === 0 ? undefined : gigs[idx - 1];
                         const hasAnEndDate = !!gig.endDate;
-                        const previousGigHasEndDate = !!previousGig.endDate;
-                        const isNextGigSameDay = dayjs(nextGig.date).isSame(
-                          gig.date,
-                        );
-                        const isPreviousGigSameDay = dayjs(
-                          previousGig.date,
-                        ).isSame(gig.date);
+                        const previousGigHasEndDate = !!previousGig?.endDate;
+                        const isNextGigSameDay =
+                          nextGig && dayjs(nextGig.date).isSame(gig.date);
+                        const isPreviousGigSameDay =
+                          previousGig &&
+                          dayjs(previousGig.date).isSame(gig.date);
                         return (
                           <GigListItem
                             displayMissingDataOnly={displayMissingDataOnly}
