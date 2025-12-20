@@ -7,7 +7,8 @@ const nextConfig = {
   images: {
     minimumCacheTTL: 60 * 30,
   },
-  turbopack: {},
+  // Turbopack is causing issues on Windows + Prisma (symlick not working)
+  // turbopack: {},
 };
 
 const withPWA = withPWADefault({
