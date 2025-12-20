@@ -1,5 +1,6 @@
 import { DEFAULT_IMG_RESIZE_OPTIONS } from "@/domain/Gig/constants";
-import { invalidImageUrlError } from "@/domain/Gig/errors";
+import { invalidImageUrlError, tooBigImageUrlError } from "@/domain/Gig/errors";
+import { MAX_IMAGE_SIZE } from "@/domain/image";
 import cloudinaryV2 from "@/lib/cloudinary";
 import { Gig } from "@prisma/client";
 import { UploadApiOptions } from "cloudinary";
@@ -9,9 +10,42 @@ import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
 
 export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
-  const response = await fetch(imageUrl);
-  const arrayBufferImg = await (await response.blob()).arrayBuffer();
-  return arrayBufferImg;
+  const url = new URL(imageUrl);
+  const invalidProtocol = !["http:", "https:"].includes(url.protocol);
+  const invalidDomain =
+    url.hostname === "localhost" || url.hostname.endsWith(".local");
+
+  if (invalidProtocol || invalidDomain) {
+    throw new Error(invalidImageUrlError.name);
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 5000);
+
+  const response = await fetch(url.toString(), {
+    redirect: "error",
+    signal: controller.signal,
+  });
+
+  clearTimeout(timeout);
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const contentType = response.headers.get("content-type");
+  if (!contentType?.startsWith("image/")) {
+    throw new Error("Not an image");
+  }
+
+  const contentLength = response.headers.get("content-length");
+  if (contentLength && Number(contentLength) > MAX_IMAGE_SIZE) {
+    throw new Error(tooBigImageUrlError.name);
+  }
+
+  return await response.arrayBuffer();
 }
 
 /**

@@ -8,7 +8,6 @@ import { downloadImage, storeImage } from "@/app/api/utils/image";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
-  CustomError,
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
@@ -19,6 +18,7 @@ import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import {
   invalidImageUrlError,
   tooBigImageFileError,
+  tooBigImageUrlError,
 } from "@/domain/Gig/errors";
 import dayjs from "@/lib/dayjs";
 
@@ -131,7 +131,7 @@ async function POST(request: NextRequest) {
     }
     return NextResponse.json(createdGig);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return NextResponse.json(
@@ -152,8 +152,12 @@ async function POST(request: NextRequest) {
       );
     }
     if (error instanceof Error) {
-      if (error.name && error.name === invalidImageUrlError.name) {
-        return toResponse(error as CustomError);
+      // TODO: Improve custom error management
+      if (error.message === invalidImageUrlError.name) {
+        return toResponse(invalidImageUrlError);
+      }
+      if (error.message === tooBigImageUrlError.name) {
+        return toResponse(tooBigImageUrlError);
       }
     }
     return NextResponse.json(
