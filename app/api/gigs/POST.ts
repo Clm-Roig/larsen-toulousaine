@@ -43,8 +43,9 @@ async function POST(request: NextRequest) {
   } catch {
     return toResponse(missingBodyError);
   }
-  const imageFile = formData.get("file") as unknown as File;
-  if (imageFile.size > MAX_IMAGE_SIZE) {
+  const imageFile = formData.get("file");
+  const isImageFileAFile = imageFile instanceof File;
+  if (isImageFileAFile && imageFile.size > MAX_IMAGE_SIZE) {
     return toResponse(tooBigImageFileError);
   }
 
@@ -76,10 +77,15 @@ async function POST(request: NextRequest) {
     });
 
     let blobImageUrl: string | undefined = undefined;
-    if (imageUrl) {
-      const arrayBufferImg = imageUrl
-        ? await downloadImage(imageUrl)
-        : await imageFile.arrayBuffer();
+
+    const arrayBufferImg =
+      imageFile && isImageFileAFile
+        ? await imageFile.arrayBuffer() // use imageFile in priority
+        : imageUrl
+          ? await downloadImage(imageUrl) // else use imageUrl
+          : undefined;
+
+    if (arrayBufferImg) {
       blobImageUrl = await storeImage({
         arrayBufferImg,
         filename: slug,

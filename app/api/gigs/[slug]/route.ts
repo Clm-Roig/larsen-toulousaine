@@ -76,10 +76,9 @@ export async function PUT(request: NextRequest) {
     });
   }
   // Check file
-  const fileEntry = formData.get("file");
-  const imageFile: File | null =
-    fileEntry instanceof File && fileEntry.size > 0 ? fileEntry : null;
-  if (imageFile && imageFile.size > MAX_IMAGE_SIZE) {
+  const imageFile = formData.get("file");
+  const isImageFileAFile = imageFile instanceof File;
+  if (isImageFileAFile && imageFile.size > MAX_IMAGE_SIZE) {
     return toResponse(tooBigImageFileError);
   }
 
@@ -153,11 +152,13 @@ export async function PUT(request: NextRequest) {
     const hasImageChanged =
       !!imageFile || (imageUrl && imageUrl !== prevImageUrl); // if an imageFile is sent, it's to change it
     if (hasImageChanged) {
-      const arrayBufferImg = imageUrl
-        ? await downloadImage(imageUrl)
-        : imageFile
-          ? await imageFile.arrayBuffer()
-          : null;
+      const arrayBufferImg =
+        imageFile && isImageFileAFile
+          ? await imageFile.arrayBuffer() // use imageFile in priority
+          : imageUrl
+            ? await downloadImage(imageUrl) // else use imageUrl
+            : undefined;
+
       if (arrayBufferImg) {
         newImageUrl = await storeImage({
           arrayBufferImg,
