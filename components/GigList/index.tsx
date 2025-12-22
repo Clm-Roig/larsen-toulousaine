@@ -41,7 +41,7 @@ type ConditionalProps =
       places?: Place[];
       selectedDate?: Date;
       setSelectedDate?: (newDate: Date) => void;
-      withListControls: true;
+      withListControls: boolean;
     }
   | {
       dateStep?: never;
@@ -49,7 +49,7 @@ type ConditionalProps =
       places?: never;
       selectedDate?: never;
       setSelectedDate?: never;
-      withListControls: false;
+      withListControls: boolean;
     };
 
 type Props = BaseProps & ConditionalProps;
@@ -64,7 +64,7 @@ const GigList = ({
   places,
   selectedDate,
   setSelectedDate,
-  withListControls = true,
+  withListControls,
 }: Props) => {
   const canCreateGig = useHasPermission(Permission.CREATE_GIG);
   const canSeeWeeklyGigsMarkdown = useHasPermission(
