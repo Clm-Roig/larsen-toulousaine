@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
 import Layout from "@/components/Layout";
 import { Alert, Center, Skeleton } from "@mantine/core";
 import GenreGrid from "@/components/GenreGrid";
-import { getGenres } from "@/domain/Genre/Genre.webService";
 import { Genre } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
+import { genresQuery } from "@/domain/queries";
 
 const Genres = () => {
   const {
@@ -14,10 +13,7 @@ const Genres = () => {
     error,
     isLoading,
     isError,
-  } = useQuery<Genre[]>({
-    queryKey: ["genres"],
-    queryFn: async () => await getGenres(),
-  });
+  } = useQuery<Genre[]>(genresQuery);
 
   return (
     <Layout title="Tous les genres" withPaper>

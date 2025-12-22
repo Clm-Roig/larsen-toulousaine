@@ -10,7 +10,7 @@ import {
 } from "@/domain/Place/constants";
 import { useQuery } from "@tanstack/react-query";
 import { Genre } from "@prisma/client";
-import { getGenres } from "@/domain/Genre/Genre.webService";
+import { genresQuery } from "@/domain/queries";
 
 type Props = {
   editedBand: BandWithGenres | undefined;
@@ -26,10 +26,7 @@ export function EditBandDrawer({
   isPending,
   ...drawerProps
 }: Props) {
-  const { data: genres } = useQuery<Genre[]>({
-    queryKey: ["genres"],
-    queryFn: async () => await getGenres(),
-  });
+  const { data: genres } = useQuery<Genre[]>(genresQuery);
 
   const form = useForm<EditBandArgs>({
     initialValues: {

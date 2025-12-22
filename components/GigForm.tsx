@@ -48,9 +48,7 @@ import {
   MAX_IMAGE_SIZE,
   getGigImgWidth,
 } from "../domain/image";
-import { getGenres } from "@/domain/Genre/Genre.webService";
 import { useQuery } from "@tanstack/react-query";
-import { getPlaces } from "@/domain/Place/Place.webService";
 import {
   FormCreateGigArgs,
   EditGigArgs,
@@ -74,6 +72,7 @@ import {
 } from "@/utils/utils";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
+import { genresQuery, placesQuery } from "@/domain/queries";
 
 const { FESTIVAL, GIG } = GigType;
 
@@ -91,14 +90,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   >(undefined);
   const [gigType, setGigType] = useState<GigType>(gig?.name ? FESTIVAL : GIG);
   const gigTypeString = useMemo(() => gigTypeToString(gigType), [gigType]);
-  const { data: genres } = useQuery<Genre[]>({
-    queryKey: ["genres"],
-    queryFn: async () => await getGenres(),
-  });
-  const { data: places } = useQuery<PlaceWithGigCount[]>({
-    queryKey: ["places"],
-    queryFn: async () => await getPlaces(),
-  });
+  const { data: genres } = useQuery<Genre[]>(genresQuery);
+  const { data: places } = useQuery<PlaceWithGigCount[]>(placesQuery);
 
   const form = useForm<
     // endDate is managed using dateRange array

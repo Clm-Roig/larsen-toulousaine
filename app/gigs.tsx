@@ -16,13 +16,13 @@ export default function Gigs() {
   const { data: genres = [] } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: getGenres,
-    staleTime: 60 * 60 * 5, // 5min
+    staleTime: 60 * 60 * 15, // 15min
   });
 
   const { data: places = [] } = useQuery<Place[]>({
     queryKey: ["places"],
     queryFn: getPlaces,
-    staleTime: 60 * 60 * 5, // 5min
+    staleTime: 60 * 60 * 15, // 15min
   });
 
   const { isLoading, monthGigs, setSelectedMonth, selectedMonth } =

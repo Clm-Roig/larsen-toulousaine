@@ -8,6 +8,12 @@ import { Providers } from "./providers";
 import { Notifications } from "@mantine/notifications";
 import { themeColor } from "@/domain/constants";
 import { getMetadata } from "@/utils/metadata";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { genresQuery, placesQuery } from "@/domain/queries";
 
 export const metadata: Metadata = getMetadata();
 
@@ -18,11 +24,23 @@ export const viewport: Viewport = {
   themeColor: themeColor,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const queryClient = new QueryClient();
+
+  // SSR prefetching
+  try {
+    await Promise.all([
+      queryClient.prefetchQuery(genresQuery),
+      queryClient.prefetchQuery(placesQuery),
+    ]);
+  } catch (e) {
+    console.error(e);
+  }
+
   return (
     <html lang="fr" {...mantineHtmlProps}>
       <head>
@@ -47,7 +65,9 @@ export default function RootLayout({
       <body>
         <Providers>
           <Notifications position="top-center" />
-          {children}
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {children}
+          </HydrationBoundary>
         </Providers>
       </body>
     </html>

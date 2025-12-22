@@ -9,12 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 import {
   CreatePlaceArgs,
   EditPlaceArgs,
-  getPlaces,
 } from "@/domain/Place/Place.webService";
 
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import { isValidUrl, normalizeString } from "@/utils/utils";
 import PlaceFields from "./PlaceFields";
+import { placesQuery } from "@/domain/queries";
 
 interface Props {
   place?: PlaceWithGigCount;
@@ -23,10 +23,7 @@ interface Props {
 }
 
 export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
-  const { data: places } = useQuery<Place[]>({
-    queryKey: ["places"],
-    queryFn: async () => await getPlaces(),
-  });
+  const { data: places } = useQuery<Place[]>(placesQuery);
 
   const validatePlaceName = (value: string): string | null => {
     if (!value) return "Le nom est requis";

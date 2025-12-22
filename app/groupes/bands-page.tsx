@@ -23,7 +23,6 @@ import {
 } from "@/domain/Band/Band.type";
 import BandTable from "@/components/BandTable";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
-import { getGenres } from "@/domain/Genre/Genre.webService";
 import { Band, Genre } from "@prisma/client";
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import useSearchParams from "@/hooks/useSearchParams";
@@ -32,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { EditBandDrawer } from "@/components/EditBandDrawer";
 import useEditBand from "@/hooks/useEditBand";
 import useDeleteBand from "@/hooks/useDeleteBand";
+import { genresQuery } from "@/domain/queries";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
@@ -65,10 +65,7 @@ const Bands = () => {
     placeholderData: keepPreviousData,
   });
   const { bands, count } = data ?? {};
-  const { data: genres } = useQuery<Genre[]>({
-    queryKey: ["genres"],
-    queryFn: async () => await getGenres(),
-  });
+  const { data: genres } = useQuery<Genre[]>(genresQuery);
 
   const handleOnClose = useCallback(() => {
     setEditedBand(undefined);

@@ -12,11 +12,10 @@ import {
   EditPlaceArgs,
   deletePlace,
   editPlace,
-  getPlaces,
 } from "@/domain/Place/Place.webService";
 import { Place } from "@prisma/client";
 import PlaceFields from "@/components/PlaceFields";
-import { PlaceWithGigCount } from "@/domain/Place/Place.type";
+import { placesQuery } from "@/domain/queries";
 
 const Lieux = () => {
   const [editedPlace, setEditedPlace] = useState<Place>();
@@ -55,10 +54,7 @@ const Lieux = () => {
     error: getPlacesError,
     isFetching,
     isError,
-  } = useQuery<PlaceWithGigCount[]>({
-    queryKey: ["places"],
-    queryFn: async () => await getPlaces(),
-  });
+  } = useQuery(placesQuery);
 
   const { isPending, mutate } = useMutation({
     mutationFn: async () => await editPlace(form.values),
