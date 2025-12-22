@@ -40,14 +40,14 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { BandWithGenres } from "../domain/Band/Band.type";
+import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandSelect from "./BandSelect";
-import { isValidUrl } from "../utils/utils";
+import { isValidUrl } from "@/utils/utils";
 import {
   GIG_IMG_RATIO_STRING,
   MAX_IMAGE_SIZE,
   getGigImgWidth,
-} from "../domain/image";
+} from "@/domain/image";
 import { useQuery } from "@tanstack/react-query";
 import {
   FormCreateGigArgs,

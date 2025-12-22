@@ -14,7 +14,7 @@ import { Place } from "@prisma/client";
 import { normalizeString } from "@/utils/utils";
 import TableHeader from "./TableHeader";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
-import UnsafeIcon, { UnsafeType } from "../UnsafeIcon";
+import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 import { getPlaceSizeLabel } from "@/app/api/utils/places";
 
 interface Props {

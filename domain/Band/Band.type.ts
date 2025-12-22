@@ -1,5 +1,5 @@
 import { Band, Genre, Prisma, BandsOnGigs } from "@prisma/client";
-import { GigWithBandsAndPlace } from "../Gig/Gig.type";
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 
 export type BandWithOrder = Band & { order: number };
 

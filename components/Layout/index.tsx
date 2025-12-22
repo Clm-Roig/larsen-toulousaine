@@ -1,7 +1,7 @@
 "use client";
 
-import React, { FC, ReactNode } from "react";
-import Header from "../Header";
+import { FC, ReactNode } from "react";
+import Header from "./Header";
 import {
   Anchor,
   AppShell,

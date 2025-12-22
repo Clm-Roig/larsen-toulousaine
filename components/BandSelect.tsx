@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import {
   BandWithGenres,
   BandWithGenresAndGigCount,
-} from "../domain/Band/Band.type";
-import { searchBands } from "../domain/Band/Band.webService";
+} from "@/domain/Band/Band.type";
+import { searchBands } from "@/domain/Band/Band.webService";
 import { Band } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";

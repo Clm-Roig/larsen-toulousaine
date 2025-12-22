@@ -1,7 +1,7 @@
 "use client";
 
 import { Table, TextInput } from "@mantine/core";
-import AddPlaceButton from "../AddButton/AddPlaceButton";
+import AddPlaceButton from "@/components/AddButton/AddPlaceButton";
 
 interface Props {
   searchedName: string;

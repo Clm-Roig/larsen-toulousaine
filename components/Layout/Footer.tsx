@@ -16,7 +16,7 @@ import Link from "next/link";
 import { discordInviteLink, facebookLink } from "@/domain/constants";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import ExternalLink from "../ExternalLink";
+import ExternalLink from "@/components/ExternalLink";
 
 export default function Footer() {
   const { status } = useSession();

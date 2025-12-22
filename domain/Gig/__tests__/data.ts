@@ -1,5 +1,5 @@
 import { allBands, allPlaces, allUsers } from "@/tests/data";
-import { GigWithBandsAndPlace } from "../Gig.type";
+import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 
 export const gigBands = allBands
   .slice(0, 2)

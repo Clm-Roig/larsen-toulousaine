@@ -1,5 +1,5 @@
 import { Box, Center, Loader, Title } from "@mantine/core";
-import Layout from "../components/Layout";
+import Layout from "@/components/Layout";
 import { Suspense } from "react";
 import Gigs from "@/app/gigs";
 import { getMetadata } from "@/utils/metadata";
