@@ -138,7 +138,9 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
           ) : (
             <Box mt={0}>{childrenWithTitle}</Box>
           )}
-          <Affix position={{ bottom: 20, right: 20 }}>
+          {/* z-index = 199 because 200 is used by drawers. 
+          The scroll to top button must be below drawers.  */}
+          <Affix position={{ bottom: 20, right: 20 }} zIndex={199}>
             <Transition transition="slide-up" mounted={scroll.y > 0}>
               {(transitionStyles) => (
                 <Button
