@@ -9,6 +9,9 @@ import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 
 const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
 
+/**
+ * Download an image from its url after performing some security checks.
+ */
 export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
   const url = new URL(imageUrl);
   const invalidProtocol = !["http:", "https:"].includes(url.protocol);
@@ -49,7 +52,7 @@ export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
 }
 
 /**
- * Download a remote image and upload it to Cloudinary and override the previous image if any
+ * Uupload an image to Cloudinary and override the previous image if any
  */
 export async function storeImage({
   arrayBufferImg,
