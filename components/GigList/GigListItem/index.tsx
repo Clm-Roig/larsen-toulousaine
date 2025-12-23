@@ -94,7 +94,22 @@ export default function GigListItem({
                 {endDate && dayjs(endDate).format("ddd DD/MM")}
               </Badge>
             )}
-            <OptimizedImage src={imageUrl} alt={gigTitle} w={105} />
+
+            <Box
+              style={{
+                overflow: "hidden", // for img scale on hover
+              }}
+            >
+              <OptimizedImage
+                src={imageUrl}
+                alt={gigTitle}
+                w={105}
+                style={{
+                  scale: hovered ? 1.3 : 1,
+                  transition: "all 0.3s ease",
+                }}
+              />
+            </Box>
             <GigImgOverlay gig={gig} />
           </Stack>
         }

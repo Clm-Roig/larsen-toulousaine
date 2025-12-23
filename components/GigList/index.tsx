@@ -120,7 +120,7 @@ const GigList = ({
               ) : (
                 <Center>
                   <Paper p="xs" maw={820} w="100%">
-                    <List>
+                    <List pl={0}>
                       {gigs.map((gig, idx) => {
                         const nextGig: GigPreview | undefined =
                           idx === gigs.length - 1 ? undefined : gigs[idx + 1];
@@ -143,7 +143,7 @@ const GigList = ({
                                 idx !== gigs.length - 1) &&
                               !isNextGigSameDay
                             }
-                            {...(isNextGigSameDay && { pb: 0 })}
+                            {...(isNextGigSameDay && { pb: "xs" })}
                             {...(isPreviousGigSameDay && { pt: "xs" })}
                             displayDate={
                               !isPreviousGigSameDay ||
