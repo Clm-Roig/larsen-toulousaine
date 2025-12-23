@@ -32,10 +32,13 @@ import { EditBandDrawer } from "@/components/EditBandDrawer";
 import useEditBand from "@/hooks/useEditBand";
 import useDeleteBand from "@/hooks/useDeleteBand";
 import { genresQuery } from "@/domain/queries";
+import { Boolean3ChoicesFormValue } from "@/utils/utils";
 
 const Bands = () => {
   const [editedBand, setEditedBand] = useState<BandWithGenres>();
   const [deletedBand, setDeletedBand] = useState<BandWithGenres>();
+  const [searchedIsLocal, setSearchedIsLocal] =
+    useState<Boolean3ChoicesFormValue>("");
   const [searchedGenres, setSearchedGenres] = useState<Genre["id"][]>([]);
   const [searchedName, setSearchedName] = useState<string>("");
   const [debouncedSearchedName] = useDebouncedValue(searchedName, 400);
@@ -57,10 +60,23 @@ const Bands = () => {
     isFetching,
     isError,
   } = useQuery<{ bands: BandWithGenresAndGigCount[]; count: number }>({
-    queryKey: ["bands", page, searchedGenres, debouncedSearchedName],
+    queryKey: [
+      "bands",
+      page,
+      searchedGenres,
+      debouncedSearchedName,
+      searchedIsLocal,
+    ],
     queryFn: async () =>
-      searchedGenres.length > 0 || debouncedSearchedName
-        ? await searchBands(debouncedSearchedName, searchedGenres, page)
+      searchedGenres.length > 0 ||
+      debouncedSearchedName ||
+      ["true", "false"].includes(searchedIsLocal)
+        ? await searchBands(
+            debouncedSearchedName,
+            searchedGenres,
+            searchedIsLocal,
+            page,
+          )
         : await getBands(page),
     placeholderData: keepPreviousData,
   });
@@ -84,6 +100,11 @@ const Bands = () => {
   const handleOnSearchedGenresChange = (genres: string[]) => {
     handleOnSetPage(1);
     setSearchedGenres(genres);
+  };
+
+  const handleOnSearchedIsLocalChange = (isLocal: Boolean3ChoicesFormValue) => {
+    handleOnSetPage(1);
+    setSearchedIsLocal(isLocal);
   };
 
   const handleOnRowClick = (bandId: Band["id"]) => {
@@ -133,10 +154,12 @@ const Bands = () => {
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
           pageTotal={Math.ceil((count ?? 0) / NB_OF_BANDS_PER_PAGE)}
-          searchedName={searchedName}
           searchedGenres={searchedGenres}
+          searchedIsLocal={searchedIsLocal}
+          searchedName={searchedName}
           setPage={handleOnSetPage}
           setSearchedGenres={handleOnSearchedGenresChange}
+          setSearchedIsLocal={handleOnSearchedIsLocalChange}
           setSearchedName={handleOnSearchedNameChange}
         />
         <EditBandDrawer

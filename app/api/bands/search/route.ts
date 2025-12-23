@@ -1,6 +1,7 @@
 import { NB_OF_BANDS_PER_PAGE } from "@/domain/Band/constants";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
+import { boolean3ChoicesFormValueToBool } from "@/utils/utils";
 import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
  * @param request
  *  - name    {string}
  *  - genres  {string}  genre ids separated by a comma
+ *  - isLocal {"true" | "false" | ""}
  */
 export async function GET(request: NextRequest) {
   const {
@@ -19,6 +21,10 @@ export async function GET(request: NextRequest) {
   const canSeeUnsafeBands = !!user;
   const rawSearchedName = searchParams.get("name");
   const rawGenres = searchParams.get("genres");
+  const rawIsLocal = searchParams.get("isLocal");
+  const isLocal = rawIsLocal
+    ? boolean3ChoicesFormValueToBool(rawIsLocal)
+    : null;
   const page = searchParams.get("page");
   const searchedName = rawSearchedName
     ? decodeURIComponent(rawSearchedName)
@@ -43,6 +49,7 @@ export async function GET(request: NextRequest) {
           },
         }
       : {}),
+    ...(isLocal !== null ? { isLocal } : {}),
   };
   const [count, bands] = await prisma.$transaction([
     prisma.band.count({

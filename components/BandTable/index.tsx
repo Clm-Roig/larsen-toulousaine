@@ -24,6 +24,7 @@ import IsATributeBadge from "@/components/IsATributeBadge";
 import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import { Boolean3ChoicesFormValue } from "@/utils/utils";
 
 interface Props {
   bands: BandWithGenresAndGigCount[] | undefined;
@@ -36,9 +37,11 @@ interface Props {
   page: number;
   pageTotal: number;
   searchedGenres: Genre["id"][];
+  searchedIsLocal: Boolean3ChoicesFormValue;
   searchedName: string;
   setPage: (value: number) => void;
   setSearchedGenres: (value: Genre["id"][]) => void;
+  setSearchedIsLocal: (value: Boolean3ChoicesFormValue) => void;
   setSearchedName: (value: string) => void;
 }
 
@@ -53,9 +56,11 @@ export default function BandTable({
   page,
   pageTotal,
   searchedGenres,
+  searchedIsLocal,
   searchedName,
   setPage,
   setSearchedGenres,
+  setSearchedIsLocal,
   setSearchedName,
 }: Props) {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
@@ -110,8 +115,10 @@ export default function BandTable({
           <TableHeader
             genres={genres}
             searchedGenres={searchedGenres}
+            searchedIsLocal={searchedIsLocal}
             searchedName={searchedName}
             setSearchedGenres={setSearchedGenres}
+            setSearchedIsLocal={setSearchedIsLocal}
             setSearchedName={setSearchedName}
           />
           <Table.Tbody style={isLoading ? { filter: "blur(1px)" } : {}}>

@@ -5,18 +5,21 @@ import {
   BandWithGenresAndGigs,
 } from "./Band.type";
 import { Genre } from "@prisma/client";
+import { Boolean3ChoicesFormValue } from "@/utils/utils";
 
 export const searchBands = async (
   name: string | undefined,
   genres?: Genre["id"][],
+  isLocal?: Boolean3ChoicesFormValue,
   page?: number,
 ): Promise<{ bands: BandWithGenresAndGigCount[]; count: number }> => {
   const nameParam = name ? `name=${encodeURIComponent(name)}` : null;
   const genresParam = genres
     ? `genres=${encodeURIComponent(genres.join(","))}`
     : null;
+  const isLocalParam = `isLocal=${isLocal}`;
   const pageParam = page ? `page=${page}` : null;
-  const params = [nameParam, genresParam, pageParam]
+  const params = [nameParam, genresParam, pageParam, isLocalParam]
     .filter((p) => !!p)
     .join("&");
   try {
