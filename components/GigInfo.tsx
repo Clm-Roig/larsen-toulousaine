@@ -51,7 +51,7 @@ interface Props {
 
 export default function GigInfo({ gig }: Props) {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
-  const { isXSmallScreen } = useScreenSize();
+  const { isXSmallScreen, isSmallScreen } = useScreenSize();
   const {
     bands,
     description,
@@ -100,7 +100,7 @@ export default function GigInfo({ gig }: Props) {
           <IconCalendar {...iconProps} />
         </IconBlock>
         <Divider orientation="vertical" />
-        <Badge size="lg">
+        <Badge size={isSmallScreen ? "lg" : "xl"}>
           {endDate
             ? `${formatDate(date)} - ${formatDate(endDate)}`
             : formatDate(date)}
