@@ -17,7 +17,7 @@ export const searchBands = async (
   const genresParam = genres
     ? `genres=${encodeURIComponent(genres.join(","))}`
     : null;
-  const isLocalParam = `isLocal=${isLocal}`;
+  const isLocalParam = isLocal !== undefined ? `isLocal=${isLocal}` : undefined;
   const pageParam = page ? `page=${page}` : null;
   const params = [nameParam, genresParam, pageParam, isLocalParam]
     .filter((p) => !!p)
