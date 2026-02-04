@@ -83,7 +83,6 @@ const blocs = [
     name="Kid Productions"
     url="https://www.facebook.com/profile.php?id=61567277364879"
     w={{ base: 225, sm: 270 }}
-    hasLogo={false}
   />,
   <AssoBloc
     key="Regarts"
