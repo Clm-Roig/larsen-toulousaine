@@ -121,7 +121,8 @@ const GigPage = ({ gigSlug }: Props) => {
           opacity={isCanceled || isSoldOut ? 0.6 : 1}
           style={{ overflowY: "hidden" }} // prevent too high image to overflow
         >
-          <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
+          {/* preload used to load the image first */}
+          <OptimizedImage src={imageUrl} alt={"Affiche du concert"} preload />
           <GigImgOverlay gig={gig} />
         </Box>
 

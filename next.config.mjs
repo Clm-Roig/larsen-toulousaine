@@ -1,4 +1,5 @@
 import withPWADefault from "@ducanh2912/next-pwa";
+import { URL } from "url";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -6,6 +7,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     minimumCacheTTL: 60 * 30,
+    remotePatterns: [new URL("https://picsum.photos/**"), new URL("https://res.cloudinary.com/**")],
   },
   // Turbopack is causing issues on Windows + Prisma (symlick not working)
   // turbopack: {},

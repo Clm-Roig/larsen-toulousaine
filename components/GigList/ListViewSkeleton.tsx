@@ -6,7 +6,7 @@ export default function ListViewSkeleton() {
     <Center>
       <Paper p="xs" maw={820} w="100%">
         <List listStyleType="none">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 8 }).map((_, index) => (
             <GigListItemSkeleton key={index} />
           ))}
         </List>

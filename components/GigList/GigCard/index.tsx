@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { memo } from "react";
 import { Box, Card, Stack, Text, Group, useMantineTheme } from "@mantine/core";
 import {
   GigPreview,
@@ -79,11 +79,10 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
           >
             <OptimizedImage
               src={gig.imageUrl}
-              h={getGigImgHeight(CARD_WIDTH)}
+              width={CARD_WIDTH}
+              height={getGigImgHeight(CARD_WIDTH)}
               alt={`${gigType} ${gigTitle}`}
-              fallbackSrc={`https://placehold.co/${CARD_WIDTH}x${Math.floor(
-                getGigImgHeight(CARD_WIDTH),
-              )}?text=.`}
+              sizes={`${CARD_WIDTH}px`}
             />
             <GigImgOverlay gig={gig} />
           </Box>
@@ -141,4 +140,4 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   );
 };
 
-export default GigCard;
+export default memo(GigCard);

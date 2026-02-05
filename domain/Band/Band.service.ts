@@ -52,17 +52,16 @@ export const getSortedGenres = (
 ): Genre[] => {
   return genres
     .sort((g1, g2) => {
+      const count1 = g1.count ?? 0;
+      const count2 = g2.count ?? 0;
+
       // More occurences (if provided)
-      if (g1.count && g2.count) {
-        const diff = g2.count - g1.count;
-        if (diff !== 0) {
-          return diff;
-        }
-      }
+      if (count2 !== count1) return count2 - count1;
 
       // With color = metal genre = has priority over the other one
-      if (!g1.color) return 1;
-      if (!g2.color) return -1;
+      const g1IsMetal = !!g1.color;
+      const g2IsMetal = !!g2.color;
+      if (g1IsMetal !== g2IsMetal) return g1IsMetal ? -1 : 1;
 
       // Alphabetical order
       return g1.name.localeCompare(g2.name);

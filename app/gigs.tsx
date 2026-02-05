@@ -1,37 +1,36 @@
 "use client";
-import { Genre, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
 import useMonthGigs from "@/hooks/useMonthGigs";
-import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getGenres } from "@/domain/Genre/Genre.webService";
-import { getPlaces } from "@/domain/Place/Place.webService";
 import usePreferences from "@/hooks/usePreferences";
 import useSearchParams from "@/hooks/useSearchParams";
+import { Genre, Place } from "@prisma/client";
+import { getGenres } from "@/domain/Genre/Genre.webService";
+import { getPlaces } from "@/domain/Place/Place.webService";
 
-export default function Gigs() {
-  const { searchParams, setSearchParams } = useSearchParams();
+interface Props {
+  initialMonth: Date;
+}
+
+export default function Gigs({ initialMonth }: Props) {
+  const { setSearchParams } = useSearchParams();
   const { displayNotSafePlaces } = usePreferences();
 
   const { data: genres = [] } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: getGenres,
-    staleTime: 60 * 60 * 15, // 15min
+    staleTime: 60 * 60 * 1, // 1h
   });
-
   const { data: places = [] } = useQuery<Place[]>({
     queryKey: ["places"],
     queryFn: getPlaces,
-    staleTime: 60 * 60 * 15, // 15min
+    staleTime: 60 * 60 * 1, // 1h
   });
 
-  const { isLoading, monthGigs, setSelectedMonth, selectedMonth } =
-    useMonthGigs();
+  const { isLoading, monthGigs, selectedMonth, setSelectedMonth } =
+    useMonthGigs(initialMonth);
 
-  const filteredPlaces = useMemo(
-    () => places.filter((p) => displayNotSafePlaces || p.isSafe),
-    [places, displayNotSafePlaces],
-  );
+  const filteredPlaces = places.filter((p) => displayNotSafePlaces || p.isSafe);
 
   const onSelectedMonthChange = (newMonth: Date) => {
     setSelectedMonth(newMonth);
@@ -41,18 +40,6 @@ export default function Gigs() {
     ]);
     setSearchParams(changes);
   };
-
-  useEffect(() => {
-    const year = searchParams.get("année");
-    const monthNb = searchParams.get("mois");
-
-    if (year && monthNb) {
-      setSelectedMonth(new Date(Number(year), Number(monthNb) - 1, 1));
-    } else {
-      const now = new Date();
-      setSelectedMonth(new Date(now.getFullYear(), now.getMonth(), 1));
-    }
-  }, [searchParams, setSelectedMonth]);
 
   return (
     <GigList
