@@ -23,6 +23,8 @@ import GigCompactInfo from "@/components/GigCompactInfo";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import { getGigImgHeight } from "@/domain/image";
+import { memo } from "react";
 
 interface Props {
   displayDate?: boolean;
@@ -37,13 +39,13 @@ const PolymorphicListItem = createPolymorphicComponent<
   ListItemProps
 >(List.Item);
 
-export default function GigListItem({
+const GigListItem = ({
   gig,
   withDivider,
   displayMissingDataOnly = false,
   displayDate = true,
   ...listItemProps
-}: Props) {
+}: Props) => {
   const canEditGig = useHasPermission(Permission.EDIT_GIG);
   const { grayOutPastGigs } = usePreferences();
   const colorScheme = useComputedColorScheme("light");
@@ -103,7 +105,8 @@ export default function GigListItem({
               <OptimizedImage
                 src={imageUrl}
                 alt={gigTitle}
-                w={105}
+                width={105}
+                height={getGigImgHeight(105)}
                 style={{
                   scale: hovered ? 1.3 : 1,
                   transition: "all 0.3s ease",
@@ -146,4 +149,6 @@ export default function GigListItem({
       {withDivider && <Divider />}
     </Box>
   );
-}
+};
+
+export default memo(GigListItem);

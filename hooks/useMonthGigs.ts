@@ -7,67 +7,38 @@ import useFilteredGigs from "@/hooks/useFilteredGigs";
 import { startOf } from "@/utils/date";
 import { GIGS_STALE_TIME_IN_MS } from "@/domain/Gig/constants";
 
-export default function useMonthGigs() {
+export default function useMonthGigs(initialMonth?: Date) {
   const queryClient = useQueryClient();
 
-  const [selectedMonth, setSelectedMonth] = useState(startOf("month"));
-  const selectedMonthStart = dayjs(selectedMonth).startOf("month").toDate();
-  const selectedMonthEnd = dayjs(selectedMonth).endOf("month").toDate();
-  const {
-    data: gigs,
-    isLoading,
-    isFetched,
-  } = useQuery<GigPreview[]>({
-    queryKey: [
-      "gigs",
-      selectedMonthStart.toISOString(),
-      selectedMonthEnd.toISOString(),
-    ],
-    queryFn: async () => await getGigs(selectedMonthStart, selectedMonthEnd),
+  const [selectedMonth, setSelectedMonth] = useState(
+    initialMonth ?? startOf("month"),
+  );
+  const monthStart = dayjs(selectedMonth).startOf("month").toDate();
+  const monthEnd = dayjs(selectedMonth).endOf("month").toDate();
+  const { data: gigs = [], isLoading } = useQuery<GigPreview[]>({
+    queryKey: ["gigs", monthStart.toISOString(), monthEnd.toISOString()],
+    queryFn: async () => await getGigs(monthStart, monthEnd),
     staleTime: GIGS_STALE_TIME_IN_MS,
   });
 
-  // Prefetch next month gigs (only after currently month's gig are fetched)
+  // Prefetch next & previous month gigs
   useEffect(() => {
-    if (isFetched) {
-      const nextMonthStart = dayjs(selectedMonthStart).add(1, "month").toDate();
-      const nextMonthEnd = dayjs(selectedMonthEnd).add(1, "month").toDate();
-      void queryClient.prefetchQuery({
-        queryKey: [
-          "gigs",
-          nextMonthStart.toISOString(),
-          nextMonthEnd.toISOString(),
-        ],
-        queryFn: async () => await getGigs(nextMonthStart, nextMonthEnd),
+    const prefetch = async (offset: number) => {
+      const start = dayjs(monthStart).add(offset, "month").toDate();
+      const end = dayjs(monthEnd).add(offset, "month").toDate();
+
+      await queryClient.prefetchQuery({
+        queryKey: ["gigs", start.toISOString(), end.toISOString()],
+        queryFn: () => getGigs(start, end),
         staleTime: GIGS_STALE_TIME_IN_MS,
       });
-    }
-  }, [isFetched, queryClient, selectedMonthEnd, selectedMonthStart]);
+    };
 
-  // Prefetch previous month gigs (only after currently month's gig are fetched)
-  useEffect(() => {
-    if (isFetched) {
-      const previousMonthStart = dayjs(selectedMonthStart)
-        .subtract(1, "month")
-        .toDate();
-      const previousMonthEnd = dayjs(selectedMonthEnd)
-        .subtract(1, "month")
-        .toDate();
-      void queryClient.prefetchQuery({
-        queryKey: [
-          "gigs",
-          previousMonthStart.toISOString(),
-          previousMonthEnd.toISOString(),
-        ],
-        queryFn: async () =>
-          await getGigs(previousMonthStart, previousMonthEnd),
-        staleTime: GIGS_STALE_TIME_IN_MS,
-      });
-    }
-  }, [isFetched, queryClient, selectedMonthEnd, selectedMonthStart]);
+    void prefetch(-1);
+    void prefetch(1);
+  }, [monthStart, monthEnd, queryClient]);
 
-  const filteredGigs = useFilteredGigs(gigs ?? []);
-
+  const filteredGigs = useFilteredGigs(gigs);
   return {
     isLoading: isLoading,
     monthGigs: filteredGigs,

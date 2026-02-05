@@ -5,7 +5,7 @@ import { Grid } from "@mantine/core";
 export default function GridViewSkeleton() {
   return (
     <Grid>
-      {Array.from({ length: 4 }).map((_, index) => (
+      {Array.from({ length: 8 }).map((_, index) => (
         <Grid.Col key={index} span={GRID_SPAN_PROP}>
           <GigCardSkeleton />
         </Grid.Col>

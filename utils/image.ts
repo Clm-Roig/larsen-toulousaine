@@ -1,7 +1,7 @@
 /**
  * To avoid using all storage hosting bandwidth in development, picsum images are displayed.
  */
-export function getImageUrl(imageUrl: string | undefined) {
+export function getImageUrl(imageUrl?: string | null) {
   if (!imageUrl) {
     return `/images/fallbackImage.jpg`;
   }
