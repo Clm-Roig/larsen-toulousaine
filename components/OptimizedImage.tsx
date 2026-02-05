@@ -39,13 +39,18 @@ export default function OptimizedImage({
     return (
       <Box
         className={className}
-        style={{ position: "relative", width, height, ...style }}
+        style={{
+          position: "relative",
+          width: "100%",
+          aspectRatio: `${width}/${height}`,
+          height,
+          ...style,
+        }}
       >
         <NextImage
           src={getImageUrl(src)}
           alt={alt}
-          width={width}
-          height={height}
+          fill
           preload={preload}
           style={{ objectFit: "cover" }}
           sizes={sizes ?? "100vw"} // responsive width hint

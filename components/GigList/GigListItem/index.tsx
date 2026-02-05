@@ -111,6 +111,7 @@ const GigListItem = ({
                   scale: hovered ? 1.3 : 1,
                   transition: "all 0.3s ease",
                 }}
+                // sizes="105px"
               />
             </Box>
             <GigImgOverlay gig={gig} />
