@@ -21,6 +21,7 @@ export default function GigMissingData({ gig }: Props) {
   return (
     <>
       <List
+        pl={0}
         center
         icon={
           <ThemeIcon color="yellow" radius="xl" size="sm">
