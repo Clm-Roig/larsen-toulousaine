@@ -99,8 +99,13 @@ const GigList = ({
         {(styles) => (
           <div style={styles}>
             {gigs && gigs.length > 0 ? (
-              viewType === ViewType.GRID ? (
-                <Grid>
+              <>
+                <Grid
+                  style={{
+                    // Optimization to make the change between grid & list instantaneous
+                    display: viewType === ViewType.GRID ? "" : "none",
+                  }}
+                >
                   {gigs.map((gig) => (
                     <Grid.Col key={gig.id} span={GRID_SPAN_PROP}>
                       <GigCard
@@ -117,8 +122,12 @@ const GigList = ({
                     </Grid.Col>
                   )}
                 </Grid>
-              ) : (
-                <Center>
+                <Center
+                  style={{
+                    // Optimization to make the change between grid & list instantaneous
+                    display: viewType === ViewType.LIST ? "" : "none",
+                  }}
+                >
                   <Paper p="xs" maw={820} w="100%">
                     <List pl={0}>
                       {gigs.map((gig, idx) => {
@@ -161,7 +170,7 @@ const GigList = ({
                     )}
                   </Paper>
                 </Center>
-              )
+              </>
             ) : (
               <Center>
                 <Stack align="center">
