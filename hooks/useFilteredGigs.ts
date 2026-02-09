@@ -3,7 +3,7 @@ import { GigPreview } from "@/domain/Gig/Gig.type";
 import usePreferences from "./usePreferences";
 
 export default function useFilteredGigs(gigs: GigPreview[]) {
-  const { displayNotSafePlaces, filteredGenres, excludedPlaces, maxPrice } =
+  const { displayNotSafeGigs, filteredGenres, excludedPlaces, maxPrice } =
     usePreferences();
 
   const filteredGigs = useMemo(
@@ -20,11 +20,12 @@ export default function useFilteredGigs(gigs: GigPreview[]) {
               ),
             ),
         )
-        // Place(s) filtering
+        // Place(s) + band(s) filtering
         .filter(
           (gig) =>
             !excludedPlaces.includes(gig.place.id) &&
-            (displayNotSafePlaces || gig.place.isSafe),
+            (displayNotSafeGigs || gig.place.isSafe) &&
+            (displayNotSafeGigs || gig.bands.every((b) => b.isSafe)),
         )
         // Price filtering
         .filter(
@@ -33,7 +34,7 @@ export default function useFilteredGigs(gigs: GigPreview[]) {
             (!maxPrice && maxPrice !== 0) ||
             (!Number.isNaN(maxPrice) && gig.price <= Number(maxPrice)),
         ),
-    [excludedPlaces, filteredGenres, gigs, maxPrice, displayNotSafePlaces],
+    [excludedPlaces, filteredGenres, gigs, maxPrice, displayNotSafeGigs],
   );
 
   return filteredGigs;
