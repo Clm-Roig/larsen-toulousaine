@@ -40,6 +40,7 @@ export async function PUT(request: NextRequest) {
     city,
     countryCode,
     genres,
+    isADJ,
     isATribute,
     isLocal,
     isSafe,
@@ -65,6 +66,7 @@ export async function PUT(request: NextRequest) {
         genres: {
           set: genres.map((gId) => ({ id: gId })),
         },
+        isADJ: isADJ,
         isATribute: isATribute,
         isLocal: isLocal,
         isSafe: isSafe,

@@ -26,6 +26,7 @@ import SoldOutIcon from "@/components/SoldOutIcon";
 import GigMissingData from "@/components/GigMissingData";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import IsADJBadge from "@/components/IsADJBadge";
 import { CardWithLink } from "@/components/CardWithLink";
 
 interface Props {
@@ -39,6 +40,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const { grayOutPastGigs } = usePreferences();
   const { bands, date, endDate, isCanceled, isSoldOut, place, price } = gig;
   const isATribute = bands.some((b) => b.isATribute);
+  const isADJ = bands.some((b) => b.isADJ);
   const gigType = gigToGigTypeString(gig);
   const gigTitle = getGigTitle(gig);
   const bandGenres = getSortedUniqueBandGenres(bands);
@@ -100,6 +102,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
                   <GenreBadge key={genre.id} genre={genre} filterOnClick />
                 ))}
                 {isATribute && <IsATributeBadge />}
+                {isADJ && <IsADJBadge />}
               </Group>
             )}
           </Stack>

@@ -33,6 +33,7 @@ model Band {
   regionCode  String?
   city        String?
   isATribute  Boolean       @default(false)
+  isADJ       Boolean       @default(false)
   isSafe      Boolean       @default(true)
 }
 

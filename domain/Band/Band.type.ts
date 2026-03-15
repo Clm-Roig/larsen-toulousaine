@@ -11,6 +11,7 @@ export interface BandMinimal {
 export interface BandPreview {
   id: Band["id"];
   genres: Genre[];
+  isADJ: Band["isADJ"];
   isATribute: Band["isATribute"];
   isLocal: Band["isLocal"];
   isSafe: Band["isSafe"];

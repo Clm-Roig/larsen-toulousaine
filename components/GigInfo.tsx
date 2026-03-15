@@ -34,6 +34,7 @@ import { getSortedGenres } from "@/domain/Band/Band.service";
 import UnsafeIcon, { UnsafeType } from "./UnsafeIcon";
 import Link from "next/link";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import IsADJBadge from "@/components/IsADJBadge";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
@@ -145,6 +146,7 @@ export default function GigInfo({ gig }: Props) {
                     ))}
                   </Flex>
                   {band.isATribute && <IsATributeBadge />}
+                  {band.isADJ && <IsADJBadge />}
                   {band.isLocal && (
                     <Badge
                       variant="outline"

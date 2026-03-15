@@ -55,11 +55,13 @@ async function POST(request: NextRequest) {
     const toCreateBands = bands.filter((b) => !b.id);
     const createdBands = await Promise.all(
       toCreateBands.map(async (band) => {
-        const { genres, isATribute, isLocal, isSafe, name, order } = band;
+        const { genres, isADJ, isATribute, isLocal, isSafe, name, order } =
+          band;
 
         const createdBand = await prisma.band.create({
           data: {
             genres: { connect: genres.map((g) => ({ id: g })) },
+            isADJ: isADJ,
             isATribute: isATribute,
             isLocal: isLocal,
             isSafe: isSafe,

@@ -15,6 +15,7 @@ interface Props {
   cityProps?: InputProps;
   countryCodeProps?: SelectProps;
   genreProps: Omit<GenreSelectProps, "maxValues" | "placeholder">;
+  isADJProps: Omit<CheckboxProps, "required" | "placeholder">;
   isATributeProps: Omit<CheckboxProps, "required" | "placeholder">;
   isLocalProps: Omit<CheckboxProps, "required" | "placeholder">;
   isSafeProps: Omit<CheckboxProps, "required" | "placeholder">;
@@ -28,6 +29,7 @@ const cityLabel = "Ville";
 const countryCodeLabel = `Pays`;
 const genreLabel = `Genres (${MAX_GENRES_PER_BAND} max)`;
 const isATributeLabel = "Est un groupe tribute";
+const isADJLabel = "Est un DJ";
 const isLocalLabel = "Est un groupe local";
 const isSafeLabel = "Est un groupe safe";
 const nameLabel = "Nom du groupe";
@@ -38,6 +40,7 @@ export default function BandFields({
   countryCodeProps,
   genreProps,
   isATributeProps,
+  isADJProps,
   isLocalProps,
   isSafeProps,
   nameProps,
@@ -73,6 +76,15 @@ export default function BandFields({
           withShortBoolDescriptions
             ? "Fait des reprises uniquement"
             : "Le groupe fait uniquement des reprises d'autre(s) groupe(s) (généralement très connu(s))."
+        }
+      />
+      <Checkbox
+        {...isADJProps}
+        label={isADJLabel}
+        description={
+          withShortBoolDescriptions
+            ? "Mixe des morceaux qu'il n'a pas créé"
+            : "L'artiste mixe des morceaux dont il n'est pas le compositeur original."
         }
       />
       <Checkbox

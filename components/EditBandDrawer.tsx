@@ -35,6 +35,7 @@ export function EditBandDrawer({
       countryCode: null,
       name: "",
       genres: [],
+      isADJ: false,
       isATribute: false,
       isLocal: false,
       isSafe: true,
@@ -114,6 +115,11 @@ export function EditBandDrawer({
                 genres: genres ?? [],
                 w: "100%",
                 ...form.getInputProps(`genres`),
+              }}
+              isADJProps={{
+                w: "100%",
+                checked: !!form.getInputProps("isADJ").value,
+                ...form.getInputProps(`isADJ`),
               }}
               isATributeProps={{
                 w: "100%",
