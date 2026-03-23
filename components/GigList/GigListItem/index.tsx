@@ -132,7 +132,7 @@ export default function GigListItem({
         <GigCompactInfo
           displayDate={false}
           displayMissingDataOnly={displayMissingDataOnly}
-          filterOnGenreClick
+          filterOnGenreClick={false}
           gig={gig}
           hovered={hovered}
           nbGenresDisplayed={nbGenresDisplayed}
