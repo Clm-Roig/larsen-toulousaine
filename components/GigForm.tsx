@@ -278,6 +278,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     reader.readAsDataURL(value);
   };
 
+  console.log(form.getValues());
+  console.log(imageFilePreview);
+
   return (
     <form onSubmit={handleOnSubmit}>
       <Box pos="relative" p="xs">
@@ -558,7 +561,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             <OptimizedImage
               mah={200}
               maw={getGigImgWidth(200)}
-              src={form.values.imageUrl ?? imageFilePreview}
+              src={imageFilePreview ?? form.values.imageUrl}
               alt="Affiche du concert"
               m={"auto"}
             />
