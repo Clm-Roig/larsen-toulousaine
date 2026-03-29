@@ -54,6 +54,7 @@ import {
   EditGigArgs,
   getGigByDateAndPlaceId,
   CreateGigArgs,
+  FromFormSimpleBand,
 } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import {
@@ -242,9 +243,10 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   };
 
   const insertNewBand = (bandName?: string) => {
-    const newBand = {
+    const newBand: FromFormSimpleBand = {
       name: bandName ?? "",
       genres: [],
+      isADJ: false,
       isATribute: false,
       isLocal: false,
       isSafe: true,
@@ -275,6 +277,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     });
     reader.readAsDataURL(value);
   };
+
+  console.log(form.getValues());
+  console.log(imageFilePreview);
 
   return (
     <form onSubmit={handleOnSubmit}>
@@ -458,6 +463,13 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                               disabled: !!form.values.bands[index].id,
                               ...form.getInputProps(`bands.${index}.genres`),
                             }}
+                            isADJProps={{
+                              disabled: !!form.values.bands[index].id,
+                              checked: !!form.getInputProps(
+                                `bands.${index}.isADJ`,
+                              ).value,
+                              ...form.getInputProps(`bands.${index}.isADJ`),
+                            }}
                             isATributeProps={{
                               disabled: !!form.values.bands[index].id,
                               checked: !!form.getInputProps(
@@ -549,7 +561,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             <OptimizedImage
               mah={200}
               maw={getGigImgWidth(200)}
-              src={form.values.imageUrl ?? imageFilePreview}
+              src={imageFilePreview ?? form.values.imageUrl}
               alt="Affiche du concert"
               m={"auto"}
             />

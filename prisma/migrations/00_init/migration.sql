@@ -14,6 +14,7 @@ CREATE TABLE "Band" (
     "countryCode" TEXT,
     "regionCode" TEXT,
     "city" TEXT,
+    "isADJ" BOOLEAN NOT NULL DEFAULT false,
     "isATribute" BOOLEAN NOT NULL DEFAULT false,
     "isSafe" BOOLEAN NOT NULL DEFAULT true,
 

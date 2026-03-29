@@ -11,7 +11,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 
 export default function Gigs() {
   const { searchParams, setSearchParams } = useSearchParams();
-  const { displayNotSafePlaces } = usePreferences();
+  const { displayNotSafeGigs } = usePreferences();
 
   const { data: genres = [] } = useQuery<Genre[]>({
     queryKey: ["genres"],
@@ -29,8 +29,8 @@ export default function Gigs() {
     useMonthGigs();
 
   const filteredPlaces = useMemo(
-    () => places.filter((p) => displayNotSafePlaces || p.isSafe),
-    [places, displayNotSafePlaces],
+    () => places.filter((p) => displayNotSafeGigs || p.isSafe),
+    [places, displayNotSafeGigs],
   );
 
   const onSelectedMonthChange = (newMonth: Date) => {

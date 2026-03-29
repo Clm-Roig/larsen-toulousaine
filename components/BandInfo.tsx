@@ -8,6 +8,7 @@ import dayjs from "@/lib/dayjs";
 import GigList from "./GigList";
 import allCountries from "country-region-data/data.json";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import IsADJBadge from "@/components/IsADJBadge";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -26,6 +27,7 @@ export default function BandInfo({ band }: Props) {
     createdAt,
     genres,
     gigs,
+    isADJ,
     isATribute,
     isLocal,
     regionCode,
@@ -47,6 +49,7 @@ export default function BandInfo({ band }: Props) {
               <GenreBadge key={genre.id} genre={genre} />
             ))}
             {isATribute && <IsATributeBadge />}
+            {isADJ && <IsADJBadge />}
             {isLocal && (
               <Badge
                 variant="outline"

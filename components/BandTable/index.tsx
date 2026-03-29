@@ -21,6 +21,7 @@ import TableHeader from "./TableHeader";
 import classes from "./BandTable.module.css";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import IsADJBadge from "@/components/IsADJBadge";
 import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
@@ -146,6 +147,7 @@ export default function BandTable({
                       <GenreBadge key={genre.id} genre={genre} size="sm" />
                     ))}
                     {band.isATribute && <IsATributeBadge />}
+                    {band.isADJ && <IsADJBadge />}
                   </Group>
                 </Table.Td>
                 <Table.Td ta="center">

@@ -15,6 +15,7 @@ import {
 import GigMissingData from "@/components/GigMissingData";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
+import IsADJBadge from "@/components/IsADJBadge";
 
 interface Props {
   displayDate: boolean;
@@ -36,6 +37,7 @@ export default function GigCompactInfo({
   const theme = useMantineTheme();
   const { bands, date, place, price } = gig;
   const isATribute = bands.some((b) => b.isATribute);
+  const isADJ = bands.some((b) => b.isADJ);
   const bandGenres = getSortedUniqueBandGenres(bands);
   const gigTitle = getGigTitle(gig);
   const nbHiddenGenres = bandGenres.length - nbGenresDisplayed;
@@ -71,6 +73,7 @@ export default function GigCompactInfo({
             />
           ))}
           {isATribute && <IsATributeBadge />}
+          {isADJ && <IsADJBadge />}
           {nbHiddenGenres > 0 && (
             <Badge color="gray.5">+{nbHiddenGenres}</Badge>
           )}

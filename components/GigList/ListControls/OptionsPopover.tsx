@@ -33,18 +33,18 @@ interface Props {
 }
 
 export default function OptionsPopover({ genres, places }: Props) {
-  const canSeeUnsafePlace = useHasPermission(Permission.SEE_UNSAFE_PLACES);
+  const canSeeUnsafeGigs = useHasPermission(Permission.SEE_UNSAFE_GIGS);
   const theme = useMantineTheme();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
   const {
-    displayNotSafePlaces,
+    displayNotSafeGigs,
     filteredGenres,
     excludedPlaces,
     grayOutPastGigs,
     maxPrice,
     preferencesSum,
     resetPreferences,
-    setDisplayNotSafePlaces,
+    setDisplayNotSafeGigs,
     setFilteredGenres,
     setExcludedPlaces,
     setGrayOutPastGigs,
@@ -115,13 +115,13 @@ export default function OptionsPopover({ genres, places }: Props) {
             }}
           />
 
-          {canSeeUnsafePlace && (
+          {canSeeUnsafeGigs && (
             <Checkbox
-              checked={displayNotSafePlaces}
-              label="Afficher les concerts dans des lieux non-safes"
+              checked={displayNotSafeGigs}
+              label="Afficher les concerts non-safes"
               onChange={(event) => {
                 const checked = event.currentTarget.checked;
-                setDisplayNotSafePlaces(checked);
+                setDisplayNotSafeGigs(checked);
               }}
             />
           )}

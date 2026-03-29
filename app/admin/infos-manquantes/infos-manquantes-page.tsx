@@ -8,11 +8,11 @@ import useMissingDataGigs from "@/hooks/useMissingDataGigs";
 import { genresQuery, placesQuery } from "@/domain/queries";
 
 export default function InfosManquantesPage() {
-  const { displayNotSafePlaces, preferencesSum } = usePreferences();
+  const { displayNotSafeGigs, preferencesSum } = usePreferences();
   const { data: genres } = useQuery<Genre[]>(genresQuery);
   const { data: places } = useQuery<Place[]>(placesQuery);
   const filteredPlaces = places?.filter(
-    (p) => (displayNotSafePlaces || p.isSafe) && !p.isClosed,
+    (p) => (displayNotSafeGigs || p.isSafe) && !p.isClosed,
   );
 
   const { gigs, isLoading } = useMissingDataGigs();

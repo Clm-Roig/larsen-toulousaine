@@ -44,6 +44,7 @@ const defaultSelect = {
           id: true,
           genres: true,
           name: true,
+          isADJ: true,
           isATribute: true,
           isLocal: true,
           isSafe: true,
