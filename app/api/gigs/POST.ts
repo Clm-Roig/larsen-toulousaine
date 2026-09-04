@@ -24,6 +24,10 @@ import dayjs from "@/lib/dayjs";
 
 import { MAX_IMAGE_SIZE } from "@/domain/image";
 import { File } from "buffer";
+import {
+  LOCAL_COUNTRY_CODE,
+  LOCAL_REGION_CODE,
+} from "@/domain/Place/constants";
 
 async function POST(request: NextRequest) {
   // Check auth
@@ -60,12 +64,14 @@ async function POST(request: NextRequest) {
 
         const createdBand = await prisma.band.create({
           data: {
+            countryCode: isLocal ? LOCAL_COUNTRY_CODE : undefined,
             genres: { connect: genres.map((g) => ({ id: g })) },
             isADJ: isADJ,
             isATribute: isATribute,
             isLocal: isLocal,
             isSafe: isSafe,
             name: name,
+            regionCode: isLocal ? LOCAL_REGION_CODE : undefined,
           },
         });
         return { ...createdBand, order: order };
