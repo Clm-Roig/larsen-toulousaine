@@ -131,6 +131,7 @@ async function POST(request: NextRequest) {
     if (createdBands.length > 0) {
       revalidatePath("bands");
     }
+    revalidatePath("gigs");
     return NextResponse.json(createdGig);
   } catch (error) {
     // console.error(error);
