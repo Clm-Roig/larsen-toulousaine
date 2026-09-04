@@ -64,6 +64,7 @@ async function GET(request: NextRequest): Promise<
     | {} // 404 case
   >
 > {
+  const start = performance.now();
   const { user } = (await getServerSession(authOptions)) ?? {};
   const headersList = await headers();
   const acceptHeader = headersList.get("Accept");
@@ -105,6 +106,10 @@ async function GET(request: NextRequest): Promise<
         facebook: facebookMarkdownGigs,
       });
     }
+
+    const duration = Math.round(performance.now() - start);
+    console.log(`[CUSTOM LOGS] GET /api/gigs - ${duration}ms`);
+
     return NextResponse.json({
       gigs: gigs,
     });
@@ -182,6 +187,8 @@ const getGigsByDateFromTo = async (
   to: string | null,
   isSafeGigsOnly: boolean,
 ): Promise<GigPreview[]> => {
+  const start = performance.now();
+
   const rawGigs = await prisma.gig.findMany({
     where: {
       date: {
@@ -204,8 +211,9 @@ const getGigsByDateFromTo = async (
     select: { ...defaultSelect },
     orderBy: gigListOrderBy,
   });
+  const duration = Math.round(performance.now() - start);
+  console.log(`[CUSTOM LOGS] prisma.gig.findMany - ${duration}ms`);
   const gigs = rawGigs.map((gig) => flattenGigBands(gig));
-
   return gigs;
 };
 
