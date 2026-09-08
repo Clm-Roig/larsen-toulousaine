@@ -36,11 +36,12 @@ export interface GigPreview {
 
 export interface GigMinimal {
   id: Gig["id"];
-  title: Gig["title"];
-  name: Gig["name"];
+  bands: BandMinimal[];
   date: Gig["date"];
   endDate: Gig["endDate"];
-  bands: BandMinimal[];
+  name: Gig["name"];
+  slug: Gig["slug"];
+  title: Gig["title"];
 }
 
 export const gigTypeToString = (gigType: GigType): string => {

@@ -236,10 +236,11 @@ const getGigByPlaceAndDate = async (
     where: whereClause,
     select: {
       id: true,
-      name: true,
-      title: true,
       date: true,
       endDate: true,
+      name: true,
+      slug: true,
+      title: true,
       bands: {
         select: {
           band: {
