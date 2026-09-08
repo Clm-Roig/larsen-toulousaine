@@ -139,7 +139,9 @@ export default function OptionsPopover({ genres, places }: Props) {
             label="Prix maximum"
             value={maxPrice}
             allowDecimal={false}
-            onChange={setMaxPrice}
+            onChange={(value) => {
+              setMaxPrice(value);
+            }}
           />
 
           <GenreSelect

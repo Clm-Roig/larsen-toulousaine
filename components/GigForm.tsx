@@ -2,6 +2,7 @@
 
 import { formRootRule, isNotEmpty, useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
+import Link from "next/link";
 import dayjs from "@/lib/dayjs";
 import {
   Button,
@@ -28,6 +29,7 @@ import {
   FileInput,
   CloseButton,
   Textarea,
+  Anchor,
 } from "@mantine/core";
 import { Genre } from "@prisma/client";
 import {
@@ -107,11 +109,11 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       date: null,
       dateRange: [null, null],
       description: null,
-      facebookEventUrl: null,
+      facebookEventUrl: "",
       hasTicketReservationLink: null,
       isAcceptingBankCard: null,
       imageFile: null,
-      imageUrl: null,
+      imageUrl: "",
       name: null,
       placeId: "",
       price: null,
@@ -278,9 +280,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     reader.readAsDataURL(value);
   };
 
-  console.log(form.getValues());
-  console.log(imageFilePreview);
-
   return (
     <form onSubmit={handleOnSubmit}>
       <Box pos="relative" p="xs">
@@ -388,7 +387,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 icon={<IconInfoCircle />}
                 p="xs"
               >
-                <b>{getGigTitle(samePlaceSameDayGig)}</b>
+                <Anchor component={Link} href={`/${samePlaceSameDayGig.slug}`}>
+                  {getGigTitle(samePlaceSameDayGig)}
+                </Anchor>
                 <br />
                 <i>
                   Vous pouvez tout de même continuer à ajouter un nouveau

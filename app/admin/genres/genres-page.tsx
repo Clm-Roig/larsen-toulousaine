@@ -3,9 +3,9 @@
 import Layout from "@/components/Layout";
 import { Alert, Center, Skeleton } from "@mantine/core";
 import GenreGrid from "@/components/GenreGrid";
-import { Genre } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { genresQuery } from "@/domain/queries";
+import { GenreWithBandCount } from "@/domain/Genre/Genre.type";
 
 const Genres = () => {
   const {
@@ -13,7 +13,7 @@ const Genres = () => {
     error,
     isLoading,
     isError,
-  } = useQuery<Genre[]>(genresQuery);
+  } = useQuery<GenreWithBandCount[]>(genresQuery);
 
   return (
     <Layout title="Tous les genres" withPaper>

@@ -7,16 +7,19 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     minimumCacheTTL: 60 * 30,
-    remotePatterns: [new URL('https://picsum.photos/**')],
+    remotePatterns: [new URL("https://picsum.photos/**")],
   },
   // Turbopack is causing issues on Windows + Prisma (symlick not working)
   // turbopack: {},
 };
 
+// eslint-disable-next-line no-undef
+const isDev = process.env.NODE_ENV === "development";
+
 const withPWA = withPWADefault({
   dest: "public",
-  // eslint-disable-next-line no-undef
-  disable: process.env.NODE_ENV === "development",
+  disable: isDev,
 });
 
-export default withPWA(nextConfig);
+// Wrapper only in production mode, otherwise it will break the dev server
+export default isDev ? nextConfig : withPWA(nextConfig);

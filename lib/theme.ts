@@ -49,4 +49,5 @@ export const theme = createTheme({
       },
     }),
   },
+  defaultRadius: "sm",
 });

@@ -6,8 +6,21 @@ export async function GET() {
     orderBy: {
       name: "asc",
     },
+    include: {
+      _count: {
+        select: {
+          bands: true,
+        },
+      },
+    },
   });
   return NextResponse.json({
-    genres: genres,
+    genres: genres.map((g) => {
+      const genreWithoutCount = { ...g, _count: undefined };
+      return {
+        ...genreWithoutCount,
+        count: g._count.bands,
+      };
+    }),
   });
 }

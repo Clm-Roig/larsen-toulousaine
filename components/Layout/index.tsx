@@ -41,7 +41,7 @@ const Layout: FC<Props> = ({ children, title, withPaper }: Props) => {
   const { breadcrumbs } = useBreadcrumbs();
   const router = useRouter();
   const { status } = useSession();
-  const pinned = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
+  const { pinned } = useHeadroom({ fixedAt: NAVBAR_HEIGHT * 2 });
 
   const breadcrumbsItems = breadcrumbs.map((item, index) => (
     <Anchor href={item.href} key={index} component={Link}>
