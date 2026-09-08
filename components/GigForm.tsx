@@ -136,9 +136,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         return null;
       },
       imageUrl: (value) =>
-        !value || isValidUrl(value) ? "" : INVALID_URL_ERROR_MSG,
+        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       facebookEventUrl: (value) =>
-        !value || isValidUrl(value) ? "" : INVALID_URL_ERROR_MSG,
+        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       placeId: isNotEmpty("Le lieu du concert est requis."),
       bands: {
         [formRootRule]: (value) =>
@@ -279,9 +279,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     });
     reader.readAsDataURL(value);
   };
-
-  console.log(form.getValues());
-  console.log(imageFilePreview);
 
   return (
     <form onSubmit={handleOnSubmit}>
