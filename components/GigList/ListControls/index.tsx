@@ -53,9 +53,7 @@ export default function ListControls({
         { label: "Liste", value: ViewType.LIST },
       ]}
       onChange={(data) => {
-        if (data) {
-          setViewType(data as ViewType);
-        }
+        setViewType(data as ViewType);
       }}
       value={viewType}
     />
