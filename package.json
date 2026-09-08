@@ -31,6 +31,7 @@
     "@mantine/hooks": "^9.6.0",
     "@mantine/modals": "^9.6.0",
     "@mantine/notifications": "^9.6.0",
+    "@prisma/client": "^6.19.3",
     "@tabler/icons-react": "^3.36.0",
     "@prisma/client": "^6.11.1",
     "@tanstack/react-query": "^5.66.9",
@@ -80,7 +81,7 @@
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.6.2",
-    "prisma": "^6.11.1",
+    "prisma": "^6.19.3",
     "typescript": "^5.7.3",
     "typescript-eslint": "8.50.1"
   }
