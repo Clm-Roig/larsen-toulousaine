@@ -111,7 +111,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       hasTicketReservationLink: null,
       isAcceptingBankCard: null,
       imageFile: null,
-      imageUrl: null,
+      imageUrl: "",
       name: null,
       placeId: "",
       price: null,
@@ -134,7 +134,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         return null;
       },
       imageUrl: (value) =>
-        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
+        !value || isValidUrl(value) ? "" : INVALID_URL_ERROR_MSG,
       facebookEventUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       placeId: isNotEmpty("Le lieu du concert est requis."),
