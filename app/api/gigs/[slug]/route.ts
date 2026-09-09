@@ -139,7 +139,7 @@ export async function PUT(request: NextRequest) {
       placeId,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       authorId,
-      facebookEventUrl,
+      sourceUrl,
       ...bodyWithoutPlaceIdAndAuthorId
     } = body;
     const slug = computeGigSlug({
@@ -190,9 +190,7 @@ export async function PUT(request: NextRequest) {
         endDate: dayjs(body.endDate).isSame(dayjs(body.date))
           ? null
           : body.endDate,
-        facebookEventUrl: facebookEventUrl
-          ? removeParametersFromUrl(facebookEventUrl)
-          : null,
+        sourceUrl: sourceUrl ? removeParametersFromUrl(sourceUrl) : null,
         imageUrl: newImageUrl,
         isAcceptingBankCard: body.isAcceptingBankCard ?? null,
         place: { connect: { id: body.placeId } },

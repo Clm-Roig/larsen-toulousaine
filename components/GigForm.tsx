@@ -109,7 +109,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       date: null,
       dateRange: [null, null],
       description: null,
-      facebookEventUrl: "",
+      sourceUrl: "",
       hasTicketReservationLink: null,
       isAcceptingBankCard: null,
       imageFile: null,
@@ -137,7 +137,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       },
       imageUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
-      facebookEventUrl: (value) =>
+      sourceUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       placeId: isNotEmpty("Le lieu du concert est requis."),
       bands: {
@@ -572,7 +572,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
           <TextInput
             label="URL de l'évènement Facebook"
-            {...form.getInputProps("facebookEventUrl")}
+            {...form.getInputProps("sourceUrl")}
           />
 
           <Box>

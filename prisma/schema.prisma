@@ -58,7 +58,7 @@ model Gig {
   price                    Float?
   hasTicketReservationLink Boolean?
   name                     String?
-  facebookEventUrl         String?
+  sourceUrl                String?
   isAcceptingBankCard      Boolean?
 }
 

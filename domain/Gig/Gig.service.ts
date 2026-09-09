@@ -215,7 +215,7 @@ export const toFacebookMarkdown = (
   gig: GigWithBandsAndPlace,
   lineBreakSymbol: string,
 ) => {
-  const { date, endDate, facebookEventUrl, place, price } = gig;
+  const { date, endDate, sourceUrl, place, price } = gig;
   const lines: string[] = [];
   lines.push(getGigMarkdownTitle(gig));
   const isSoldOutText = getGigMarkdownSoldOut(gig.isSoldOut);
@@ -225,8 +225,8 @@ export const toFacebookMarkdown = (
   lines.push(getGigMarkdownDate(date, endDate));
   lines.push(getGigMarkdownPlace(place));
   lines.push(formatGigPrice(markdownPricePrefix, price));
-  if (facebookEventUrl) {
-    lines.push(facebookEventUrl);
+  if (sourceUrl) {
+    lines.push(sourceUrl);
   }
   return lines.map((line) => line).join(lineBreakSymbol);
 };

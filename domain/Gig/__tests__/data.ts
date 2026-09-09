@@ -25,7 +25,7 @@ export const gig: GigWithBandsAndPlace = {
   title: null,
   updatedAt: new Date(),
   endDate: null,
-  facebookEventUrl: null,
+  sourceUrl: null,
   hasTicketReservationLink: true,
   isAcceptingBankCard: null,
 };

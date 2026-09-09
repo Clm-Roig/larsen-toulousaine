@@ -1,0 +1,1 @@
+ALTER TABLE "Gig" RENAME COLUMN "facebookEventUrl" TO "sourceUrl";

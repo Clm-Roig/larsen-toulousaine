@@ -18,7 +18,7 @@ const defaultSelect = {
   id: true,
   date: true,
   endDate: true,
-  facebookEventUrl: true,
+  sourceUrl: true,
   imageUrl: true,
   isCanceled: true,
   isSoldOut: true,

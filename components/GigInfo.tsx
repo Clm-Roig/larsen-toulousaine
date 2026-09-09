@@ -58,7 +58,7 @@ export default function GigInfo({ gig }: Props) {
     description,
     date,
     endDate,
-    facebookEventUrl,
+    sourceUrl,
     hasTicketReservationLink,
     isAcceptingBankCard,
     isCanceled,
@@ -106,12 +106,12 @@ export default function GigInfo({ gig }: Props) {
             ? `${formatDate(date)} - ${formatDate(endDate)}`
             : formatDate(date)}
         </Badge>
-        {facebookEventUrl && (
+        {sourceUrl && (
           <ActionIcon
             component={Link}
             target="_blank"
-            href={facebookEventUrl}
-            aria-label="URL de l'évènement Facebook"
+            href={sourceUrl}
+            aria-label="URL de la source"
           >
             <IconBrandFacebook />
           </ActionIcon>

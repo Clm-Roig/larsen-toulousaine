@@ -102,7 +102,7 @@ async function POST(request: NextRequest) {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { placeId, facebookEventUrl, ...bodyWithoutPlaceId } = body;
+    const { placeId, sourceUrl, ...bodyWithoutPlaceId } = body;
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
         ...bodyWithoutPlaceId,
@@ -121,9 +121,7 @@ async function POST(request: NextRequest) {
         endDate: dayjs(body.endDate).isSame(dayjs(body.date))
           ? null
           : body.endDate,
-        facebookEventUrl: facebookEventUrl
-          ? removeParametersFromUrl(facebookEventUrl)
-          : null,
+        sourceUrl: sourceUrl ? removeParametersFromUrl(sourceUrl) : null,
         imageUrl: blobImageUrl,
         isAcceptingBankCard: body.isAcceptingBankCard ?? null,
         place: { connect: { id: body.placeId } },
