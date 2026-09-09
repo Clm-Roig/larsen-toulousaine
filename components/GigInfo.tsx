@@ -7,14 +7,12 @@ import {
   Alert,
   Divider,
   Group,
-  ActionIcon,
   Anchor,
 } from "@mantine/core";
 import dayjs from "@/lib/dayjs";
 import { capitalize, isMobile } from "@/utils/utils";
 import ExternalLink from "@/components/ExternalLink";
 import {
-  IconBrandFacebook,
   IconCalendar,
   IconCurrencyEuro,
   IconEdit,
@@ -106,16 +104,6 @@ export default function GigInfo({ gig }: Props) {
             ? `${formatDate(date)} - ${formatDate(endDate)}`
             : formatDate(date)}
         </Badge>
-        {sourceUrl && (
-          <ActionIcon
-            component={Link}
-            target="_blank"
-            href={sourceUrl}
-            aria-label="URL de la source"
-          >
-            <IconBrandFacebook />
-          </ActionIcon>
-        )}
         {!isCanceled && <AddGigToCalendarButton gig={gig} />}
       </Row>
 
@@ -249,6 +237,11 @@ export default function GigInfo({ gig }: Props) {
             {description}
           </Text>
         </Row>
+      )}
+      {sourceUrl && (
+        <ExternalLink href={sourceUrl} aria-label="URL de la source">
+          Plus d&apos;infos
+        </ExternalLink>
       )}
     </Flex>
   );

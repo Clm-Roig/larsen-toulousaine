@@ -571,7 +571,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
           <Divider my="md" />
 
           <TextInput
-            label="URL de l'évènement Facebook"
+            label="URL de la source de l'évènement"
+            description={`Les évènements Facebook sont préférés mais cela peut être une publication, un post Instagram, un site web etc.`}
             {...form.getInputProps("sourceUrl")}
           />
 
