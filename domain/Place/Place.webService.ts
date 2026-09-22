@@ -13,6 +13,8 @@ export type EditPlaceArgs = Pick<
   | "city"
   | "isClosed"
   | "isSafe"
+  | "latitude"
+  | "longitude"
   | "name"
   | "size"
   | "website"

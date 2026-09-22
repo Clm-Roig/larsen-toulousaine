@@ -30,6 +30,8 @@ const Lieux = () => {
       city: "",
       isClosed: false,
       isSafe: true,
+      latitude: null,
+      longitude: null,
       name: "",
       size: null,
       website: "",
