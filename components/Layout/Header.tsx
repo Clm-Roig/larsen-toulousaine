@@ -17,6 +17,7 @@ import {
   IconExclamationCircle,
   IconLogout,
   IconMusic,
+  IconPalette,
 } from "@tabler/icons-react";
 import NextImage from "next/image";
 import Link from "next/link";
@@ -125,6 +126,13 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                     leftSection={<IconBuilding />}
                   >
                     Lieux
+                  </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    href="/admin/genres-v2"
+                    leftSection={<IconPalette />}
+                  >
+                    Genres
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<IconLogout />}
