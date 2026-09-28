@@ -47,7 +47,7 @@ export default function TableHeader({
         {canEditBand && <Table.Th w={{ base: 100, md: 120 }}>Action</Table.Th>}
       </Table.Tr>
       <Table.Tr>
-        <Table.Th pr={"xs"}>
+        <Table.Th pl={0}>
           <TextInput
             rightSection={
               searchedName && (

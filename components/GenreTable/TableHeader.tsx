@@ -19,7 +19,7 @@ export default function TableHeader({ searchedName, setSearchedName }: Props) {
         <Table.Th>Action</Table.Th>
       </Table.Tr>
       <Table.Tr>
-        <Table.Th>
+        <Table.Th pl={0}>
           <TextInput
             fw="initial"
             value={searchedName}
