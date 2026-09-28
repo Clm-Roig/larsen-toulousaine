@@ -14,6 +14,7 @@ const frenchBreadcrumbDictionnary = {
   Edit: "Éditer",
   "A-propos": "À propos",
   "Cette-semaine": "Cette semaine",
+  "Ajout-genre": "Ajout d'un genre",
   "Ajout-lieu": "Ajout d'un lieu",
   "Mentions-legales": "Mentions légales",
   "Infos-manquantes": "Infos manquantes",
