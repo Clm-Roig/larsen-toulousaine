@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const createdGig = await prisma.place.create({
+    const createdPlace = await prisma.place.create({
       data: Prisma.validator<Prisma.PlaceCreateInput>()({
         ...body,
       }),
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         },
       },
     });
-    return NextResponse.json(createdGig);
+    return NextResponse.json(createdPlace);
   } catch (error) {
     console.error(error);
     if (error instanceof PrismaClientValidationError) {
