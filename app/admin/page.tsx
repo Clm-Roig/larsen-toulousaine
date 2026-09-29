@@ -58,11 +58,6 @@ export default function Admin() {
                 icon={<IconPalette />}
                 text="Genres"
               />
-              <DashboardCard
-                href="/admin/genres-v2"
-                icon={<IconPalette />}
-                text="Genres v2"
-              />
             </Flex>
             <Title order={2}>Divers</Title>
             <Flex gap="sm" wrap="wrap">

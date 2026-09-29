@@ -129,7 +129,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                   </Menu.Item>
                   <Menu.Item
                     component={Link}
-                    href="/admin/genres-v2"
+                    href="/admin/genres"
                     leftSection={<IconPalette />}
                   >
                     Genres

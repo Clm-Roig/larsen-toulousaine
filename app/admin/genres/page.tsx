@@ -1,9 +1,7 @@
-import { Metadata } from "next";
 import GenresPage from "./genres-page";
-
 import { getMetadata } from "@/utils/metadata";
 
-export const metadata: Metadata = getMetadata({
+export const metadata = getMetadata({
   title: "Genres",
 });
 
