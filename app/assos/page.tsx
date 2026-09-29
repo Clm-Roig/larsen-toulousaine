@@ -93,7 +93,12 @@ const blocs = [
   <AssoBloc
     key="Silly Prod"
     name="Silly Prod"
-    url="https://www.facebook.com/sillyprod "
+    url="https://www.facebook.com/sillyprod"
+  />,
+  <AssoBloc
+    key="Report Tales of Hell"
+    name="Report Tales of Hell"
+    url="https://reporttalesofhell.wordpress.com/"
   />,
 ];
 
