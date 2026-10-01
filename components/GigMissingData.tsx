@@ -1,6 +1,6 @@
 import { unknownPlaceName } from "@/domain/constants";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
-import { List, ThemeIcon } from "@mantine/core";
+import { Group, List, Text, ThemeIcon } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { PropsWithChildren } from "react";
 
@@ -8,11 +8,16 @@ interface Props {
   gig: GigWithBandsAndPlace;
 }
 
-function ListItem(props: PropsWithChildren) {
+function ListItem({ children }: PropsWithChildren) {
   return (
-    <List.Item c="yellow" fs="italic">
-      {props.children}
-    </List.Item>
+    <Group gap="sm" wrap="nowrap">
+      <ThemeIcon color="yellow" radius="xl" size="sm">
+        <IconExclamationCircle />
+      </ThemeIcon>
+      <Text c="yellow" fs="italic">
+        {children}
+      </Text>
+    </Group>
   );
 }
 
@@ -22,6 +27,8 @@ export default function GigMissingData({ gig }: Props) {
     <>
       <List
         center
+        c="yellow"
+        fs="italic"
         icon={
           <ThemeIcon color="yellow" radius="xl" size="sm">
             <IconExclamationCircle />
