@@ -1,3 +1,4 @@
+import { unknownPlaceName } from "@/domain/constants";
 import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
 import { List, ThemeIcon } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
@@ -34,6 +35,9 @@ export default function GigMissingData({ gig }: Props) {
         {!price && price !== 0 && <ListItem>Prix</ListItem>}
         {bands.length <= 1 && <ListItem>Groupe(s)</ListItem>}
         {!sourceUrl && <ListItem>URL de la source</ListItem>}
+        {gig.place.name === unknownPlaceName && (
+          <ListItem>Lieu inconnu</ListItem>
+        )}
       </List>
     </>
   );

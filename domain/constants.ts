@@ -3,3 +3,4 @@ export const facebookLink = "https://www.facebook.com/larsen.toulousaine";
 export const contactEmail = "webmaster@larsen-toulousaine.fr";
 export const fbAppId = 193783477144905;
 export const themeColor = "#b99f51";
+export const unknownPlaceName = "Inconnu";

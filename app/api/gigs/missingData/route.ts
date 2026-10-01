@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { mustBeAuthenticatedError, toResponse } from "@/domain/errors";
 import { Prisma } from "@prisma/client";
+import { unknownPlaceName } from "@/domain/constants";
 
 const defaultInclude = {
   place: true,
@@ -44,7 +45,8 @@ export async function GET() {
         g.imageUrl === null ||
         g.imageUrl === "" ||
         g.sourceUrl === null ||
-        g.hasTicketReservationLink === null,
+        g.hasTicketReservationLink === null ||
+        g.place.name === unknownPlaceName,
     );
 
   const gigs = rawGigs.map((gig) => ({
