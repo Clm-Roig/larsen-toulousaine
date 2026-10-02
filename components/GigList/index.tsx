@@ -127,6 +127,8 @@ const GigList = ({
                         const previousGig: GigPreview | undefined =
                           idx === 0 ? undefined : gigs[idx - 1];
                         const hasAnEndDate = !!gig.endDate;
+                        const isFirstGigOfTheList = idx === 0;
+                        const isLastGigOfTheList = idx === gigs.length - 1;
                         const previousGigHasEndDate = !!previousGig?.endDate;
                         const isNextGigSameDay =
                           nextGig && dayjs(nextGig.date).isSame(gig.date);
@@ -145,6 +147,9 @@ const GigList = ({
                             }
                             {...(isNextGigSameDay && { pb: "xs" })}
                             {...(isPreviousGigSameDay && { pt: "xs" })}
+                            {...(isFirstGigOfTheList && { pt: 0 })}
+                            {...(isLastGigOfTheList &&
+                              !canCreateGig && { pb: 0 })}
                             displayDate={
                               !isPreviousGigSameDay ||
                               hasAnEndDate || // Festival must display its dates
