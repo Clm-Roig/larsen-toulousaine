@@ -1,40 +1,36 @@
 import { User } from "@prisma/client";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 
-// TODO: setup refresh token mechanism to reduce this duration
-export const EXPIRATION_TIME_IN_SECONDS = Date.now() + 30 * 24 * 60 * 60; // 30 days
+// ==== If you modify AUTH_MAX_AGE, make sure to also update expirationTime ==== //
+export const AUTH_MAX_AGE = 30 * 24 * 60 * 60; // 30 days in seconds
+const expirationTime = "30d";
 
 type CustomJWTPayload = JWTPayload & Omit<User, "password">;
 
 export async function signJwtAccessToken(payload: CustomJWTPayload) {
   const secretKey = process.env.NEXTAUTH_SECRET;
-  if (!secretKey) {
-    throw new Error("Secret key not found!");
-  }
-  const token = await new SignJWT(payload)
+  if (!secretKey) throw new Error("Secret key not found!");
+
+  return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(EXPIRATION_TIME_IN_SECONDS)
+    .setExpirationTime(expirationTime)
     .sign(new TextEncoder().encode(secretKey));
-
-  return token;
 }
 
 export async function verifyAndDecodeJwt(token: string) {
   try {
     const secretKey = process.env.NEXTAUTH_SECRET;
-    if (!secretKey) {
-      throw new Error("Secret key not found!");
-    }
+    if (!secretKey) throw new Error("Secret key not found!");
+
     if (token) {
-      const decodedToken = await jwtVerify<CustomJWTPayload>(
+      return await jwtVerify<CustomJWTPayload>(
         token,
         new TextEncoder().encode(secretKey),
       );
-      return decodedToken;
     }
   } catch (error) {
-    console.error("Error while verifying and decoding JWT token:\n", error);
+    console.error("Error while verifying JWT token:", error);
     return null;
   }
 }
