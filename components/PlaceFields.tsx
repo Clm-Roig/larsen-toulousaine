@@ -87,7 +87,7 @@ export default function PlaceFields({
           ? { label: latitudeLabel }
           : { placeholder: latitudeLabel })}
         description="Pour obtenir cette information, rendez-vous sur Google Maps et faites clic-droit sur le lieu. Parmi les 2 chiffres dans le menu, la latitude est le premier."
-        step={0.1}
+        hideControls
       />
       <NumberInput
         {...longitudeProps}
@@ -95,7 +95,7 @@ export default function PlaceFields({
           ? { label: longitudeLabel }
           : { placeholder: longitudeLabel })}
         description="Pour obtenir cette information, rendez-vous sur Google Maps et faites clic-droit sur le lieu. Parmi les 2 chiffres dans le menu, la longitude est le deuxième."
-        step={0.1}
+        hideControls
       />
       <Switch
         {...isSafeProps}
