@@ -17,10 +17,7 @@ import {
   downloadImage,
   storeImage,
 } from "@/app/api/utils/image";
-import {
-  flattenGigBands,
-  gigWithBandsAndGenresInclude,
-} from "@/app/api/utils/gigs";
+import { flattenGigBands, completGigInclude } from "@/app/api/utils/gigs";
 import {
   invalidImageUrlError,
   tooBigImageFileError,
@@ -40,7 +37,7 @@ export async function GET(
     where: {
       slug: slug,
     },
-    include: gigWithBandsAndGenresInclude,
+    include: completGigInclude,
   });
   if (!gig) {
     return new Response(null, { status: 404 });
@@ -140,6 +137,7 @@ export async function PUT(request: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       authorId,
       sourceUrl,
+      organizationId,
       ...bodyWithoutPlaceIdAndAuthorId
     } = body;
     const slug = computeGigSlug({
@@ -186,6 +184,12 @@ export async function PUT(request: NextRequest) {
             order: band.order,
           })),
         },
+        // organization management : if null is provided, disconnect it
+        organization: organizationId
+          ? { connect: { id: organizationId } }
+          : organizationId === null
+            ? { disconnect: true }
+            : undefined,
         // endDate must be different than date
         endDate: dayjs(body.endDate).isSame(dayjs(body.date))
           ? null

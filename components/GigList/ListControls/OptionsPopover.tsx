@@ -18,7 +18,7 @@ import {
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
-import { Genre, Place } from "@prisma/client";
+import { Genre, Organization, Place } from "@prisma/client";
 import {
   IconDeselect,
   IconHomeCancel,
@@ -29,10 +29,15 @@ import { useState } from "react";
 
 interface Props {
   genres: Genre[];
+  organizations: Organization[];
   places: Place[];
 }
 
-export default function OptionsPopover({ genres, places }: Props) {
+export default function OptionsPopover({
+  genres,
+  organizations,
+  places,
+}: Props) {
   const canSeeUnsafeGigs = useHasPermission(Permission.SEE_UNSAFE_GIGS);
   const theme = useMantineTheme();
   const [areFiltersOpened, setAreFiltersOpened] = useState(false);
@@ -64,6 +69,9 @@ export default function OptionsPopover({ genres, places }: Props) {
       setExcludedPlaces([]);
     }
   };
+
+  // TODO: filter by organizations
+  console.log(organizations);
 
   return (
     <Popover

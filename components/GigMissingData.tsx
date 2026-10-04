@@ -1,11 +1,11 @@
 import { unknownPlaceName } from "@/domain/constants";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import { Group, List, Text, ThemeIcon } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { PropsWithChildren } from "react";
 
 interface Props {
-  gig: GigWithBandsAndPlace;
+  gig: CompleteGig;
 }
 
 function ListItem({ children }: PropsWithChildren) {

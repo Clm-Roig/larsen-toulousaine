@@ -1,6 +1,6 @@
 import { fbAppId } from "@/domain/constants";
 import { getGigTitleFromGigSlug } from "@/domain/Gig/Gig.service";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import { Metadata } from "next";
 import { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
 
@@ -41,7 +41,7 @@ export const getMetadata = (
 };
 
 export const getGigsMetadata = (
-  gigs: GigWithBandsAndPlace[],
+  gigs: CompleteGig[],
 ): { gigDescriptions: string[]; gigImages: string[] } => {
   const filteredGigs = gigs.filter((g) => !g.isCanceled);
   const images: string[] = filteredGigs.reduce((images, gig) => {

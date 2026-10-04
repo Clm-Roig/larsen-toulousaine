@@ -3,11 +3,7 @@ import {
   getSortedGenres,
   getSortedUniqueBandGenres,
 } from "@/domain/Band/Band.service";
-import {
-  GigMinimal,
-  GigPreview,
-  GigWithBandsAndPlace,
-} from "@/domain/Gig/Gig.type";
+import { GigMinimal, GigPreview, CompleteGig } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize, formatFrenchPrice } from "@/utils/utils";
 import { Band, Gig, Place } from "@prisma/client";
@@ -130,7 +126,7 @@ export const formatGigPrice = (prefix: string, price: Gig["price"]): string => {
   return res;
 };
 
-export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
+export const getGigRSSFeedDescription = (gig: CompleteGig): string => {
   let description = "";
   const { bands, name, place, price, ticketReservationLink } = gig;
 
@@ -173,7 +169,7 @@ export const getGigRSSFeedDescription = (gig: GigWithBandsAndPlace): string => {
 };
 
 // ===== To Markdown utils ===== //
-const getGigMarkdownTitle = (gig: GigWithBandsAndPlace): string => {
+const getGigMarkdownTitle = (gig: CompleteGig): string => {
   return `${getGigTitle(gig)} (${getSortedUniqueBandGenres(gig.bands)
     .slice(0, 3)
     .map((g) => g.name)
@@ -194,7 +190,7 @@ const getGigMarkdownSoldOut = (isSoldOut: boolean): string | null =>
   isSoldOut ? `⚠ COMPLET ⚠` : null;
 
 export const toDiscordMarkdown = (
-  gig: GigWithBandsAndPlace,
+  gig: CompleteGig,
   lineBreakSymbol: string,
 ) => {
   const { date, endDate, place, price, slug } = gig;
@@ -212,7 +208,7 @@ export const toDiscordMarkdown = (
 };
 
 export const toFacebookMarkdown = (
-  gig: GigWithBandsAndPlace,
+  gig: CompleteGig,
   lineBreakSymbol: string,
 ) => {
   const { date, endDate, sourceUrl, place, price } = gig;

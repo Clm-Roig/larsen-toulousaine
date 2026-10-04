@@ -26,7 +26,7 @@ import Price from "@/components/Price";
 import GenreBadge from "@/components/GenreBadge";
 import AddGigToCalendarButton from "@/components/AddGigToCalendarButton";
 import useScreenSize from "@/hooks/useScreenSize";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import { getSortedGenres } from "@/domain/Band/Band.service";
 import UnsafeIcon, { UnsafeType } from "./UnsafeIcon";
@@ -45,7 +45,7 @@ const Row = ({ children }: { children: ReactNode }) => (
 const IconBlock = ({ children }) => <Flex>{children}</Flex>;
 
 interface Props {
-  gig: GigWithBandsAndPlace;
+  gig: CompleteGig;
 }
 
 export default function GigInfo({ gig }: Props) {

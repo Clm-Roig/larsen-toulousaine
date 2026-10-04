@@ -6,7 +6,7 @@ import {
   SimpleGrid,
 } from "@mantine/core";
 import dayjs from "@/lib/dayjs";
-import { Genre, Place } from "@prisma/client";
+import { Genre, Organization, Place } from "@prisma/client";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import OptionsPopover from "@/components/GigList/ListControls/OptionsPopover";
@@ -15,6 +15,7 @@ import DateSelector from "@/components/GigList/ListControls/DateSelector";
 interface Props {
   dateStep: "month" | "week";
   genres?: Genre[];
+  organizations?: Organization[];
   places?: Place[];
   selectedDate?: Date;
   setSelectedDate?: (newDate: Date) => void;
@@ -23,6 +24,7 @@ interface Props {
 export default function ListControls({
   dateStep,
   genres,
+  organizations,
   places,
   selectedDate,
   setSelectedDate,
@@ -43,7 +45,8 @@ export default function ListControls({
     setSelectedDate?.(newDate);
   };
 
-  const displayGenresAndPlacesSelector = !!genres && !!places;
+  const displayGenresAndOrgAndPlacesSelector =
+    !!genres && !!organizations && !!places;
   const displayDateSelector = !!selectedDate && !!setSelectedDate;
 
   const ViewTypeControl = (
@@ -61,7 +64,7 @@ export default function ListControls({
 
   return (
     <SimpleGrid cols={{ base: 1, sm: 3 }}>
-      {!displayDateSelector && !displayGenresAndPlacesSelector ? (
+      {!displayDateSelector && !displayGenresAndOrgAndPlacesSelector ? (
         <Box>{ViewTypeControl}</Box>
       ) : (
         <>
@@ -91,13 +94,17 @@ export default function ListControls({
         justify={{ base: "center", sm: "flex-end" }}
         align="center"
       >
-        {displayGenresAndPlacesSelector && (
+        {displayGenresAndOrgAndPlacesSelector && (
           <>
-            <OptionsPopover genres={genres} places={places} />
+            <OptionsPopover
+              genres={genres}
+              organizations={organizations}
+              places={places}
+            />
             <Divider orientation="vertical" size="xs" />
           </>
         )}
-        {displayGenresAndPlacesSelector && ViewTypeControl}
+        {displayGenresAndOrgAndPlacesSelector && ViewTypeControl}
       </Flex>
     </SimpleGrid>
   );

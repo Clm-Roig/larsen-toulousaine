@@ -1,10 +1,5 @@
 import { Band, Genre, Gig } from "@prisma/client";
-import {
-  GigMinimal,
-  GigPreview,
-  GigWithBandsAndPlace,
-  MarkdownGigs,
-} from "./Gig.type";
+import { GigMinimal, GigPreview, CompleteGig, MarkdownGigs } from "./Gig.type";
 import api, { getErrorMessage } from "@/lib/axios";
 import { BandPreview, BandWithGenres } from "@/domain/Band/Band.type";
 import { isAxiosError } from "axios";
@@ -20,7 +15,7 @@ export const getGigs = async (
           Accept: "text/markdown",
         }
       : {};
-    const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
+    const response = await api.get<{ gigs: CompleteGig[] }>(
       `/gigs?from=${from.toISOString()}&to=${to.toISOString()}`,
       {
         headers: headers,
@@ -56,7 +51,7 @@ export const getGigByDateAndPlaceId = async (
   placeId: string,
 ): Promise<GigMinimal | null> => {
   try {
-    const response = await api.get<GigWithBandsAndPlace | undefined>(
+    const response = await api.get<CompleteGig | undefined>(
       `/gigs?date=${date.toISOString()}&placeId=${placeId}`,
     );
     return response.data ?? null;
@@ -66,11 +61,9 @@ export const getGigByDateAndPlaceId = async (
   }
 };
 
-export const getGig = async (
-  slug: string,
-): Promise<GigWithBandsAndPlace | null> => {
+export const getGig = async (slug: string): Promise<CompleteGig | null> => {
   try {
-    const response = await api.get<GigWithBandsAndPlace | undefined>(
+    const response = await api.get<CompleteGig | undefined>(
       `/gigs/${encodeURIComponent(slug)}`,
     );
     return response.data ?? null;
@@ -138,9 +131,7 @@ export type CreateGigArgs = Omit<
   imageFile?: File | null;
 };
 
-export const createGig = async (
-  gig: CreateGigArgs,
-): Promise<GigWithBandsAndPlace> => {
+export const createGig = async (gig: CreateGigArgs): Promise<CompleteGig> => {
   const formData = new FormData();
   const { imageFile, ...otherValues } = gig;
   if (imageFile) {
@@ -154,7 +145,7 @@ export const createGig = async (
     }),
   );
   try {
-    const response = await api.post<GigWithBandsAndPlace>(`/gigs`, formData, {
+    const response = await api.post<CompleteGig>(`/gigs`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
@@ -172,9 +163,7 @@ export type EditGigArgs = Gig & {
   imageFile?: File | null;
 };
 
-export const editGig = async (
-  gig: EditGigArgs,
-): Promise<GigWithBandsAndPlace> => {
+export const editGig = async (gig: EditGigArgs): Promise<CompleteGig> => {
   const formData = new FormData();
   const { imageFile, ...otherValues } = gig;
   if (imageFile) {
@@ -188,13 +177,9 @@ export const editGig = async (
     }),
   );
   try {
-    const response = await api.put<GigWithBandsAndPlace>(
-      `/gigs/${gig.id}`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
-    );
+    const response = await api.put<CompleteGig>(`/gigs/${gig.id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -243,11 +228,9 @@ export const markGigAsNotSoldOut = async (
   }
 };
 
-export const searchGigs = async (
-  query: string,
-): Promise<GigWithBandsAndPlace[]> => {
+export const searchGigs = async (query: string): Promise<CompleteGig[]> => {
   try {
-    const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
+    const response = await api.get<{ gigs: CompleteGig[] }>(
       `/gigs?query=${query}`,
     );
     return response.data.gigs;
@@ -256,9 +239,9 @@ export const searchGigs = async (
   }
 };
 
-export const getMissingDataGigs = async (): Promise<GigWithBandsAndPlace[]> => {
+export const getMissingDataGigs = async (): Promise<CompleteGig[]> => {
   try {
-    const response = await api.get<{ gigs: GigWithBandsAndPlace[] }>(
+    const response = await api.get<{ gigs: CompleteGig[] }>(
       `/gigs/missingData`,
     );
     return response.data.gigs;

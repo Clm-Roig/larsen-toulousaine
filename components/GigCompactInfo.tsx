@@ -1,7 +1,7 @@
 import GenreBadge from "@/components/GenreBadge";
 import Price from "@/components/Price";
 import { getSortedUniqueBandGenres } from "@/domain/Band/Band.service";
-import { GigPreview, GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { GigPreview, CompleteGig } from "@/domain/Gig/Gig.type";
 import dayjs from "@/lib/dayjs";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import {
@@ -21,7 +21,7 @@ interface Props {
   displayDate: boolean;
   displayMissingDataOnly: boolean;
   filterOnGenreClick: boolean;
-  gig: GigPreview | GigWithBandsAndPlace;
+  gig: GigPreview | CompleteGig;
   hovered?: boolean;
   nbGenresDisplayed: number;
 }
@@ -61,7 +61,7 @@ export default function GigCompactInfo({
         {gigTitle}
       </Title>
       {displayMissingDataOnly ? (
-        <GigMissingData gig={gig as GigWithBandsAndPlace} />
+        <GigMissingData gig={gig as CompleteGig} />
       ) : (
         <Group gap={2}>
           {bandGenres.slice(0, nbGenresDisplayed).map((genre) => (

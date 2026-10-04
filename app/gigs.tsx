@@ -1,5 +1,5 @@
 "use client";
-import { Genre, Place } from "@prisma/client";
+import { Genre, Organization, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
 import useMonthGigs from "@/hooks/useMonthGigs";
 import { useEffect, useMemo } from "react";
@@ -8,6 +8,7 @@ import { getGenres } from "@/domain/Genre/Genre.webService";
 import { getPlaces } from "@/domain/Place/Place.webService";
 import usePreferences from "@/hooks/usePreferences";
 import useSearchParams from "@/hooks/useSearchParams";
+import { getOrganizations } from "@/domain/Organization/Organization.webService";
 
 export default function Gigs() {
   const { searchParams, setSearchParams } = useSearchParams();
@@ -22,6 +23,12 @@ export default function Gigs() {
   const { data: places = [] } = useQuery<Place[]>({
     queryKey: ["places"],
     queryFn: getPlaces,
+    staleTime: 60 * 60 * 15, // 15min
+  });
+
+  const { data: organizations = [] } = useQuery<Organization[]>({
+    queryKey: ["organizations"],
+    queryFn: getOrganizations,
     staleTime: 60 * 60 * 15, // 15min
   });
 
@@ -61,6 +68,7 @@ export default function Gigs() {
       gigs={monthGigs}
       isLoading={isLoading}
       noGigsFoundMessage="Aucun concert trouvé pour ce mois-ci 🙁"
+      organizations={organizations}
       places={filteredPlaces}
       selectedDate={selectedMonth}
       setSelectedDate={onSelectedMonthChange}

@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { searchGigs } from "@/domain/Gig/Gig.webService";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import { useDebouncedState } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import Option from "./Option";
@@ -25,7 +25,7 @@ export default function GigSearchInput() {
   });
   const [inputValue, setInputValue] = useDebouncedState("", 200);
 
-  const { data: gigs, isLoading } = useQuery<GigWithBandsAndPlace[] | null>({
+  const { data: gigs, isLoading } = useQuery<CompleteGig[] | null>({
     queryKey: ["searchedGigs", inputValue],
     queryFn: async () => {
       if (!inputValue || inputValue.length < NB_CHAR_TO_LAUNCH_GIG_SEARCH) {

@@ -102,10 +102,10 @@ async function POST(request: NextRequest) {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { placeId, sourceUrl, ...bodyWithoutPlaceId } = body;
+    const { placeId, sourceUrl, organizationId, ...bodyRest } = body;
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
-        ...bodyWithoutPlaceId,
+        ...bodyRest,
         author: { connect: { id: user.id } },
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
@@ -124,6 +124,9 @@ async function POST(request: NextRequest) {
         sourceUrl: sourceUrl ? removeParametersFromUrl(sourceUrl) : null,
         imageUrl: blobImageUrl,
         isAcceptingBankCard: body.isAcceptingBankCard ?? null,
+        organization: organizationId
+          ? { connect: { id: organizationId } }
+          : undefined,
         place: { connect: { id: body.placeId } },
         slug: slug,
         ticketReservationLink: body.hasTicketReservationLink

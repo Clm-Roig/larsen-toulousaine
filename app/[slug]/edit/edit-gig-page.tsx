@@ -5,7 +5,7 @@ import { EditGigArgs, editGig, getGig } from "@/domain/Gig/Gig.webService";
 import { Anchor, Box, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Gig } from "@prisma/client";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function EditGig({ gigSlug }: Props) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { data: gig, isLoading } = useQuery<GigWithBandsAndPlace | null>({
+  const { data: gig, isLoading } = useQuery<CompleteGig | null>({
     queryKey: ["gig", gigSlug],
     queryFn: async () => await getGig(gigSlug),
   });

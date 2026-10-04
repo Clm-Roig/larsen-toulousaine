@@ -7,8 +7,8 @@ import { PlacePreview } from "@/domain/Place/Place.type";
 import { capitalize as capitalizeStr } from "@/utils/utils";
 import { Gig, Prisma } from "@prisma/client";
 
-export type GigWithBandsAndPlace = Prisma.GigGetPayload<{
-  include: { place: true };
+export type CompleteGig = Prisma.GigGetPayload<{
+  include: { place: true; organization: true };
 }> & {
   bands: (BandWithGenres & { order: number })[];
 };

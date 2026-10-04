@@ -11,7 +11,8 @@ export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
   { slug: Prisma.SortOrder.asc },
 ];
 
-export const gigWithBandsAndGenresInclude = {
+export const completGigInclude = {
+  organization: true,
   place: true,
   bands: {
     include: {

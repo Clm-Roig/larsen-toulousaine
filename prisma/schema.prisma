@@ -60,17 +60,20 @@ model Gig {
   name                     String?
   sourceUrl                String?
   isAcceptingBankCard      Boolean?
+  organization             Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  organizationId           String?
 }
 
 model User {
-  id        String   @id @default(cuid())
-  pseudo    String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-  gigs      Gig[]
-  role      Role     @default(MODERATOR)
+  id            String         @id @default(cuid())
+  pseudo        String
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now()) @map(name: "created_at")
+  updatedAt     DateTime       @updatedAt @map(name: "updated_at")
+  gigs          Gig[]
+  role          Role           @default(MODERATOR)
+  organizations Organization[]
 
   @@map(name: "users")
 }
@@ -104,4 +107,16 @@ model BandsOnGigs {
   order  Int
 
   @@id([bandId, gigId])
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  logoUrl   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  gigs      Gig[]
 }

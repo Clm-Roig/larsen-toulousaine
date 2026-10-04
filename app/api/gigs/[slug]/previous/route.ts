@@ -1,7 +1,4 @@
-import {
-  gigListOrderBy,
-  gigWithBandsAndGenresInclude,
-} from "@/app/api/utils/gigs";
+import { gigListOrderBy, completGigInclude } from "@/app/api/utils/gigs";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
@@ -20,7 +17,7 @@ export async function GET(
         slug: slug,
       },
       orderBy: gigListOrderBy,
-      include: gigWithBandsAndGenresInclude,
+      include: completGigInclude,
     });
     if (!gig) {
       return new Response(null, { status: 404 });

@@ -1,11 +1,11 @@
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import { Band, BandsOnGigs } from "@prisma/client";
 import { flattenGigBands } from "./gigs";
 import allCountries from "country-region-data/data.json";
 
 export const flattenBandGigs = (
-  band: Band & { gigs: ({ gig: GigWithBandsAndPlace } & BandsOnGigs)[] },
-): Band & { gigs: GigWithBandsAndPlace[] } => ({
+  band: Band & { gigs: ({ gig: CompleteGig } & BandsOnGigs)[] },
+): Band & { gigs: CompleteGig[] } => ({
   ...band,
   // @ts-ignore I give up on this very complex typing (but it works! :))
   gigs: band.gigs.map((g) => flattenGigBands(g.gig)),

@@ -10,7 +10,7 @@ import {
 } from "@/domain/Gig/Gig.webService";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ const GigPage = ({ gigSlug }: Props) => {
     data: gig,
     isLoading,
     isError,
-  } = useQuery<GigWithBandsAndPlace | null>({
+  } = useQuery<CompleteGig | null>({
     queryKey: ["gig", gigSlug],
     queryFn: async () => await getGig(gigSlug),
   });

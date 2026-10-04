@@ -16,11 +16,25 @@ Run server:
 
 ### Prisma
 
-You need to update the database every time your Prisma schema file is changing by running the following commands:
+> ⚠️ **Important (Direct Production Environment):**
+> **Never** run `npx prisma db push` or `npx prisma migrate dev` directly against the production database. These commands can trigger a schema reset (`prisma migrate reset`) and destroy production data.
 
-`npx prisma generate`
+To safely apply Prisma schema changes:
 
-`npx prisma db push`
+1. **Create a migration folder manually:**
+   Create a timestamped directory inside `prisma/migrations/`, for example:
+   `prisma/migrations/YYYYMMDDHHMMSS_your_migration_name/`
+
+2. **Create the SQL migration file:**
+   Inside that folder, create a `migration.sql` file containing the required DDL statements (`CREATE TABLE`, `ALTER TABLE`, etc.).
+
+3. **Apply the migration to the database:**
+   ```bash
+   npx prisma migrate deploy
+
+4. **Regenerate the Prisma client:**
+   ```bash
+   npx prisma generate
 
 ### Tools
 

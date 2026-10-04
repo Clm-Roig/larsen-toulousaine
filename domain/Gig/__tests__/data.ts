@@ -1,11 +1,11 @@
 import { allBands, allPlaces, allUsers } from "@/tests/data";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 
 export const gigBands = allBands
   .slice(0, 2)
   .map((b, idx) => ({ ...b, order: idx + 1 }));
 
-export const gig: GigWithBandsAndPlace = {
+export const gig: CompleteGig = {
   id: "oiqdkjioaz8549849d8",
   authorId: allUsers[0].id,
   bands: gigBands.map((b, idx) => ({ ...b, order: idx + 1 })),

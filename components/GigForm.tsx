@@ -62,7 +62,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import {
   GigMinimal,
   GigType,
-  GigWithBandsAndPlace,
+  CompleteGig,
   gigTypeToString,
 } from "@/domain/Gig/Gig.type";
 import { DatePickerInput } from "@mantine/dates";
@@ -82,7 +82,7 @@ const { FESTIVAL, GIG } = GigType;
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
 
 interface Props {
-  gig?: GigWithBandsAndPlace;
+  gig?: CompleteGig;
   isLoading: boolean;
   onSubmit: (values: CreateGigArgs | EditGigArgs) => void;
 }
@@ -115,6 +115,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
       imageFile: null,
       imageUrl: "",
       name: null,
+      organizationId: "",
       placeId: "",
       price: null,
       slug: "",

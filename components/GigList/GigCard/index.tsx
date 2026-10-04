@@ -5,7 +5,7 @@ import { Box, Card, Stack, Text, Group, useMantineTheme } from "@mantine/core";
 import {
   GigPreview,
   gigToGigTypeString,
-  GigWithBandsAndPlace,
+  CompleteGig,
 } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "@/lib/dayjs";
@@ -108,7 +108,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
           </Stack>
 
           {displayMissingDataOnly && (
-            <GigMissingData gig={gig as GigWithBandsAndPlace} />
+            <GigMissingData gig={gig as CompleteGig} />
           )}
 
           <Group justify="space-between" wrap="nowrap">

@@ -1,10 +1,10 @@
 import GigCompactInfo from "@/components/GigCompactInfo";
-import { GigWithBandsAndPlace } from "@/domain/Gig/Gig.type";
+import { CompleteGig } from "@/domain/Gig/Gig.type";
 import { hasPassed } from "@/utils/date";
 import { Box, Combobox } from "@mantine/core";
 
 interface Props {
-  gig: GigWithBandsAndPlace;
+  gig: CompleteGig;
 }
 
 export default function Option({ gig }: Props) {

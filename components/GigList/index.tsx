@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { GigPreview } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
-import { Genre, Place } from "@prisma/client";
+import { Genre, Organization, Place } from "@prisma/client";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
 import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
@@ -39,6 +39,7 @@ type ConditionalProps =
       dateStep: "month" | "week";
       genres?: Genre[];
       places?: Place[];
+      organizations?: Organization[];
       selectedDate?: Date;
       setSelectedDate?: (newDate: Date) => void;
       withListControls: boolean;
@@ -47,6 +48,7 @@ type ConditionalProps =
       dateStep?: never;
       genres?: never;
       places?: never;
+      organizations?: never;
       selectedDate?: never;
       setSelectedDate?: never;
       withListControls: boolean;
@@ -61,6 +63,7 @@ const GigList = ({
   isLoading,
   listControlsBoxProps,
   noGigsFoundMessage,
+  organizations,
   places,
   selectedDate,
   setSelectedDate,
@@ -78,6 +81,7 @@ const GigList = ({
           <ListControls
             dateStep={dateStep}
             genres={genres}
+            organizations={organizations}
             places={places}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
