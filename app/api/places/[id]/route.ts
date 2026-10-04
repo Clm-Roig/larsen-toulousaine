@@ -4,6 +4,7 @@ import {
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
+  unknownError,
 } from "@/domain/errors";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
@@ -63,10 +64,7 @@ export async function PUT(request: NextRequest) {
         { status: 400 },
       );
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }
 
@@ -100,9 +98,6 @@ export async function DELETE(
         { status: 400 },
       );
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }

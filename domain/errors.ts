@@ -11,6 +11,7 @@ export enum COMMON_ERROR_NAMES {
   MISSING_BODY = "MISSING_BODY",
   MUST_BE_AUTHENTICATED = "MUST_BE_AUTHENTICATED",
   MISSING_AUTH_TOKEN = "MISSING_AUTH_TOKEN",
+  UNKNOWN_ERROR = "UNKNOWN_ERROR",
 }
 
 export const missingBodyError: CustomError = {
@@ -32,6 +33,13 @@ export const missingAuthToken: CustomError = {
   message: "User from authentication token not found.",
   frMessage: "Utilisateur introuvable.",
   status: 400,
+};
+
+export const unknownError: CustomError = {
+  name: COMMON_ERROR_NAMES.UNKNOWN_ERROR,
+  message: "An unknown error occurred.",
+  frMessage: "Une erreur inconnue s'est produite.",
+  status: 500,
 };
 
 export const toResponse = (err: CustomError) =>

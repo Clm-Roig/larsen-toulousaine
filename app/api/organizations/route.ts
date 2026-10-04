@@ -2,6 +2,7 @@ import {
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
+  unknownError,
 } from "@/domain/errors";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
@@ -75,9 +76,6 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }

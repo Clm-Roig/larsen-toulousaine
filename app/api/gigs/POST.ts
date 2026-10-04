@@ -11,6 +11,7 @@ import {
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
+  unknownError,
 } from "@/domain/errors";
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 import { revalidatePath } from "next/cache";
@@ -170,10 +171,7 @@ async function POST(request: NextRequest) {
         return toResponse(tooBigImageUrlError);
       }
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }
 

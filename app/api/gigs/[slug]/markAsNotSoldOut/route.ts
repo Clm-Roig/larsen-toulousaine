@@ -1,5 +1,9 @@
 import { authOptions } from "@/utils/authOptions";
-import { mustBeAuthenticatedError, toResponse } from "@/domain/errors";
+import {
+  mustBeAuthenticatedError,
+  toResponse,
+  unknownError,
+} from "@/domain/errors";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { getServerSession } from "next-auth";
@@ -36,9 +40,6 @@ export async function POST(
         { status: 400 },
       );
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }

@@ -1,4 +1,5 @@
 import { gigListOrderBy, completGigInclude } from "@/app/api/utils/gigs";
+import { toResponse, unknownError } from "@/domain/errors";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,9 +35,6 @@ export async function GET(
         { status: 400 },
       );
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }

@@ -17,6 +17,7 @@ import {
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
+  unknownError,
 } from "@/domain/errors";
 
 interface NewPasswordPayload {
@@ -83,9 +84,6 @@ export async function PUT(request: NextRequest) {
         { status: 400 },
       );
     }
-    return NextResponse.json(
-      { message: "An unexpected error occured." },
-      { status: 500 },
-    );
+    return toResponse(unknownError);
   }
 }
