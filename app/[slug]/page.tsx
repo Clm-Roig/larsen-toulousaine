@@ -12,15 +12,32 @@ import { V_SEPARATOR } from "@/utils/utils";
 import { getGig } from "@/domain/Gig/Gig.webService";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { getMetadata } from "@/utils/metadata";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
+const IGNORED_SLUGS = new Set([
+  "icon",
+  "favicon.ico",
+  "apple-icon",
+  "robots.txt",
+  "sitemap.xml",
+]);
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
+
+  // To avoid 404 API errors
+  if (IGNORED_SLUGS.has(decodedSlug)) {
+    notFound();
+  }
+
   const gig = await getGig(decodedSlug);
+  if (!gig) notFound();
+
   const {
     date,
     dateObject: gigDate,
@@ -35,17 +52,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       : date;
 
   const description = `${bandNames.join(V_SEPARATOR)}${dateString} - ${
-    gig?.place.name
-  }${gig?.place.city && gig.place.city !== MAIN_CITY ? ` (${gig.place.city})` : ""}`;
+    gig.place.name
+  }${gig.place.city && gig.place.city !== MAIN_CITY ? ` (${gig.place.city})` : ""}`;
 
   return getMetadata(
     {
       title: gigTitle,
       description,
-      assets: gig?.imageUrl,
+      assets: gig.imageUrl,
     },
     {
-      ...(gig?.imageUrl ? { images: gig.imageUrl } : {}),
+      ...(gig.imageUrl ? { images: gig.imageUrl } : {}),
       title: gigTitle,
       description,
     },
