@@ -28,4 +28,6 @@ export const gig: CompleteGig = {
   sourceUrl: null,
   hasTicketReservationLink: true,
   isAcceptingBankCard: null,
+  organizationId: null,
+  organization: null,
 };

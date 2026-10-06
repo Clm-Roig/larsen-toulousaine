@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "postinstall": "prisma generate",
     "start": "next start",
-    "lint": "eslint --cache --cache-location .next/cache/eslint/",
+    "lint": "tsc --noEmit && eslint --cache --cache-location .next/cache/eslint/",
     "lint:fix": "eslint --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
