@@ -12,4 +12,6 @@ swe-worker-*
 
 # Custom folders
 db_dumps/
-next-env.d.ts
+
+# Misc
+*.tsbuildinfo
