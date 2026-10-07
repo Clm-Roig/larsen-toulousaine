@@ -1,6 +1,6 @@
 import { Role } from "@/lib/Role"; // ugly hack, see lib/Role.ts
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAndDecodeJwt } from "@/lib/jwt";
+import { getToken } from "next-auth/jwt";
 
 const isAdminRouteFn = (pathname: string, req: NextRequest): boolean => {
   const conditions = [
@@ -21,17 +21,18 @@ const isModeratorRouteFn = (pathname: string, req: NextRequest): boolean => {
       ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
     pathname.startsWith("/api/places") &&
       ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
+    pathname.startsWith("/api/organizations") &&
+      ["POST", "DELETE", "PUT", "PATCH"].includes(req.method),
   ];
   return conditions.includes(true);
 };
 
 export async function proxy(req: NextRequest) {
-  const authHeader = req.headers.get("authorization") ?? "";
   const { pathname } = req.nextUrl;
 
   try {
-    const decodedJwt = await verifyAndDecodeJwt(authHeader.slice(7));
-    const role = decodedJwt?.payload.role ?? null;
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const role = token?.role ?? null;
     const isModeratorRoute = isModeratorRouteFn(pathname, req);
     const isAdminRoute = isAdminRouteFn(pathname, req);
     const needToBeAuthenticated = isModeratorRoute || isAdminRoute;
