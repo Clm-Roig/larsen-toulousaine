@@ -1,26 +1,60 @@
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 import api, { getErrorMessage } from "@/lib/axios";
+import { Boolean3ChoicesFormValue } from "@/utils/utils";
 import { Organization } from "@prisma/client";
 
-export type CreateOrganizationArgs = Omit<Organization, "id"> & {
+export type CreateOrganizationArgs = Omit<
+  Organization,
+  "id" | "createdAt" | "updatedAt" | "author" | "authorId"
+> & {
   id?: string;
 };
 
-export const getOrganizations = async (): Promise<Organization[]> => {
+export const searchOrganizations = async (
+  name: string | undefined,
+  isActive: Boolean3ChoicesFormValue,
+  page?: number,
+): Promise<{ organizations: OrganizationWithGigCount[]; count: number }> => {
+  const nameParam = name ? `name=${encodeURIComponent(name)}` : null;
+  const isActiveParam = `isActive=${isActive === "true" ? "true" : isActive === "false" ? "false" : ""}`;
+  const pageParam = page ? `page=${page}` : null;
+  const params = [nameParam, isActiveParam, pageParam]
+    .filter((p): p is string => !!p)
+    .join("&");
   try {
-    const response = await api.get<{ organizations: Organization[] }>(
-      `/organizations`,
-    );
+    const response = await api.get<{
+      organizations: OrganizationWithGigCount[];
+      count: number;
+    }>(`/organizations/search?${params}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const getOrganizations = async (): Promise<
+  OrganizationWithGigCount[]
+> => {
+  try {
+    const response = await api.get<{
+      organizations: OrganizationWithGigCount[];
+    }>("/organizations");
     return response.data.organizations;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
 };
 
+export type EditOrganizationArgs = Omit<
+  Organization,
+  "createdAt" | "updatedAt"
+>;
+
 export const editOrganization = async (
-  organization: Organization,
-): Promise<Organization> => {
+  organization: EditOrganizationArgs,
+): Promise<OrganizationWithGigCount> => {
   try {
-    const response = await api.put<Organization>(
+    const response = await api.put<OrganizationWithGigCount>(
       `/organizations/${organization.id}`,
       organization,
     );

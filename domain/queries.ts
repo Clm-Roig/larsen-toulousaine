@@ -4,7 +4,7 @@ import { getOrganizations } from "./Organization/Organization.webService";
 import { PlaceWithGigCount } from "./Place/Place.type";
 import { getGenres } from "./Genre/Genre.webService";
 import { GenreWithBandCount } from "@/domain/Genre/Genre.type";
-import { Organization } from "@prisma/client";
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 
 export const placesQuery: UseQueryOptions<PlaceWithGigCount[]> = {
   queryKey: ["places"],
@@ -18,7 +18,7 @@ export const genresQuery: UseQueryOptions<GenreWithBandCount[]> = {
   staleTime: 1000 * 60 * 60 * 1, // 1h in ms
 };
 
-export const organizationsQuery: UseQueryOptions<Organization[]> = {
+export const organizationsQuery: UseQueryOptions<OrganizationWithGigCount[]> = {
   queryKey: ["organizations"],
   queryFn: async () => await getOrganizations(),
   staleTime: 1000 * 60 * 60 * 1, // 1h in ms

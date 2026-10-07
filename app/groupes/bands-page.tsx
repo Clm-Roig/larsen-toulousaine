@@ -180,7 +180,7 @@ const Bands = () => {
         {deletedBand ? (
           <Stack>
             <Text>
-              Êtes vous sûr·e de vouloir supprimer le groupe{" "}
+              Êtes-vous sûr·e de vouloir supprimer le groupe{" "}
               <b>{deletedBand.name}</b> ? Sa suppression est <b>définitive</b> !
             </Text>
             <Group justify="space-between">

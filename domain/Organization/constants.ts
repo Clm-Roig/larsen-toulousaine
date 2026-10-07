@@ -1,0 +1,1 @@
+export const NB_OF_ORGANIZATIONS_PER_PAGE = 20;

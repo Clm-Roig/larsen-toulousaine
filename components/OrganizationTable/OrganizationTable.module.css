@@ -1,0 +1,7 @@
+.row:hover {
+  cursor: pointer;
+}
+
+.rowLoading:hover {
+  cursor: progress;
+}
