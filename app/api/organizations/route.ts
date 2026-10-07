@@ -50,8 +50,7 @@ export async function POST(request: NextRequest) {
     return toResponse(mustBeAuthenticatedError);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { authorId, ...organizationData } = body;
+  const { ...organizationData } = body;
   try {
     const createdOrganization = await prisma.organization.create({
       data: Prisma.validator<Prisma.OrganizationCreateInput>()({
