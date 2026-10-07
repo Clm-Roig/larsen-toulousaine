@@ -16,7 +16,6 @@ import { GigPreview } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
 import { Genre, Organization, Place } from "@prisma/client";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
-import AddGigButton from "@/components/AddButton/AddGigButton";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import GigListItem from "@/components/GigList/GigListItem";
@@ -25,6 +24,7 @@ import GridViewSkeleton from "@/components/GigList/GridViewSkeleton";
 import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import AddResourceButton from "@/components/AddResourceButton";
 
 interface BaseProps {
   displayMissingDataOnly?: boolean;
@@ -116,7 +116,7 @@ const GigList = ({
                   {canCreateGig && (
                     <Grid.Col span={GRID_SPAN_PROP}>
                       <Center h="100%">
-                        <AddGigButton />
+                        <AddResourceButton type="gig" />
                       </Center>
                     </Grid.Col>
                   )}
@@ -165,7 +165,7 @@ const GigList = ({
                     </List>
                     {canCreateGig && (
                       <Center mt="sm">
-                        <AddGigButton />
+                        <AddResourceButton type="gig" />
                       </Center>
                     )}
                   </Paper>
@@ -181,7 +181,7 @@ const GigList = ({
                   >
                     {noGigsFoundMessage}
                   </Text>
-                  {canCreateGig && <AddGigButton />}
+                  {canCreateGig && <AddResourceButton type="gig" />}
                 </Stack>
               </Center>
             )}

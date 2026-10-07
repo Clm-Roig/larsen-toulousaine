@@ -1,7 +1,7 @@
 "use client";
 
 import { Table, TextInput } from "@mantine/core";
-import AddPlaceButton from "@/components/AddButton/AddPlaceButton";
+import AddResourceButton from "@/components/AddResourceButton";
 
 interface Props {
   searchedName: string;
@@ -52,7 +52,7 @@ export default function TableHeader({
         <Table.Th></Table.Th>
         <Table.Th></Table.Th>
         <Table.Th>
-          <AddPlaceButton size="xs" />
+          <AddResourceButton type="place" size="xs" />
         </Table.Th>
       </Table.Tr>
     </Table.Thead>

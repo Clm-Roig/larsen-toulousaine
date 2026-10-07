@@ -24,7 +24,7 @@ import Link from "next/link";
 import GigSearchInput from "@/components/GigSearchInput";
 import SchemeSwitcher from "@/components/SchemeSwitcher";
 import { useRouter } from "next/navigation";
-import AddGigButton from "@/components/AddButton/AddGigButton";
+import AddResourceButton from "@/components/AddResourceButton";
 
 interface Props {
   navbarOpened: boolean;
@@ -104,7 +104,7 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
 
                 <Menu.Dropdown>
                   <Menu.Item>
-                    <AddGigButton size="compact-sm" />
+                    <AddResourceButton type="gig" size="compact-sm" />
                   </Menu.Item>
                   <Menu.Item
                     component={Link}

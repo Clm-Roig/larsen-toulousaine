@@ -12,8 +12,8 @@ import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 import { useSession } from "next-auth/react";
 import { IconCheck, IconGridDots, IconX } from "@tabler/icons-react";
-import AddOrganizationButton from "@/components/AddButton/AddOrganizationButton";
 import { Boolean3ChoicesFormValue } from "@/utils/utils";
+import AddResourceButton from "@/components/AddResourceButton";
 
 interface Props {
   searchedName: string;
@@ -100,7 +100,7 @@ export default function TableHeader({
         </Table.Th>
         {status === "authenticated" && (
           <Table.Th>
-            <AddOrganizationButton size="xs" />
+            <AddResourceButton type="organization" size="xs" />
           </Table.Th>
         )}
       </Table.Tr>

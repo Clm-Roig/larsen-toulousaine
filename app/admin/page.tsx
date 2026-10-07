@@ -12,10 +12,10 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
-import AddGigButton from "@/components/AddButton/AddGigButton";
 import { DashboardCard } from "@/app/admin/DashboardCard";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import AddResourceButton from "@/components/AddResourceButton";
 
 export default function Admin() {
   const canSeeUsers = useHasPermission(Permission.SEE_USERS);
@@ -33,7 +33,7 @@ export default function Admin() {
             <Title order={2}>Concerts</Title>
             <Flex gap="sm" wrap="wrap" align="center">
               <Box>
-                <AddGigButton />
+                <AddResourceButton type="gig" />
               </Box>
               <DashboardCard
                 href="/admin/infos-manquantes"
