@@ -38,4 +38,4 @@ To safely apply Prisma schema changes:
 
 ### Tools
 
-This projet uses Next.js, Netlify for deployment and Cloudinary for images storage.
+This projet uses Next.js, Railway, Supabase and Cloudinary.

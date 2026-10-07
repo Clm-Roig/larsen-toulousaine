@@ -89,13 +89,13 @@ export default function Page() {
 
           <Title order={2}>Hébergeur du site</Title>
           <Text ta="justify">
-            Netlify Inc. - 2325 3rd Street, Suite 296, San Francisco, California
-            94107, États-Unis
+            Railway Corporation - 548 Market St Suite 68956, San Francisco,
+            California 94107, États-Unis
           </Text>
           <Text ta="justify">
             Site Internet :{" "}
-            <ExternalLink href="https://netlify.com">
-              https://netlify.com
+            <ExternalLink href="https://railway.com">
+              https://railway.com
             </ExternalLink>
           </Text>
 
