@@ -3,7 +3,12 @@ import {
   getSortedGenres,
   getSortedUniqueBandGenres,
 } from "@/domain/Band/Band.service";
-import { GigMinimal, GigPreview, CompleteGig } from "@/domain/Gig/Gig.type";
+import {
+  GigMinimal,
+  GigPreview,
+  CompleteGig,
+  GigDateDisplayMode,
+} from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize, formatFrenchPrice } from "@/utils/utils";
 import { Band, Gig } from "@prisma/client";
@@ -223,4 +228,12 @@ export const toFacebookMarkdown = (
     lines.push(sourceUrl);
   }
   return lines.map((line) => line).join(lineBreakSymbol);
+};
+
+export const getGigDateFormat = (
+  gigDateDisplayFormat: GigDateDisplayMode,
+): string => {
+  return gigDateDisplayFormat === GigDateDisplayMode.WITH_YEAR
+    ? "DD/MM/YYYY"
+    : "ddd DD/MM";
 };

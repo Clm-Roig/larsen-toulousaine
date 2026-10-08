@@ -1,7 +1,7 @@
 import GigMenu from "@/components/GigMenu";
 import TopMenuBox from "@/components/GigList/GigCard/TopMenuBox";
 import OptimizedImage from "@/components/OptimizedImage";
-import { GigPreview } from "@/domain/Gig/Gig.type";
+import { GigDateDisplayMode, GigPreview } from "@/domain/Gig/Gig.type";
 import usePreferences from "@/hooks/usePreferences";
 import { hasPassed } from "@/utils/date";
 import {
@@ -20,13 +20,14 @@ import Link from "next/link";
 import useScreenSize from "@/hooks/useScreenSize";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import GigCompactInfo from "@/components/GigCompactInfo";
-import { getGigTitle } from "@/domain/Gig/Gig.service";
+import { getGigDateFormat, getGigTitle } from "@/domain/Gig/Gig.service";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 
 interface Props {
   displayDate?: boolean;
   displayMissingDataOnly?: boolean;
+  gigDateDisplayFormat: GigDateDisplayMode;
   gig: GigPreview;
   listItemProps?: ListItemProps;
   withDivider: boolean;
@@ -40,6 +41,7 @@ const PolymorphicListItem = createPolymorphicComponent<
 export default function GigListItem({
   gig,
   withDivider,
+  gigDateDisplayFormat,
   displayMissingDataOnly = false,
   displayDate = true,
   ...listItemProps
@@ -61,6 +63,7 @@ export default function GigListItem({
   const { hovered, ref } = useHover();
   const { date, endDate, isCanceled, isSoldOut, imageUrl, slug } = gig;
   const gigTitle = getGigTitle(gig);
+  const dateFormat = getGigDateFormat(gigDateDisplayFormat);
   return (
     <Box
       ref={ref}
@@ -89,9 +92,9 @@ export default function GigListItem({
           >
             {displayDate && (
               <Badge color="primary" size="lg" w={105} h="fit-content">
-                {dayjs(date).format("ddd DD/MM")}
+                {dayjs(date).format(dateFormat)}
                 <br />
-                {endDate && dayjs(endDate).format("ddd DD/MM")}
+                {endDate && dayjs(endDate).format(dateFormat)}
               </Badge>
             )}
 

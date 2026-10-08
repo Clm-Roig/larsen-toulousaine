@@ -12,7 +12,7 @@ import {
   Paper,
   BoxProps,
 } from "@mantine/core";
-import { GigPreview } from "@/domain/Gig/Gig.type";
+import { GigDateDisplayMode, GigPreview } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
 import { Genre, Organization, Place } from "@prisma/client";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
@@ -27,6 +27,7 @@ import { Permission } from "@/domain/permissions";
 import AddResourceButton from "@/components/AddResourceButton";
 
 interface BaseProps {
+  gigDateDisplayFormat?: GigDateDisplayMode;
   displayMissingDataOnly?: boolean;
   gigs?: GigPreview[];
   isLoading: boolean;
@@ -56,6 +57,7 @@ type ConditionalProps =
 
 type Props = BaseProps & ConditionalProps;
 const GigList = ({
+  gigDateDisplayFormat = GigDateDisplayMode.DEFAULT,
   dateStep,
   displayMissingDataOnly = false,
   genres,
@@ -109,6 +111,7 @@ const GigList = ({
                     <Grid.Col key={gig.id} span={GRID_SPAN_PROP}>
                       <GigCard
                         displayMissingDataOnly={displayMissingDataOnly}
+                        gigDateDisplayFormat={gigDateDisplayFormat}
                         gig={gig}
                       />
                     </Grid.Col>
@@ -143,6 +146,7 @@ const GigList = ({
                           <GigListItem
                             displayMissingDataOnly={displayMissingDataOnly}
                             gig={gig}
+                            gigDateDisplayFormat={gigDateDisplayFormat}
                             key={gig.id}
                             withDivider={
                               (canSeeWeeklyGigsMarkdown ||

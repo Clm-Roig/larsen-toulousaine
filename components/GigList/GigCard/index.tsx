@@ -6,6 +6,7 @@ import {
   GigPreview,
   gigToGigTypeString,
   CompleteGig,
+  GigDateDisplayMode,
 } from "@/domain/Gig/Gig.type";
 import { CARD_WIDTH } from "../constants";
 import dayjs from "@/lib/dayjs";
@@ -24,7 +25,7 @@ import GenreBadge from "@/components/GenreBadge";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import GigMissingData from "@/components/GigMissingData";
-import { getGigTitle } from "@/domain/Gig/Gig.service";
+import { getGigDateFormat, getGigTitle } from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
 import IsADJBadge from "@/components/IsADJBadge";
 import { CardWithLink } from "@/components/CardWithLink";
@@ -32,9 +33,14 @@ import { CardWithLink } from "@/components/CardWithLink";
 interface Props {
   displayMissingDataOnly?: boolean;
   gig: GigPreview;
+  gigDateDisplayFormat: GigDateDisplayMode;
 }
 
-const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
+const GigCard = ({
+  displayMissingDataOnly = false,
+  gig,
+  gigDateDisplayFormat,
+}: Props) => {
   const theme = useMantineTheme();
   const { hovered, ref } = useHover();
   const { grayOutPastGigs } = usePreferences();
@@ -44,6 +50,7 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
   const gigType = gigToGigTypeString(gig);
   const gigTitle = getGigTitle(gig);
   const bandGenres = getSortedUniqueBandGenres(bands);
+  const dateFormat = getGigDateFormat(gigDateDisplayFormat);
   return (
     <Box
       style={{
@@ -132,8 +139,8 @@ const GigCard = ({ displayMissingDataOnly = false, gig }: Props) => {
 
       <TopMenuBox position="left" px={8} py={4}>
         <Text c="white">
-          {dayjs(date).format("ddd DD/MM")}
-          {endDate && " - " + dayjs(endDate).format("ddd DD/MM")}
+          {dayjs(date).format(dateFormat)}
+          {endDate && " - " + dayjs(endDate).format(dateFormat)}
         </Text>
       </TopMenuBox>
 

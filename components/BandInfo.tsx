@@ -9,6 +9,7 @@ import allCountries from "country-region-data/data.json";
 import IsATributeBadge from "@/components/IsATributeBadge";
 import IsADJBadge from "@/components/IsADJBadge";
 import Metadata from "@/components/Metadata";
+import { GigDateDisplayMode } from "@/domain/Gig/Gig.type";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -74,6 +75,7 @@ export default function BandInfo({ band }: Props) {
         Concerts
       </Title>
       <GigList
+        gigDateDisplayFormat={GigDateDisplayMode.WITH_YEAR}
         gigs={gigs}
         isLoading={false}
         listControlsBoxProps={{ mb: "xs" }}

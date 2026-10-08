@@ -15,6 +15,11 @@ export enum GigType {
   FESTIVAL = "FESTIVAL",
 }
 
+export enum GigDateDisplayMode {
+  DEFAULT,
+  WITH_YEAR,
+}
+
 export interface GigPreview {
   id: Gig["id"];
   date: Gig["date"];
