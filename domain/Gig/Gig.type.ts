@@ -1,17 +1,14 @@
-import {
-  BandMinimal,
-  BandPreviewWithOrder,
-  BandWithGenres,
-} from "@/domain/Band/Band.type";
+import { completeGigInclude, FlattenedGig } from "@/app/api/utils/gigs";
+import { BandMinimal, BandPreviewWithOrder } from "@/domain/Band/Band.type";
 import { PlacePreview } from "@/domain/Place/Place.type";
 import { capitalize as capitalizeStr } from "@/utils/utils";
 import { Gig, Prisma } from "@prisma/client";
 
-export type CompleteGig = Prisma.GigGetPayload<{
-  include: { place: true; organization: true };
-}> & {
-  bands: (BandWithGenres & { order: number })[];
-};
+type RawCompleteGig = Prisma.GigGetPayload<{
+  include: typeof completeGigInclude;
+}>;
+
+export type CompleteGig = FlattenedGig<RawCompleteGig>;
 
 export enum GigType {
   GIG = "GIG",
@@ -28,6 +25,7 @@ export interface GigPreview {
   name: Gig["name"];
   price: Gig["price"];
   slug: Gig["slug"];
+  sourceUrl: Gig["sourceUrl"];
   ticketReservationLink: Gig["ticketReservationLink"];
   title: Gig["title"];
   place: PlacePreview;

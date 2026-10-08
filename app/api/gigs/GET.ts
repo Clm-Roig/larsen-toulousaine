@@ -91,14 +91,12 @@ async function GET(request: NextRequest): Promise<
       const lineBreak = "\\n\\n";
       const discordMarkdownGigs = filteredGigs
         .map((gig) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-          return toDiscordMarkdown(gig as any, lineBreak);
+          return toDiscordMarkdown(gig, lineBreak);
         })
         .join(lineBreak + lineBreak);
       const facebookMarkdownGigs = filteredGigs
         .map((gig) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-          return toFacebookMarkdown(gig as any, lineBreak);
+          return toFacebookMarkdown(gig, lineBreak);
         })
         .join(lineBreak + lineBreak);
       return NextResponse.json({
@@ -249,6 +247,7 @@ const getGigByPlaceAndDate = async (
               name: true,
             },
           },
+          order: true,
         },
       },
     },

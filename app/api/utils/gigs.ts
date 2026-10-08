@@ -1,6 +1,4 @@
-import { BandMinimal, BandPreview } from "@/domain/Band/Band.type";
-import { GigMinimal, GigPreview } from "@/domain/Gig/Gig.type";
-import { BandsOnGigs, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
   {
@@ -11,7 +9,13 @@ export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
   { slug: Prisma.SortOrder.asc },
 ];
 
-export const completGigInclude = {
+export const completeGigInclude = {
+  author: {
+    select: {
+      id: true,
+      pseudo: true,
+    },
+  },
   organization: true,
   place: true,
   bands: {
@@ -23,19 +27,26 @@ export const completGigInclude = {
       },
     },
   },
+} satisfies Prisma.GigInclude;
+
+export type RawGigFromPrisma = Prisma.GigGetPayload<{
+  include: typeof completeGigInclude;
+}>;
+
+export type FlattenedGig<
+  TGig extends { bands: { band: object; order: number }[] },
+> = Omit<TGig, "bands"> & {
+  bands: (TGig["bands"][number]["band"] & { order: number })[];
 };
 
 export const flattenGigBands = <
-  T extends
-    | (Omit<GigPreview, "bands"> & {
-        bands: { band: BandPreview; order: BandsOnGigs["order"] }[];
-      })
-    | (Omit<GigMinimal, "bands"> & { bands: { band: BandMinimal }[] }),
+  TGig extends { bands: { band: object; order: number }[] },
 >(
-  gig: T,
-) => ({
-  ...gig,
-  // Very hard to type correctly, I give up...
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
-});
+  gig: TGig,
+): FlattenedGig<TGig> => {
+  const { bands, ...rest } = gig;
+  return {
+    ...rest,
+    bands: bands.map((b) => ({ ...b.band, order: b.order })),
+  } as FlattenedGig<TGig>;
+};

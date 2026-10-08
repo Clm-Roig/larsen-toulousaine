@@ -7,6 +7,7 @@ export const gigBands = allBands
 
 export const gig: CompleteGig = {
   id: "oiqdkjioaz8549849d8",
+  author: allUsers[0],
   authorId: allUsers[0].id,
   bands: gigBands.map((b, idx) => ({ ...b, order: idx + 1 })),
   createdAt: new Date(),

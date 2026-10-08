@@ -6,8 +6,9 @@ import {
 import { GigMinimal, GigPreview, CompleteGig } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize, formatFrenchPrice } from "@/utils/utils";
-import { Band, Gig, Place } from "@prisma/client";
+import { Band, Gig } from "@prisma/client";
 import dayjs from "@/lib/dayjs";
+import { PlacePreview } from "@/domain/Place/Place.type";
 
 const slugReplacements: { replaced: string; replacer: string }[] = [
   { replaced: " ", replacer: "-" },
@@ -169,7 +170,7 @@ export const getGigRSSFeedDescription = (gig: CompleteGig): string => {
 };
 
 // ===== To Markdown utils ===== //
-const getGigMarkdownTitle = (gig: CompleteGig): string => {
+const getGigMarkdownTitle = (gig: GigPreview): string => {
   return `${getGigTitle(gig)} (${getSortedUniqueBandGenres(gig.bands)
     .slice(0, 3)
     .map((g) => g.name)
@@ -183,16 +184,13 @@ const markdownPlacePrefix = `📍 `;
 const getGigMarkdownDate = (date: Date, endDate?: Date | null): string =>
   `${markdownDatePrefix}${capitalize(dayjs(date).tz().format("dddd DD MMMM"))}${endDate ? ` au ${dayjs(endDate).tz().format("dddd DD MMMM")}` : ""}`;
 
-const getGigMarkdownPlace = (place: Place): string =>
+const getGigMarkdownPlace = (place: PlacePreview): string =>
   `${markdownPlacePrefix}${place.name}${place.city === MAIN_CITY ? "" : ` (${place.city})`}`;
 
 const getGigMarkdownSoldOut = (isSoldOut: boolean): string | null =>
   isSoldOut ? `⚠ COMPLET ⚠` : null;
 
-export const toDiscordMarkdown = (
-  gig: CompleteGig,
-  lineBreakSymbol: string,
-) => {
+export const toDiscordMarkdown = (gig: GigPreview, lineBreakSymbol: string) => {
   const { date, endDate, place, price, slug } = gig;
   const lines: string[] = [];
   lines.push(`**${getGigMarkdownTitle(gig)}**`);
@@ -208,7 +206,7 @@ export const toDiscordMarkdown = (
 };
 
 export const toFacebookMarkdown = (
-  gig: CompleteGig,
+  gig: GigPreview,
   lineBreakSymbol: string,
 ) => {
   const { date, endDate, sourceUrl, place, price } = gig;

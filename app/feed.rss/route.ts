@@ -1,4 +1,8 @@
-import { completGigInclude, gigListOrderBy } from "@/app/api/utils/gigs";
+import {
+  completeGigInclude,
+  flattenGigBands,
+  gigListOrderBy,
+} from "@/app/api/utils/gigs";
 import { getGigRSSFeedDescription } from "@/domain/Gig/Gig.service";
 import prisma from "@/lib/prisma";
 import RSS, { FeedOptions } from "rss";
@@ -18,13 +22,10 @@ export async function GET() {
   const feed = new RSS(feedOptions);
 
   const allGigs = await prisma.gig.findMany({
-    include: completGigInclude,
+    include: completeGigInclude,
     orderBy: gigListOrderBy,
   });
-  const cleanedGigs = allGigs.map((gig) => ({
-    ...gig,
-    bands: gig.bands.map((b) => ({ ...b.band, order: b.order })),
-  }));
+  const cleanedGigs = allGigs.map((gig) => flattenGigBands(gig));
 
   cleanedGigs.map((gig) => {
     feed.item({

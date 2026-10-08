@@ -18,7 +18,7 @@ import {
   downloadImage,
   storeImage,
 } from "@/app/api/utils/image";
-import { flattenGigBands, completGigInclude } from "@/app/api/utils/gigs";
+import { flattenGigBands, completeGigInclude } from "@/app/api/utils/gigs";
 import {
   invalidImageUrlError,
   tooBigImageFileError,
@@ -34,11 +34,11 @@ export async function GET(
 ) {
   const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
-  const gig = await prisma.gig.findFirst({
+  const gig = await prisma.gig.findUnique({
     where: {
       slug: slug,
     },
-    include: completGigInclude,
+    include: completeGigInclude,
   });
   if (!gig) {
     return new Response(null, { status: 404 });
@@ -60,9 +60,9 @@ export async function PUT(request: NextRequest) {
     if (typeof value === "string") {
       rawData[key] = value;
     }
-    // si tu veux gérer les fichiers, ajoute une autre logique ici
   });
-  let body: EditGigArgs;
+  // TODO - Client can send author currently...
+  let body: EditGigArgs & { author?: unknown };
   try {
     body = JSON.parse(rawData.data) as EditGigArgs;
   } catch {
@@ -133,13 +133,22 @@ export async function PUT(request: NextRequest) {
     await prisma.bandsOnGigs.deleteMany({ where: { gigId: body.id } });
 
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      placeId,
+      // author & createdAt should not be updated
+      // updatedAt is automaticcaly managed by Prisma
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       authorId,
+      // author should not be updated
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      author,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      createdAt,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      updatedAt,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      placeId,
       sourceUrl,
       organizationId,
-      ...bodyWithoutPlaceIdAndAuthorId
+      ...cleanedBody
     } = body;
     const slug = computeGigSlug({
       bands: bands,
@@ -174,7 +183,7 @@ export async function PUT(request: NextRequest) {
     const updatedGig = await prisma.gig.update({
       where: { id: body.id },
       data: Prisma.validator<Prisma.GigUpdateInput>()({
-        ...bodyWithoutPlaceIdAndAuthorId,
+        ...cleanedBody,
         bands: {
           create: [...toConnectBands, ...createdBands].map((band) => ({
             band: {

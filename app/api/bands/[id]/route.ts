@@ -17,7 +17,7 @@ import {
   flattenBandGigs,
   validateCountryAndRegionCodes,
 } from "@/app/api/utils/bands";
-import { completGigInclude } from "@/app/api/utils/gigs";
+import { completeGigInclude } from "@/app/api/utils/gigs";
 import {
   LOCAL_COUNTRY_CODE,
   LOCAL_REGION_CODE,
@@ -155,7 +155,7 @@ export async function GET(
       gigs: {
         include: {
           gig: {
-            include: completGigInclude,
+            include: completeGigInclude,
           },
         },
       },

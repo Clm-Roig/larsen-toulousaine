@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import {
   Badge,
   Flex,
@@ -35,6 +35,7 @@ import IsATributeBadge from "@/components/IsATributeBadge";
 import IsADJBadge from "@/components/IsADJBadge";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import Metadata from "@/components/Metadata";
 
 const Row = ({ children }: { children: ReactNode }) => (
   <Flex gap={{ base: "xs", sm: "md" }} align="center">
@@ -52,7 +53,9 @@ export default function GigInfo({ gig }: Props) {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
   const {
+    author,
     bands,
+    createdAt,
     description,
     date,
     endDate,
@@ -64,6 +67,7 @@ export default function GigInfo({ gig }: Props) {
     place,
     price,
     ticketReservationLink,
+    updatedAt,
   } = gig;
   const { latitude, longitude } = place;
   const addressAndCity =
@@ -243,6 +247,12 @@ export default function GigInfo({ gig }: Props) {
           Plus d&apos;infos
         </ExternalLink>
       )}
+      <Metadata
+        author={author}
+        createdAt={createdAt}
+        updatedAt={updatedAt}
+        withDivider
+      />
     </Flex>
   );
 }
