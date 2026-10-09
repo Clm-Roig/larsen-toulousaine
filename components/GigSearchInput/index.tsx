@@ -66,7 +66,7 @@ export default function GigSearchInput() {
             }}
             rightSection={isLoading && <Loader size={14} />}
             leftSection={<IconSearch />}
-            maw={500}
+            maw={{ sm: 500 }}
             style={{ flex: 1, zIndex: 201 }} // to put it above black overlay
           />
         </Combobox.Target>

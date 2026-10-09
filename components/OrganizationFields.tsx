@@ -20,7 +20,6 @@ export default function OrganizationFields({
   nameProps,
   withLabels = false,
 }: Props) {
-  console.log(isActiveProps);
   return (
     <Stack>
       <TextInput
