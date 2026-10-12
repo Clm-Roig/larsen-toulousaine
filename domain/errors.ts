@@ -8,6 +8,7 @@ export interface CustomError {
 }
 
 export enum COMMON_ERROR_NAMES {
+  FORM_DATA_PARSING_ERROR = "FORM_DATA_PARSING_ERROR",
   MISSING_BODY = "MISSING_BODY",
   MUST_BE_AUTHENTICATED = "MUST_BE_AUTHENTICATED",
   MISSING_AUTH_TOKEN = "MISSING_AUTH_TOKEN",
@@ -39,6 +40,13 @@ export const unknownError: CustomError = {
   name: COMMON_ERROR_NAMES.UNKNOWN_ERROR,
   message: "An unknown error occurred.",
   frMessage: "Une erreur inconnue s'est produite.",
+  status: 500,
+};
+
+export const formDataParsingError: CustomError = {
+  name: "FORM_DATA_PARSING_ERROR",
+  frMessage: "Il y a eu une erreur lors du traitement du formulaire.",
+  message: "Error while parsing form data",
   status: 500,
 };
 

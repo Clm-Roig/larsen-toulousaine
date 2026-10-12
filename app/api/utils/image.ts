@@ -2,12 +2,16 @@ import { DEFAULT_IMG_RESIZE_OPTIONS } from "@/domain/Gig/constants";
 import { invalidImageUrlError, tooBigImageUrlError } from "@/domain/Gig/errors";
 import { MAX_IMAGE_SIZE } from "@/domain/image";
 import cloudinaryV2 from "@/lib/cloudinary";
-import { Gig } from "@prisma/client";
 import { UploadApiOptions } from "cloudinary";
 import imageType from "image-type";
 import sharp, { AvailableFormatInfo, FormatEnum, ResizeOptions } from "sharp";
 
-const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
+export const ORGANIZATION_LOGOS_FOLDER_NAME = "organizations-logo";
+export const GIG_POSTERS_FOLDER_NAME = "gigs-poster";
+
+export type FolderName =
+  | typeof ORGANIZATION_LOGOS_FOLDER_NAME
+  | typeof GIG_POSTERS_FOLDER_NAME;
 
 /**
  * Download an image from its url after performing some security checks.
@@ -57,11 +61,13 @@ export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
 export async function storeImage({
   arrayBufferImg,
   filename,
+  folderName,
   imageFormat,
   resizeOptions = DEFAULT_IMG_RESIZE_OPTIONS,
 }: {
   arrayBufferImg: ArrayBuffer;
   filename: string;
+  folderName: string;
   imageFormat: keyof FormatEnum | AvailableFormatInfo;
   resizeOptions?: ResizeOptions;
 }): Promise<string> {
@@ -79,13 +85,18 @@ export async function storeImage({
   const base64Data = resizedImg.toString("base64");
   const fileUri = `data:image/jpeg;base64,${base64Data}`;
 
-  const cloudinaryImageUrl = await storeImageToCloudinary(filename, fileUri);
+  const cloudinaryImageUrl = await storeImageToCloudinary(
+    filename,
+    fileUri,
+    folderName,
+  );
   return cloudinaryImageUrl;
 }
 
 export async function storeImageToCloudinary(
   filename: string,
   fileUri: string,
+  folderName: string,
 ): Promise<string> {
   const options: UploadApiOptions = {
     unique_filename: false,
@@ -93,7 +104,7 @@ export async function storeImageToCloudinary(
     discard_original_filename: true,
     display_name: filename,
     public_id: filename,
-    folder: GIG_POSTERS_FOLDER_NAME,
+    folder: folderName,
   };
 
   console.log("Uploading image to Cloudinary...");
@@ -102,21 +113,24 @@ export async function storeImageToCloudinary(
   return cloudinaryImageUrl;
 }
 
-export async function deleteGigImage(imageUrl: Gig["imageUrl"]) {
+export async function deleteImageOnCloudinary(
+  imageUrl: string | null,
+  folderName: FolderName,
+) {
   if (imageUrl) {
-    const publicId = getGigImagePublicId(imageUrl);
+    const publicId = getGigImagePublicId(imageUrl, folderName);
 
     console.log("Trying to delete image with public id '" + publicId + "'.");
     const result: unknown = await cloudinaryV2.uploader.destroy(
-      getGigImagePublicId(imageUrl),
+      getGigImagePublicId(imageUrl, folderName),
     );
 
     console.log(result);
   }
 }
 
-export function getGigImagePublicId(imageUrl: string) {
+export function getGigImagePublicId(imageUrl: string, folderName: string) {
   const splittedUrl = imageUrl.split("/");
   const imagePublicId = splittedUrl[splittedUrl.length - 1].replace(".jpg", "");
-  return GIG_POSTERS_FOLDER_NAME + "/" + imagePublicId;
+  return folderName + "/" + imagePublicId;
 }

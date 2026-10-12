@@ -26,7 +26,7 @@ interface Props {
   nbOfResults?: number;
   onDelete: (organization: Organization) => void;
   onEdit: (organization: Organization) => void;
-  onRowClick: (organizationId: Organization["id"]) => void;
+  onRowClick?: (organizationId: Organization["id"]) => void;
   page: number;
   pageTotal: number;
   searchedName: string;
@@ -111,7 +111,7 @@ export default function OrganizationTable({
               <Table.Tr
                 key={organization.id}
                 onClick={() => {
-                  if (!isLoading) {
+                  if (!isLoading && onRowClick) {
                     onRowClick(organization.id);
                   }
                 }}

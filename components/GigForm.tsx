@@ -45,11 +45,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandSelect from "./BandSelect";
 import { isValidUrl } from "@/utils/utils";
-import {
-  GIG_IMG_RATIO_STRING,
-  MAX_IMAGE_SIZE,
-  getGigImgWidth,
-} from "@/domain/image";
+import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "@/domain/image";
 import { useQuery } from "@tanstack/react-query";
 import {
   FormCreateGigArgs,
@@ -76,6 +72,7 @@ import {
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import { genresQuery, placesQuery } from "@/domain/queries";
+import { validateImageFile } from "@/utils/image";
 
 const { FESTIVAL, GIG } = GigType;
 
@@ -125,17 +122,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
     validate: {
       date: (value) =>
         !value && gigType === GIG ? "La date du concert est requise." : null,
-      imageFile: (value) => {
-        if (!value) return null;
-        const { size, type } = value;
-        if (!type.startsWith("image/")) {
-          return "Le fichier doit être une image.";
-        }
-        if (size > MAX_IMAGE_SIZE) {
-          return `Le fichier est trop volumineux (taille maximale autorisée : ${(MAX_IMAGE_SIZE / 1000000).toString()} Mo).`;
-        }
-        return null;
-      },
+      imageFile: validateImageFile,
       imageUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       sourceUrl: (value) =>

@@ -18,6 +18,7 @@ import {
   IconLogout,
   IconMusic,
   IconPalette,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import NextImage from "next/image";
 import Link from "next/link";
@@ -134,6 +135,14 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
                   >
                     Genres
                   </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    href="/admin/assos"
+                    leftSection={<IconUsersGroup />}
+                  >
+                    Associations
+                  </Menu.Item>
+                  <Menu.Divider />
                   <Menu.Item
                     leftSection={<IconLogout />}
                     onClick={handleSignOut}

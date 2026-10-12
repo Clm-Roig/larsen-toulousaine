@@ -16,7 +16,8 @@ export default function AddOrganization() {
 
   const { isPending, mutate } = useMutation({
     mutationFn: async (values: CreateOrganizationArgs) => {
-      await createOrganization(values);
+      const result = await createOrganization(values);
+      return result;
     },
     onError: (error) =>
       notifications.show({

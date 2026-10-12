@@ -8,6 +8,15 @@ export type CreateOrganizationArgs = Omit<
   "id" | "createdAt" | "updatedAt" | "author" | "authorId"
 > & {
   id?: string;
+  logoFile?: File | null;
+};
+
+export type FormCreateOrganizationArgs = Omit<
+  Organization,
+  "id" | "createdAt" | "authorId" | "updatedAt"
+> & {
+  id?: string;
+  logoFile?: File | null;
 };
 
 export const searchOrganizations = async (
@@ -48,15 +57,31 @@ export const getOrganizations = async (): Promise<
 export type EditOrganizationArgs = Omit<
   Organization,
   "createdAt" | "updatedAt"
->;
+> & {
+  logoFile: File | null;
+};
 
 export const editOrganization = async (
   organization: EditOrganizationArgs,
 ): Promise<OrganizationWithGigCount> => {
+  const formData = new FormData();
+  const { logoFile, ...otherValues } = organization;
+  if (logoFile) {
+    formData.append("file", logoFile);
+  }
+  formData.append(
+    "data",
+    JSON.stringify({
+      ...otherValues,
+    }),
+  );
   try {
     const response = await api.put<OrganizationWithGigCount>(
       `/organizations/${organization.id}`,
-      organization,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data;
   } catch (error) {
@@ -77,9 +102,21 @@ export const deleteOrganization = async (
 export const createOrganization = async (
   organization: CreateOrganizationArgs,
 ): Promise<Organization> => {
+  const formData = new FormData();
+  const { logoFile, ...otherValues } = organization;
+  if (logoFile) {
+    formData.append("file", logoFile);
+  }
+  formData.append(
+    "data",
+    JSON.stringify({
+      ...otherValues,
+    }),
+  );
+
   try {
-    const response = await api.post<Organization>(`/organizations`, {
-      ...organization,
+    const response = await api.post<Organization>(`/organizations`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
   } catch (error) {

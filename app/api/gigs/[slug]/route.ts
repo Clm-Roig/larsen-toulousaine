@@ -3,6 +3,7 @@ import { EditGigArgs } from "@/domain/Gig/Gig.webService";
 import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
   CustomError,
+  formDataParsingError,
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
@@ -14,8 +15,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { Prisma } from "@prisma/client";
 import {
-  deleteGigImage,
+  deleteImageOnCloudinary,
   downloadImage,
+  GIG_POSTERS_FOLDER_NAME,
   storeImage,
 } from "@/app/api/utils/image";
 import { flattenGigBands, completeGigInclude } from "@/app/api/utils/gigs";
@@ -66,12 +68,7 @@ export async function PUT(request: NextRequest) {
   try {
     body = JSON.parse(rawData.data) as EditGigArgs;
   } catch {
-    return toResponse({
-      name: "FORM_DATA_PARSING_ERROR",
-      frMessage: "Il y a eu une erreur lors du traitement du formulaire.",
-      message: "Error while parsing form data",
-      status: 500,
-    });
+    return toResponse(formDataParsingError);
   }
   // Check file
   const imageFile = formData.get("file");
@@ -173,12 +170,13 @@ export async function PUT(request: NextRequest) {
         newImageUrl = await storeImage({
           arrayBufferImg,
           filename: slug,
+          folderName: GIG_POSTERS_FOLDER_NAME,
           imageFormat: IMG_OUTPUT_FORMAT,
         });
       }
     }
     if (!newImageUrl && prevImageUrl) {
-      await deleteGigImage(prevImageUrl);
+      await deleteImageOnCloudinary(prevImageUrl, GIG_POSTERS_FOLDER_NAME);
     }
     const updatedGig = await prisma.gig.update({
       where: { id: body.id },
@@ -267,7 +265,10 @@ export async function DELETE(
       },
     });
     if (toBeDeletedGig) {
-      await deleteGigImage(toBeDeletedGig.imageUrl);
+      await deleteImageOnCloudinary(
+        toBeDeletedGig.imageUrl,
+        GIG_POSTERS_FOLDER_NAME,
+      );
     }
     return new Response(null, { status: 204 });
   } catch (error) {

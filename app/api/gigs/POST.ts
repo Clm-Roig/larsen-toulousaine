@@ -4,7 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { removeParametersFromUrl } from "@/utils/utils";
-import { downloadImage, storeImage } from "@/app/api/utils/image";
+import {
+  downloadImage,
+  GIG_POSTERS_FOLDER_NAME,
+  storeImage,
+} from "@/app/api/utils/image";
 import { computeGigSlug } from "@/domain/Gig/Gig.service";
 import { IMG_OUTPUT_FORMAT } from "@/domain/Gig/constants";
 import {
@@ -31,7 +35,6 @@ import {
 } from "@/domain/Place/constants";
 
 async function POST(request: NextRequest) {
-  // Check auth
   const { user } = (await getServerSession(authOptions)) ?? {};
   if (!user) {
     return toResponse(mustBeAuthenticatedError);
@@ -98,6 +101,7 @@ async function POST(request: NextRequest) {
       blobImageUrl = await storeImage({
         arrayBufferImg,
         filename: slug,
+        folderName: GIG_POSTERS_FOLDER_NAME,
         imageFormat: IMG_OUTPUT_FORMAT,
       });
     }

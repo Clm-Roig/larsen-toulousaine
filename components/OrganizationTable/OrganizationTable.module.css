@@ -1,7 +1,9 @@
-.row:hover {
+/* OrganizationTable is currently not clickable */
+
+/* .row:hover {
   cursor: pointer;
 }
 
 .rowLoading:hover {
   cursor: progress;
-}
+} */

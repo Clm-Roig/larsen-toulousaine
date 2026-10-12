@@ -9,6 +9,7 @@ import {
   IconMusic,
   IconBuilding,
   IconExclamationCircle,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
@@ -57,6 +58,11 @@ export default function Admin() {
                 href="/admin/genres"
                 icon={<IconPalette />}
                 text="Genres"
+              />
+              <DashboardCard
+                href="/admin/assos"
+                icon={<IconUsersGroup />}
+                text="Associations"
               />
             </Flex>
             <Title order={2}>Divers</Title>

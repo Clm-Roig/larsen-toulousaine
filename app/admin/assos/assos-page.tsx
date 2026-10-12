@@ -84,6 +84,7 @@ const Assos = () => {
     setSearchedIsActive(isActive);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleOnRowClick = (organizationId: Organization["id"]) => {
     router.push(`/assos/${organizationId}`);
   };
@@ -126,7 +127,7 @@ const Assos = () => {
           nbOfResults={count}
           onDelete={handleOnOpenDeleteOrganizationModal}
           onEdit={handleOnEditOrganization}
-          onRowClick={handleOnRowClick}
+          // onRowClick={handleOnRowClick}
           // Mantine table pagination works with page starting at 1.
           page={page + 1}
           pageTotal={Math.ceil((count ?? 0) / NB_OF_ORGANIZATIONS_PER_PAGE)}
