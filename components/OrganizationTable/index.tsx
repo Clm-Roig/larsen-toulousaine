@@ -73,10 +73,6 @@ export default function OrganizationTable({
 
   return (
     <Stack>
-      <Center>
-        <Pagination value={page} onChange={setPage} total={pageTotal} />
-      </Center>
-
       <Stack gap="xs">
         {nbOfResults !== undefined && (
           <Group>
@@ -118,7 +114,11 @@ export default function OrganizationTable({
                 className={isLoading ? classes.rowLoading : classes.row}
               >
                 <Table.Td>{organization.name}</Table.Td>
-                <Table.Td>{organization._count.gigs}</Table.Td>
+
+                <Table.Td>
+                  <Text size="xs">{organization.link}</Text>
+                </Table.Td>
+
                 <Table.Td ta="center">
                   {organization.isActive ? (
                     <IconCheck color="green" />
@@ -126,6 +126,7 @@ export default function OrganizationTable({
                     <IconX color="red" />
                   )}
                 </Table.Td>
+                <Table.Td>{organization._count.gigs}</Table.Td>
                 {canEdit && (
                   <Table.Td>
                     <Group>

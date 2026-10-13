@@ -131,6 +131,8 @@ export async function deleteImageOnCloudinary(
 
 export function getGigImagePublicId(imageUrl: string, folderName: string) {
   const splittedUrl = imageUrl.split("/");
-  const imagePublicId = splittedUrl[splittedUrl.length - 1].replace(".jpg", "");
+  const imagePublicId = splittedUrl[splittedUrl.length - 1]
+    .replace(".jpg", "")
+    .replace(".png", "");
   return folderName + "/" + imagePublicId;
 }

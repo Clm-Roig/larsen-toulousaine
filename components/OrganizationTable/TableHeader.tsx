@@ -35,8 +35,9 @@ export default function TableHeader({
       {/* zIndex to fix a bug where icons are above the third column text */}
       <Table.Tr>
         <Table.Th>Nom</Table.Th>
-        <Table.Th w={{ base: 70, md: 120 }}>Nb. concerts</Table.Th>
+        <Table.Th>Lien</Table.Th>
         <Table.Th w={{ base: 60, md: 100 }}>Active ?</Table.Th>
+        <Table.Th w={{ base: 70, md: 120 }}>Nb. concerts</Table.Th>
         {canEdit && <Table.Th w={{ base: 100, md: 120 }}>Action</Table.Th>}
       </Table.Tr>
       <Table.Tr>
@@ -59,6 +60,7 @@ export default function TableHeader({
           />
         </Table.Th>
         <Table.Th></Table.Th>
+
         <Table.Th>
           <Center>
             <SegmentedControl
@@ -98,6 +100,7 @@ export default function TableHeader({
             />
           </Center>
         </Table.Th>
+        <Table.Th></Table.Th>
         {status === "authenticated" && (
           <Table.Th>
             <AddResourceButton type="organization" size="xs" />

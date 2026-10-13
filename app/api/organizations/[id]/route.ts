@@ -47,7 +47,7 @@ export async function PUT(request: NextRequest) {
     return toResponse(tooBigImageFileError);
   }
 
-  const { id, isActive, logoUrl, name } = body;
+  const { id, isActive, link, logoUrl, name } = body;
   try {
     const previousOrganization = await prisma.organization.findUnique({
       where: { id: id },
@@ -85,6 +85,7 @@ export async function PUT(request: NextRequest) {
       where: { id: id },
       data: Prisma.validator<Prisma.OrganizationUpdateInput>()({
         isActive: isActive,
+        link: link,
         logoUrl: newLogoUrl,
         name: name,
       }),

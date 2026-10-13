@@ -111,9 +111,10 @@ model BandsOnGigs {
 
 model Organization {
   id        String   @id @default(cuid())
-  name      String   @unique
-  logoUrl   String?
   isActive  Boolean  @default(true)
+  link      String?
+  logoUrl   String?
+  name      String   @unique
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   author    User     @relation(fields: [authorId], references: [id])

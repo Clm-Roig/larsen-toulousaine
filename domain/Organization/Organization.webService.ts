@@ -25,7 +25,7 @@ export const searchOrganizations = async (
   page?: number,
 ): Promise<{ organizations: OrganizationWithGigCount[]; count: number }> => {
   const nameParam = name ? `name=${encodeURIComponent(name)}` : null;
-  const isActiveParam = `isActive=${isActive === "true" ? "true" : isActive === "false" ? "false" : ""}`;
+  const isActiveParam = isActive !== "" ? `isActive=${isActive}` : null;
   const pageParam = page ? `page=${page}` : null;
   const params = [nameParam, isActiveParam, pageParam]
     .filter((p): p is string => !!p)

@@ -63,14 +63,13 @@ export async function POST(request: NextRequest) {
     return toResponse(missingBodyError);
   }
 
-  const { logoUrl, name } = body;
+  const { isActive, link, logoUrl, name } = body;
   const logoFile = formData.get("file");
   const isLogoFileAFile = logoFile instanceof File;
   if (isLogoFileAFile && logoFile.size > MAX_IMAGE_SIZE) {
     return toResponse(tooBigImageFileError);
   }
 
-  const { ...organizationData } = body;
   try {
     let blobImageUrl: string | undefined = undefined;
 
@@ -87,13 +86,16 @@ export async function POST(request: NextRequest) {
         filename: name,
         folderName: ORGANIZATION_LOGOS_FOLDER_NAME,
         imageFormat: "png",
+        resizeOptions: {},
       });
     }
     const createdOrganization = await prisma.organization.create({
       data: Prisma.validator<Prisma.OrganizationCreateInput>()({
-        ...organizationData,
         author: { connect: { id: user.id } },
+        isActive: isActive,
+        link: link,
         logoUrl: blobImageUrl,
+        name: name,
       }),
       include: {
         _count: {

@@ -30,26 +30,25 @@ import { EditOrganizationDrawer } from "@/components/EditOrganizationDrawer";
 import { Boolean3ChoicesFormValue } from "@/utils/utils";
 
 const Assos = () => {
-  const [editedOrganization, setEditedOrganization] = useState<Organization>();
-  const [deletedOrganization, setDeletedOrganization] =
-    useState<Organization>();
-
-  const [searchedName, setSearchedName] = useState<string>("");
-  const [searchedIsActive, setSearchedIsActive] =
-    useState<Boolean3ChoicesFormValue>("");
-  const [debouncedSearchedName] = useDebouncedValue(searchedName, 400);
   const { searchParams, setSearchParams } = useSearchParams();
   const router = useRouter();
 
-  const urlPageStr = searchParams.get("page");
-  const urlPage = urlPageStr ? parseInt(urlPageStr, 10) - 1 : null;
-  const [page, setPage] = useState(urlPage ?? 0);
+  const [searchedName, setSearchedName] = useState<string>("");
+  const [debouncedSearchedName] = useDebouncedValue(searchedName, 400);
+  const [searchedIsActive, setSearchedIsActive] =
+    useState<Boolean3ChoicesFormValue>("");
 
   const [editOpened, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
   const [deleteOpened, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
+  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
 
+  const urlPageStr = searchParams.get("page");
+  const urlPage = urlPageStr ? parseInt(urlPageStr, 10) - 1 : null;
+  const [page, setPage] = useState(urlPage ?? 0);
+
+  // Search organizations query
   const {
     data,
     error: getBandsError,
@@ -61,16 +60,18 @@ const Assos = () => {
       await searchOrganizations(debouncedSearchedName, searchedIsActive, page),
     placeholderData: keepPreviousData,
   });
-  const { organizations, count } = data ?? {};
 
   const handleOnClose = useCallback(() => {
-    setEditedOrganization(undefined);
+    setSelectedOrg(null);
     closeEdit();
   }, [closeEdit]);
-  const { isPending, mutate } = useEditOrganization(handleOnClose);
 
+  // Create / Update organization hooks
+  const { isPending, mutate } = useEditOrganization(handleOnClose);
   const { isPending: isDeletePending, mutate: handleOnDelete } =
     useDeleteOrganization();
+
+  const { organizations, count } = data ?? {};
 
   const handleOnSearchedNameChange = (name: string) => {
     handleOnSetPage(1);
@@ -90,18 +91,18 @@ const Assos = () => {
   };
 
   const handleOnEditOrganization = (organization: Organization) => {
-    setEditedOrganization(organization);
+    setSelectedOrg(organization);
     openEdit();
   };
 
   const handleOnOpenDeleteOrganizationModal = (organization: Organization) => {
-    setDeletedOrganization(organization);
+    setSelectedOrg(organization);
     openDelete();
   };
 
   const handleOnDeleteOrganization = () => {
-    if (deletedOrganization) {
-      handleOnDelete(deletedOrganization.id);
+    if (selectedOrg) {
+      handleOnDelete(selectedOrg.id);
       closeDelete();
     }
   };
@@ -138,7 +139,7 @@ const Assos = () => {
           setSearchedName={handleOnSearchedNameChange}
         />
         <EditOrganizationDrawer
-          editedOrganization={editedOrganization}
+          editedOrganization={selectedOrg}
           handleOnClose={handleOnClose}
           handleOnSubmit={handleOnSubmit}
           isPending={isPending}
@@ -152,12 +153,11 @@ const Assos = () => {
         onClose={closeDelete}
         title="Confirmation de suppression"
       >
-        {deletedOrganization ? (
+        {selectedOrg ? (
           <Stack>
             <Text>
               Êtes-vous sûr·e de vouloir supprimer l&apos;association{" "}
-              <b>{deletedOrganization.name}</b> ? Sa suppression est{" "}
-              <b>définitive</b> !
+              <b>{selectedOrg.name}</b> ? Sa suppression est <b>définitive</b> !
             </Text>
             <Group justify="space-between">
               <Button onClick={closeDelete}>Annuler</Button>

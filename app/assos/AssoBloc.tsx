@@ -1,35 +1,25 @@
 "use client";
 
-import { Box, Image, ImageProps, Text } from "@mantine/core";
+import { Box, Image, Text } from "@mantine/core";
 import classes from "./AssoBloc.module.css";
+import { Organization } from "@prisma/client";
 import Link from "next/link";
 
-type AssoBlocProps = {
-  logoFileName?: string;
-  name: string;
-  url?: string;
-  hasLogo?: boolean;
-} & ImageProps;
+interface AssoBlocProps {
+  organization: Organization;
+}
 
-export default function AssoBloc({
-  logoFileName,
-  name,
-  url,
-  hasLogo = true,
-  ...imageProps
-}: AssoBlocProps) {
-  const logoFilePath = `images/logos_assos/${logoFileName ?? name}.png`;
-
-  const content = hasLogo ? (
+export default function AssoBloc({ organization }: AssoBlocProps) {
+  const { link, logoUrl, name } = organization;
+  const content = logoUrl ? (
     <Image
-      src={logoFilePath}
+      src={logoUrl}
       alt={`Logo ${name}`}
       mah="100%"
       h="auto"
-      w={{ base: 100, xs: 150 }}
+      w={{ base: 100, xs: 150, sm: 200 }}
       m="auto"
       className={classes.assoLogo}
-      {...imageProps}
     />
   ) : (
     <Text size="2.5rem" tt="uppercase" className={classes.assoLogo} c="black">
@@ -39,9 +29,9 @@ export default function AssoBloc({
 
   return (
     <Box ta="center" w={{ base: "100%", xs: "50%", md: "30%", xl: "20%" }}>
-      {url ? (
+      {link ? (
         <Link
-          href={url}
+          href={link}
           target="_blank"
           rel="noopener noreferrer"
           className={classes.assoLink}
