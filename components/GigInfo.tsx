@@ -53,7 +53,7 @@ export default function GigInfo({ gig }: Props) {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
   const {
-    author,
+    authorId,
     bands,
     createdAt,
     description,
@@ -248,7 +248,7 @@ export default function GigInfo({ gig }: Props) {
         </ExternalLink>
       )}
       <Metadata
-        author={author}
+        authorId={authorId}
         createdAt={createdAt}
         updatedAt={updatedAt}
         withDivider

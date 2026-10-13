@@ -13,7 +13,12 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { genresQuery, organizationsQuery, placesQuery } from "@/domain/queries";
+import {
+  genresQuery,
+  organizationsQuery,
+  placesQuery,
+  usersQuery,
+} from "@/domain/queries";
 
 export const metadata: Metadata = getMetadata();
 
@@ -37,6 +42,7 @@ export default async function RootLayout({
       queryClient.prefetchQuery(genresQuery),
       queryClient.prefetchQuery(organizationsQuery),
       queryClient.prefetchQuery(placesQuery),
+      queryClient.prefetchQuery(usersQuery),
     ]);
   } catch (e) {
     console.error(e);

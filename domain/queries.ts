@@ -5,12 +5,8 @@ import { PlaceWithGigCount } from "./Place/Place.type";
 import { getGenres } from "./Genre/Genre.webService";
 import { GenreWithBandCount } from "@/domain/Genre/Genre.type";
 import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
-
-export const placesQuery: UseQueryOptions<PlaceWithGigCount[]> = {
-  queryKey: ["places"],
-  queryFn: async () => await getPlaces(),
-  staleTime: 1000 * 60 * 60 * 1, // 1h in ms
-};
+import { getUsers } from "@/domain/User/User.webService";
+import { UserWithGigCount } from "@/domain/User/User.type";
 
 export const genresQuery: UseQueryOptions<GenreWithBandCount[]> = {
   queryKey: ["genres"],
@@ -21,5 +17,17 @@ export const genresQuery: UseQueryOptions<GenreWithBandCount[]> = {
 export const organizationsQuery: UseQueryOptions<OrganizationWithGigCount[]> = {
   queryKey: ["organizations"],
   queryFn: async () => await getOrganizations(),
+  staleTime: 1000 * 60 * 60 * 1, // 1h in ms
+};
+
+export const placesQuery: UseQueryOptions<PlaceWithGigCount[]> = {
+  queryKey: ["places"],
+  queryFn: async () => await getPlaces(),
+  staleTime: 1000 * 60 * 60 * 1, // 1h in ms
+};
+
+export const usersQuery: UseQueryOptions<UserWithGigCount[]> = {
+  queryKey: ["users"],
+  queryFn: async () => await getUsers(),
   staleTime: 1000 * 60 * 60 * 1, // 1h in ms
 };

@@ -4,25 +4,27 @@ import dayjs from "@/lib/dayjs";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 import { User } from "@prisma/client";
+import { usersQuery } from "@/domain/queries";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props extends StackProps {
-  author?: {
-    id: User["id"];
-    pseudo: User["pseudo"];
-  };
+  authorId?: User["id"];
   createdAt: Date;
   updatedAt?: Date | null;
   withDivider?: boolean;
 }
 
 export default function Metadata({
-  author,
+  authorId,
   createdAt,
   updatedAt,
   withDivider,
   ...stackProps
 }: Props) {
   const canSeeMetadata = useHasPermission(Permission.SEE_METADATA);
+  const { data: users } = useQuery(usersQuery);
+
+  const authorPseudo = users?.find((u) => u.id === authorId)?.pseudo;
 
   return (
     canSeeMetadata && (
@@ -34,11 +36,11 @@ export default function Metadata({
             <b>{dayjs(createdAt).format("D MMMM YYYY")}</b>
             &nbsp;à&nbsp;
             <b>{dayjs(createdAt).format("HH[h]mm")}</b>
-            {author?.pseudo && (
+            {authorPseudo && (
               <>
                 &nbsp;par&nbsp;
                 <i>
-                  <b>{author.pseudo}</b>
+                  <b>{authorPseudo}</b>
                 </i>
               </>
             )}

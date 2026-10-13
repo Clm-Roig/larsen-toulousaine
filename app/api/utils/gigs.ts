@@ -10,12 +10,6 @@ export const gigListOrderBy: Prisma.GigOrderByWithAggregationInput[] = [
 ];
 
 export const completeGigInclude = {
-  author: {
-    select: {
-      id: true,
-      pseudo: true,
-    },
-  },
   organization: true,
   place: true,
   bands: {
