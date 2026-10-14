@@ -2,14 +2,31 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function isValidUrl(text: string | null) {
-  if (text === null) return false;
+export function isValidUrl(text: string | null | undefined): text is string {
+  if (!text) return false;
   try {
     new URL(text);
     return true;
   } catch {
     return false;
   }
+}
+
+export function isImageUrl(text: string | null | undefined): boolean {
+  if (!isValidUrl(text)) return false;
+
+  // remove url parameters
+  const cleanUrl = text.split("?")[0].toLowerCase();
+  const validExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp",
+    ".svg",
+    ".gif",
+    ".avif",
+  ];
+  return validExtensions.some((ext) => cleanUrl.endsWith(ext));
 }
 
 export function capitalize(string: string) {

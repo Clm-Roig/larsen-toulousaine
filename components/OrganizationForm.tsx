@@ -15,7 +15,7 @@ import {
 import { IconFile, IconLink, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import OptimizedImage from "@/components/OptimizedImage";
-import { isValidUrl } from "@/utils/utils";
+import { isImageUrl, isValidUrl } from "@/utils/utils";
 
 interface OrganizationFormValues {
   id?: string;
@@ -56,7 +56,9 @@ export default function OrganizationForm({
       link: (value) =>
         !value || isValidUrl(value) ? null : "L'URL fournie n'est pas valide.",
       logoUrl: (value) =>
-        !value || isValidUrl(value) ? null : "L'URL fournie n'est pas valide.",
+        !value || isImageUrl(value)
+          ? null
+          : "L'URL fournie n'est pas celle d'une image.",
     },
   });
 

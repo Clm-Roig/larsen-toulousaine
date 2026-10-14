@@ -43,7 +43,7 @@ import {
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandSelect from "./BandSelect";
-import { isValidUrl } from "@/utils/utils";
+import { isImageUrl, isValidUrl } from "@/utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "@/domain/image";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -76,6 +76,8 @@ import OrganizationSelect from "@/components/OrganizationSelect";
 const { FESTIVAL, GIG } = GigType;
 
 const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
+const INVALID_IMAGE_URL_ERROR_MSG =
+  "L'URL fournie n'est pas celle d'une image.";
 
 interface Props {
   gig?: CompleteGig;
@@ -124,7 +126,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
         !value && gigType === GIG ? "La date du concert est requise." : null,
       imageFile: validateImageFile,
       imageUrl: (value) =>
-        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
+        !value || isImageUrl(value) ? null : INVALID_IMAGE_URL_ERROR_MSG,
       sourceUrl: (value) =>
         !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       placeId: isNotEmpty("Le lieu du concert est requis."),
@@ -556,7 +558,7 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
             disabled={!!form.getValues().imageFile?.name}
           />
 
-          {(isValidUrl(form.values.imageUrl) ||
+          {(isImageUrl(form.values.imageUrl) ||
             (!!imageFilePreview && form.isValid("imageFile"))) && (
             <OptimizedImage
               mah={200}

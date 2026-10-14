@@ -52,7 +52,7 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
       city: (value) => (value ? null : "La ville est requise."),
       name: (value) => validatePlaceName(value),
       website: (value) =>
-        isValidUrl(value) || !value ? null : "L'URL fournie n'est pas valide.",
+        isValidUrl(value) ? null : "L'URL fournie n'est pas valide.",
     },
   });
 
