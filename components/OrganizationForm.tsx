@@ -16,6 +16,10 @@ import { IconFile, IconLink, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { isImageUrl, isValidUrl } from "@/utils/utils";
+import {
+  INVALID_IMAGE_URL_ERROR_MSG,
+  INVALID_URL_ERROR_MSG,
+} from "@/domain/errors";
 
 interface OrganizationFormValues {
   id?: string;
@@ -54,11 +58,9 @@ export default function OrganizationForm({
     validate: {
       name: (value) => (!value.trim() ? "Le nom est requis." : null),
       link: (value) =>
-        !value || isValidUrl(value) ? null : "L'URL fournie n'est pas valide.",
+        !value || isValidUrl(value) ? null : INVALID_URL_ERROR_MSG,
       logoUrl: (value) =>
-        !value || isImageUrl(value)
-          ? null
-          : "L'URL fournie n'est pas celle d'une image.",
+        !value || isImageUrl(value) ? null : INVALID_IMAGE_URL_ERROR_MSG,
     },
   });
 

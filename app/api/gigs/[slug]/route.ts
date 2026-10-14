@@ -7,7 +7,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { getServerSession } from "next-auth";
@@ -24,7 +24,7 @@ import { flattenGigBands, completeGigInclude } from "@/app/api/utils/gigs";
 import {
   invalidImageUrlError,
   tooBigImageFileError,
-} from "@/domain/Gig/errors";
+} from "@/domain/Gig/apiErrors";
 import { removeParametersFromUrl } from "@/utils/utils";
 import { revalidatePath } from "next/cache";
 import dayjs from "@/lib/dayjs";

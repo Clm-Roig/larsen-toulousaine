@@ -1,5 +1,5 @@
 import { gigListOrderBy, completeGigInclude } from "@/app/api/utils/gigs";
-import { toResponse, unknownError } from "@/domain/errors";
+import { toResponse, unknownError } from "@/domain/apiErrors";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";

@@ -3,7 +3,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import { CreateGenreArgs } from "@/domain/Genre/Genre.webService";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";

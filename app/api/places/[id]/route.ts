@@ -5,7 +5,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";

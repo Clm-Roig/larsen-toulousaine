@@ -3,7 +3,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,7 +13,7 @@ import { authOptions } from "@/utils/authOptions";
 import { getPrismaOrderByFromRequest } from "@/app/api/utils/orderBy";
 import { CreateOrganizationArgs } from "@/domain/Organization/Organization.webService";
 import { MAX_IMAGE_SIZE } from "@/domain/image";
-import { tooBigImageFileError } from "@/domain/Gig/errors";
+import { tooBigImageFileError } from "@/domain/Gig/apiErrors";
 import {
   downloadImage,
   ORGANIZATION_LOGOS_FOLDER_NAME,

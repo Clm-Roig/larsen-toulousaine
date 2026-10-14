@@ -16,7 +16,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import { CreateGigArgs } from "@/domain/Gig/Gig.webService";
 import { revalidatePath } from "next/cache";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
@@ -24,7 +24,7 @@ import {
   invalidImageUrlError,
   tooBigImageFileError,
   tooBigImageUrlError,
-} from "@/domain/Gig/errors";
+} from "@/domain/Gig/apiErrors";
 import dayjs from "@/lib/dayjs";
 
 import { MAX_IMAGE_SIZE } from "@/domain/image";

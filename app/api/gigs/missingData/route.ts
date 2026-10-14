@@ -3,7 +3,7 @@ import dayjs from "@/lib/dayjs";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
-import { mustBeAuthenticatedError, toResponse } from "@/domain/errors";
+import { mustBeAuthenticatedError, toResponse } from "@/domain/apiErrors";
 import { Prisma } from "@prisma/client";
 import { unknownPlaceName } from "@/domain/constants";
 

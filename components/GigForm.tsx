@@ -72,12 +72,12 @@ import { MAIN_CITY } from "@/domain/Place/constants";
 import { genresQuery, organizationsQuery, placesQuery } from "@/domain/queries";
 import { validateImageFile } from "@/utils/image";
 import OrganizationSelect from "@/components/OrganizationSelect";
+import {
+  INVALID_IMAGE_URL_ERROR_MSG,
+  INVALID_URL_ERROR_MSG,
+} from "@/domain/errors";
 
 const { FESTIVAL, GIG } = GigType;
-
-const INVALID_URL_ERROR_MSG = "L'URL fournie n'est pas valide.";
-const INVALID_IMAGE_URL_ERROR_MSG =
-  "L'URL fournie n'est pas celle d'une image.";
 
 interface Props {
   gig?: CompleteGig;

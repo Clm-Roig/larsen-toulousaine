@@ -1,5 +1,8 @@
 import { DEFAULT_IMG_RESIZE_OPTIONS } from "@/domain/Gig/constants";
-import { invalidImageUrlError, tooBigImageUrlError } from "@/domain/Gig/errors";
+import {
+  invalidImageUrlError,
+  tooBigImageUrlError,
+} from "@/domain/Gig/apiErrors";
 import { MAX_IMAGE_SIZE } from "@/domain/image";
 import cloudinaryV2 from "@/lib/cloudinary";
 import { UploadApiOptions } from "cloudinary";

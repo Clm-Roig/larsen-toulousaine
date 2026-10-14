@@ -1,4 +1,4 @@
-import { CustomError } from "@/domain/errors";
+import { CustomError } from "@/domain/apiErrors";
 import { MAX_IMAGE_SIZE } from "@/domain/image";
 
 export enum GIG_IMAGE_ERROR_NAMES {

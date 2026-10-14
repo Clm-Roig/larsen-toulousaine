@@ -4,7 +4,7 @@ import {
   missingNewPasswordError,
   missingPreviousPasswordError,
   tooShortPasswordError,
-} from "@/domain/User/errors";
+} from "@/domain/User/apiErrors";
 import { MIN_PASSWORD_LENGTH } from "@/domain/User/constants";
 import prisma from "@/lib/prisma";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
@@ -18,7 +18,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 
 interface NewPasswordPayload {
   newPassword: string;

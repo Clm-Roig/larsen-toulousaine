@@ -1,4 +1,4 @@
-import { CustomError } from "@/domain/errors";
+import { CustomError } from "@/domain/apiErrors";
 import axios, { isAxiosError } from "axios";
 
 const api = axios.create({

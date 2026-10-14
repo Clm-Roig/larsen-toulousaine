@@ -15,6 +15,7 @@ import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import { isValidUrl, normalizeString } from "@/utils/utils";
 import PlaceFields from "./PlaceFields";
 import { placesQuery } from "@/domain/queries";
+import { INVALID_IMAGE_URL_ERROR_MSG } from "@/domain/errors";
 
 interface Props {
   place?: PlaceWithGigCount;
@@ -52,7 +53,7 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
       city: (value) => (value ? null : "La ville est requise."),
       name: (value) => validatePlaceName(value),
       website: (value) =>
-        isValidUrl(value) ? null : "L'URL fournie n'est pas valide.",
+        isValidUrl(value) ? null : INVALID_IMAGE_URL_ERROR_MSG,
     },
   });
 

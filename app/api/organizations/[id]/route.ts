@@ -4,7 +4,7 @@ import {
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
@@ -12,7 +12,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { EditOrganizationArgs } from "@/domain/Organization/Organization.webService";
 import { MAX_IMAGE_SIZE } from "@/domain/image";
-import { tooBigImageFileError } from "@/domain/Gig/errors";
+import { tooBigImageFileError } from "@/domain/Gig/apiErrors";
 import {
   deleteImageOnCloudinary,
   downloadImage,

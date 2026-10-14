@@ -1,12 +1,12 @@
 import { authOptions } from "@/utils/authOptions";
 import { EditBandArgs } from "@/domain/Band/Band.webService";
-import { cantDeleteBandBecauseInGigError } from "@/domain/Band/errors";
+import { cantDeleteBandBecauseInGigError } from "@/domain/Band/apiErrors";
 import {
   missingBodyError,
   mustBeAuthenticatedError,
   toResponse,
   unknownError,
-} from "@/domain/errors";
+} from "@/domain/apiErrors";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
