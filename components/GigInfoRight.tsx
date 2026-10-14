@@ -20,6 +20,7 @@ import {
   IconInfoCircle,
   IconMapPin,
   IconMusic,
+  IconUsersGroup,
   IconX,
 } from "@tabler/icons-react";
 import Price from "@/components/Price";
@@ -49,7 +50,7 @@ interface Props {
   gig: CompleteGig;
 }
 
-export default function GigInfo({ gig }: Props) {
+export default function GigInfoRight({ gig }: Props) {
   const canEditBand = useHasPermission(Permission.EDIT_BAND);
   const { isXSmallScreen, isSmallScreen } = useScreenSize();
   const {
@@ -64,6 +65,7 @@ export default function GigInfo({ gig }: Props) {
     isAcceptingBankCard,
     isCanceled,
     isSoldOut,
+    organization,
     place,
     price,
     ticketReservationLink,
@@ -242,6 +244,29 @@ export default function GigInfo({ gig }: Props) {
           </Text>
         </Row>
       )}
+
+      {!!organization && (
+        <Row>
+          <IconBlock>
+            <IconUsersGroup {...iconProps} />
+          </IconBlock>
+          <Divider orientation="vertical" />
+          <Text>
+            Organisé par{" "}
+            {organization.link ? (
+              <ExternalLink
+                href={organization.link}
+                aria-label="Lien de l'association"
+              >
+                {organization.name}
+              </ExternalLink>
+            ) : (
+              organization.name
+            )}
+          </Text>
+        </Row>
+      )}
+
       {sourceUrl && (
         <ExternalLink href={sourceUrl} aria-label="URL de la source">
           Plus d&apos;infos

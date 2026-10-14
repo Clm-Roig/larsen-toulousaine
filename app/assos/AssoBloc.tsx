@@ -1,7 +1,6 @@
 "use client";
 
 import { Box, Image, Popover, Text } from "@mantine/core";
-import classes from "./AssoBloc.module.css";
 import { Organization } from "@prisma/client";
 import Link from "next/link";
 import { useDisclosure } from "@mantine/hooks";
@@ -24,10 +23,10 @@ export default function AssoBloc({ organization }: AssoBlocProps) {
       h="auto"
       w={{ base: 100, xs: 150, sm: 200 }}
       m="auto"
-      className={classes.assoLogo}
+      className="assoLogo"
     />
   ) : (
-    <Text size="2.5rem" tt="uppercase" className={classes.assoLogo} c="black">
+    <Text size="2.5rem" tt="uppercase" className="assoLogo" c="black">
       {name}
     </Text>
   );
@@ -52,7 +51,7 @@ export default function AssoBloc({ organization }: AssoBlocProps) {
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className={classes.assoLink}
+              style={{ textDecoration: "none" }}
             >
               <Box td="none">{content}</Box>
             </Link>

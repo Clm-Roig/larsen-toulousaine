@@ -11,24 +11,23 @@ import {
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { CompleteGig } from "@/domain/Gig/Gig.type";
-import OptimizedImage from "@/components/OptimizedImage";
 import GigMenu from "@/components/GigMenu";
 import { useRouter } from "next/navigation";
 import useScreenSize from "@/hooks/useScreenSize";
-import GigInfo from "@/components/GigInfo";
+import GigInfoRight from "@/components/GigInfoRight";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { Gig } from "@prisma/client";
 import ConditionnalButtonLink from "@/components/ConditionnalButtonLink";
-import GigImgOverlay from "@/components/GigImgOverlay";
 import { getGigTitle } from "@/domain/Gig/Gig.service";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import GigInfoLeft from "@/components/GigInfoLeft";
 
 interface Props {
   gigSlug: string;
 }
 
-const IMAGE_MAX_HEIGHT = 250;
+const GIG_POSTER_MAX_HEIGHT = 250;
 
 const GigPage = ({ gigSlug }: Props) => {
   const canEditGig = useHasPermission(Permission.EDIT_GIG);
@@ -68,8 +67,8 @@ const GigPage = ({ gigSlug }: Props) => {
         <Flex direction={{ base: "column", md: "row" }} gap="sm" w="100%">
           <Skeleton
             h={220}
-            mah={IMAGE_MAX_HEIGHT}
-            maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
+            mah={GIG_POSTER_MAX_HEIGHT}
+            maw={getGigImgWidth(GIG_POSTER_MAX_HEIGHT)}
             m={{ base: "auto", md: 0 }}
           />
           <Stack>
@@ -93,7 +92,6 @@ const GigPage = ({ gigSlug }: Props) => {
     );
   }
 
-  const { imageUrl, isCanceled, isSoldOut } = gig;
   const gigTitle = getGigTitle(gig);
 
   return (
@@ -113,19 +111,8 @@ const GigPage = ({ gigSlug }: Props) => {
       )}
 
       <Flex mt="md" direction={{ base: "column", md: "row" }} gap={"md"}>
-        <Box
-          mah={IMAGE_MAX_HEIGHT}
-          maw={getGigImgWidth(IMAGE_MAX_HEIGHT)}
-          pos="relative"
-          m={{ base: "auto", md: 0 }}
-          opacity={isCanceled || isSoldOut ? 0.6 : 1}
-          style={{ overflowY: "hidden" }} // prevent too high image to overflow
-        >
-          <OptimizedImage src={imageUrl} alt={"Affiche du concert"} />
-          <GigImgOverlay gig={gig} />
-        </Box>
-
-        <GigInfo gig={gig} />
+        <GigInfoLeft gig={gig} gigPosterMaxHeight={GIG_POSTER_MAX_HEIGHT} />
+        <GigInfoRight gig={gig} />
       </Flex>
 
       <Flex mt="md" justify="space-between">

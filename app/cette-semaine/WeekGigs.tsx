@@ -18,11 +18,12 @@ import {
 } from "@mantine/core";
 import useWeekGigs from "@/hooks/useWeekGigs";
 import dayjs from "@/lib/dayjs";
-import { genresQuery, placesQuery } from "@/domain/queries";
+import { genresQuery, organizationsQuery, placesQuery } from "@/domain/queries";
 
 export default function WeekGigs() {
   const { displayNotSafeGigs, preferencesSum } = usePreferences();
   const { data: genres } = useQuery<Genre[]>(genresQuery);
+  const { data: organizations } = useQuery(organizationsQuery);
   const { data: places } = useQuery<Place[]>(placesQuery);
   const filteredPlaces = places?.filter(
     (p) => (displayNotSafeGigs || p.isSafe) && !p.isClosed,
@@ -52,6 +53,7 @@ export default function WeekGigs() {
             ? "\nVos options masquent peut-être certains concerts..."
             : "")
         }
+        organizations={organizations}
         places={filteredPlaces ?? []}
         selectedDate={selectedWeek}
         setSelectedDate={setSelectedWeek}

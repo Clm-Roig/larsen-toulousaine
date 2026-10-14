@@ -1,5 +1,7 @@
-import GenreSelect from "@/components/GenreSelect";
+import GenresSelect from "@/components/GenresSelect";
+import OrganizationsSelect from "@/components/OrganizationsSelect";
 import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 import { Permission } from "@/domain/permissions";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import useHasPermission from "@/hooks/useHasPermission";
@@ -18,7 +20,7 @@ import {
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
-import { Genre, Organization, Place } from "@prisma/client";
+import { Genre, Place } from "@prisma/client";
 import {
   IconDeselect,
   IconHomeCancel,
@@ -29,7 +31,7 @@ import { useState } from "react";
 
 interface Props {
   genres: Genre[];
-  organizations: Organization[];
+  organizations: OrganizationWithGigCount[];
   places: Place[];
 }
 
@@ -44,6 +46,7 @@ export default function OptionsPopover({
   const {
     displayNotSafeGigs,
     filteredGenres,
+    filteredOrganizations,
     excludedPlaces,
     grayOutPastGigs,
     maxPrice,
@@ -51,6 +54,7 @@ export default function OptionsPopover({
     resetPreferences,
     setDisplayNotSafeGigs,
     setFilteredGenres,
+    setFilteredOrganizations,
     setExcludedPlaces,
     setGrayOutPastGigs,
     setMaxPrice,
@@ -62,6 +66,12 @@ export default function OptionsPopover({
     setFilteredGenres(genres.filter((g) => genreIds.includes(g.id)));
   };
 
+  const handleOrganizationSelect = (orgIds: string[]) => {
+    setFilteredOrganizations(
+      organizations.filter((o) => orgIds.includes(o.id)),
+    );
+  };
+
   const handleToggleSelectPlaces = () => {
     if (areAllPlacesIncluded) {
       setExcludedPlaces(places.map((p) => p.id));
@@ -69,9 +79,6 @@ export default function OptionsPopover({
       setExcludedPlaces([]);
     }
   };
-
-  // TODO: filter by organizations
-  console.log(organizations);
 
   return (
     <Popover
@@ -152,13 +159,24 @@ export default function OptionsPopover({
             }}
           />
 
-          <GenreSelect
+          <GenresSelect
             label="Genres"
             genres={genres}
             value={filteredGenres.map((g) => g.id)}
             onChange={handleGenreSelect}
             clearable
             // Fix a bug where the Popover is closed when selecting a genre
+            // https://github.com/mantinedev/mantine/issues/5173
+            comboboxProps={{ withinPortal: false }}
+          />
+
+          <OrganizationsSelect
+            label="Associations"
+            organizations={organizations}
+            value={filteredOrganizations.map((o) => o.id)}
+            onChange={handleOrganizationSelect}
+            clearable
+            // Fix a bug where the Popover is closed when selecting an organization
             // https://github.com/mantinedev/mantine/issues/5173
             comboboxProps={{ withinPortal: false }}
           />

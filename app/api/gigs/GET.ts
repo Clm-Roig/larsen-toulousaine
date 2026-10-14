@@ -23,6 +23,7 @@ const defaultSelect = {
   isCanceled: true,
   isSoldOut: true,
   name: true,
+  organizationId: true,
   price: true,
   slug: true,
   ticketReservationLink: true,

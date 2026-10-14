@@ -28,6 +28,7 @@ export interface GigPreview {
   isCanceled: Gig["isCanceled"];
   isSoldOut: Gig["isSoldOut"];
   name: Gig["name"];
+  organizationId: Gig["organizationId"];
   price: Gig["price"];
   slug: Gig["slug"];
   sourceUrl: Gig["sourceUrl"];

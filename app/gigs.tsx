@@ -1,5 +1,5 @@
 "use client";
-import { Genre, Organization, Place } from "@prisma/client";
+import { Genre, Place } from "@prisma/client";
 import GigList from "@/components/GigList";
 import useMonthGigs from "@/hooks/useMonthGigs";
 import { useEffect, useMemo } from "react";
@@ -26,7 +26,7 @@ export default function Gigs() {
     staleTime: 60 * 60 * 15, // 15min
   });
 
-  const { data: organizations = [] } = useQuery<Organization[]>({
+  const { data: organizations = [] } = useQuery({
     queryKey: ["organizations"],
     queryFn: getOrganizations,
     staleTime: 60 * 60 * 15, // 15min

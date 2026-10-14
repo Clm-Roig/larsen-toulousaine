@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { GigDateDisplayMode, GigPreview } from "@/domain/Gig/Gig.type";
 import ListControls from "./ListControls";
-import { Genre, Organization, Place } from "@prisma/client";
+import { Genre, Place } from "@prisma/client";
 import { GRID_SPAN_PROP } from "@/components/GigList/constants";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
@@ -25,6 +25,7 @@ import ListViewSkeleton from "@/components/GigList/ListViewSkeleton";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 import AddResourceButton from "@/components/AddResourceButton";
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 
 interface BaseProps {
   gigDateDisplayFormat?: GigDateDisplayMode;
@@ -40,7 +41,7 @@ type ConditionalProps =
       dateStep: "month" | "week";
       genres?: Genre[];
       places?: Place[];
-      organizations?: Organization[];
+      organizations?: OrganizationWithGigCount[];
       selectedDate?: Date;
       setSelectedDate?: (newDate: Date) => void;
       withListControls: boolean;

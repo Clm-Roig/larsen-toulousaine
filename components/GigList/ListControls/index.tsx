@@ -6,16 +6,17 @@ import {
   SimpleGrid,
 } from "@mantine/core";
 import dayjs from "@/lib/dayjs";
-import { Genre, Organization, Place } from "@prisma/client";
+import { Genre, Place } from "@prisma/client";
 import usePreferences from "@/hooks/usePreferences";
 import { ViewType } from "@/domain/ViewType";
 import OptionsPopover from "@/components/GigList/ListControls/OptionsPopover";
 import DateSelector from "@/components/GigList/ListControls/DateSelector";
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 
 interface Props {
   dateStep: "month" | "week";
   genres?: Genre[];
-  organizations?: Organization[];
+  organizations?: OrganizationWithGigCount[];
   places?: Place[];
   selectedDate?: Date;
   setSelectedDate?: (newDate: Date) => void;

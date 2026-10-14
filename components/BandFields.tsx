@@ -1,5 +1,5 @@
 import CountrySelect from "@/components/CountrySelect";
-import GenreSelect, { GenreSelectProps } from "@/components/GenreSelect";
+import GenresSelect, { GenreSelectProps } from "@/components/GenresSelect";
 import RegionSelect from "@/components/RegionSelect";
 import { MAX_GENRES_PER_BAND } from "@/domain/Band/constants";
 import {
@@ -55,7 +55,7 @@ export default function BandFields({
         required
         {...(withLabels ? { label: nameLabel } : { placeholder: nameLabel })}
       />
-      <GenreSelect
+      <GenresSelect
         {...genreProps}
         maxValues={MAX_GENRES_PER_BAND}
         {...(withLabels ? { label: genreLabel } : { placeholder: genreLabel })}

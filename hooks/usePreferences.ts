@@ -1,3 +1,4 @@
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 import { ViewType } from "@/domain/ViewType";
 import { useLocalStorage } from "@mantine/hooks";
 import { Genre, Place } from "@prisma/client";
@@ -10,6 +11,12 @@ export default function usePreferences() {
   });
   const [filteredGenres, setFilteredGenres] = useLocalStorage<Genre[]>({
     key: "gigList-filteredGenres",
+    defaultValue: [],
+  });
+  const [filteredOrganizations, setFilteredOrganizations] = useLocalStorage<
+    OrganizationWithGigCount[]
+  >({
+    key: "gigList-filteredOrganizations",
     defaultValue: [],
   });
   const [excludedPlaces, setExcludedPlaces] = useLocalStorage<Place["id"][]>({
@@ -31,6 +38,7 @@ export default function usePreferences() {
 
   const resetPreferences = () => {
     setFilteredGenres([]);
+    setFilteredOrganizations([]);
     setExcludedPlaces([]);
     setGrayOutPastGigs(false);
     setMaxPrice("");
@@ -39,15 +47,22 @@ export default function usePreferences() {
   const preferencesSum = useMemo(
     () =>
       filteredGenres.length +
+      filteredOrganizations.length +
       (!!maxPrice || maxPrice === 0 ? 1 : 0) +
       excludedPlaces.length,
-    [excludedPlaces.length, filteredGenres.length, maxPrice],
+    [
+      excludedPlaces.length,
+      filteredGenres.length,
+      filteredOrganizations.length,
+      maxPrice,
+    ],
   );
 
   return {
     displayNotSafeGigs,
     excludedPlaces,
     filteredGenres,
+    filteredOrganizations,
     grayOutPastGigs,
     maxPrice,
     preferencesSum,
@@ -55,6 +70,7 @@ export default function usePreferences() {
     setDisplayNotSafeGigs,
     setExcludedPlaces,
     setFilteredGenres,
+    setFilteredOrganizations,
     setGrayOutPastGigs,
     setMaxPrice,
     setViewType,

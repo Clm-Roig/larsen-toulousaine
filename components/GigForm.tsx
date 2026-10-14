@@ -31,7 +31,6 @@ import {
   Textarea,
   Anchor,
 } from "@mantine/core";
-import { Genre } from "@prisma/client";
 import {
   IconCheck,
   IconFile,
@@ -70,9 +69,9 @@ import {
   boolean3ChoicesFormValueToBool,
 } from "@/utils/utils";
 import { MAIN_CITY } from "@/domain/Place/constants";
-import { PlaceWithGigCount } from "@/domain/Place/Place.type";
-import { genresQuery, placesQuery } from "@/domain/queries";
+import { genresQuery, organizationsQuery, placesQuery } from "@/domain/queries";
 import { validateImageFile } from "@/utils/image";
+import OrganizationSelect from "@/components/OrganizationSelect";
 
 const { FESTIVAL, GIG } = GigType;
 
@@ -90,8 +89,9 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
   >(undefined);
   const [gigType, setGigType] = useState<GigType>(gig?.name ? FESTIVAL : GIG);
   const gigTypeString = useMemo(() => gigTypeToString(gigType), [gigType]);
-  const { data: genres } = useQuery<Genre[]>(genresQuery);
-  const { data: places } = useQuery<PlaceWithGigCount[]>(placesQuery);
+  const { data: genres } = useQuery(genresQuery);
+  const { data: places } = useQuery(placesQuery);
+  const { data: organizations } = useQuery(organizationsQuery);
 
   const form = useForm<
     // endDate is managed using dateRange array
@@ -387,6 +387,17 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
               </Alert>
             </>
           )}
+
+          <TextInput
+            label="URL de la source de l'évènement"
+            description={`Les évènements Facebook sont préférés mais cela peut être une publication, un post Instagram, un site web etc.`}
+            {...form.getInputProps("sourceUrl")}
+          />
+
+          <OrganizationSelect
+            organizations={organizations ?? []}
+            {...form.getInputProps("organizationId")}
+          />
         </Stack>
 
         <Divider my="md" />
@@ -558,12 +569,6 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
 
           <Divider my="md" />
 
-          <TextInput
-            label="URL de la source de l'évènement"
-            description={`Les évènements Facebook sont préférés mais cela peut être une publication, un post Instagram, un site web etc.`}
-            {...form.getInputProps("sourceUrl")}
-          />
-
           <Box>
             <InputLabel display="block">
               Le concert a-t-il une billetterie ?
@@ -686,6 +691,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
               }}
             />
           </Box>
+
+          <Divider my="md" />
 
           <Textarea
             placeholder="Informations spécifiques à l'évènement (nourriture, boissons, expositions, artisans...)"

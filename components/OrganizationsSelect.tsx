@@ -1,5 +1,6 @@
 "use client";
 
+import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 import { normalizeString } from "@/utils/utils";
 import {
   ComboboxItem,
@@ -7,14 +8,13 @@ import {
   MultiSelectProps,
   OptionsFilter,
 } from "@mantine/core";
-import { Genre } from "@prisma/client";
 
 export type GenreSelectProps = {
-  genres: Genre[];
+  organizations: OrganizationWithGigCount[];
 } & MultiSelectProps;
 
-export default function GenreSelect({
-  genres,
+export default function OrganizationsSelect({
+  organizations,
   ...selectProps
 }: GenreSelectProps) {
   // Case unsensitive filtering
@@ -32,9 +32,9 @@ export default function GenreSelect({
   return (
     <MultiSelect
       searchable
-      data={genres.map((genre) => ({
-        value: genre.id,
-        label: genre.name,
+      data={organizations.map((o) => ({
+        value: o.id,
+        label: o.name,
       }))}
       filter={optionsFilter}
       {...selectProps}
