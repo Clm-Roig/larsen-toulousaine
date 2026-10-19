@@ -8,7 +8,7 @@ import {
   createOrganization,
   CreateOrganizationArgs,
 } from "@/domain/Organization/Organization.webService";
-import OrganizationForm from "@/components/OrganizationForm";
+import OrganizationForm from "@/components/Forms/OrganizationForm";
 
 export default function AddOrganization() {
   const router = useRouter();

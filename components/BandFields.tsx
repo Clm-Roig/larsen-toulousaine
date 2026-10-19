@@ -1,6 +1,8 @@
-import CountrySelect from "@/components/CountrySelect";
-import GenresSelect, { GenreSelectProps } from "@/components/GenresSelect";
-import RegionSelect from "@/components/RegionSelect";
+import CountrySelect from "@/components/Select/CountrySelect";
+import GenresSelect, {
+  GenreSelectProps,
+} from "@/components/Select/GenresSelect";
+import RegionSelect from "@/components/Select/RegionSelect";
 import { MAX_GENRES_PER_BAND } from "@/domain/Band/constants";
 import {
   Checkbox,

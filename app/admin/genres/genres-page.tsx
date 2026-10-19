@@ -14,7 +14,7 @@ import {
   EditGenreArgs,
 } from "@/domain/Genre/Genre.webService";
 import GenreTable from "@/components/GenreTable";
-import GenreForm from "@/components/GenreForm";
+import GenreForm from "@/components/Forms/GenreForm";
 
 const Genres = () => {
   const [editedGenre, setEditedGenre] = useState<Genre>();

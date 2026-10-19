@@ -5,7 +5,7 @@ import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreatePlaceArgs, createPlace } from "@/domain/Place/Place.webService";
-import PlaceForm from "@/components/PlaceForm";
+import PlaceForm from "@/components/Forms/PlaceForm";
 
 export default function AddPlace() {
   const router = useRouter();

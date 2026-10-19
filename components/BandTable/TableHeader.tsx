@@ -8,7 +8,7 @@ import {
   VisuallyHidden,
 } from "@mantine/core";
 import { Genre } from "@prisma/client";
-import GenresSelect from "@/components/GenresSelect";
+import GenresSelect from "@/components/Select/GenresSelect";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
 import { useSession } from "next-auth/react";

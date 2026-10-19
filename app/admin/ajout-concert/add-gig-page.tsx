@@ -1,6 +1,6 @@
 "use client";
 
-import GigForm from "@/components/GigForm";
+import GigForm from "@/components/Forms/GigForm";
 import { CreateGigArgs, createGig } from "@/domain/Gig/Gig.webService";
 import { Box } from "@mantine/core";
 import { notifications } from "@mantine/notifications";

@@ -1,5 +1,5 @@
-import GenresSelect from "@/components/GenresSelect";
-import OrganizationsSelect from "@/components/OrganizationsSelect";
+import GenresSelect from "@/components/Select/GenresSelect";
+import OrganizationsSelect from "@/components/Select/OrganizationsSelect";
 import UnsafeIcon, { UnsafeType } from "@/components/UnsafeIcon";
 import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
 import { Permission } from "@/domain/permissions";

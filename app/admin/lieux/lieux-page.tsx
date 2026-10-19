@@ -14,7 +14,7 @@ import {
 } from "@/domain/Place/Place.webService";
 import { Place } from "@prisma/client";
 import { placesQuery } from "@/domain/queries";
-import PlaceForm from "@/components/PlaceForm";
+import PlaceForm from "@/components/Forms/PlaceForm";
 
 const Lieux = () => {
   const [editedPlace, setEditedPlace] = useState<Place>();

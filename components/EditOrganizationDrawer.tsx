@@ -1,7 +1,7 @@
 import { Drawer, DrawerProps } from "@mantine/core";
 import { Organization } from "@prisma/client";
 import { EditOrganizationArgs } from "@/domain/Organization/Organization.webService";
-import OrganizationForm from "@/components/OrganizationForm";
+import OrganizationForm from "@/components/Forms/OrganizationForm";
 
 type Props = {
   editedOrganization: Organization | null;

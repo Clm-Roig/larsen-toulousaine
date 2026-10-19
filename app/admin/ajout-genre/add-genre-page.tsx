@@ -4,7 +4,7 @@ import { Box } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import GenreForm from "@/components/GenreForm";
+import GenreForm from "@/components/Forms/GenreForm";
 import { createGenre, CreateGenreArgs } from "@/domain/Genre/Genre.webService";
 
 export default function AddGenre() {

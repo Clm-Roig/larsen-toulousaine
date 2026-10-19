@@ -42,7 +42,7 @@ import {
 } from "@tabler/icons-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "@/domain/Band/Band.type";
-import BandSelect from "./BandSelect";
+import BandSelect from "../Select/BandSelect";
 import { isImageUrl, isValidUrl } from "@/utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "@/domain/image";
 import { useQuery } from "@tanstack/react-query";
@@ -71,7 +71,7 @@ import {
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { genresQuery, organizationsQuery, placesQuery } from "@/domain/queries";
 import { validateImageFile } from "@/utils/image";
-import OrganizationSelect from "@/components/OrganizationSelect";
+import OrganizationSelect from "@/components/Select/OrganizationSelect";
 import {
   INVALID_IMAGE_URL_ERROR_MSG,
   INVALID_URL_ERROR_MSG,
