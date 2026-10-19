@@ -11,6 +11,7 @@ import {
   Text,
   ActionIcon,
   CloseButton,
+  Divider,
 } from "@mantine/core";
 import { IconFile, IconLink, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -125,56 +126,65 @@ export default function OrganizationForm({
           {...form.getInputProps("link")}
         />
 
-        <FileInput
-          label="Logo (Fichier)"
-          placeholder="Choisir une image"
-          accept="image/*"
-          leftSection={<IconFile size={16} />}
-          rightSection={
-            !!form.values.logoFile && (
-              <CloseButton
-                onClick={() => {
-                  form.setFieldValue("logoFile", null);
-                  setImagePreview(null);
-                }}
-              />
-            )
-          }
-          value={form.values.logoFile}
-          onChange={handleFileChange}
-          disabled={Boolean(form.values.logoUrl)}
-        />
+        <Divider />
 
-        <Text ta="center" size="sm" c="dimmed">
-          OU
+        <Text>
+          Le logo doit <b>impérativement</b> être un fichier png noir sur fond
+          transparent.
         </Text>
 
-        <TextInput
-          label="Logo (URL externe)"
-          placeholder="https://..."
-          {...form.getInputProps("logoUrl")}
-          disabled={Boolean(form.values.logoFile)}
-          onChange={(event) => {
-            form.getInputProps("logoUrl").onChange(event);
-            setImagePreview(event.currentTarget.value);
-          }}
-          rightSection={
-            <ActionIcon
-              // Mimic Select clearable icon
-              variant="transparent"
-              color="gray"
-              aria-label="Clear input"
-              size="xs"
-              disabled={!form.values.logoUrl}
-              onClick={() => {
-                form.setFieldValue("logoUrl", "");
-                setImagePreview(null);
-              }}
-            >
-              <IconX />
-            </ActionIcon>
-          }
-        />
+        <Stack gap={"sm"}>
+          <FileInput
+            label="Logo (Fichier)"
+            placeholder="Choisir une image"
+            accept="image/*"
+            leftSection={<IconFile size={16} />}
+            rightSection={
+              !!form.values.logoFile && (
+                <CloseButton
+                  onClick={() => {
+                    form.setFieldValue("logoFile", null);
+                    setImagePreview(null);
+                  }}
+                />
+              )
+            }
+            value={form.values.logoFile}
+            onChange={handleFileChange}
+            disabled={Boolean(form.values.logoUrl)}
+          />
+
+          <Text ta="center" size="sm" c="dimmed">
+            OU
+          </Text>
+
+          <TextInput
+            label="Logo (URL externe)"
+            placeholder="https://..."
+            {...form.getInputProps("logoUrl")}
+            disabled={Boolean(form.values.logoFile)}
+            onChange={(event) => {
+              form.getInputProps("logoUrl").onChange(event);
+              setImagePreview(event.currentTarget.value);
+            }}
+            rightSection={
+              <ActionIcon
+                // Mimic Select clearable icon
+                variant="transparent"
+                color="gray"
+                aria-label="Clear input"
+                size="xs"
+                disabled={!form.values.logoUrl}
+                onClick={() => {
+                  form.setFieldValue("logoUrl", "");
+                  setImagePreview(null);
+                }}
+              >
+                <IconX />
+              </ActionIcon>
+            }
+          />
+        </Stack>
 
         {imagePreview && (
           <OptimizedImage
