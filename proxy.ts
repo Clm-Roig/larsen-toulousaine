@@ -1,6 +1,6 @@
-import { Role } from "@/lib/Role"; // ugly hack, see lib/Role.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { Role } from "@prisma/client";
 
 const isAdminRouteFn = (pathname: string, req: NextRequest): boolean => {
   const conditions = [
