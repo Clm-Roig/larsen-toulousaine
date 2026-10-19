@@ -1,51 +1,72 @@
 "use client";
 
 import { useForm } from "@mantine/form";
-import { Button, Group } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Stack,
+  TextInput,
+  NumberInput,
+  Select,
+  Switch,
+  rem,
+  useMantineTheme,
+} from "@mantine/core";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import { Place } from "@prisma/client";
-
-import { FormEvent, useEffect } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   CreatePlaceArgs,
   EditPlaceArgs,
 } from "@/domain/Place/Place.webService";
-
 import { PlaceWithGigCount } from "@/domain/Place/Place.type";
 import { isValidUrl, normalizeString } from "@/utils/utils";
-import PlaceFields from "./PlaceFields";
 import { placesQuery } from "@/domain/queries";
 import { INVALID_URL_ERROR_MSG } from "@/domain/errors";
+import { placeSizeOptions } from "@/app/api/utils/places";
 
 interface Props {
-  place?: PlaceWithGigCount;
+  initialValues?: Partial<PlaceWithGigCount | Place>;
   isLoading: boolean;
   onSubmit: (values: CreatePlaceArgs | EditPlaceArgs) => void;
+  onCancel?: () => void;
+  submitLabel?: string;
 }
 
-export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
+export default function PlaceForm({
+  initialValues,
+  isLoading,
+  onSubmit,
+  onCancel,
+  submitLabel,
+}: Props) {
+  const theme = useMantineTheme();
   const { data: places } = useQuery<Place[]>(placesQuery);
 
   const validatePlaceName = (value: string): string | null => {
-    if (!value) return "Le nom est requis";
+    if (!value.trim()) return "Le nom est requis";
     const isNameAlreadyTaken = places?.some(
-      (p) => normalizeString(p.name) === normalizeString(value),
+      (p) =>
+        p.id !== initialValues?.id &&
+        normalizeString(p.name) === normalizeString(value),
     );
     if (isNameAlreadyTaken) return "Un lieu avec ce nom existe déjà.";
     return null;
   };
 
-  const form = useForm<CreatePlaceArgs>({
+  const form = useForm<CreatePlaceArgs | EditPlaceArgs>({
     initialValues: {
-      name: "",
-      address: "",
-      website: "",
-      city: "",
-      isClosed: false,
-      isSafe: true,
-      latitude: null,
-      longitude: null,
-      size: null,
+      name: initialValues?.name ?? "",
+      address: initialValues?.address ?? "",
+      city: initialValues?.city ?? "",
+      website: initialValues?.website ?? "",
+      isClosed: initialValues?.isClosed ?? false,
+      isSafe: initialValues?.isSafe ?? true,
+      latitude: initialValues?.latitude ?? null,
+      longitude: initialValues?.longitude ?? null,
+      size: initialValues?.size ?? null,
+      ...(initialValues?.id ? { id: initialValues.id } : {}),
     },
     validateInputOnBlur: true,
     validate: {
@@ -57,43 +78,119 @@ export default function PlaceForm({ place, isLoading, onSubmit }: Props) {
     },
   });
 
+  // Keep the form in sync with initialValues
   useEffect(() => {
-    if (!form.values.id && place?.id) {
+    if (initialValues && form.values.id !== initialValues.id) {
       form.setValues({
-        ...place,
+        name: initialValues.name ?? "",
+        address: initialValues.address ?? "",
+        city: initialValues.city ?? "",
+        website: initialValues.website ?? "",
+        isClosed: initialValues.isClosed ?? false,
+        isSafe: initialValues.isSafe ?? true,
+        latitude: initialValues.latitude ?? null,
+        longitude: initialValues.longitude ?? null,
+        size: initialValues.size ?? null,
+        ...(initialValues.id ? { id: initialValues.id } : {}),
       });
     }
-  }, [form, place]);
-
-  const handleOnSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSubmit(form.values);
-  };
+  }, [form, initialValues, initialValues?.id]);
 
   return (
-    <form onSubmit={handleOnSubmit}>
-      <PlaceFields
-        addressProps={form.getInputProps("address")}
-        cityProps={form.getInputProps("city")}
-        isClosedProps={{
-          checked: !!form.getInputProps("isClosed").value,
-          ...form.getInputProps("isClosed"),
-        }}
-        isSafeProps={{
-          checked: !!form.getInputProps("isSafe").value,
-          ...form.getInputProps("isSafe"),
-        }}
-        latitudeProps={form.getInputProps("latitude")}
-        longitudeProps={form.getInputProps("longitude")}
-        nameProps={form.getInputProps("name")}
-        sizeProps={form.getInputProps("size")}
-        websiteProps={form.getInputProps("website")}
-        withLabels
-      />
+    <form onSubmit={form.onSubmit(onSubmit)}>
+      <Stack gap="md">
+        <TextInput
+          label="Nom du lieu"
+          required
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          label="Adresse"
+          required
+          {...form.getInputProps("address")}
+        />
+        <TextInput label="Ville" required {...form.getInputProps("city")} />
+        <TextInput
+          label="Site web"
+          placeholder="https://..."
+          {...form.getInputProps("website")}
+        />
+        <Select
+          label="Taille"
+          data={placeSizeOptions}
+          {...form.getInputProps("size")}
+        />
+        <NumberInput
+          label="Latitude"
+          description="Pour obtenir cette information, rendez-vous sur Google Maps et faites clic-droit sur le lieu. Parmi les 2 chiffres dans le menu, la latitude est le premier."
+          hideControls
+          {...form.getInputProps("latitude")}
+        />
+        <NumberInput
+          label="Longitude"
+          description="Pour obtenir cette information, rendez-vous sur Google Maps et faites clic-droit sur le lieu. Parmi les 2 chiffres dans le menu, la longitude est le deuxième."
+          hideControls
+          {...form.getInputProps("longitude")}
+        />
+        <Switch
+          description={`Quand un lieu est marqué comme "non-safe", les concerts qui s'y déroulent sont alors masqués. Le fait de changer cette valeur doit avoir été approuvé par plusieurs modérateur·rices ainsi que par Clément.`}
+          label={
+            form.values.isSafe ? "Le lieu est safe" : "Le lieu n'est pas safe"
+          }
+          checked={form.values.isSafe}
+          onChange={(e) => {
+            form.setFieldValue("isSafe", e.currentTarget.checked);
+          }}
+          thumbIcon={
+            form.values.isSafe ? (
+              <IconCheck
+                color={theme.colors.green[6]}
+                style={{ width: rem(12), height: rem(12) }}
+              />
+            ) : (
+              <IconX
+                color={theme.colors.red[9]}
+                style={{ width: rem(12), height: rem(12) }}
+              />
+            )
+          }
+        />
+        <Switch
+          description={`Quand un lieu est marqué comme "fermé", il n'est plus possible de le sélectionner pour y ajouter un nouveau concert et il n'est plus affiché dans les options de filtrage de la liste de concerts.`}
+          label={
+            form.values.isClosed
+              ? "Le lieu est fermé"
+              : "Le lieu est en activité"
+          }
+          checked={form.values.isClosed}
+          onChange={(e) => {
+            form.setFieldValue("isClosed", e.currentTarget.checked);
+          }}
+          thumbIcon={
+            form.values.isClosed ? (
+              <IconX
+                color={theme.colors.red[9]}
+                style={{ width: rem(12), height: rem(12) }}
+              />
+            ) : (
+              <IconCheck
+                color={theme.colors.green[6]}
+                style={{ width: rem(12), height: rem(12) }}
+              />
+            )
+          }
+        />
+      </Stack>
 
-      <Group justify="flex-end" mt="md">
+      <Group justify={onCancel ? "space-between" : "flex-end"} mt="xl">
+        {onCancel && (
+          <Button variant="outline" onClick={onCancel} type="button">
+            Annuler
+          </Button>
+        )}
         <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
-          {form.values.id ? "Éditer le lieu" : "Ajouter le lieu"}
+          {submitLabel ??
+            (initialValues?.id ? "Éditer le lieu" : "Ajouter le lieu")}
         </Button>
       </Group>
     </form>

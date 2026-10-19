@@ -1,12 +1,11 @@
 "use client";
 
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Layout from "@/components/Layout";
-import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
+import { Alert, Center, Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PlaceTable from "@/components/PlaceTable";
 import { notifications } from "@mantine/notifications";
-import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import {
   EditPlaceArgs,
@@ -14,42 +13,14 @@ import {
   editPlace,
 } from "@/domain/Place/Place.webService";
 import { Place } from "@prisma/client";
-import PlaceFields from "@/components/PlaceFields";
 import { placesQuery } from "@/domain/queries";
+import PlaceForm from "@/components/PlaceForm";
 
 const Lieux = () => {
   const [editedPlace, setEditedPlace] = useState<Place>();
   const queryClient = useQueryClient();
 
   const [opened, { open, close }] = useDisclosure(false);
-
-  const form = useForm<EditPlaceArgs>({
-    initialValues: {
-      id: "",
-      address: "",
-      city: "",
-      isClosed: false,
-      isSafe: true,
-      latitude: null,
-      longitude: null,
-      name: "",
-      size: null,
-      website: "",
-    },
-    validate: {
-      address: (value) => (value ? null : "L'adresse est requise."),
-      city: (value) => (value ? null : "La ville est requise."),
-      name: (value) => (value ? null : "Le nom est requis."),
-    },
-  });
-
-  useEffect(() => {
-    if (editedPlace && form.values.id !== editedPlace.id) {
-      form.setValues({
-        ...editedPlace,
-      });
-    }
-  }, [editedPlace, form]);
 
   const {
     data: places,
@@ -59,7 +30,7 @@ const Lieux = () => {
   } = useQuery(placesQuery);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: async () => await editPlace(form.values),
+    mutationFn: async (values: EditPlaceArgs) => await editPlace(values),
     onError: (error) => {
       notifications.show({
         color: "red",
@@ -106,11 +77,6 @@ const Lieux = () => {
     open();
   };
 
-  const handleOnSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    mutate();
-  };
-
   return (
     <Layout title="Tous les lieux" withPaper>
       <Center>
@@ -127,61 +93,14 @@ const Lieux = () => {
           position="right"
           title="Modifier le lieu"
         >
-          {!!form.values.id && (
-            <form onSubmit={handleOnSubmit}>
-              <Group w="100%">
-                <PlaceFields
-                  w="100%"
-                  addressProps={{
-                    w: "100%",
-                    ...form.getInputProps(`address`),
-                  }}
-                  cityProps={{
-                    w: "100%",
-                    ...form.getInputProps(`city`),
-                  }}
-                  isClosedProps={{
-                    w: "100%",
-                    checked: !!form.getInputProps("isClosed").value,
-                    ...form.getInputProps(`isClosed`),
-                  }}
-                  isSafeProps={{
-                    w: "100%",
-                    checked: !!form.getInputProps("isSafe").value,
-                    ...form.getInputProps(`isSafe`),
-                  }}
-                  latitudeProps={{
-                    w: "100%",
-                    ...form.getInputProps(`latitude`),
-                  }}
-                  longitudeProps={{
-                    w: "100%",
-                    ...form.getInputProps(`longitude`),
-                  }}
-                  nameProps={{
-                    w: "100%",
-                    ...form.getInputProps(`name`),
-                  }}
-                  sizeProps={{
-                    w: "100%",
-                    ...form.getInputProps(`size`),
-                  }}
-                  websiteProps={{
-                    w: "100%",
-                    ...form.getInputProps(`website`),
-                  }}
-                  withLabels
-                />
-                <Group justify="space-between" w="100%">
-                  <Button variant="outline" onClick={handleOnClose}>
-                    Annuler
-                  </Button>
-                  <Button type="submit" loading={isPending}>
-                    Modifier
-                  </Button>
-                </Group>
-              </Group>
-            </form>
+          {editedPlace && (
+            <PlaceForm
+              initialValues={editedPlace}
+              isLoading={isPending}
+              onSubmit={mutate}
+              onCancel={handleOnClose}
+              submitLabel="Modifier"
+            />
           )}
         </Drawer>
       </Center>
