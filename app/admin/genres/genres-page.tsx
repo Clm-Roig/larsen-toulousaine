@@ -1,11 +1,10 @@
 "use client";
 
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Layout from "@/components/Layout";
-import { Alert, Button, Center, Drawer, Group } from "@mantine/core";
+import { Alert, Center, Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
-import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { Genre } from "@prisma/client";
 import { genresQuery } from "@/domain/queries";
@@ -15,32 +14,13 @@ import {
   EditGenreArgs,
 } from "@/domain/Genre/Genre.webService";
 import GenreTable from "@/components/GenreTable";
-import GenreFields from "@/components/GenreFields";
+import GenreForm from "@/components/GenreForm";
 
 const Genres = () => {
   const [editedGenre, setEditedGenre] = useState<Genre>();
   const queryClient = useQueryClient();
 
   const [opened, { open, close }] = useDisclosure(false);
-
-  const form = useForm<EditGenreArgs>({
-    initialValues: {
-      id: "",
-      name: "",
-      color: "",
-    },
-    validate: {
-      name: (value) => (value ? null : "Le nom est requis."),
-    },
-  });
-
-  useEffect(() => {
-    if (editedGenre && form.values.id !== editedGenre.id) {
-      form.setValues({
-        ...editedGenre,
-      });
-    }
-  }, [editedGenre, form]);
 
   const {
     data: genres,
@@ -50,7 +30,7 @@ const Genres = () => {
   } = useQuery(genresQuery);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: async () => await editGenre(form.values),
+    mutationFn: async (values: EditGenreArgs) => await editGenre(values),
     onError: (error) => {
       notifications.show({
         color: "red",
@@ -97,9 +77,8 @@ const Genres = () => {
     open();
   };
 
-  const handleOnSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    mutate();
+  const handleFormSubmit = (values: EditGenreArgs) => {
+    mutate(values);
   };
 
   return (
@@ -118,35 +97,14 @@ const Genres = () => {
           position="right"
           title="Modifier le genre"
         >
-          {!!form.values.id && (
-            <form onSubmit={handleOnSubmit}>
-              <Group w="100%">
-                <GenreFields
-                  w="100%"
-                  colorInputProps={{
-                    w: "100%",
-                    ...form.getInputProps(`color`),
-                  }}
-                  colorPickerProps={{
-                    w: "100%",
-                    ...form.getInputProps(`color`),
-                  }}
-                  nameProps={{
-                    w: "100%",
-                    ...form.getInputProps(`name`),
-                  }}
-                  withLabels
-                />
-                <Group justify="space-between" w="100%">
-                  <Button variant="outline" onClick={handleOnClose}>
-                    Annuler
-                  </Button>
-                  <Button type="submit" loading={isPending}>
-                    Modifier
-                  </Button>
-                </Group>
-              </Group>
-            </form>
+          {editedGenre && (
+            <GenreForm
+              initialValues={editedGenre}
+              isLoading={isPending}
+              onSubmit={handleFormSubmit}
+              onCancel={handleOnClose}
+              submitLabel="Modifier"
+            />
           )}
         </Drawer>
       </Center>

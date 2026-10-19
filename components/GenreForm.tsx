@@ -1,9 +1,16 @@
 "use client";
 
+import {
+  Button,
+  Group,
+  Stack,
+  TextInput,
+  ColorPicker,
+  Center,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { Button, Group } from "@mantine/core";
 
-import { FormEvent, useEffect } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { normalizeString } from "@/utils/utils";
@@ -13,39 +20,56 @@ import {
   CreateGenreArgs,
   EditGenreArgs,
 } from "@/domain/Genre/Genre.webService";
-import GenreFields from "@/components/GenreFields";
 
 interface Props {
-  genre?: GenreWithBandCount;
+  initialValues?: Partial<EditGenreArgs>;
   isLoading: boolean;
   onSubmit: (values: CreateGenreArgs | EditGenreArgs) => void;
+  onCancel?: () => void;
+  submitLabel?: string;
 }
 
-export default function GenreForm({ genre, isLoading, onSubmit }: Props) {
+export default function GenreForm({
+  initialValues,
+  isLoading,
+  onSubmit,
+  onCancel,
+  submitLabel,
+}: Props) {
   const { data: genres } = useQuery<GenreWithBandCount[]>(genresQuery);
 
   const validateGenreName = (value: string): string | null => {
-    if (!value) return "Le nom est requis.";
+    if (!value.trim()) return "Le nom est requis.";
+
     const isNameAlreadyTaken = genres?.some(
-      (p) => normalizeString(p.name) === normalizeString(value),
+      (g) =>
+        // If editing, ignore current genre name
+        g.id !== initialValues?.id &&
+        normalizeString(g.name) === normalizeString(value),
     );
     if (isNameAlreadyTaken) return "Un genre avec ce nom existe déjà.";
     return null;
   };
 
-  const validateGenreColor = (value: string | null): string | null => {
+  const validateGenreColor = (
+    value: string | null | undefined,
+  ): string | null => {
     if (!value) return null;
     const isColorAlreadyTaken = genres?.some(
-      (g) => g.color && normalizeString(g.color) === normalizeString(value),
+      (g) =>
+        g.id !== initialValues?.id &&
+        g.color &&
+        normalizeString(g.color) === normalizeString(value),
     );
     if (isColorAlreadyTaken) return "Un genre avec cette couleur existe déjà.";
     return null;
   };
 
-  const form = useForm<CreateGenreArgs>({
+  const form = useForm<CreateGenreArgs | EditGenreArgs>({
     initialValues: {
-      name: "",
-      color: "",
+      name: initialValues?.name ?? "",
+      color: initialValues?.color ?? "",
+      ...(initialValues?.id ? { id: initialValues.id } : {}),
     },
     validateInputOnBlur: true,
     validate: {
@@ -54,31 +78,43 @@ export default function GenreForm({ genre, isLoading, onSubmit }: Props) {
     },
   });
 
+  // Keep the form in sync with initialValues
   useEffect(() => {
-    if (!form.values.id && genre?.id) {
+    if (initialValues && form.values.id !== initialValues.id) {
       form.setValues({
-        ...genre,
+        name: initialValues.name ?? "",
+        color: initialValues.color ?? "",
+        ...(initialValues.id ? { id: initialValues.id } : {}),
       });
     }
-  }, [form, genre]);
-
-  const handleOnSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSubmit(form.values);
-  };
+  }, [form, initialValues]);
 
   return (
-    <form onSubmit={handleOnSubmit}>
-      <GenreFields
-        nameProps={form.getInputProps("name")}
-        colorInputProps={form.getInputProps("color")}
-        colorPickerProps={form.getInputProps("color")}
-        withLabels
-      />
+    <form onSubmit={form.onSubmit(onSubmit)}>
+      <Stack gap="md">
+        <TextInput
+          label="Nom du genre"
+          required
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          label="Couleur"
+          description="Le code couleur doit être interprétable par du CSS (hex, rgb, hsl, gradient...). Vous pouvez également choisir une couleur dans le sélecteur ci-dessous."
+          {...form.getInputProps("color")}
+        />
+        <Center>
+          <ColorPicker format="hex" {...form.getInputProps("color")} />
+        </Center>
+      </Stack>
 
-      <Group justify="flex-end" mt="md">
+      <Group justify={onCancel ? "space-between" : "flex-end"} mt="xl">
+        {onCancel && (
+          <Button variant="outline" onClick={onCancel} type="button">
+            Annuler
+          </Button>
+        )}
         <Button loading={isLoading} type="submit" disabled={!form.isValid()}>
-          {form.values.id ? "Éditer le genre" : "Ajouter le genre"}
+          {submitLabel ?? (initialValues?.id ? "Modifier" : "Ajouter le genre")}
         </Button>
       </Group>
     </form>
