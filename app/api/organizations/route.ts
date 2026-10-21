@@ -19,7 +19,6 @@ import {
   ORGANIZATION_LOGOS_FOLDER_NAME,
   storeImage,
 } from "@/app/api/utils/image";
-import { revalidatePath } from "next/cache";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -103,7 +102,6 @@ export async function POST(request: NextRequest) {
         },
       },
     });
-    revalidatePath("organizations");
     return NextResponse.json(createdOrganization);
   } catch (error) {
     console.error(error);

@@ -26,7 +26,6 @@ import {
   tooBigImageFileError,
 } from "@/domain/Gig/apiErrors";
 import { removeParametersFromUrl } from "@/utils/utils";
-import { revalidatePath } from "next/cache";
 import dayjs from "@/lib/dayjs";
 import { MAX_IMAGE_SIZE } from "@/domain/image";
 
@@ -213,9 +212,6 @@ export async function PUT(request: NextRequest) {
       }),
       include: { bands: true },
     });
-    if (createdBands.length > 0) {
-      revalidatePath("bands");
-    }
     return NextResponse.json(updatedGig);
   } catch (error) {
     console.error(error);

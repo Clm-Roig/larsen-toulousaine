@@ -11,7 +11,6 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import {
   flattenBandGigs,
@@ -76,7 +75,6 @@ export async function PUT(request: NextRequest) {
       }),
       include: { genres: true },
     });
-    revalidatePath("/api/bands");
     return NextResponse.json(updatedBand);
   } catch (error) {
     console.error(error);
