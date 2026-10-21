@@ -28,6 +28,7 @@ import { GigPreview } from "@/domain/Gig/Gig.type";
 import Link from "next/link";
 import useHasPermission from "@/hooks/useHasPermission";
 import { Permission } from "@/domain/permissions";
+import { soldOutToString } from "@/domain/Gig/Gig.service";
 
 const iconStyle = { width: rem(16), height: rem(16) };
 
@@ -98,19 +99,17 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
         }
       },
       onError: (error) => {
-        const newState = isSoldOut ? "non-complet" : "complet";
         notifications.show({
           color: "red",
-          title: `Erreur lors du marquage du concert comme "${newState}".`,
+          title: `Erreur lors du marquage du concert comme "${soldOutToString(isSoldOut)}".`,
           message: error.message,
         });
       },
       onSuccess: async () => {
-        const newState = isSoldOut ? "non-complet" : "complet";
         await queryClient.invalidateQueries({ queryKey: ["gigs"] });
         notifications.show({
           color: "green",
-          message: `Concert marqué comme "${newState}" avec succès !`,
+          message: `Concert marqué comme "${soldOutToString(isSoldOut)}" avec succès !`,
         });
       },
     });
@@ -182,7 +181,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
                 handleOnSoldOut();
               }}
             >
-              {isSoldOut ? "Non-complet" : "Complet"}
+              {soldOutToString(isSoldOut, { capitalizeResult: true })}
             </MantineMenu.Item>
             <MantineMenu.Item
               leftSection={<IconTrash style={iconStyle} />}

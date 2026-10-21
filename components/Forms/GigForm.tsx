@@ -54,16 +54,11 @@ import {
   FromFormSimpleBand,
 } from "@/domain/Gig/Gig.webService";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import {
-  GigMinimal,
-  GigType,
-  CompleteGig,
-  gigTypeToString,
-} from "@/domain/Gig/Gig.type";
+import { GigMinimal, GigType, CompleteGig } from "@/domain/Gig/Gig.type";
 import { DatePickerInput } from "@mantine/dates";
 import OptimizedImage from "@/components/OptimizedImage";
 import BandFields from "@/components/BandFields";
-import { getGigTitle } from "@/domain/Gig/Gig.service";
+import { getGigTitle, gigTypeToString } from "@/domain/Gig/Gig.service";
 import {
   boolean3ChoicesToFormValue,
   boolean3ChoicesFormValueToBool,

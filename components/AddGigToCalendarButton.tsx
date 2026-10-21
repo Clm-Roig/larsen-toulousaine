@@ -1,8 +1,9 @@
 import {
   getGigCalendarDescription,
   getGigTitle,
+  gigToGigTypeString,
 } from "@/domain/Gig/Gig.service";
-import { GigPreview, gigToGigTypeString } from "@/domain/Gig/Gig.type";
+import { GigPreview } from "@/domain/Gig/Gig.type";
 import { useComputedColorScheme, useMantineTheme } from "@mantine/core";
 import {
   AddToCalendarButton,

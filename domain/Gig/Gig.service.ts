@@ -8,6 +8,8 @@ import {
   GigPreview,
   CompleteGig,
   GigDateDisplayMode,
+  GigType as string,
+  GigType,
 } from "@/domain/Gig/Gig.type";
 import { MAIN_CITY } from "@/domain/Place/constants";
 import { V_SEPARATOR, capitalize, formatFrenchPrice } from "@/utils/utils";
@@ -236,4 +238,41 @@ export const getGigDateFormat = (
   return gigDateDisplayFormat === GigDateDisplayMode.WITH_YEAR
     ? "DD/MM/YYYY"
     : "ddd DD/MM";
+};
+
+export const gigTypeToString = (gigType: GigType): string => {
+  let result = "";
+  switch (gigType) {
+    case GigType.FESTIVAL:
+      result = "festival";
+      break;
+    case GigType.GIG:
+      result = "concert";
+  }
+  return result;
+};
+
+export const gigToGigTypeString = (
+  gig: GigPreview,
+  options: { capitalizeResult: boolean } = { capitalizeResult: true },
+): string => {
+  const result = gig.name
+    ? gigTypeToString(string.FESTIVAL)
+    : gigTypeToString(string.GIG);
+  const { capitalizeResult } = options;
+  if (capitalizeResult) {
+    return capitalize(result);
+  }
+  return result;
+};
+
+export const soldOutToString = (
+  isSoldOut: boolean,
+  options: { capitalizeResult: boolean } = { capitalizeResult: true },
+): string => {
+  const result = isSoldOut ? "non-complet" : "complet";
+  if (options.capitalizeResult) {
+    return capitalize(result);
+  }
+  return result;
 };

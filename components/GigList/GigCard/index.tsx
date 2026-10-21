@@ -4,7 +4,6 @@ import React from "react";
 import { Box, Card, Stack, Text, Group, useMantineTheme } from "@mantine/core";
 import {
   GigPreview,
-  gigToGigTypeString,
   CompleteGig,
   GigDateDisplayMode,
 } from "@/domain/Gig/Gig.type";
@@ -25,7 +24,11 @@ import GenreBadge from "@/components/GenreBadge";
 import GigImgOverlay from "@/components/GigImgOverlay";
 import SoldOutIcon from "@/components/SoldOutIcon";
 import GigMissingData from "@/components/GigMissingData";
-import { getGigDateFormat, getGigTitle } from "@/domain/Gig/Gig.service";
+import {
+  getGigDateFormat,
+  getGigTitle,
+  gigToGigTypeString,
+} from "@/domain/Gig/Gig.service";
 import IsATributeBadge from "@/components/IsATributeBadge";
 import IsADJBadge from "@/components/IsADJBadge";
 import { CardWithLink } from "@/components/CardWithLink";
