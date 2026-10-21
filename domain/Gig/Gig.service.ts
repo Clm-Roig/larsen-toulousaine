@@ -32,11 +32,18 @@ export const computeGigSlug = (gig: {
   date: Gig["date"];
   name: Gig["name"];
 }): string => {
-  const normalizeString = (str: string) =>
-    slugReplacements.reduce(
+  const normalizeString = (str: string) => {
+    const slugified = str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    console.log(slugified);
+    return slugReplacements.reduce(
       (res, { replaced, replacer }) => res.replaceAll(replaced, replacer),
-      str.toLowerCase(),
+      slugified,
     );
+  };
   const { bands, date, name } = gig;
   const dateObj = dayjs(date).tz("Europe/Paris");
   if (name) {

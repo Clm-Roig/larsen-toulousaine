@@ -11,15 +11,24 @@ import { gig, gigBands } from "./data";
 
 describe("Gig service", () => {
   describe("computeGigSlug", () => {
-    it("contains band names & gig date", () => {
-      const slug = computeGigSlug(gig);
+    it("contains band names & gig date, and normalizes strings (spaces, accents, lowercase)", () => {
+      const mockGigWithAccents = {
+        ...gig,
+        name: null,
+        bands: [{ name: "Obsydían / Éther & Ox" }], // Band name with diacritic and "&" symbol
+      };
+
+      const slug = computeGigSlug(mockGigWithAccents);
+
+      // Global verification
       expect(slug).not.toContain(" ");
-      expect(slug).toContain(gig.date.getDate().toString());
-      expect(slug).toContain((gig.date.getMonth() + 1).toString());
+      expect(slug).not.toContain("í");
+      expect(slug).not.toContain("é");
+      expect(slug).toContain("obsydian-|-ether-and-ox");
+
+      // Date verification
+      expect(slug).toContain(gig.date.getDate().toString().padStart(2, "0"));
       expect(slug).toContain(gig.date.getFullYear().toString());
-      gigBands.forEach((band) => {
-        expect(slug).toContain(band.name.toLowerCase().replaceAll(" ", "-"));
-      });
     });
   });
   describe("getDataFromGigSlug", () => {

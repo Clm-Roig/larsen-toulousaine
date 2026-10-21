@@ -1,3 +1,5 @@
+"use client";
+
 import {
   cancelGig,
   deleteGig,
@@ -54,7 +56,7 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
         message: error.message,
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["gigs"] });
+      await queryClient.refetchQueries({ queryKey: ["gigs"] });
       notifications.show({
         color: "green",
         message: "Concert supprimé avec succès !",
@@ -80,12 +82,12 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
       });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["gigs"] });
       const verb = isCanceled ? "désannulé" : "annulé";
       notifications.show({
         color: "green",
         message: `Concert ${verb} avec succès !`,
       });
+      await queryClient.refetchQueries({ queryKey: ["gig", slug] });
     },
   });
 
@@ -106,11 +108,11 @@ export default function GigMenu({ afterDeleteCallback, gig }: Props) {
         });
       },
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["gigs"] });
         notifications.show({
           color: "green",
           message: `Concert marqué comme "${soldOutToString(isSoldOut)}" avec succès !`,
         });
+        await queryClient.refetchQueries({ queryKey: ["gig", slug] });
       },
     });
 
