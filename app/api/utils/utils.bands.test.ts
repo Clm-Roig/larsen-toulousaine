@@ -1,5 +1,5 @@
 import { validateCountryAndRegionCodes } from "@/app/api/utils/bands";
-import { expect, describe, it } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 
 describe("API Bands utils", () => {
   describe("validateCountryAndRegionCodes", () => {

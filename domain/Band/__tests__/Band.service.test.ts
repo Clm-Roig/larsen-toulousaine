@@ -1,6 +1,6 @@
-import { expect, describe, it } from "@jest/globals";
 import { getBandNames } from "@/domain/Band/Band.service";
 import { V_SEPARATOR } from "@/utils/utils";
+import { describe, expect, it } from "vitest";
 
 describe("Band service", () => {
   describe("getBandNames", () => {

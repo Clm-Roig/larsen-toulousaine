@@ -7,24 +7,18 @@ import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import nextPlugin from "@next/eslint-plugin-next";
 
 // Global ignores configuration
-// Must be in its own config object to act as global ignores
 const ignoresConfig = {
   name: "project/ignores",
-  ignores: [
-    ".next/",
-    "node_modules/",
-    "public/",
-    ".vscode/",
-    "next-env.d.ts",
-    "jest.config.js",
-  ],
+  ignores: [".next/", "node_modules/", "public/", ".vscode/", "next-env.d.ts"],
 };
+
 // ESLint recommended rules for JavaScript/TypeScript
 const eslintConfig = {
   name: "project/javascript-recommended",
   files: ["**/*.{js,mjs,ts,tsx}"],
   ...eslintPlugin.configs.recommended,
 };
+
 // TypeScript configuration with type-checked rules
 const typescriptConfig = {
   name: "project/typescript-strict",
@@ -76,6 +70,12 @@ const typescriptConfig = {
       },
     ],
   },
+};
+
+// Vitest configuration block for test files
+const vitestConfig = {
+  name: "project/vitest",
+  files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
 };
 
 // React and Next.js configuration
@@ -135,5 +135,6 @@ export default defineConfig([
   ignoresConfig,
   eslintConfig,
   typescriptConfig,
+  vitestConfig,
   reactConfig,
 ]);

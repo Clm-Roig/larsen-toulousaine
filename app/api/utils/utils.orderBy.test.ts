@@ -1,5 +1,5 @@
-import { expect, describe, it } from "@jest/globals";
 import { getPrismaOrderByFromRequest } from "@/app/api/utils/orderBy";
+import { describe, it, expect } from "vitest";
 
 describe("getPrismaOrderBy", () => {
   const validFields = ["name", "price", "createdAt"];

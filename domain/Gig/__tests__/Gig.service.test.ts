@@ -6,8 +6,8 @@ import {
   getGigTitleFromGigSlug,
   formatGigPrice,
 } from "@/domain/Gig/Gig.service";
-import { expect, describe, it } from "@jest/globals";
 import { gig, gigBands } from "./data";
+import { describe, it, expect } from "vitest";
 
 describe("Gig service", () => {
   describe("computeGigSlug", () => {

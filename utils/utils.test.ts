@@ -10,16 +10,16 @@ import {
   removeParametersFromUrl,
   sleep,
 } from "@/utils/utils";
-import { expect, describe, it, jest, afterEach } from "@jest/globals";
+import { describe, it, expect, vi, afterEach } from "vitest";
 
 describe("Utility Functions", () => {
   describe("sleep", () => {
     it("should resolve after the specified milliseconds", async () => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       const promise = sleep(1000);
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
       await expect(promise).resolves.toBeUndefined();
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
   });
 
