@@ -38,7 +38,6 @@ export const computeGigSlug = (gig: {
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-    console.log(slugified);
     return slugReplacements.reduce(
       (res, { replaced, replacer }) => res.replaceAll(replaced, replacer),
       slugified,
