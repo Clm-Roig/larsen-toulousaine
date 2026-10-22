@@ -10,24 +10,18 @@ import { Band } from "@prisma/client";
 import { beforeEach, expect, it, vi } from "vitest";
 import { describe } from "vitest";
 
-const mockUpdate = vi.fn();
-const mockDelete = vi.fn();
-const mockFindFirst = vi.fn();
+// Force prismMock initialization before vi.mock() hoisting
+const { prismaMock, resetPrismaMock } = await vi.hoisted(async () => {
+  return await import("@/tests/prismaMock");
+});
 
-// Mocks for external dependencies using `vi`
 vi.mock("next-auth", () => ({
   getServerSession: vi.fn(),
 }));
 
 vi.mock("@/lib/prisma", () => ({
   __esModule: true,
-  default: {
-    band: {
-      update: (...args: unknown[]): unknown => mockUpdate(...args),
-      delete: (...args: unknown[]): unknown => mockDelete(...args),
-      findFirst: (...args: unknown[]): unknown => mockFindFirst(...args),
-    },
-  },
+  default: prismaMock,
 }));
 
 vi.mock("@/app/api/utils/bands", () => ({
@@ -42,9 +36,9 @@ describe("API Route: /api/bands/[id]", () => {
   const mockUserSession = { user: { id: "user-1", email: "admin@larsen.fr" } };
 
   beforeEach(() => {
+    resetPrismaMock();
     vi.clearAllMocks();
   });
-
   // --------------------------------------------------------------------------
   // PUT /api/bands/[id]
   // --------------------------------------------------------------------------
@@ -60,14 +54,14 @@ describe("API Route: /api/bands/[id]", () => {
       const response = await PUT(request);
       expect(response.status).toBe(401);
 
-      expect(mockUpdate).not.toHaveBeenCalled();
+      expect(prismaMock.band.update).not.toHaveBeenCalled();
     });
 
     it("should force LOCAL_COUNTRY_CODE and LOCAL_REGION_CODE when isLocal is true", async () => {
       vi.mocked(getServerSession).mockResolvedValueOnce(
         mockUserSession as never,
       );
-      mockUpdate.mockResolvedValueOnce({} as Band);
+      prismaMock.band.update.mockResolvedValueOnce({} as Band);
 
       const requestBody = {
         id: "band-1",
@@ -85,7 +79,7 @@ describe("API Route: /api/bands/[id]", () => {
 
       await PUT(request);
 
-      expect(mockUpdate).toHaveBeenCalledWith(
+      expect(prismaMock.band.update).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: "band-1" },
           data: expect.objectContaining({
@@ -102,7 +96,7 @@ describe("API Route: /api/bands/[id]", () => {
   // DELETE /api/bands/[id]
   // --------------------------------------------------------------------------
   describe("DELETE", () => {
-    it("should return domain-specific error if band is linked to a gig (Code P2003)", async () => {
+    it("should return domain-specific error if band is linked to a gig (Code P2003, HTTP error = 409)", async () => {
       vi.mocked(getServerSession).mockResolvedValueOnce(
         mockUserSession as never,
       );
@@ -112,7 +106,7 @@ describe("API Route: /api/bands/[id]", () => {
         meta: { field_name: "BandsOnGigs_bandId_fkey (index)" },
       };
 
-      vi.mocked(mockDelete).mockRejectedValueOnce(prismaFKError);
+      vi.mocked(prismaMock.band.delete).mockRejectedValueOnce(prismaFKError);
 
       const params = Promise.resolve({ id: "band-1" });
       const request = new NextRequest("http://localhost/api/bands/band-1", {
@@ -135,7 +129,9 @@ describe("API Route: /api/bands/[id]", () => {
         gigs: [{ gig: { id: "gig-1" } }],
       };
 
-      vi.mocked(mockFindFirst).mockResolvedValueOnce(mockRawBand as never);
+      vi.mocked(prismaMock.band.findFirst).mockResolvedValueOnce(
+        mockRawBand as never,
+      );
 
       const params = Promise.resolve({ id: "band-1" });
       const request = new NextRequest("http://localhost/api/bands/band-1");
@@ -148,7 +144,7 @@ describe("API Route: /api/bands/[id]", () => {
     });
 
     it("should return a 404 when band is not found", async () => {
-      vi.mocked(mockFindFirst).mockResolvedValueOnce(null);
+      vi.mocked(prismaMock.band.findFirst).mockResolvedValueOnce(null);
 
       const params = Promise.resolve({ id: "unknown-band" });
       const request = new NextRequest(
