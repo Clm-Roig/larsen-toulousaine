@@ -129,18 +129,12 @@ export async function PUT(request: NextRequest) {
     await prisma.bandsOnGigs.deleteMany({ where: { gigId: body.id } });
 
     const {
-      // author & createdAt should not be updated
-      // updatedAt is automaticcaly managed by Prisma
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      authorId,
-      // author should not be updated
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      author,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      createdAt,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // author, authorId, createdAt, should not be updated
+      authorId: _authorId,
+      author: _author,
+      createdAt: _createdAt,
+      // updatedAt is automatically managed by Prisma
+      updatedAt: _updatedAt,
       placeId,
       sourceUrl,
       organizationId,
@@ -204,7 +198,7 @@ export async function PUT(request: NextRequest) {
         sourceUrl: sourceUrl ? removeParametersFromUrl(sourceUrl) : null,
         imageUrl: newImageUrl,
         isAcceptingBankCard: body.isAcceptingBankCard ?? null,
-        place: { connect: { id: body.placeId } },
+        place: { connect: { id: placeId } },
         slug: slug,
         ticketReservationLink: body.hasTicketReservationLink
           ? body.ticketReservationLink

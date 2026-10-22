@@ -105,7 +105,6 @@ async function POST(request: NextRequest) {
       });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { placeId, sourceUrl, organizationId, ...bodyRest } = body;
     const createdGig = await prisma.gig.create({
       data: Prisma.validator<Prisma.GigCreateInput>()({
@@ -131,7 +130,7 @@ async function POST(request: NextRequest) {
         organization: organizationId
           ? { connect: { id: organizationId } }
           : undefined,
-        place: { connect: { id: body.placeId } },
+        place: { connect: { id: placeId } },
         slug: slug,
         ticketReservationLink: body.hasTicketReservationLink
           ? body.ticketReservationLink

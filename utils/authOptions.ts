@@ -30,7 +30,6 @@ export const authOptions: NextAuthOptions = {
         const isPasswordValid = await compare(password, user.password);
         if (!isPasswordValid) return null;
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: _, ...userWithoutPass } = user;
         return userWithoutPass;
       },

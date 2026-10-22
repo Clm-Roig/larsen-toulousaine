@@ -68,7 +68,6 @@ export const getSortedGenres = (
       return g1.name.localeCompare(g2.name);
     })
     .map((g) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { count: _, ...rest } = g;
       return rest;
     });
