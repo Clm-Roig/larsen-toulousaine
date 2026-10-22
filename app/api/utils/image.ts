@@ -59,7 +59,7 @@ export async function downloadImage(imageUrl: string): Promise<ArrayBuffer> {
 }
 
 /**
- * Uupload an image to Cloudinary and override the previous image if any
+ * Upload an image to Cloudinary and override the previous image if any
  */
 export async function storeImage({
   arrayBufferImg,
@@ -84,9 +84,13 @@ export async function storeImage({
     .toFormat(imageFormat)
     .toBuffer();
 
-  // Workaround using base64, see : https://community.cloudinary.com/discussion/439/405-cloudinary-only-on-production-using-vercel-nextjs
+  // Workaround using base64 because, in the past, we were using Vercel serverless functions.
+  // Serverless functions were limiting the upload size so we chose to use a base64 string
+  // instead of sending the image buffer.
+  // TODO: Can be switched back to a raw buffer now that we are hosted on Railway.
   const base64Data = resizedImg.toString("base64");
-  const fileUri = `data:image/jpeg;base64,${base64Data}`;
+  const mimeType = `image/${typeof imageFormat === "string" ? imageFormat : "jpeg"}`;
+  const fileUri = `data:${mimeType};base64,${base64Data}`;
 
   const cloudinaryImageUrl = await storeImageToCloudinary(
     filename,
@@ -109,7 +113,6 @@ export async function storeImageToCloudinary(
     public_id: filename,
     folder: folderName,
   };
-
   console.log("Uploading image to Cloudinary...");
   const result = await cloudinaryV2.uploader.upload(fileUri, options);
   const cloudinaryImageUrl = result.secure_url;
@@ -122,12 +125,10 @@ export async function deleteImageOnCloudinary(
 ) {
   if (imageUrl) {
     const publicId = getGigImagePublicId(imageUrl, folderName);
-
     console.log("Trying to delete image with public id '" + publicId + "'.");
     const result: unknown = await cloudinaryV2.uploader.destroy(
       getGigImagePublicId(imageUrl, folderName),
     );
-
     console.log(result);
   }
 }
