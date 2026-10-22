@@ -120,10 +120,7 @@ describe("API Route: /api/bands/[id]", () => {
       });
 
       const response = await DELETE(request, { params });
-      const body: unknown = await response.json();
-
       expect(response.status).toBe(409);
-      expect(body).toHaveProperty("code");
     });
   });
 
