@@ -10,13 +10,9 @@ export async function GET() {
         select: { gigs: true },
       },
     },
-  });
-  // TODO: Prisma doesn't provide a type-safe and automatic way to exclude a field.
-  // See this issue: https://github.com/prisma/prisma/issues/5042
-  const usersWithoutPassword = users.map((u) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = u;
-    return rest;
+    omit: {
+      password: true,
+    },
   });
   return NextResponse.json({
     /* Sort rule:
@@ -24,7 +20,7 @@ export async function GET() {
       - Moderators (by alphabetical order)
       - Previously moderators
     */
-    users: usersWithoutPassword.sort((u1, u2) =>
+    users: users.sort((u1, u2) =>
       u1.role === Role.ADMIN
         ? -1
         : u1.role === Role.PREVIOUSLY_MODERATOR
