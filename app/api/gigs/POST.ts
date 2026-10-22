@@ -41,8 +41,7 @@ async function POST(request: NextRequest) {
 
   // Parse formData
   const formData = await request.formData();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawData: { data: any } = { data: null };
+  const rawData: { data: unknown } = { data: null };
   formData.forEach((value, key) => (rawData[key] = value));
   let body: CreateGigArgs;
   try {

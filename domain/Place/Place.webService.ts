@@ -49,7 +49,7 @@ export const createPlace = async (place: CreatePlaceArgs): Promise<Place> => {
   try {
     const response = await api.post<Place>(`/places`, {
       ...place,
-      // sometimes, latitude or longitude can be a string. This is due to the NumberInput component from Mantine
+      // Sometimes, latitude or longitude can be a string. This is due to the NumberInput component from Mantine
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
       latitude: place.latitude && Number(place.latitude),
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
