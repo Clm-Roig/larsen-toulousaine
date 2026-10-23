@@ -145,9 +145,8 @@ export default function GigInfoRight({ gig }: Props) {
                     <Badge
                       variant="outline"
                       p={4}
-                      leftSection={<IconHome width={"0.9rem"} />}
-                      pl={2}
-                      pr={4}
+                      leftSection={<IconHome width={"1rem"} />}
+                      style={{ display: "inline-flex" }} // Revert a Mantine fix, see here : https://github.com/mantinedev/mantine/pull/6629
                     >
                       Local
                     </Badge>
