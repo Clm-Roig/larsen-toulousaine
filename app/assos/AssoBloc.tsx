@@ -15,7 +15,7 @@ export default function AssoBloc({ organization }: AssoBlocProps) {
   const { status } = useSession();
   const [popoverOpened, { open, close }] = useDisclosure(false);
   const { authorId, createdAt, link, logoUrl, name, updatedAt } = organization;
-  const content = logoUrl ? (
+  const logoContent = logoUrl ? (
     <Image
       src={logoUrl}
       alt={`Logo ${name}`}
@@ -47,18 +47,20 @@ export default function AssoBloc({ organization }: AssoBlocProps) {
           onMouseLeave={close}
         >
           {link ? (
-            <Link
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
-            >
-              <Box td="none">{content}</Box>
-            </Link>
+            <>
+              <Link
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <Box td="none">{logoContent}</Box>
+              </Link>
+            </>
           ) : (
-            <Box td="none">{content}</Box>
+            <Box td="none">{logoContent}</Box>
           )}
-          <Text fs="italic">{name}</Text>
+          {logoUrl && <Text fs="italic">{name}</Text>}
         </Box>
       </Popover.Target>
       <Popover.Dropdown style={{ pointerEvents: "none" }}>
