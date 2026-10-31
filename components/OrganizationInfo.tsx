@@ -17,8 +17,14 @@ export default function OrganizationInfo({ organization }: Props) {
     <Flex direction="column" w="100%">
       <Flex direction={{ base: "column", md: "row" }} gap={"md"} mb="md">
         {logoUrl && (
-          <Box maw={500}>
-            <OptimizedImage src={logoUrl} alt={`Logo ${name}`} />
+          <Box>
+            <OptimizedImage
+              src={logoUrl}
+              alt={`Logo ${name}`}
+              className="assoLogo"
+              maw={400}
+              mah={250}
+            />
           </Box>
         )}
         <Box>

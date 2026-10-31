@@ -1,20 +1,15 @@
 "use client";
 
-import { Box, Image, Popover, Text } from "@mantine/core";
+import { Box, Image, Text } from "@mantine/core";
 import { Organization } from "@prisma/client";
 import Link from "next/link";
-import { useDisclosure } from "@mantine/hooks";
-import Metadata from "@/components/Metadata";
-import { useSession } from "next-auth/react";
 
 interface AssoBlocProps {
   organization: Organization;
 }
 
 export default function AssoBloc({ organization }: AssoBlocProps) {
-  const { status } = useSession();
-  const [popoverOpened, { open, close }] = useDisclosure(false);
-  const { authorId, createdAt, link, logoUrl, name, updatedAt } = organization;
+  const { link, logoUrl, name } = organization;
   const logoContent = logoUrl ? (
     <Image
       src={logoUrl}
@@ -32,44 +27,22 @@ export default function AssoBloc({ organization }: AssoBlocProps) {
   );
 
   return (
-    <Popover
-      position="top"
-      withArrow
-      shadow="md"
-      opened={popoverOpened}
-      disabled={status !== "authenticated"}
-    >
-      <Popover.Target>
-        <Box
-          ta="center"
-          w={{ base: "100%", xs: "50%", md: "30%", xl: "20%" }}
-          onMouseEnter={open}
-          onMouseLeave={close}
-        >
-          {link ? (
-            <>
-              <Link
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
-              >
-                <Box td="none">{logoContent}</Box>
-              </Link>
-            </>
-          ) : (
+    <Box ta="center" w={{ base: "100%", xs: "50%", md: "30%", xl: "20%" }}>
+      {link ? (
+        <>
+          <Link
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
             <Box td="none">{logoContent}</Box>
-          )}
-          {logoUrl && <Text fs="italic">{name}</Text>}
-        </Box>
-      </Popover.Target>
-      <Popover.Dropdown style={{ pointerEvents: "none" }}>
-        <Metadata
-          authorId={authorId}
-          createdAt={createdAt}
-          updatedAt={updatedAt}
-        />
-      </Popover.Dropdown>
-    </Popover>
+          </Link>
+        </>
+      ) : (
+        <Box td="none">{logoContent}</Box>
+      )}
+      {logoUrl && <Text fs="italic">{name}</Text>}
+    </Box>
   );
 }
