@@ -1,4 +1,7 @@
-import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
+import {
+  OrganizationWithGigCount,
+  OrganizationWithGigs,
+} from "@/domain/Organization/Organization.type";
 import api, { getErrorMessage } from "@/lib/axios";
 import { Boolean3ChoicesFormValue } from "@/utils/utils";
 import { Organization } from "@prisma/client";
@@ -49,6 +52,19 @@ export const getOrganizations = async (): Promise<
       organizations: OrganizationWithGigCount[];
     }>("/organizations");
     return response.data.organizations;
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const getOrganization = async (
+  organizationId: string,
+): Promise<OrganizationWithGigs | null> => {
+  try {
+    const response = await api.get<OrganizationWithGigs | undefined>(
+      `/organizations/${encodeURIComponent(organizationId)}`,
+    );
+    return response.data ?? null;
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

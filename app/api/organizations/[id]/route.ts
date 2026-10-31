@@ -19,6 +19,46 @@ import {
   ORGANIZATION_LOGOS_FOLDER_NAME,
   storeImage,
 } from "@/app/api/utils/image";
+import { flattenGigBands } from "../../utils/gigs";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id: rawId } = await params;
+  const id = decodeURIComponent(rawId);
+  const organization = await prisma.organization.findFirst({
+    where: {
+      id: id,
+    },
+    include: {
+      gigs: {
+        include: {
+          place: true,
+          bands: {
+            include: {
+              band: {
+                include: {
+                  genres: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!organization) {
+    return new Response(null, { status: 404 });
+  }
+
+  const cleanedOrganization = {
+    ...organization,
+    gigs: organization.gigs.map((g) => flattenGigBands(g)),
+  };
+
+  return NextResponse.json(cleanedOrganization);
+}
 
 export async function PUT(request: NextRequest) {
   const { user } = (await getServerSession(authOptions)) ?? {};

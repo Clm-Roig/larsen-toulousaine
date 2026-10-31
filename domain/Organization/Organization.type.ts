@@ -1,4 +1,5 @@
-import { Prisma } from "@prisma/client";
+import { Organization, Prisma } from "@prisma/client";
+import { GigPreview } from "../Gig/Gig.type";
 
 export type OrganizationWithGigCount = Prisma.OrganizationGetPayload<{
   include: {
@@ -7,3 +8,7 @@ export type OrganizationWithGigCount = Prisma.OrganizationGetPayload<{
     };
   };
 }>;
+
+export type OrganizationWithGigs = Organization & {
+  gigs: GigPreview[];
+};
