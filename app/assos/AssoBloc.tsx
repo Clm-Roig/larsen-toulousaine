@@ -9,7 +9,7 @@ interface AssoBlocProps {
 }
 
 export default function AssoBloc({ organization }: AssoBlocProps) {
-  const { link, logoUrl, name } = organization;
+  const { id, link, logoUrl, name } = organization;
   const logoContent = logoUrl ? (
     <Image
       src={logoUrl}
@@ -30,12 +30,7 @@ export default function AssoBloc({ organization }: AssoBlocProps) {
     <Box ta="center" w={{ base: "100%", xs: "50%", md: "30%", xl: "20%" }}>
       {link ? (
         <>
-          <Link
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: "none" }}
-          >
+          <Link href={`assos/${id}`} style={{ textDecoration: "none" }}>
             <Box td="none">{logoContent}</Box>
           </Link>
         </>
