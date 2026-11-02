@@ -7,7 +7,6 @@ import dayjs from "@/lib/dayjs";
 import {
   Button,
   Group,
-  Select,
   Divider,
   ActionIcon,
   Text,
@@ -30,7 +29,6 @@ import {
   CloseButton,
   Textarea,
   Anchor,
-  ComboboxItem,
 } from "@mantine/core";
 import {
   IconCheck,
@@ -44,7 +42,7 @@ import {
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandSelect from "../Select/BandSelect";
-import { insensitiveIncludes, isImageUrl, isValidUrl } from "@/utils/utils";
+import { isImageUrl, isValidUrl } from "@/utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "@/domain/image";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -64,7 +62,6 @@ import {
   boolean3ChoicesToFormValue,
   boolean3ChoicesFormValueToBool,
 } from "@/utils/utils";
-import { MAIN_CITY } from "@/domain/Place/constants";
 import { genresQuery, organizationsQuery, placesQuery } from "@/domain/queries";
 import { validateImageFile } from "@/utils/image";
 import OrganizationSelect from "@/components/Select/OrganizationSelect";
@@ -72,6 +69,7 @@ import {
   INVALID_IMAGE_URL_ERROR_MSG,
   INVALID_URL_ERROR_MSG,
 } from "@/domain/errors";
+import PlaceSelect from "@/components/Select/PlaceSelect";
 
 const { FESTIVAL, GIG } = GigType;
 
@@ -331,34 +329,8 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                 }
               }}
             />
-
-            <Select
-              label="Lieu"
-              placeholder="Sélectionner un lieu"
-              clearable
-              data={places
-                ?.sort((p1, p2) => {
-                  if (p1.isClosed) return 1;
-                  if (p2.isClosed) return -1;
-                  return p2._count.gigs - p1._count.gigs;
-                })
-                .map((place) => ({
-                  value: place.id,
-                  label: `${place.name} ${
-                    place.city !== MAIN_CITY ? `(${place.city})` : ""
-                  } ${place.isClosed ? " (fermé)" : ""}`,
-                  disabled: place.isClosed,
-                }))}
-              filter={({ options, search }) => {
-                const filtered = (options as ComboboxItem[]).filter(
-                  (option: ComboboxItem) =>
-                    insensitiveIncludes(option.label, search),
-                );
-                filtered.sort((a, b) => a.label.localeCompare(b.label));
-                return filtered;
-              }}
-              required
-              searchable
+            <PlaceSelect
+              places={places ?? []}
               style={{ flex: 1 }}
               {...form.getInputProps("placeId")}
             />

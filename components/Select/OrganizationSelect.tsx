@@ -1,7 +1,13 @@
 "use client";
 
 import { OrganizationWithGigCount } from "@/domain/Organization/Organization.type";
-import { Select, SelectProps } from "@mantine/core";
+import { insensitiveIncludes } from "@/utils/utils";
+import {
+  ComboboxItem,
+  OptionsFilter,
+  Select,
+  SelectProps,
+} from "@mantine/core";
 
 export type Props = {
   organizations: OrganizationWithGigCount[];
@@ -11,6 +17,14 @@ export default function OrganizationSelect({
   organizations,
   ...selectProps
 }: Props) {
+  const optionsFilter: OptionsFilter = ({ options, search }) => {
+    const filtered = (options as ComboboxItem[]).filter(
+      (option: ComboboxItem) => insensitiveIncludes(option.label, search),
+    );
+    filtered.sort((a, b) => a.label.localeCompare(b.label));
+    return filtered;
+  };
+
   return (
     <Select
       label="Association"
@@ -24,6 +38,7 @@ export default function OrganizationSelect({
           value: organization.id,
           label: organization.name,
         }))}
+      filter={optionsFilter}
       searchable
       {...selectProps}
     />
