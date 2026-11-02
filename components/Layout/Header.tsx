@@ -57,6 +57,8 @@ const Header = ({ navbarOpened, toggleNavbar }: Props) => {
               component={NextImage}
               src="/images/logo.png"
               alt="Logo Larsen Toulousaine"
+              // high priority for the logo to avoid layout shift on page load
+              loading="eager"
               // width and height are used as a ratio by NextImage
               width={1}
               height={1}
