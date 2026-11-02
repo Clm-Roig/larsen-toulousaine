@@ -90,3 +90,12 @@ export const boolean3ChoicesToFormValue = (
   if (value) return "true";
   return "false";
 };
+
+export const insensitiveIncludes = (
+  text: string,
+  searchedText: string,
+): boolean => {
+  return normalizeString(text.trim()).includes(
+    normalizeString(searchedText.trim()),
+  );
+};

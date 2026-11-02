@@ -30,6 +30,7 @@ import {
   CloseButton,
   Textarea,
   Anchor,
+  ComboboxItem,
 } from "@mantine/core";
 import {
   IconCheck,
@@ -43,7 +44,7 @@ import {
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BandWithGenres } from "@/domain/Band/Band.type";
 import BandSelect from "../Select/BandSelect";
-import { isImageUrl, isValidUrl } from "@/utils/utils";
+import { insensitiveIncludes, isImageUrl, isValidUrl } from "@/utils/utils";
 import { GIG_IMG_RATIO_STRING, getGigImgWidth } from "@/domain/image";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -348,6 +349,14 @@ export default function GigForm({ gig, isLoading, onSubmit }: Props) {
                   } ${place.isClosed ? " (fermé)" : ""}`,
                   disabled: place.isClosed,
                 }))}
+              filter={({ options, search }) => {
+                const filtered = (options as ComboboxItem[]).filter(
+                  (option: ComboboxItem) =>
+                    insensitiveIncludes(option.label, search),
+                );
+                filtered.sort((a, b) => a.label.localeCompare(b.label));
+                return filtered;
+              }}
               required
               searchable
               style={{ flex: 1 }}
