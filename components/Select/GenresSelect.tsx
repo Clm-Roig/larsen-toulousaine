@@ -21,7 +21,6 @@ export default function GenresSelect({
     const filtered = (options as ComboboxItem[]).filter(
       (option: ComboboxItem) => insensitiveIncludes(option.label, search),
     );
-    filtered.sort((a, b) => a.label.localeCompare(b.label));
     return filtered;
   };
 
