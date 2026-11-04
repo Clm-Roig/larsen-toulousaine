@@ -78,6 +78,7 @@ const typescriptConfig = {
         destructuredArrayIgnorePattern: "^_",
       },
     ],
+    "no-console": ["error", { allow: ["error"] }],
   },
 };
 

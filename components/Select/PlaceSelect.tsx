@@ -26,7 +26,6 @@ export default function PlaceSelect({ places, ...selectProps }: Props) {
     .sort((p1, p2) => {
       if (p1.isClosed) return 1;
       if (p2.isClosed) return -1;
-      console.log({ p1, p2 });
       return p2._count.gigs - p1._count.gigs;
     })
     .map((place) => ({
@@ -36,7 +35,6 @@ export default function PlaceSelect({ places, ...selectProps }: Props) {
       } ${place.isClosed ? " (fermé)" : ""}`,
       disabled: place.isClosed,
     }));
-  console.log(sortedPlaces);
 
   return (
     <Select

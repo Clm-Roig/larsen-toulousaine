@@ -113,6 +113,7 @@ export async function storeImageToCloudinary(
     public_id: filename,
     folder: folderName,
   };
+  // eslint-disable-next-line no-console -- Very useful to debug Cloudinary issues
   console.log("Uploading image to Cloudinary...");
   const result = await cloudinaryV2.uploader.upload(fileUri, options);
   const cloudinaryImageUrl = result.secure_url;
@@ -125,10 +126,12 @@ export async function deleteImageOnCloudinary(
 ) {
   if (imageUrl) {
     const publicId = getGigImagePublicId(imageUrl, folderName);
+    // eslint-disable-next-line no-console -- Very useful to debug Cloudinary issues
     console.log("Trying to delete image with public id '" + publicId + "'.");
     const result: unknown = await cloudinaryV2.uploader.destroy(
       getGigImagePublicId(imageUrl, folderName),
     );
+    // eslint-disable-next-line no-console -- Very useful to debug Cloudinary issues
     console.log(result);
   }
 }
